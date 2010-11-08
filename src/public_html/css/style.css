@@ -1,0 +1,199 @@
+
+body {
+	background-color: #63b1da;
+}
+
+h3 {
+	font-size: 1.3em; 	
+}
+
+a {
+	color: black;
+	text-decoration: underline;
+}
+
+a:hover {
+	color: #cc3300;
+}
+
+.button {
+	border: 1px solid #3f7183;
+	color: black;
+	background-color: #63b1da;	
+}
+
+.link {
+	cursor: pointer;
+	text-decoration: underline;	
+}
+
+.link:hover {
+	color: #cc3300;	
+}
+
+.required {
+	font-weight: bold;	
+}
+	
+.hide {
+	display: none;
+}
+
+.divider {
+	padding: 20px;
+}
+
+.sub-divider {
+	padding: 10px;	
+}
+
+.restriction {
+	margin: 2px 0;
+}
+	
+.radio-label, .checkbox-label {
+	display: inline-block;	
+}	
+	
+#header {
+	font-weight: bold;
+	font-size: 24pt;
+	background-color: #262626;
+	padding: 20px 10px;
+	border-bottom: 1px solid black;
+}
+
+#header a {
+	color: #d9d9d9;
+	text-decoration: none;
+}
+
+#content {
+	border-top: 1px solid black;
+	padding: 20px;
+}
+
+table.xhr-table-form {
+	border-collapse: separate;
+	border-spacing: 0 7px;	
+}
+
+td.label {
+	vertical-align: top;
+	padding-right: 5px;
+}
+
+table.admin {
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0;
+	border: 1px solid black;
+}
+
+table.admin tr {
+	background-color: white;
+}
+
+table.admin tr:hover {
+	background-color: #dddee3;	
+}
+	
+table.admin th {
+	background-color: #a9cde0;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	text-align: center;
+	font-weight: bold;
+}
+
+table.admin td, table.admin th {
+	padding: 5px 10px;
+	border: 1px solid #fff;
+}
+
+table.admin ul {
+	margin: 0;
+}
+
+td.order {
+	text-align: left;
+}
+
+.up-arrow {
+	cursor: pointer;
+}
+
+.down-arrow {
+	cursor: pointer;
+}
+
+.add-form {
+	padding: 15px;
+	border: 1px solid black;
+	background-color: white;	
+}
+
+.fragment-edit, .file-upload, #email-test {
+	background-color: white;
+	padding: 0 15px 10px 15px;	
+	border: 1px solid black;
+}
+
+#email-test {
+	padding-top: 10px;
+}
+	
+.simple-list {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;	
+}
+
+.simple-list li {
+	margin: 0;
+	padding: 0;
+}
+
+.breadcrumb {
+	border-top: 1px solid black;
+	padding-top: 10px;
+}
+
+.color-display {
+	border: 1px solid gray;	
+}
+
+/******************************************
+ * Validation Icons and Messages
+ ******************************************/
+ 
+ 
+.error-text {
+	color: red;
+	font-size: 10pt;
+}
+
+.validation-icon {
+	margin: 0 5px 0 10px;
+	display: inline;
+}
+
+.validation-icon img, .error-message img {
+	vertical-align: middle;
+}
+
+.error-message {
+	position: absolute;
+	padding: 0 10px;	
+}
+
+/******************************************
+ * Event Payment Types
+ ******************************************/
+
+.payment-type {
+	margin-left: 30px;
+}
+
+
+

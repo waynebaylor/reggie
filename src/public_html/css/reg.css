@@ -1,0 +1,324 @@
+body {
+	font-family: arial, sans-serif;	
+	background-color: lightblue;
+	margin: 0;
+}
+	
+#header {
+	border-bottom: 1px solid black;
+	padding: 10px 0;
+	background-color: white;
+}
+	
+#content {
+	width: 1024px;
+	margin: 0 auto;
+	padding: 10px 5px 50px 5px;
+}
+
+.required {
+	font-weight: bold;	
+}
+	
+.hide {
+	display: none;
+}
+
+.divider {
+	padding: 20px;
+}
+
+.sub-divider {
+	padding: 10px;	
+}
+
+table.reg-content {
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 10px 0;	
+}
+
+table.reg-content td {
+	vertical-align: top;
+}
+
+.reg-form-title {
+	text-align: center;
+	padding: 10px;
+	font-weight: bold;
+	font-size: 14pt;
+	border-bottom: 1px solid black;
+	margin-bottom: 15px;	
+}
+	
+.reg-form-content {
+	width: 100%;
+	background-color: white;	
+	padding: 0 15px 10px 15px;
+	border: 1px solid black;
+}
+
+#footer {
+	border-top: 1px solid black;
+	padding: 10px 0;
+	background-color: white;
+}
+
+.radio-label, .checkbox-label {
+	display: inline-block;	
+}
+
+.radio-input, .checkbox-input {
+	vertical-align: top;
+}	
+
+/******************************************
+ * CSS for left menu.
+ ******************************************/
+ 
+ .menu {
+ 	background-color: white;
+ 	border: 1px solid black;
+ }
+ 
+.menu-title {
+	font-weight: bold;
+	font-size: 12pt;
+ 	text-align: center;
+ 	padding: 5px 0;
+ 	background-color: #abc;
+ 	border-bottom: 1px solid black;
+ }
+ 
+.menu-link {
+	white-space:nowrap;
+	text-align: left;
+	padding: 10px 5px;	
+}
+
+.menu .current {
+	background-color: yellow;	
+}
+
+/******************************************
+ * CSS for form controls.
+ ******************************************/
+
+.form-controls {
+	text-align: center;
+}
+	
+.button {
+	border: 1px solid black;
+	color: white;
+	background-color: #333333;	
+}
+
+.disabled-button {
+	color: gray;	
+}
+
+/******************************************
+ * CSS for sections.
+ ******************************************/
+ 
+.section-divider {
+	padding: 15px;
+}
+
+.section-text {
+	margin-bottom: 10px;
+}
+
+.section-content {}
+
+/******************************************
+ * CSS for reg type options.
+ ******************************************/
+
+.reg-type-option {
+	margin: 0 0 5px 15px;
+}
+	
+/******************************************
+ * CSS for contact fields.
+ ******************************************/
+
+table.contact-fields {
+	border-collapse: separate;
+	border-spacing: 5px;
+}
+
+td.contact-field-label {
+	text-align: right;
+	vertical-align: top;
+}
+
+ol.contact-fields li {
+	padding: 10px 0;
+}
+/******************************************
+ * CSS for reg options.
+ ******************************************/
+
+table.reg-options {
+	width: 100%;	
+	border-collapse: separate;
+	border-spacing: 0 10px;
+}
+
+table.reg-options td {
+	vertical-align: top;
+	text-align: left;
+}
+
+table.reg-options td.price {
+	white-space: nowrap;
+	text-align: right;
+}
+
+table.reg-options table.reg-options {
+	padding-left: 30px;
+}
+
+/******************************************
+ * CSS for summary page.
+ ******************************************/
+
+table.summary {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+table.summary td {
+	text-align: left;
+	vertical-align: top;
+	padding: 5px;
+}
+
+.summary .label {
+	font-weight: bold;
+}
+
+div.price {
+	float: right;
+}
+
+td > ul.reg-option-group {
+	margin: 0;
+	padding: 0;
+}
+
+.summary .price {
+	font-weight: bold;
+}
+
+.summary-divider {
+	margin: 5px 0;
+	border-top: 1px solid #ccc;
+}
+
+.payment-info .info-field {
+	text-align: left;	
+}
+
+/******************************************
+ * CSS for payment page.
+ ******************************************/
+ 
+ .payment-instructions {}
+ 
+ .payment-form .label {
+ 	text-align: right;
+ }
+ 
+.amount-due {
+	margin: 10px 0;
+ 	padding:10px 0;
+ 	border-top: 1px solid #ccc;
+ 	border-bottom: 1px solid #ccc;
+	text-align: right;
+ 	font-weight: bold;
+ 	color: #d11;
+ }
+ 
+ .credit-card-title {
+ 	font-weight: bold;
+ 	text-align: left;
+ 	padding: 20px 0 10px 0;
+ }
+ 
+ .billing-title {
+ 	font-weight: bold;
+ 	text-align: left;
+ 	padding: 20px 0 10px 0;
+ }
+ 
+ table.payment-types {
+ 	width: 100%;
+ 	border-collapse: collapse;
+ }
+ 
+ table.payment-types td.tab-cell {
+ 	width: 25%;
+ 	padding: 0;
+ }
+ 
+ table.payment-types td.form-cell {
+ 	width: 75%;
+ 	padding: 0;
+ }
+ 
+ table.payment-type-tabs {
+ 	width: 100%;
+ 	border-collapse: collapse;
+ 	padding: 0;
+ 	margin: 0;
+ }
+ 
+ .payment-type-tab {
+ 	padding: 5px;
+ 	background-color: #ddd;
+ }
+ 
+ .selected-tab {
+ 	background-color: #bbb;
+ }
+ 
+ .payment-instructions {
+ 	background: #bbb;    /* to match .selected-tab bg */
+ 	padding: 10px;
+ }
+ 
+ .auth-net-form .label {
+ 	text-align: right;
+ }
+ 
+
+/******************************************
+ * Validation Icons and Messages
+ ******************************************/
+ 
+ 
+.error-text {
+	color: red;
+	font-size: 10pt;
+}
+
+.validation-icon {
+	margin: 0 5px 0 10px;
+	display: inline;
+}
+
+.validation-icon img, .error-message img {
+	vertical-align: middle;
+}
+
+.error-message {
+	position: absolute;
+	padding: 0 10px;	
+}
+
+
+ 
+ 
