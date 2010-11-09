@@ -87,7 +87,8 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => $link,
-							'href' => $link
+							'href' => $link,
+							'target' => '_blank',
 						))}
 					</td>
 					<td>
