@@ -50,6 +50,9 @@ _;
 					<td class="order">
 						{$status}
 					</td>
+					<td>
+						{$this->getLinks($event)}
+					</td>
 					<td class="order">
 						{$this->HTML->link(array(
 							'label' => 'Edit',
@@ -82,6 +85,26 @@ _;
 _;
 		}
 
+		return $html;
+	}
+	
+	private function getLinks($event) {
+		$html = '';
+		
+		$categories = model_Category::values();
+		foreach($categories as $category) {
+			$visiblePages = model_EventPage::getVisiblePages($event, $category);
+			if(!empty($visiblePages)) {
+				$code = model_Category::code($category);
+				$html .= $this->HTML->link(array(
+					'label' => $category['displayName'],
+					'href' => "/event/{$event['code']}/{$code}",
+					'title' => 'As seen by '.$category['displayName'],
+					'target' => '_blank'
+				));
+			}
+		}
+		
 		return $html;
 	}
 }
