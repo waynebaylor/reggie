@@ -192,6 +192,7 @@ class db_ReportManager extends db_Manager
 	}
 	
 	private function getReportFieldValues($registrationId) {
+		// single input fields (text, textarea).
 		$sql = '
 			SELECT 
 				ContactField.id,
@@ -212,8 +213,10 @@ class db_ReportManager extends db_Manager
 				Report_ContactField.contactFieldId = ContactField.id
 			WHERE
 				Registration.id = :registrationId
-			ORDER BY
-				Report_ContactField.displayOrder
+			AND
+				ContactField.formInputId 
+			IN
+				(1, 2)
 		';
 		
 		$params = array(
@@ -225,6 +228,47 @@ class db_ReportManager extends db_Manager
 		$values = array();
 		foreach($results as $result) {
 			$values[$result['id']] = $result['value'];
+		}
+		
+		// multiple input fields (checkbox, radio, select).
+		$sql = '
+			SELECT 
+				ContactField.id,
+				ContactFieldOption.displayName as value
+			FROM
+				ContactField
+			INNER JOIN
+				Registration_Information
+			ON
+				Registration_Information.contactFieldId = ContactField.id
+			INNER JOIN
+				Registration
+			ON
+				Registration_Information.registrationId = Registration.id
+			INNER JOIN
+				Report_ContactField
+			ON
+				Report_ContactField.contactFieldId = ContactField.id
+			INNER JOIN
+				ContactFieldOption
+			ON
+				Registration_Information.value = ContactFieldOption.id
+			WHERE
+				Registration.id = :registrationId
+			AND
+				ContactField.formInputId 
+			IN
+				(3, 4, 5)
+		';
+		
+		$results = $this->rawQuery($sql, $params, 'Find report option field values.');
+		
+		foreach($results as $result) {
+			if(empty($values[$result['id']])) {
+				$values[$result['id']] = array();
+			}
+			
+			$values[$result['id']][] = $result['value'];
 		}
 		
 		return $values;

@@ -65,7 +65,16 @@ _;
 		$html = '';
 		
 		foreach($this->fieldHeadings as $heading) {
-			$value = empty($result['fieldValues'][$heading['id']])? '' : $result['fieldValues'][$heading['id']];
+			if(empty($result['fieldValues'][$heading['id']])) {
+				$value = '';
+			}
+			else if(is_array($result['fieldValues'][$heading['id']])) {
+				$value = implode(', ', $result['fieldValues'][$heading['id']]);
+			}
+			else {
+				$value = $result['fieldValues'][$heading['id']];
+			}
+
 			$html .= '<td>'.$value.'</td>';
 		}
 		
