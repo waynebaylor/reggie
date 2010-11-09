@@ -10,12 +10,15 @@ class template_admin_EmailTemplate extends template_AdminPage
 		$this->event = $event;
 	}
 	
-	protected function getContent() {
-		$breadcrumbs = new fragment_Breadcrumb(array(
+	protected function getBreadcrumbs() {
+		return new fragment_Breadcrumb(array(
 			'location' => 'EmailTemplate',
-			'event' => $this->event
+			'eventId' => $this->event['id'],
+			'eventCode' => $this->event['code']
 		));
-		
+	}
+	
+	protected function getContent() {
 		$form = new fragment_XhrTableForm(
 			'/action/admin/email/EmailTemplate',
 			'saveTemplate',
@@ -52,10 +55,6 @@ class template_admin_EmailTemplate extends template_AdminPage
 						<input type="submit" class="button" value="Send"/>
 					</form>
 				</div>
-				
-				<div class="divider"></div>
-				
-				{$breadcrumbs->html()}
 			</div>
 _;
 	}

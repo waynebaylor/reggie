@@ -10,12 +10,17 @@ class template_admin_FileUpload extends template_AdminPage
 		$this->event = $event;
 	}
 	
-	protected function getContent() {
+	protected function getBreadcrumbs() {
 		$breadcrumbs = new fragment_Breadcrumb(array(
 			'location' => 'FileUpload',
-			'event' => $this->event
+			'eventId' => $this->event['id'],
+			'eventCode' => $this->event['code']
 		));
 		
+		return $breadcrumbs;
+	}
+	
+	protected function getContent() {
 		return <<<_
 			<div id="content">
 				<div class="file-upload">
@@ -59,10 +64,6 @@ class template_admin_FileUpload extends template_AdminPage
 						{$this->getFileRows()}
 					</table>
 				</div>
-				
-				<div class="divider"></div>
-				
-				{$breadcrumbs->html()}
 			</div>
 _;
 	}

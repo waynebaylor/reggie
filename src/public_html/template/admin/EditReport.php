@@ -12,13 +12,16 @@ class template_admin_EditReport extends template_AdminPage
 		$this->report = $report;
 	}
 	
+	protected function getBreadcrumbs() {
+		return new fragment_Breadcrumb(array(
+			'location' => 'Report',
+			'eventId' => $this->event['id'],
+			'eventCode' => $this->event['code']
+		));
+	}
 	protected function getContent() {
 		$edit = new fragment_report_Edit($this->report);
 		$fields = new fragment_report_field_Fields($this->event, $this->report);
-		$breadcrumbs = new fragment_Breadcrumb(array(
-			'location' => 'Report',
-			'event' => $this->event
-		));
 		
 		return <<<_
 			<script type="text/javascript">
@@ -32,10 +35,6 @@ class template_admin_EditReport extends template_AdminPage
 				<div class="divider"></div>
 				
 				{$fields->html()}
-				
-				<div class="divider"></div>
-				
-				{$breadcrumbs->html()}
 			</div>
 _;
 	}

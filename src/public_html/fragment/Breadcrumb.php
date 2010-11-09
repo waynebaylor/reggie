@@ -36,12 +36,12 @@ class fragment_Breadcrumb extends template_Template
 			case 'Reports':
 				$html = $this->reports();
 				$html .= $this->SEPARATOR;
-				$html .= "{$this->config['event']['code']} Reports";
+				$html .= "{$this->config['eventCode']} Reports";
 				break;
 			case 'FileUpload':
 				$html = $this->fileUpload();
 				$html .= $this->SEPARATOR;
-				$html .= "{$this->config['event']['code']} Files";
+				$html .= "{$this->config['eventCode']} Files";
 				break;
 			case 'EmailTemplate':
 				$html = $this->emailTemplate();
@@ -65,30 +65,51 @@ class fragment_Breadcrumb extends template_Template
 				break;
 			case 'VariableQuantityOption':
 				$html = $this->variableQuantityOption($this->config['id']);
+				$html .= $this->SEPARATOR;
+				$html .= 'Variable Quantity Option';
 				break;
 			case 'RegOptionPrice':
 				$html = $this->regOptionPrice($this->config['id']);
+				$html .= $this->SEPARATOR;
+				$html .= 'Reg Option Price';
 				break;
 			case 'RegOption':
 				$html = $this->regOption($this->config['id']);
+				$html .= $this->SEPARATOR;
+				$html .= 'Reg Option';
 				break;
 			case 'OptionGroup':
 				$html = $this->optionGroup($this->config['id'], $this->config['isSectionGroup']);
+				$html .= $this->SEPARATOR;
+				$html .= 'Option Group';
 				break;
 			case 'RegType':
-				$html = $this->regType($this->config['id']);
+				$this->config = db_BreadcrumbManager::getInstance()->findRegTypeCrumbs($this->config['regTypeId']);
+				$html = $this->regType();
+				$html .= $this->SEPARATOR;
+				$html .= 'Reg Type';
 				break;
 			case 'ContactField':
-				$html = $this->contactField($this->config['id']);
+				$this->config = db_BreadcrumbManager::getInstance()->findContactFieldCrumbs($this->config['contactFieldId']);
+				$html = $this->contactField();
+				$html .= $this->SEPARATOR;
+				$html .= 'Information Field';
 				break;
 			case 'Section':
-				$html = $this->section($this->config['id']);
+				$this->config = db_BreadcrumbManager::getInstance()->findSectionCrumbs($this->config['sectionId']);
+				$html = $this->section();
+				$html .= $this->SEPARATOR;
+				$html .= 'Section';
 				break;
 			case 'Page':
-				$html = $this->page($this->config['id']);
+				$html = $this->page();
+				$html .= $this->SEPARATOR;
+				$html .= 'Page';
 				break;
 			case 'Event':
 				$html = $this->event();
+				$html .= $this->SEPARATOR;
+				$html .= "Event ({$this->config['event']['code']})";
 				break;
 		}
 		
@@ -111,71 +132,63 @@ _;
 _;
 	}
 	
-	private function page($id) {
-		$page = $this->pageManager->find($id);
-		
+	private function page() {
 		return <<<_
-			{$this->event($page['eventId'])}
+			{$this->event()}
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
-				'label' => 'Event',
+				'label' => "Event ({$this->config['eventCode']})",
 				'href' => '/action/admin/event/EditEvent',
 				'parameters' => array(
 					'action' => 'view',
-					'id' => $page['eventId']
+					'id' => $this->config['eventId']
 				)
 			))}
 _;
 	}
 	
-	private function section($id) {
-		$section = $this->sectionManager->find($id);
-		
+	private function section() {
 		return <<<_
-			{$this->page($section['pageId'])}
+			{$this->page()}
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
 				'label' => 'Page',
 				'href' => '/action/admin/page/Page',
 				'parameters' => array(
 					'action' => 'view',
-					'id' => $section['pageId'],
+					'id' => $this->config['pageId'],
 					'eventId' => $this->config['eventId']
 				)
 			))}
 _;
 	}
 	
-	private function contactField($id) {
-		$field = $this->contactFieldManager->find($id);
-		 
+	private function contactField() {
 		return <<<_
-			{$this->section($field['sectionId'])}
+			{$this->section()}
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
 				'label' => 'Section',
 				'href' => '/action/admin/section/Section',
 				'parameters' => array(
 					'action' => 'view',
-					'id' => $field['sectionId'],
+					'id' => $this->config['sectionId'],
 					'eventId' => $this->config['eventId']
 				)
 			))}		
 _;
 	}
 	
-	private function regType($id) {
-		$type = $this->regTypeManager->find($id);
-		
+	private function regType() {
 		return <<<_
-			{$this->section($type['sectionId'])}
+			{$this->section()}
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
 				'label' => 'Section',
 				'href' => '/action/admin/section/Section',
 				'parameters' => array(
 					'action' => 'view',
-					'id' => $type['sectionId'],
+					'id' => $this->config['sectionId'],
 					'eventId' => $this->config['eventId']
 				)
 			))}	
@@ -186,15 +199,17 @@ _;
 		if($isSectionGroup === true) {
 			$group = $this->sectionGroupManager->find($id);
 			
+			$this->config = db_BreadcrumbManager::getInstance()->findSectionCrumbs($group['sectionId']);
+			
 			return <<<_
-				{$this->section($group['sectionId'])}
+				{$this->section()}
 				{$this->SEPARATOR}
 				{$this->HTML->link(array(
 					'label' => 'Section',
 					'href' => '/action/admin/section/Section',
 					'parameters' => array(
 						'action' => 'view',
-						'id' => $group['sectionId'],
+						'id' => $this->config['sectionId'],
 						'eventId' => $this->config['eventId']
 					)
 				))}
@@ -284,15 +299,16 @@ _;
 	private function variableQuantityOption($id) {
 		$option = db_VariableQuantityOptionManager::getInstance()->find($id);
 		
+		$this->config = db_BreadcrumbManager::getInstance()->findSectionCrumbs($option['sectionId']);
 		return <<<_
-			{$this->section($option['sectionId'])}
+			{$this->section()}
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
 				'label' => 'Section',
 				'href' => '/action/admin/section/Section',
 				'parameters' => array(
 					'action' => 'view',
-					'id' => $option['sectionId'],
+					'id' => $this->config['sectionId'],
 					'eventId' => $this->config['eventId']
 				)
 			))}		
@@ -304,11 +320,11 @@ _;
 			{$this->event()}
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
-				'label' => "{$this->config['event']['code']} Reports",
+				'label' => "{$this->config['eventCode']} Reports",
 				'href' => '/action/admin/report/Report',
 				'parameters' => array(
 					'action' => 'eventReports',
-					'id' => $this->config['event']['id']
+					'id' => $this->config['eventId']
 				)
 			))}	
 _;
@@ -319,11 +335,11 @@ _;
 			{$this->event()}
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
-				'label' => "Edit {$this->config['event']['code']}",
+				'label' => "Event ({$this->config['eventCode']})",
 				'href' => '/action/admin/event/EditEvent',
 				'parameters' => array(
 					'action' => 'view',
-					'id' => $this->config['event']['id']
+					'id' => $this->config['eventId']
 				)
 			))}	
 _;
@@ -334,11 +350,11 @@ _;
 			{$this->event()}
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
-				'label' => "Edit {$this->config['event']['code']}",
+				'label' => "Event ({$this->config['eventCode']})",
 				'href' => '/action/admin/event/EditEvent',
 				'parameters' => array(
 					'action' => 'view',
-					'id' => $this->config['event']['id']
+					'id' => $this->config['eventId']
 				)
 			))}	
 _;
@@ -349,38 +365,22 @@ _;
 			{$this->event()}
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
-				'label' => "Edit {$this->config['event']['code']}",
+				'label' => "Event ({$this->config['eventCode']})",
 				'href' => '/action/admin/event/EditEvent',
 				'parameters' => array(
 					'action' => 'view',
-					'id' => $this->config['event']['id']
+					'id' => $this->config['eventId']
 				)
 			))}	
 _;
 	}
 	
 	private function fileUpload() {
-		return <<<_
-			{$this->HTML->link(array(
-				'label' => 'Events',
-				'href' => '/action/MainMenu',
-				'parameters' => array(
-					'action' => 'view'
-				)
-			))}
-_;
+		return $this->event();
 	}
 	
 	private function reports() {
-		return <<<_
-			{$this->HTML->link(array(
-				'label' => 'Events',
-				'href' => '/action/MainMenu',
-				'parameters' => array(
-					'action' => 'view'
-				)
-			))}
-_;
+		return $this->event();
 	}
 }
 

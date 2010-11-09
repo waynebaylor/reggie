@@ -6,6 +6,10 @@ class template_admin_MainMenu extends template_AdminPage
 		parent::__construct('Administration Menu');
 	}
 
+	protected function getBreadcrumbs() {
+		return new fragment_Empty();	
+	}
+	
 	protected function getContent() {
 		$events = new fragment_event_Events();
 		

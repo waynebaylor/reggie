@@ -12,14 +12,17 @@ class template_admin_EditVariableQuantity extends template_AdminPage
 		$this->option = $option;
 	}
 	
-	protected function getContent() {
-		$edit = new fragment_variableQuantityOption_Edit($this->option);
-		$prices = new fragment_regOptionPrice_Prices($this->event, $this->option);
-		$breadcrumbs = new fragment_Breadcrumb(array(
+	protected function getBreadcrumbs() {
+		return new fragment_Breadcrumb(array(
 			'location' => 'VariableQuantityOption',
 			'id' => $this->option['id'],
 			'eventId' => $this->event['id']
 		));
+	}
+	
+	protected function getContent() {
+		$edit = new fragment_variableQuantityOption_Edit($this->option);
+		$prices = new fragment_regOptionPrice_Prices($this->event, $this->option);
 		
 		return <<<_
 			<script type="text/javascript">
@@ -33,10 +36,6 @@ class template_admin_EditVariableQuantity extends template_AdminPage
 				<div class="divider"></div>
 				
 				{$prices->html()}
-				
-				<div class="divider"></div>
-				
-				{$breadcrumbs->html()}
 			</div>
 _;
 	}

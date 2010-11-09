@@ -20,7 +20,7 @@ class fragment_contactField_Edit extends template_Template
 		
 		return <<<_
 			<div class="fragment-edit">			
-				<h3>Edit Contact Field</h3>
+				<h3>Edit Information Field</h3>
 
 				{$form->html()}
 			</div>

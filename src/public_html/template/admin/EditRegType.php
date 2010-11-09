@@ -12,13 +12,15 @@ class template_admin_EditRegType extends template_AdminPage
 		$this->regType = $regType;
 	}
 	
+	protected function getBreadcrumbs() {
+		return new fragment_Breadcrumb(array(
+			'location' => 'RegType',
+			'regTypeId' => $this->regType['id']
+		));
+	}
+	
 	protected function getContent() {
 		$edit = new fragment_regType_Edit($this->regType);
-		$breadcrumbs = new fragment_Breadcrumb(array(
-			'location' => 'RegType',
-			'id' => $this->regType['id'],
-			'eventId' => $this->event['id']
-		));
 		
 		return <<<_
 			<script type="text/javascript">
@@ -27,10 +29,6 @@ class template_admin_EditRegType extends template_AdminPage
 			
 			<div id="content">
 				{$edit->html()}
-				
-				<div class="divider"></div>
-				
-				{$breadcrumbs->html()}
 			</div>
 _;
 	}

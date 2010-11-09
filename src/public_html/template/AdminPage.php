@@ -1,6 +1,6 @@
 <?php 
 
-class template_AdminPage extends template_Template
+abstract class template_AdminPage extends template_Template
 {
 	private $title;
 	
@@ -43,6 +43,8 @@ class template_AdminPage extends template_Template
 			</a>
 		</div>	
 		
+		{$this->getBreadcrumbs()->html()}
+		
 		{$this->getContent()}
 	</div>
 </body>
@@ -54,6 +56,8 @@ _;
 	protected function getContent() {
 		return '';
 	}
+	
+	protected abstract function getBreadcrumbs();
 }
 
 ?>

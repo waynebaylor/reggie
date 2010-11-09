@@ -12,14 +12,17 @@ class template_admin_EditRegOptionPrice extends template_AdminPage
 		$this->event = $event;
 	}
 	
-	protected function getContent() {
-		$edit = new fragment_regOptionPrice_Edit($this->price, $this->event['regTypes']);
-		$breadcrumbs = new fragment_Breadcrumb(array(
+	protected function getBreadcrumbs() {
+		return new fragment_Breadcrumb(array(
 			'location' => 'RegOptionPrice',
 			'id' => $this->price['id'],
 			'eventId' => $this->event['id']
 		));
-		
+	}
+	
+	protected function getContent() {
+		$edit = new fragment_regOptionPrice_Edit($this->price, $this->event['regTypes']);
+
 		return <<<_
 			<script type="text/javascript">
 				dojo.require("hhreg.editRegOptionPrice");
@@ -27,10 +30,6 @@ class template_admin_EditRegOptionPrice extends template_AdminPage
 			
 			<div id="content">
 				{$edit->html()}
-
-				<div class="divider"></div>
-				
-				{$breadcrumbs->html()}
 			</div>
 _;
 	}

@@ -2,20 +2,15 @@
 
 class action_admin_page_Page extends action_ValidatorAction
 {
-	private $eventManager;
-	private $pageManager;
-
 	function __construct() {
 		parent::__construct();
-
-		$this->eventManager = db_EventManager::getInstance();
-		$this->pageManager = db_PageManager::getInstance();
 	}
 
 	public function view() {
 		$page = $this->strictFindById(db_PageManager::getInstance(), $_REQUEST['id']);
+		$event = $this->strictFindById(db_EventManager::getInstance(), $page['eventId']);
 		
-		return new template_admin_EditPage($page);
+		return new template_admin_EditPage($event, $page);
 	}
 	
 	public function savePage() {
@@ -30,7 +25,7 @@ class action_admin_page_Page extends action_ValidatorAction
 		$page['title'] = $_REQUEST['title'];
 		$categoryIds = $_REQUEST['categoryIds'];
 		
-		$this->pageManager->savePage($page, $categoryIds);
+		db_PageManager::getInstance()->savePage($page, $categoryIds);
 		
 		return new fragment_Success();
 	}
@@ -48,9 +43,9 @@ class action_admin_page_Page extends action_ValidatorAction
 		$title = empty($title)? 'New Page' : $title;
 		$categories = $_REQUEST['categoryIds'];
 
-		$this->pageManager->createPage($event, $title, $categories);
+		db_PageManager::getInstance()->createPage($event, $title, $categories);
 
-		$event = $this->eventManager->find($event['id']);
+		$event = db_EventManager::getInstance()->find($event['id']);
 			
 		return new fragment_page_List($event);
 	}
@@ -58,8 +53,8 @@ class action_admin_page_Page extends action_ValidatorAction
 	public function removePage() {
 		$page = $this->strictFindById(db_PageManager::getInstance(), $_REQUEST['id']);
 
-		$this->pageManager->deletePage($page);
-		$event = $this->eventManager->find($page['eventId']);
+		db_PageManager::getInstance()->deletePage($page);
+		$event = db_EventManager::getInstance()->find($page['eventId']);
 			
 		return new fragment_page_List($event);
 	}
@@ -67,8 +62,8 @@ class action_admin_page_Page extends action_ValidatorAction
 	public function movePageUp() {
 		$page = $this->strictFindById(db_PageManager::getInstance(), $_REQUEST['id']);
 
-		$this->pageManager->movePageUp($page);
-		$event = $this->eventManager->find($page['eventId']);
+		db_PageManager::getInstance()->movePageUp($page);
+		$event = db_EventManager::getInstance()->find($page['eventId']);
 			
 		return new fragment_page_List($event);
 	}
@@ -76,8 +71,8 @@ class action_admin_page_Page extends action_ValidatorAction
 	public function movePageDown() {
 		$page = $this->strictFindById(db_PageManager::getInstance(), $_REQUEST['id']);
 		
-		$this->pageManager->movePageDown($page);
-		$event = $this->eventManager->find($page['eventId']);
+		db_PageManager::getInstance()->movePageDown($page);
+		$event = db_EventManager::getInstance()->find($page['eventId']);
 			
 		return new fragment_page_List($event);
 	}

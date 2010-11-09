@@ -21,14 +21,16 @@ class template_admin_EditSection extends template_AdminPage
 		);
 	}
 
+	protected function getBreadcrumbs() {
+		return new fragment_Breadcrumb(array(
+			'location' => 'Section',
+			'sectionId' => $this->section['id']
+		));
+	}
+	
 	protected function getContent() {
 		$edit = new fragment_section_Edit($this->section);
 		$content = $this->contentToFragment[$this->section['contentType']['id']];
-		$breadcrumbs = new fragment_Breadcrumb(array(
-			'location' => 'Section',
-			'id' => $this->section['id'],
-			'eventId' => $this->event['id']
-		));
 		
 		return <<<_
 			<script type="text/javascript">
@@ -45,10 +47,6 @@ class template_admin_EditSection extends template_AdminPage
 				<div class="divider"></div>
 				
 				{$content->html()}
-				
-				<div class="divider"></div>
-				
-				{$breadcrumbs->html()}
 			</div>
 _;
 	}	

@@ -10,12 +10,15 @@ class template_admin_EditAppearance extends template_AdminPage
 		$this->event = $event;
 	}
 	
-	protected function getContent() {
-		$breadcrumbs = new fragment_Breadcrumb(array(
+	protected function getBreadcrumbs() {
+		return new fragment_Breadcrumb(array(
 			'location' => 'Appearance',
-			'event' => $this->event
-		));
-		
+			'eventId' => $this->event['id'],
+			'eventCode' => $this->event['code']
+		));	
+	}
+	
+	protected function getContent() {
 		$form = new fragment_XhrTableForm(
 			'/action/admin/event/EditAppearance', 
 			'saveAppearance', 
@@ -42,10 +45,6 @@ class template_admin_EditAppearance extends template_AdminPage
 
 					{$form->html()}
 				</div>
-				
-				<div class="divider"></div>
-				
-				{$breadcrumbs->html()}
 			</div>
 _;
 	}

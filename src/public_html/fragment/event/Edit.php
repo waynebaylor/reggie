@@ -38,7 +38,7 @@ _;
 					'eventId' => $this->event['id']
 				)
 			))}
-			
+			&nbsp;
 			{$this->HTML->link(array(
 				'label' => 'Payment Options',
 				'href' => '/action/admin/event/EditPaymentOptions',
@@ -48,7 +48,7 @@ _;
 					'id' => $this->event['id']
 				)
 			))}
-			
+			&nbsp;
 			{$this->HTML->link(array(
 				'label' => 'Email Template',
 				'href' => '/action/admin/email/EmailTemplate',

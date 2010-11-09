@@ -44,6 +44,8 @@ _;
 						{$this->HTML->link(array(
 							'label' => $report['name'],
 							'href' => '/action/admin/report/RunReport',
+							'title' => 'Generate Report',
+							'target' => '_blank',
 							'parameters' => array(
 								'action' => 'view',
 								'id' => $report['id']

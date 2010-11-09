@@ -14,6 +14,10 @@ class template_admin_ReportResults extends template_AdminPage
 		$this->results = $results;
 	}
 	
+	protected function getBreadcrumbs() {
+		return new fragment_Empty();
+	}
+	
 	protected function getContent() {
 		return <<<_
 			<div id="content">
