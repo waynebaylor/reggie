@@ -1,4 +1,6 @@
 
+drop table if exists Report_ContactField;
+drop table if exists Report;
 drop table if exists Payment;
 drop table if exists AuthorizeNetDirections;
 drop table if exists CheckDirections;
