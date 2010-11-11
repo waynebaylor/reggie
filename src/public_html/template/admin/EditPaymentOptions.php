@@ -98,7 +98,7 @@ _;
 							))}
 						</td>
 					</tr>
-					<tr class="{$showDetails}">
+					<tr class="payment-type-details {$showDetails}">
 						<td class="label">Instructions</td>
 						<td>
 							{$this->HTML->textarea(array(
@@ -132,7 +132,7 @@ _;
 							))}
 						</td>
 					</tr>
-					<tr class="{$showDetails}">
+					<tr class="payment-type-details {$showDetails}">
 						<td class="label">Instructions</td>
 						<td>
 							{$this->HTML->textarea(array(
@@ -166,7 +166,7 @@ _;
 							))}
 						</td>
 					</tr>
-					<tr class="{$showDetails}">
+					<tr class="payment-type-details {$showDetails}">
 						<td class="label">Instructions</td>
 						<td>
 							{$this->HTML->textarea(array(
@@ -177,7 +177,7 @@ _;
 							))}
 						</td>
 					</tr>
-					<tr class="{$showDetails}">
+					<tr class="payment-type-details {$showDetails}">
 						<td class="label">Login</td>
 						<td>
 							{$this->HTML->text(array(
@@ -187,7 +187,7 @@ _;
 							))}
 						</td>
 					</tr>
-					<tr class="{$showDetails}">
+					<tr class="payment-type-details {$showDetails}">
 						<td class="label">Transaction Key</td>
 						<td>
 							{$this->HTML->text(array(

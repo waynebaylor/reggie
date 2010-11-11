@@ -3,15 +3,11 @@
 	dojo.provide("hhreg.admin.paymentTypes");
 	
 	var showPaymentType = function(type) {
-		dojo.query("tr", type).filter(function(row, index) {
-			return index > 0;
-		}).removeClass("hide");
+		dojo.query("tr.payment-type-details", type).removeClass("hide");
 	};
 	
 	var hidePaymentType = function(type) {
-		dojo.query("tr", type).filter(function(row, index) {
-			return index > 0;
-		}).addClass("hide");
+		dojo.query("tr.payment-type-details", type).addClass("hide");
 	};
 	
 	var handleChange = function(type, radio) {

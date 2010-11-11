@@ -29,7 +29,7 @@ class fragment_XhrAddForm extends template_Template
 					<td></td>
 					<td>
 						<div class="sub-divider"></div>
-						<input type="hidden" name="action" value="{$this->action}"/>
+						<input type="hidden" name="a" value="{$this->action}"/>
 						<input type="button" class="button" value="Continue"/>
 						<span class="cancel-link link">Cancel</span>
 						

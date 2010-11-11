@@ -51,8 +51,9 @@ a:hover {
 	margin: 2px 0;
 }
 	
-.radio-label, .checkbox-label {
-	display: inline-block;	
+table.radio-label    td, 
+table.checkbox-label td {
+	vertical-align: top;
 }	
 	
 #header {
@@ -84,6 +85,7 @@ td.label {
 
 table.admin {
 	width: 100%;
+	background-color: white;
 	border-collapse: separate;
 	border-spacing: 0;
 	border: 1px solid black;
@@ -99,8 +101,6 @@ table.admin tr:hover {
 	
 table.admin th {
 	background-color: #a9cde0;
-	border-top: 1px solid black;
-	border-bottom: 1px solid black;
 	text-align: center;
 	font-weight: bold;
 }

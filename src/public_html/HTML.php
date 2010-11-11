@@ -93,10 +93,12 @@ _;
 		$attrs = self::getAttributeString($config);
 		
 		return <<<_
-			<input type="checkbox" id="{$id}" {$attrs} /> 
-			<div class="checkbox-label">
-				{$label}
-			</div>
+			<table class="checkbox-label"><tr>
+				<td>	
+					<input type="checkbox" id="{$id}" {$attrs} />
+				</td>
+				<td> {$label}</td>
+			</tr></table>
 _;
 	}
 	
@@ -174,10 +176,14 @@ _;
 		$attrs = self::getAttributeString($config);
 		
 		return <<<_
-			<input type="radio" id="{$id}" {$attrs} />
-			<div class="radio-label">
-				<label for="{$id}">{$label}</label>
-			</div>
+			<table class="radio-label"></tr>
+				<td>
+					<input type="radio" id="{$id}" {$attrs} />
+				</td>
+				<td>
+					<label for="{$id}">{$label}</label>
+				</td>
+			</tr></table>
 _;
 	}
 	

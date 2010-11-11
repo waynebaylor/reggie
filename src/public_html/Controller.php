@@ -63,8 +63,30 @@ class Controller
 	}
 	
 	private function invoke() {
-		$className = implode('_', $this->uri);
-		$path = implode('/', $this->uri);
+		//
+		// there are three ways to indicate the method to execute:
+		// 1) include it in the request - localhost/action/admin/MainMenu?a=view
+		// 2) include it as part of the url - localhost/action/admin/MainMenu/view
+		// 3) DEPRECATED: include it in the request - localhost/action/admin/MainMenu?action=view
+		//
+		
+		if(isset($_REQUEST['a'])) {
+			$method = $_REQUEST['a'];
+			$className = implode('_', $this->uri);
+		}
+		else if(isset($_REQUEST['action'])) {
+			$method = $_REQUEST['action'];
+			$className = implode('_', $this->uri);
+		}
+		else {
+			// the last segment is the name of the method to execute.
+			$method = $this->uri[count($this->uri)-1];
+			$className = implode('_', array_slice($this->uri, 0, -1));
+		}
+		
+		$_REQUEST['action'] = $method;
+		
+		$path = implode('/', explode('_', $className));
 		$file = $path.'.php';
 		
 		if(file_exists(Reggie::$PATH.'/'.$file)) {
