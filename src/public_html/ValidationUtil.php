@@ -10,7 +10,7 @@ class ValidationUtil
 			$value = $field['value'];
 			$restrictions = $field['restrictions'];
 			foreach($restrictions as $r) {
-				if(!self::isValid($r, $value)) {
+				if(!self::isValid($r, $value)) { 
 					$messages[$name] = $r['text'];
 					break;
 				}
@@ -22,7 +22,7 @@ class ValidationUtil
 	
 	private static function isValid($restriction, $value) {
 		switch($restriction['name']) {
-			case 'required':
+			case 'required': 
 				return !empty($value);
 			case 'pattern':
 				return preg_match($restriction['regex'], $value);

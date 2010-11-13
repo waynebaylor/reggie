@@ -36,6 +36,21 @@ class RegistrationDispatcher
 			$_REQUEST['action'] = 'view';
 		}
 
+		// check if registration is open. this depends on the event dates and 
+		// the capacity (if any).
+		$eventOpen = strtotime($this->event['regOpen']);
+		$eventClosed = strtotime($this->event['regClosed']);
+		$now =  time();
+		if($now < $eventOpen) {
+			// event reg is not open yet.
+			return new action_reg_NotOpenYet($this->event);
+		}
+		else if($now > $eventClosed || $this->eventAtCapacity()) {
+			// event reg is closed
+			return new action_reg_Closed($this->event);
+		}
+
+		// event is open, so find the right page.
 		if(model_RegistrationPage::isViewable($this->event, $this->pageId)) {
 			switch($this->pageId) {
 				case model_RegistrationPage::$PAYMENT_PAGE_ID:
@@ -94,6 +109,16 @@ class RegistrationDispatcher
 		}
 		
 		throw new Exception('Invalid event: '.$code.'"');
+	}
+	
+	private function eventAtCapacity() {
+		if($this->event['capacity'] > 0) {
+			$regCount = db_reg_RegistrationManager::getInstance()->findRegisteredCount($this->event);
+			
+			return $regCount >= $this->event['capacity'];
+		}
+		
+		return false;
 	}
 }
 

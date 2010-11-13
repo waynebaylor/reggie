@@ -33,7 +33,14 @@ class db_ReportManager extends db_Manager
 			SELECT
 				id,
 				eventId,
-				name
+				name,
+				showDateRegistered,
+				showCategory,
+				showRegType,
+				showPaymentType,
+				showTotalCost,
+				showTotalPaid,
+				showRemainingBalance
 			FROM
 				Report
 			WHERE
@@ -52,7 +59,14 @@ class db_ReportManager extends db_Manager
 			SELECT
 				id,
 				eventId,
-				name
+				name,
+				showDateRegistered,
+				showCategory,
+				showRegType,
+				showPaymentType,
+				showTotalCost,
+				showTotalPaid,
+				showRemainingBalance
 			FROM
 				Report
 			WHERE
@@ -122,6 +136,62 @@ class db_ReportManager extends db_Manager
 		$this->execute($sql, $params, 'Save report.');
 	}
 
+	public function addSpecialField($field) {
+		$specialFields = array(
+			'date_registered' => 'showDateRegistered',
+			'category' => 'showCategory',
+			'registration_type' => 'showRegType',
+			'payment_type' => 'showPaymentType',
+			'total_cost' => 'showTotalCost',
+			'total_paid' => 'showTotalPaid',
+			'remaining_balance' => 'showRemainingBalance'
+		);
+		
+		$sql = "
+			UPDATE
+				Report
+			SET
+				{$specialFields[$field['name']]} = :value
+			WHERE
+				id = :id
+		";
+				
+		$params = array(
+			'id' => $field['reportId'],
+			'value' => 'true'
+		);
+		
+		$this->execute($sql, $params, 'Add special field to report.');
+	}
+	
+	public function removeSpecialField($field) {
+		$specialFields = array(
+			'date_registered' => 'showDateRegistered',
+			'category' => 'showCategory',
+			'registration_type' => 'showRegType',
+			'payment_type' => 'showPaymentType',
+			'total_cost' => 'showTotalCost',
+			'total_paid' => 'showTotalPaid',
+			'remaining_balance' => 'showRemainingBalance'
+		);
+		
+		$sql = "
+			UPDATE
+				Report
+			SET
+				{$specialFields[$field['name']]} = :value
+			WHERE
+				id = :id
+		";
+				
+		$params = array(
+			'id' => $field['reportId'],
+			'value' => 'false'
+		);
+		
+		$this->execute($sql, $params, 'Remove special field from report.');
+	}
+	
 	//////////////////////////////////////////////////////////////
 	// methods for running reports.
 	//////////////////////////////////////////////////////////////

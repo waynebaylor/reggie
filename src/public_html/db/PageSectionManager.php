@@ -45,7 +45,8 @@ class db_PageSectionManager extends db_OrderableManager
 			SELECT
 				Section.id,
 				Section.pageId,
-				Section.title,
+				Section.name,
+				Section.text,
 				Section.numbered,
 				ContentType.id as contentType_id,
 				ContentType.name as contentType_name,
@@ -72,7 +73,8 @@ class db_PageSectionManager extends db_OrderableManager
 			SELECT
 				Section.id,
 				Section.pageId,
-				Section.title,
+				Section.name,
+				Section.text,
 				Section.numbered,
 				ContentType.id as contentType_id,
 				ContentType.name as contentType_name,
@@ -96,18 +98,18 @@ class db_PageSectionManager extends db_OrderableManager
 		return $this->query($sql, $params, 'Find page sections.');
 	}	
 	
-	public function createSection($page, $title, $contentTypeId) {
+	public function createSection($page, $name, $contentTypeId) {
 		$sql = '
 			INSERT INTO
 				Section(
 					pageId,
-					title,
+					name,
 					contentTypeId,
 					displayOrder
 				)
 			VALUES(
 				:pageId,
-				:title,
+				:name,
 				:contentTypeId,
 				:displayOrder
 			)
@@ -115,7 +117,7 @@ class db_PageSectionManager extends db_OrderableManager
 		
 		$params = array(
 			'pageId' => $page['id'],
-			'title' => $title,
+			'name' => $name,
 			'contentTypeId' => $contentTypeId,
 			'displayOrder' => $this->getNextOrder()
 		);
@@ -128,15 +130,17 @@ class db_PageSectionManager extends db_OrderableManager
 			UPDATE
 				Section
 			SET
-				title=:title,
-				numbered=:numbered
+				name = :name,
+				text = :text,
+				numbered = :numbered
 			WHERE
 				id=:id				
 		';
 		
 		$params = array(
 			'id' => $section['id'],
-			'title' => $section['title'],
+			'name' => $section['name'],
+			'text' => $section['text'],
 			'numbered' => $section['numbered']
 		);
 		

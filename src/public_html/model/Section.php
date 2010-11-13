@@ -18,6 +18,10 @@ class model_Section
 		return self::containsContentType($section, model_ContentType::$VAR_QUANTITY_OPTION);
 	}
 	
+	public static function containsText($section) {
+		return self::containsContentType($section, model_ContentType::$TEXT);
+	}
+	
 	/**
 	 * whether or not the given section's content is of the given
 	 * type.

@@ -81,7 +81,7 @@ dojo.require("hhreg.validation");
 				handleAs: "text"
 			});
 			
-			post.addCallback(function(response) { console.log(response); 
+			post.addCallback(function(response) { 
 				var success = handleResponse(form, response);
 
 				if(success && callback) {

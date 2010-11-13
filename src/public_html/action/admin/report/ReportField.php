@@ -9,8 +9,24 @@ class action_admin_report_ReportField extends action_BaseAction
 	public function addField() {
 		$field = RequestUtil::getParameters(array('reportId', 'contactFieldId'));
 		
-		db_ReportFieldManager::getInstance()->createField($field);
+		$specialFields = array(
+			'date_registered',
+			'category',
+			'registration_type',
+			'payment_type',
+			'total_cost',
+			'total_paid',
+			'remaining_balance'
+		);
 		
+		if(in_array($field['contactFieldId'], $specialFields)) {
+			$field['name'] = $field['contactFieldId'];
+			db_ReportManager::getInstance()->addSpecialField($field);	
+		}
+		else {
+			db_ReportFieldManager::getInstance()->createField($field);
+		}
+
 		$report = db_ReportManager::getInstance()->find($field['reportId']);
 		
 		return new fragment_report_field_List($report);

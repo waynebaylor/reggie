@@ -16,6 +16,8 @@ class template_reg_BasePage extends template_Template
 		$this->page = $config['page'];
 		$this->title = $config['title'];
 		$this->id = $config['id'];	
+		$this->showMenu = isset($config['showMenu'])? $config['showMenu'] : true;
+		$this->showControls = isset($config['showControls'])? $config['showControls'] : true;
 	}	
 	
 	public function html() {
@@ -23,14 +25,12 @@ class template_reg_BasePage extends template_Template
 		$category = model_RegSession::getCategory();
 		$cat = model_Category::code($category);
 		
-		// don't display the menu on the confirmation page.
-		if($this->id === 'confirmation') {
-			$menu = new fragment_Empty();
-		}
-		else {
+		if($this->showMenu) {
 			$menu = new fragment_reg_Menu($this->event, $this->id);
 		}
-		
+		else {
+			$menu = new fragment_Empty();
+		}
 		
 		$errorMessages = new fragment_validation_ValidationErrors($this->errors);
 		
@@ -124,7 +124,7 @@ _;
 	}
 	
 	private function getFormControls() {
-		if($this->id !== 'confirmation') {
+		if($this->showControls) {
 			$hasErrors = empty($this->errors)? 'hide' : 'validation-icon';
 			
 			return <<<_

@@ -66,11 +66,11 @@ values
 insert into
 	ContentType(id, name)
 values
-	(1, 'Registration Type'),
-	(2, 'Contact Field'),
-	(3, 'Registration Option'),
-	(4, 'Text Only'),
-	(5, 'Variable Quantity Option');
+	(1, 'Registration Types'),
+	(2, 'Information Fields'),
+	(3, 'Registration Options'),
+	(4, 'Text'),
+	(5, 'Variable Quantity Options');
 
 -- --------------------------------------------
 

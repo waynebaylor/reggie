@@ -20,7 +20,9 @@ class action_reg_Confirmation extends action_BaseAction
 			'event' => $this->event,
 			'title' => 'Confirmation',
 			'id' => model_RegistrationPage::$CONFIRMATION_PAGE_ID,
-			'page' => $confirmation
+			'page' => $confirmation,
+			'showMenu' => false,
+			'showControls' => false
 		));	
 	}
 }

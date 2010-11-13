@@ -35,6 +35,8 @@ _;
 		$html = '';
 		$evenRow = true;
 		
+		// FIXME: special fields here
+		
 		$fields = $this->report['fields'];
 		foreach($fields as $field) {
 			$arrows = new fragment_Arrows(array(
@@ -74,6 +76,8 @@ _;
 				</tr>
 _;
 		}
+		
+		// FIXME: payment info fields here
 		
 		return $html;
 	}

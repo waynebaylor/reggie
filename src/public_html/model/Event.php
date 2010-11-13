@@ -95,6 +95,18 @@ class model_Event
 		
 		return $options;
 	}
+	
+	public static function getSectionById($event, $sectionId) {
+		foreach($event['pages'] as $page) {
+			foreach($page['sections'] as $section) {
+				if(intval($section['id'], 10) === intval($sectionId, 10)) {
+					return $section;
+				}				
+			}
+		}
+		
+		return NULL;
+	}
 }
 
 ?>

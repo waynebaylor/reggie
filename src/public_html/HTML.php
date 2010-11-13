@@ -198,22 +198,44 @@ _;
 			<select {$attrs}>	
 _;
 		// if no value is specified, then make the first option selected. 
-		// isset() is used instead of empty() because we 0,'', etc to be
+		// isset() is used instead of empty() because we want 0, '', etc to be
 		// valid values.
 		if(!isset($config['value'])) {
 			$config['value'] = $config['items'][0]['value']; 	
 		}
 		
-		foreach($config['items'] as $index => $item) {
-			$checked = is_array($config['value'])? 
-				in_array($item['value'], $config['value']) : 
-				$config['value'] === $item['value'];
-			
-			$checked = $checked? 'selected="selected"' : '';
-			
-			$html .= <<<_
-				<option value="{$item['value']}" {$checked}>{$item['label']}</option>
+		foreach($config['items'] as $item) {
+			// optgroup.
+			if(is_array($item['value'])) {
+				$html .= <<<_
+					<optgroup label="{$item['label']}">
 _;
+				
+				foreach($item['value'] as $opt) {
+					$checked = is_array($config['value'])? 
+						in_array($opt['value'], $config['value']) : 
+						$config['value'] === $opt['value'];
+			
+					$checked = $checked? 'selected="selected"' : '';
+					
+					$html .= <<<_
+						<option value="{$opt['value']}" {$checked}>{$opt['label']}</option>
+_;
+				}
+				
+				$html .= '</optgroup>';
+			}
+			else {
+				$checked = is_array($config['value'])? 
+					in_array($item['value'], $config['value']) : 
+					$config['value'] === $item['value'];
+				
+				$checked = $checked? 'selected="selected"' : '';
+				
+				$html .= <<<_
+					<option value="{$item['value']}" {$checked}>{$item['label']}</option>
+_;
+			}
 		}
 		
 		return $html.'</select>';

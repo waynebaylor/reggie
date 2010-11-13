@@ -20,9 +20,16 @@ class action_admin_section_Section extends action_ValidatorAction
 	}
 	
 	public function saveSection() {
+		$errors = $this->validate();
+		
+		if(!empty($errors)) {
+			return new fragment_validation_ValidationErrors($errors);	
+		}
+		
 		$s = array();
 		$s['id'] = RequestUtil::getValue('id', NULL);
-		$s['title'] = RequestUtil::getValue('title', '');
+		$s['name'] = RequestUtil::getValue('name', '');
+		$s['text'] = RequestUtil::getValue('text', NULL);
 		$s['numbered'] = RequestUtil::getValue('numbered', 'false');
 
 		db_PageSectionManager::getInstance()->save($s);
@@ -34,15 +41,15 @@ class action_admin_section_Section extends action_ValidatorAction
 		$errors = $this->validate();
 		
 		if(!empty($errors)) {
-			return new fragment__validation_ValidationErrors($errors);	
+			return new fragment_validation_ValidationErrors($errors);	
 		}
 		
 		$page = $this->strictFindById(db_PageManager::getInstance(), $_REQUEST['pageId']);
 
-		$title = RequestUtil::getValue('title', '');
+		$name = RequestUtil::getValue('name', '');
 		$contentTypeId = $_REQUEST['contentTypeId'];
 
-		$this->sectionManager->createSection($page, $title, $contentTypeId);
+		$this->sectionManager->createSection($page, $name, $contentTypeId);
 	
 		$page = db_PageManager::getInstance()->find($page['id']);
 		
@@ -82,8 +89,18 @@ class action_admin_section_Section extends action_ValidatorAction
 	protected function getValidationConfig() {
 		return array(
 			array(
+				'name' => 'name',
+				'value' => RequestUtil::getValue('name', ''),
+				'restrictions' => array(
+					array(
+						'name' => 'required',
+						'text' => 'Name is required.'
+					)
+				)
+			),
+			array(
 				'name' => 'contentTypeId',
-				'value' => $_REQUEST['contentTypeId'],
+				'value' => RequestUtil::getValue('contentTypeId', 0),
 				'restrictions' => array(
 					array(
 						'name' => 'required',

@@ -1,7 +1,6 @@
 <?php
 
-// enum-like class for Content Types (reg type, 
-// contact field, reg option, survey question, etc). 
+// enum-like class for Content Types. 
 class model_ContentType
 {
 	// content type constants taken from ContentType 

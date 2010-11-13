@@ -49,11 +49,68 @@ _;
 	private function getFields() {
 		$opts = array();
 		
+		$opts[] = array(
+			'label' => 'General',
+			'value' => array(
+				array(
+					'label' => 'Date Registered',
+					'value' => 'date_registered'
+				),
+				array(
+					'label' => 'Category',
+					'value' => 'category'
+				),
+				array(
+					'label' => 'Registration Type',
+					'value' => 'registration_type'
+				)
+			)
+		);
+		
+		$opts[] = array(
+			'label' => 'Payment Information',
+			'value' => array(
+				array(
+					'label' => 'Payment Type',
+					'value' => 'payment_type'
+				),
+				array(
+					'label' => 'Total Cost',
+					'value' => 'total_cost'
+				),
+				array(
+					'label' => 'Total Paid',
+					'value' => 'total_paid'
+				),
+				array(
+					'label' => 'Remaining Balance',
+					'value' => 'remaining_balance'
+				)
+			)
+		);
+		
+		// group all the information fields by section id.
+		$sectionFields = array();
 		$fields = model_Event::getInformationFields($this->event);
 		foreach($fields as $field) {
-			$opts[] = array(
+			$section = model_Event::getSectionById($this->event, $field['sectionId']);
+			
+			if(empty($sectionFields[$section['id']])) {
+				$sectionFields[$section['id']] = array();
+			}
+			
+			$sectionFields[$section['id']][] = array(
 				'label' => $field['displayName'],
 				'value' => $field['id']
+			);
+		}
+		
+		
+		foreach($sectionFields as $sectionId => $fields) {
+			$section = model_Event::getSectionById($this->event, $sectionId);
+			$opts[] = array(
+				'label' => $section['name'],
+				'value' => $fields
 			);
 		}
 		

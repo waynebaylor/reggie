@@ -22,7 +22,7 @@ class fragment_section_List extends template_Template
 				<table class="admin">
 					<tr>
 						<th></th>
-						<th>Text</th>
+						<th>Name</th>
 						<th>Content</th>
 						<th>Options</th>
 					</tr>
@@ -63,7 +63,7 @@ _;
 					<td>
 						{$arrows->html()}
 					</td>
-					<td>{$this->escapeHtml($section['title'])}</td>
+					<td>{$this->escapeHtml($section['name'])}</td>
 					<td>
 						{$contentTypeName}
 					</td>

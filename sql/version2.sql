@@ -103,7 +103,8 @@ unique
 create table if not exists `Section` (
 	`id` 		integer 	not null auto_increment,
 	`pageId` 	integer 	not null,
-	`title` 	text		not null,
+	`name`	 	varchar(255)	not null,
+	`text`		text,
 	`numbered`	varchar(255)	not null default 'false',
 	`contentTypeId` integer 	not null,
 	`displayOrder` 	integer 	not null,
@@ -1261,9 +1262,16 @@ references
 -- --------------------------------------------------
 
 create table if not exists `Report` (
-	`id`		integer		not null auto_increment,
-	`eventId`	integer		not null,
-	`name`		varchar(255)	not null,
+	`id`			integer		not null auto_increment,
+	`eventId`		integer		not null,
+	`name`			varchar(255)	not null,
+	`showDateRegistered`	varchar(255)	not null default 'false',
+	`showCategory`		varchar(255)	not null default 'false',
+	`showRegType`		varchar(255)	not null default 'false',
+	`showPaymentType`	varchar(255)	not null default 'false',
+	`showTotalCost`		varchar(255)	not null default 'false',
+	`showTotalPaid`		varchar(255)	not null default 'false',
+	`showRemainingBalance`	varchar(255)	not null default 'false'
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 

@@ -23,16 +23,14 @@ _;
 	public function getFormRows() {
 		return <<<_
 			<tr>
-					<td class="label">Text</td>
+					<td class="required label">Name</td>
 					<td>
 						{$this->HTML->hidden(array(
 							'name' => 'pageId',
 							'value' => $this->page['id']
 						))}
-						{$this->HTML->textarea(array(
-							'name' => 'title',
-							'rows' => '5',
-							'cols' => '50',
+						{$this->HTML->text(array(
+							'name' => 'name',
 							'value' => ''
 						))}
 					</td>

@@ -27,12 +27,36 @@ _;
 	private function getFormRows() {
 		$showOptions = model_Section::containsContactFields($this->section)? '' : 'hide';
 		
+		$showText = model_Section::containsText($this->section)? '' : 'hide';
+		
 		return <<<_
 			<tr>
-				<td class="label">Description</td>
+				<td class="required label">Name</td>
 				<td>
-					<input type="hidden" name="id" value="{$this->escapeHtml($this->section['id'])}"/>
-					<textarea name="title" rows="5" cols="50">{$this->escapeHtml($this->section['title'])}</textarea>
+					{$this->HTML->hidden(array(
+						'name' => 'id',
+						'value' => $this->escapeHtml($this->section['id'])
+					))}
+					{$this->HTML->hidden(array(
+						'name' => 'contentTypeId',
+						'value' => $this->escapeHtml($this->section['contentType']['id'])
+					))}
+					
+					{$this->HTML->text(array(
+						'name' => 'name',
+						'value' => $this->escapeHtml($this->section['name'])
+					))}
+				</td>
+			</tr>
+			<tr class="{$showText}">
+				<td class="label">Text</td>
+				<td>
+					{$this->HTML->textarea(array(
+						'name' => 'text',
+						'value' => $this->escapeHtml($this->section['text']),
+						'rows' => 5,
+						'cols' =>50
+					))}
 				</td>
 			</tr>
 			<tr class="{$showOptions}">

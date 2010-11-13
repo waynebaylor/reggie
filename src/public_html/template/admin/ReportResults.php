@@ -21,6 +21,8 @@ class template_admin_ReportResults extends template_AdminPage
 	protected function getContent() {
 		return <<<_
 			<div id="content">
+				<h3>{$this->report['name']}</h3>
+				
 				<table class="admin">
 					<tr>
 						<th>Date Registered</th>

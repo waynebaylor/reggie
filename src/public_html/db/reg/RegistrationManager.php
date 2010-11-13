@@ -124,6 +124,25 @@ class db_reg_RegistrationManager extends db_Manager
 		
 		return $ids;
 	}
+	
+	public function findRegisteredCount($event) {
+		$sql = '
+			SELECT
+				count(*) as regCount
+			FROM
+				Registration
+			WHERE
+				eventId = :id
+		';
+		
+		$params = array(
+			'id' => $event['id']
+		);
+		
+		$result = $this->rawQueryUnique($sql, $params, 'Find number registered for event.');
+		
+		return $result['regCount'];
+	}
 }
 
 ?>
