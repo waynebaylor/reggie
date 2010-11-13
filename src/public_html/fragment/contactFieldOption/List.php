@@ -73,7 +73,7 @@ _;
 					<td>
 						{$this->getRestrictions($option)}
 					</td>
-					<td class="order">
+					<td>
 						{$this->HTML->link(array(
 							'label' => 'Remove',
 							'href'  => '/action/admin/contactField/Option',

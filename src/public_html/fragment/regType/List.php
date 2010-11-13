@@ -67,8 +67,8 @@ _;
 					<td>
 						{$this->getVisibleTo($type)}
 					</td>
-					<td class="order">{$type['code']}</td>
-					<td class="order">
+					<td>{$type['code']}</td>
+					<td>
 						{$this->HTML->link(array(
 							'label' => 'Edit',
 							'href' => '/action/admin/regType/RegType',

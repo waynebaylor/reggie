@@ -33,9 +33,64 @@ _;
 	
 	private function getFields() {
 		$html = '';
-		$evenRow = true;
 		
-		// FIXME: special fields here
+		if($this->report['showDateRegistered'] === 'true') {
+			$html .= <<<_
+				<tr>
+					<td></td>
+					<td>Date Registered</td>
+					<td>
+						{$this->HTML->link(array(
+							'label' => 'Remove',
+							'href' => '/action/admin/report/ReportField',
+							'parameters' => array(
+								'action' => 'removeField',
+								'id' => 'date_registered'
+							),
+							'class' => 'remove'
+						))}
+					</td>
+				</tr>
+_;
+		}
+		if($this->report['showCategory'] === 'true') {
+			$html .= <<<_
+				<tr>
+					<td></td>
+					<td>Category</td>
+					<td>
+						{$this->HTML->link(array(
+							'label' => 'Remove',
+							'href' => '/action/admin/report/ReportField',
+							'parameters' => array(
+								'action' => 'removeField',
+								'id' => 'category'
+							),
+							'class' => 'remove'
+						))}
+					</td>
+				</tr>
+_;
+		}
+		if($this->report['showRegType'] === 'true') {
+			$html .= <<<_
+				<tr>
+					<td></td>
+					<td>Reg Type</td>
+					<td>
+						{$this->HTML->link(array(
+							'label' => 'Remove',
+							'href' => '/action/admin/report/ReportField',
+							'parameters' => array(
+								'action' => 'removeField',
+								'id' => 'registration_type'
+							),
+							'class' => 'remove'
+						))}
+					</td>
+				</tr>
+_;
+		}
 		
 		$fields = $this->report['fields'];
 		foreach($fields as $field) {
@@ -54,15 +109,13 @@ _;
 				)
 			));
 			
-			$evenRow = !$evenRow;
-			$rowClass = $evenRow? 'even' : 'odd';
 			$html .= <<<_
-				<tr class="{$rowClass}">
+				<tr>
 					<td>
 						{$arrows->html()}
 					</td>
 					<td>{$field['displayName']}</td>
-					<td class="order">
+					<td>
 						{$this->HTML->link(array(
 							'label' => 'Remove',
 							'href' => '/action/admin/report/ReportField',

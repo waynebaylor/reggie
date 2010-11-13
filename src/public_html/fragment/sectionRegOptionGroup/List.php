@@ -74,7 +74,7 @@ _;
 						</div>
 						{$this->getMultipleRestrictions($group)}
 					</td>
-					<td class="order">
+					<td>
 						{$this->HTML->link(array(
 							'label' => 'Edit',
 							'href' => '/action/admin/regOption/SectionRegOptionGroup',

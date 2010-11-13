@@ -66,13 +66,13 @@ _;
 					<td>
 						{$this->escapeHtml($option['description'])}
 					</td>
-					<td class="order">
+					<td>
 						{$this->escapeHtml($option['code'])}
 					</td>
 					<td>
 						{$this->getRestrictions($option)}
 					</td>
-					<td class="order">
+					<td>
 						{$this->HTML->link(array(
 							'label' => 'Edit',
 							'href' => '/action/admin/regOption/RegOption',

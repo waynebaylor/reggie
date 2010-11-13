@@ -67,16 +67,16 @@ _;
 					<td>
 						{$this->escapeHtml($field['displayName'])}
 					</td>
-					<td class="order">
+					<td>
 						{$this->escapeHtml($field['code'])}
 					</td>
 					<td>
 						{$this->getFieldRestrictions($field)}
 					</td>
-					<td class="order">
+					<td>
 						{$this->getFieldVisibleTo($field)}
 					</td>
-					<td class="order">
+					<td>
 						{$this->HTML->link(array(
 							'label' => 'Edit',
 							'href' => '/action/admin/contactField/ContactField',

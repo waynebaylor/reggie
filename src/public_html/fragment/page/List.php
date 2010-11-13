@@ -64,7 +64,7 @@ _;
 					<td>
 						{$this->getAvailableTo($page)}
 					</td>
-					<td class="order">
+					<td>
 						{$this->HTML->link(array(
 							'label' => 'Edit',
 							'href' => '/action/admin/page/Page',

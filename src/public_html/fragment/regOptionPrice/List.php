@@ -43,10 +43,10 @@ _;
 			$html .= <<<_
 				<tr class="{$rowClass}">
 					<td>{$this->escapeHtml($price['description'])}</td>
-					<td class="order">{$price['startDate']}</td>
-					<td class="order">{$price['endDate']}</td>
-					<td class="order">\${$price['price']}</td>
-					<td class="order">
+					<td>{$price['startDate']}</td>
+					<td>{$price['endDate']}</td>
+					<td>\${$price['price']}</td>
+					<td>
 						{$this->getVisibleTo($price)}
 					</td>
 					<td>

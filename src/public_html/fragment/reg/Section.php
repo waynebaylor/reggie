@@ -11,15 +11,21 @@ class fragment_reg_Section extends template_Template
 	}
 	
 	public function html() {
-		return <<<_
-			<div class="section-text">
-				{$this->section['text']}
-			</div>	
-			
-			<div class="section-content">
-				{$this->getSectionContent()}
-			</div>
+		if(model_Section::containsText($this->section)) {
+			return <<<_
+				<div class="section-text">
+					{$this->section['text']}
+				</div>	
+				
 _;
+		}
+		else {
+			return <<<_
+				<div class="section-content">
+					{$this->getSectionContent()}
+				</div>		
+_;
+		}
 	}
 	
 	private function getSectionContent() {

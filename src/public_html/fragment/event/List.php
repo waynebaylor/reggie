@@ -47,13 +47,13 @@ _;
 					<td>
 						{$event['displayName']} ({$event['code']})
 					</td>
-					<td class="order">
+					<td>
 						{$status}
 					</td>
 					<td>
 						{$this->getLinks($event)}
 					</td>
-					<td class="order">
+					<td>
 						{$this->HTML->link(array(
 							'label' => 'Edit',
 							'href' => '/action/admin/event/EditEvent',
