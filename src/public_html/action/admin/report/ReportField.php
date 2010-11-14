@@ -33,9 +33,30 @@ class action_admin_report_ReportField extends action_BaseAction
 	}
 	
 	public function removeField() {
-		$field = $this->strictFindById(db_ReportFieldManager::getInstance(), RequestUtil::getValue('id', 0));
+		$id = RequestUtil::getValue('id', 0);
 		
-		db_ReportFieldManager::getInstance()->deleteField($field);
+		$specialFields = array(
+			'date_registered',
+			'category',
+			'registration_type',
+			'payment_type',
+			'total_cost',
+			'total_paid',
+			'remaining_balance'
+		);
+		
+		if(in_array($id, $specialFields)) {
+			$field = array(
+				'name' => $id,
+				'reportId' => RequestUtil::getValue('reportId', 0)
+			);
+			
+			db_ReportManager::getInstance()->removeSpecialField($field);
+		}
+		else {
+			$field = $this->strictFindById(db_ReportFieldManager::getInstance(), $id);
+			db_ReportFieldManager::getInstance()->deleteField($field);
+		}
 		
 		$report = db_ReportManager::getInstance()->find($field['reportId']);
 		

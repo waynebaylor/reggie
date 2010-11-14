@@ -2,6 +2,40 @@
 
 class db_ReportManager extends db_Manager
 {
+	public static $SPECIAL_FIELDS = array(
+		'date_registered' => array(
+			'dbColumn' => 'showDateRegistered',
+			'dbValueColumn' => 'dateRegistered',
+			'displayName' => 'Date Registered'
+		),
+		'category' => array(
+			'dbColumn' => 'showCategory',
+			'dbValueColumn' => 'categoryName',
+			'displayName' => 'Category'
+		),
+		'registration_type' => array(
+			'dbColumn' => 'showRegType',
+			'dbValueColumn' => 'regTypeName',
+			'displayName' => 'Registration Type'
+		),
+		'payment_type' => array(
+			'dbColumn' => 'showPaymentType',
+			'displayName' => 'Payment Type'
+		),
+		'total_cost' => array(
+			'dbColumn' => 'showTotalCost',
+			'displayName' => 'Total Cost'
+		),
+		'total_paid' => array(
+			'dbColumn' => 'showTotalPaid',
+			'displayName' => 'Total Paid'
+		),
+		'remaining_balance' => array(
+			'dbColumn' => 'showRemainingBalance',
+			'displayName' => 'Remaining Balance'
+		)
+	);
+	
 	private static $instance;
 	
 	protected function __construct() {
@@ -137,21 +171,13 @@ class db_ReportManager extends db_Manager
 	}
 
 	public function addSpecialField($field) {
-		$specialFields = array(
-			'date_registered' => 'showDateRegistered',
-			'category' => 'showCategory',
-			'registration_type' => 'showRegType',
-			'payment_type' => 'showPaymentType',
-			'total_cost' => 'showTotalCost',
-			'total_paid' => 'showTotalPaid',
-			'remaining_balance' => 'showRemainingBalance'
-		);
+		$column = self::$SPECIAL_FIELDS[$field['name']]['dbColumn'];
 		
 		$sql = "
 			UPDATE
 				Report
 			SET
-				{$specialFields[$field['name']]} = :value
+				{$column} = :value
 			WHERE
 				id = :id
 		";
@@ -165,21 +191,13 @@ class db_ReportManager extends db_Manager
 	}
 	
 	public function removeSpecialField($field) {
-		$specialFields = array(
-			'date_registered' => 'showDateRegistered',
-			'category' => 'showCategory',
-			'registration_type' => 'showRegType',
-			'payment_type' => 'showPaymentType',
-			'total_cost' => 'showTotalCost',
-			'total_paid' => 'showTotalPaid',
-			'remaining_balance' => 'showRemainingBalance'
-		);
+		$column = self::$SPECIAL_FIELDS[$field['name']]['dbColumn'];
 		
 		$sql = "
 			UPDATE
 				Report
 			SET
-				{$specialFields[$field['name']]} = :value
+				{$column} = :value
 			WHERE
 				id = :id
 		";
@@ -231,7 +249,19 @@ class db_ReportManager extends db_Manager
 		$results = $this->rawQuery($sql, $params, 'Find report results.');
 		
 		foreach($results as &$result) {
-			$result['fieldValues'] = $this->getReportFieldValues($result['registrationId']);
+			$fieldValues = $this->getReportFieldValues($result['registrationId']);
+				
+			// add in any general fields.
+			foreach(array('registration_type', 'category', 'date_registered') as $specialFieldId) {
+				$column = self::$SPECIAL_FIELDS[$specialFieldId]['dbColumn'];
+				$valueColumn = self::$SPECIAL_FIELDS[$specialFieldId]['dbValueColumn'];
+				
+				if($report[$column] === 'true') {
+					$fieldValues[$specialFieldId] = $result[$valueColumn];
+				}
+			}
+			
+			$result['fieldValues'] = $fieldValues;
 		}
 
 		return $results;
@@ -258,7 +288,40 @@ class db_ReportManager extends db_Manager
 			'reportId' => $report['id']
 		);
 		
-		return $this->rawQuery($sql, $params, 'Find report contact field names.');
+		$results = $this->rawQuery($sql, $params, 'Find report contact field names.');
+
+		//
+		// prepend the general fields, if any. the order matters because they are prepended 
+		// to the front of the results array.
+		//
+		foreach(array('registration_type', 'category', 'date_registered') as $specialFieldId) {
+			$column = self::$SPECIAL_FIELDS[$specialFieldId]['dbColumn'];
+			if($report[$column] === 'true') {
+				$field = array(
+					'id' => $specialFieldId, 
+					'displayName' => self::$SPECIAL_FIELDS[$specialFieldId]['displayName']
+				);
+				
+				array_unshift($results, $field);
+			}
+		}
+		
+		//
+		// append the payment fields, if any. 
+		//
+		foreach(array('payment_type', 'total_cost', 'total_paid', 'remaining_balance') as $specialFieldId) {
+			$column = self::$SPECIAL_FIELDS[$specialFieldId]['dbColumn'];
+			if($report[$column] === 'true') {
+				$field = array(
+					'id' => $specialFieldId, 
+					'displayName' => self::$SPECIAL_FIELDS[$specialFieldId]['displayName']
+				);
+				
+				array_push($results, $field);
+			}
+		}
+		
+		return $results;
 	}
 	
 	private function getReportFieldValues($registrationId) {
@@ -340,6 +403,8 @@ class db_ReportManager extends db_Manager
 			
 			$values[$result['id']][] = $result['value'];
 		}
+		
+		
 		
 		return $values;
 	}

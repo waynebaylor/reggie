@@ -36,12 +36,12 @@ class fragment_Breadcrumb extends template_Template
 			case 'Reports':
 				$html = $this->reports();
 				$html .= $this->SEPARATOR;
-				$html .= "{$this->config['eventCode']} Reports";
+				$html .= "Reports ({$this->config['eventCode']})";
 				break;
 			case 'FileUpload':
 				$html = $this->fileUpload();
 				$html .= $this->SEPARATOR;
-				$html .= "{$this->config['eventCode']} Files";
+				$html .= "Files ({$this->config['eventCode']})";
 				break;
 			case 'EmailTemplate':
 				$html = $this->emailTemplate();

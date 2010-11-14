@@ -25,9 +25,6 @@ class template_admin_ReportResults extends template_AdminPage
 				
 				<table class="admin">
 					<tr>
-						<th>Date Registered</th>
-						<th>Category</th>
-						<th>Registration Type</th>
 						{$this->getFieldHeadings()}
 					</tr>
 					{$this->getResultRows()}
@@ -52,9 +49,6 @@ _;
 		foreach($this->results as $result) {
 			$html .= <<<_
 				<tr>
-					<td>{$result['dateRegistered']}</td>
-					<td>{$result['categoryName']}</td>
-					<td>{$result['regTypeName']}</td>
 					{$this->getFieldValues($result)}
 				</tr>
 _;

@@ -45,7 +45,8 @@ _;
 							'href' => '/action/admin/report/ReportField',
 							'parameters' => array(
 								'action' => 'removeField',
-								'id' => 'date_registered'
+								'id' => 'date_registered',
+								'reportId' => $this->report['id']
 							),
 							'class' => 'remove'
 						))}
@@ -53,6 +54,7 @@ _;
 				</tr>
 _;
 		}
+		
 		if($this->report['showCategory'] === 'true') {
 			$html .= <<<_
 				<tr>
@@ -64,7 +66,8 @@ _;
 							'href' => '/action/admin/report/ReportField',
 							'parameters' => array(
 								'action' => 'removeField',
-								'id' => 'category'
+								'id' => 'category',
+								'reportId' => $this->report['id']
 							),
 							'class' => 'remove'
 						))}
@@ -72,6 +75,7 @@ _;
 				</tr>
 _;
 		}
+		
 		if($this->report['showRegType'] === 'true') {
 			$html .= <<<_
 				<tr>
@@ -83,7 +87,8 @@ _;
 							'href' => '/action/admin/report/ReportField',
 							'parameters' => array(
 								'action' => 'removeField',
-								'id' => 'registration_type'
+								'id' => 'registration_type',
+								'reportId' => $this->report['id']
 							),
 							'class' => 'remove'
 						))}
@@ -130,7 +135,89 @@ _;
 _;
 		}
 		
-		// FIXME: payment info fields here
+		if($this->report['showPaymentType'] === 'true') {
+			$html .= <<<_
+				<tr>
+					<td></td>
+					<td>PaymentType</td>
+					<td>
+						{$this->HTML->link(array(
+							'label' => 'Remove',
+							'href' => '/action/admin/report/ReportField',
+							'parameters' => array(
+								'action' => 'removeField',
+								'id' => 'payment_type',
+								'reportId' => $this->report['id']
+							),
+							'class' => 'remove'
+						))}
+					</td>
+				</tr>
+_;
+		}
+		
+		if($this->report['showTotalCost'] === 'true') {
+			$html .= <<<_
+				<tr>
+					<td></td>
+					<td>Total Cost</td>
+					<td>
+						{$this->HTML->link(array(
+							'label' => 'Remove',
+							'href' => '/action/admin/report/ReportField',
+							'parameters' => array(
+								'action' => 'removeField',
+								'id' => 'total_cost',
+								'reportId' => $this->report['id']
+							),
+							'class' => 'remove'
+						))}
+					</td>
+				</tr>
+_;
+		}
+		
+		if($this->report['showTotalPaid'] === 'true') {
+			$html .= <<<_
+				<tr>
+					<td></td>
+					<td>Total Paid</td>
+					<td>
+						{$this->HTML->link(array(
+							'label' => 'Remove',
+							'href' => '/action/admin/report/ReportField',
+							'parameters' => array(
+								'action' => 'removeField',
+								'id' => 'total_paid',
+								'reportId' => $this->report['id']
+							),
+							'class' => 'remove'
+						))}
+					</td>
+				</tr>
+_;
+		}
+		
+		if($this->report['showRemainingBalance'] === 'true') {
+			$html .= <<<_
+				<tr>
+					<td></td>
+					<td>Remaining Balance</td>
+					<td>
+						{$this->HTML->link(array(
+							'label' => 'Remove',
+							'href' => '/action/admin/report/ReportField',
+							'parameters' => array(
+								'action' => 'removeField',
+								'id' => 'remaining_balance',
+								'reportId' => $this->report['id']
+							),
+							'class' => 'remove'
+						))}
+					</td>
+				</tr>
+_;
+		}
 		
 		return $html;
 	}
