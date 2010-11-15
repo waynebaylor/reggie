@@ -7,6 +7,9 @@ RewriteEngine on
 #
 # run everything through Controller.php
 #
+
+RewriteRule ^/?$ index.php
+
 RewriteCond $1 !^\/?(index\.php|favicon\.ico|js|css|images|pdf|files)
 RewriteRule ^(.*)$ Controller.php [L]
 

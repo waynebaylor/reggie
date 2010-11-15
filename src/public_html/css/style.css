@@ -5,6 +5,7 @@ body {
 
 h3 {
 	font-size: 1.3em; 	
+	margin-bottom: 10px;
 }
 
 a {
@@ -73,6 +74,11 @@ table.checkbox-label td {
 	padding: 20px;
 }
 
+table.sub-header-links {
+	width: 100%;
+	border-collapse: collapse;	
+}
+	
 table.xhr-table-form {
 	border-collapse: separate;
 	border-spacing: 0 7px;	

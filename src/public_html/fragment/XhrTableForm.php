@@ -5,11 +5,15 @@ class fragment_XhrTableForm extends template_Template
 	private $url;
 	private $action;
 	private $rows;
+	private $buttonText;
+	private $errorText;
 	
-	function __construct($url, $action, $rows) {
+	function __construct($url, $action, $rows, $buttonText = 'Save', $errorText = 'There was a problem saving. Please try again.') {
 		$this->url = $url;
 		$this->action = $action;
 		$this->rows = $rows;	
+		$this->buttonText = $buttonText;
+		$this->errorText = $errorText;
 	}
 	
 	public function html() {
@@ -28,7 +32,7 @@ class fragment_XhrTableForm extends template_Template
 				<div class="sub-divider"></div>
 				
 				<input type="hidden" name="a" value="{$this->action}"/>
-				<input type="button" class="button" value="Save"/>
+				<input type="button" class="button" value="{$this->buttonText}"/>
 				
 				<div class="xhr-save-success hide">
 					<img src="/images/check.gif" alt="Success" title="Success"/>
@@ -39,7 +43,7 @@ class fragment_XhrTableForm extends template_Template
 				</div>
 				<div class="xhr-save-error hide">
 					<img src="/images/ex.gif" alt="Error" title="Error"/>
-					<span class="error-text">There was a problem saving. Please try again.</span>
+					<span class="error-text">{$this->errorText}</span>
 				</div>
 			</td>
 		</tr>

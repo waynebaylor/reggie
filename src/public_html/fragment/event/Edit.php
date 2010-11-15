@@ -27,8 +27,6 @@ _;
 	
 	private function getEventLinks() {
 		return <<<_
-			<div class="sub-divider"></div>
-			
 			{$this->HTML->link(array(
 				'label' => 'Appearance',
 				'href' => '/action/admin/event/EditAppearance',

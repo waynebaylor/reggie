@@ -1,5 +1,6 @@
 <?php
 
-phpinfo();
-
+header('Location: /action/admin/Login?a=view');
+return;
+	
 ?>

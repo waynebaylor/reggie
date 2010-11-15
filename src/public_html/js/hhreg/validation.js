@@ -44,6 +44,7 @@
 		div.appendChild(span);
 	
 		if(node.id === "general-errors") {
+			dojo.style(div, "position", "static");
 			node.appendChild(div);
 		}
 		else if(node.type && (node.type === "radio" || node.type === "checkbox")) {

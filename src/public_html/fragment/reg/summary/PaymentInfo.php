@@ -18,7 +18,7 @@ class fragment_reg_summary_PaymentInfo extends template_Template
 				<tr>
 					<td class="label">Payment Information</td>
 					<td class="details">
-						<div id="general-errors"></span>
+						<div id="general-errors"></div>
 						{$this->getPaymentInfo()}
 					</td>
 				</tr>

@@ -43,8 +43,20 @@ abstract class template_AdminPage extends template_Template
 			</a>
 		</div>	
 		
-		{$this->getBreadcrumbs()->html()}
-		
+		<table class="sub-header-links"><tr>
+		<td>
+			{$this->getBreadcrumbs()->html()}
+		</td>
+		<td style="text-align:right; padding-right:20px;">
+			{$this->HTML->link(array(
+				'label' => 'Logout',
+				'href' => '/action/admin/Login',
+				'parameters' => array(
+					'a' => 'logout'
+				)
+			))}
+		</td>
+		</tr></table>
 		{$this->getContent()}
 	</div>
 </body>

@@ -1338,7 +1338,54 @@ unique
 
 -- --------------------------------------------------
 
+create table if not exists `User` (
+	`id`		integer		not null auto_increment,
+	`email`		varchar(255)	not null,
+	`password`	varchar(40) 	not null,
+	`isAdmin`	varchar(255)	not null,
+	primary key(`id`)
+) ENGINE=InnoDB default CHARSET=utf8;
 
+alter table 
+	User
+add constraint
+	user_email_uni
+unique
+	(email);
+
+-- --------------------------------------------------
+
+create table if not exists `EventPermission` (
+	`id`		integer 	not null auto_increment,
+	`userId`	integer		not null,
+	`eventId`	integer		not null,
+	primary key(`id`)
+) ENGINE=InnoDB default CHARSET=utf8;
+
+alter table
+	EventPermission
+add constraint
+	eventPermission_userId_fk
+foreign key
+	(userId)
+references
+	User(id);
+
+alter table
+	EventPermission
+add constraint
+	eventPermission_eventId_fk
+foreign key
+	(eventId)
+references
+	Event(id);
+
+alter table 
+	EventPermission
+add constraint
+	eventPermission_userId_eventId_uni
+unique
+	(userId, eventId);
 
 
 
