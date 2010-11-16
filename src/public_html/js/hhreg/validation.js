@@ -119,7 +119,7 @@
 				node = dojo.byId("general-errors");
 			}
 			else if(form) {
-				for(var i in form.elements) {
+				for(var i=0; i<form.elements.length; ++i) {
 					// the form input name may have a '[]' appended to the end.
 					if(form.elements[i].name.replace(/\[\]$/, "") === fieldName) {
 						node = form.elements[i];

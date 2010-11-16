@@ -39,9 +39,8 @@ dojo.require("hhreg.validation");
 	var handleResponse = function(/*DOM Node*/ form, /*String*/ response) {
 		var status = false;
 		
-		var div = dojo.create("div");
+		var div = dojo.create("div", {innerHTML: response});
 		dojo.addClass(div, "hide");
-		div.innerHTML = response;
 		dojo.body().appendChild(div);
 		
 		// if there was an error or a problem validating, then 
@@ -74,7 +73,7 @@ dojo.require("hhreg.validation");
 		dojo.query("input[type=button]", form).connect("onclick", function() {
 			// remove any previous error messages.
 			hhreg.validation.removeMessages(form);
-			
+		
 			var post = dojo.xhrPost({
 				url: dojo.attr(form, "action"),
 				content: dojo.formToObject(form),
@@ -89,7 +88,7 @@ dojo.require("hhreg.validation");
 				}
 			});
 			
-			post.addErrback(function(error) {
+			post.addErrback(function(error) { 
 				showErrorIcon(form);
 			});
 		});

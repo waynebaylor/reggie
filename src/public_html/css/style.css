@@ -185,6 +185,7 @@ table.admin ul {
 .error-message {
 	position: absolute;
 	padding: 0 10px;	
+	z-index: 5;
 }
 
 /******************************************
