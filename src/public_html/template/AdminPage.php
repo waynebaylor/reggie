@@ -11,8 +11,19 @@ abstract class template_AdminPage extends template_Template
 	}
 	
 	public function html() {
-		return <<<_
+		$logoutLink = '';
+		$user = SessionUtil::getAdminUser();
+		if(!empty($user)) { 
+			$logoutLink = $this->HTML->link(array(
+				'label' => 'Logout',
+				'href' => '/action/admin/Login',
+				'parameters' => array(
+					'a' => 'logout'
+				)
+			));
+		}
 		
+		return <<<_
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -48,13 +59,7 @@ abstract class template_AdminPage extends template_Template
 			{$this->getBreadcrumbs()->html()}
 		</td>
 		<td style="text-align:right; padding:10px 20px 0 0;">
-			{$this->HTML->link(array(
-				'label' => 'Logout',
-				'href' => '/action/admin/Login',
-				'parameters' => array(
-					'a' => 'logout'
-				)
-			))}
+			{$logoutLink}
 		</td>
 		</tr></table>
 		{$this->getContent()}
