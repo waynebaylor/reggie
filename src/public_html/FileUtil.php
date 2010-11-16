@@ -15,7 +15,7 @@ class FileUtil
 	public static function createEventDir($event) {
 		$dir = self::getEventFilesDir($event);
 		mkdir($dir);
-		chmod($dir, 0740);
+		chmod($dir, 0775);
 	}
 	
 	/**

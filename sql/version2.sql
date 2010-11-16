@@ -1,4 +1,6 @@
 
+drop table if exists EventPermission;
+drop table if exists User;
 drop table if exists Report_ContactField;
 drop table if exists Report;
 drop table if exists Payment;
@@ -1271,7 +1273,7 @@ create table if not exists `Report` (
 	`showPaymentType`	varchar(255)	not null default 'false',
 	`showTotalCost`		varchar(255)	not null default 'false',
 	`showTotalPaid`		varchar(255)	not null default 'false',
-	`showRemainingBalance`	varchar(255)	not null default 'false'
+	`showRemainingBalance`	varchar(255)	not null default 'false',
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
