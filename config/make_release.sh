@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#
+# usage: $> make_release.sh <release-name>
+#
+
 svn checkout svn://dino/baylorsc/reggie/tags/$1 $1-tmp
 
 mv $1-tmp/src/public_html $1
