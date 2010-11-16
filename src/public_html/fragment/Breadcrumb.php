@@ -124,7 +124,7 @@ _;
 		return <<<_
 			{$this->HTML->link(array(
 				'label' => 'Events',
-				'href' => '/action/MainMenu',
+				'href' => '/action/admin/MainMenu',
 				'parameters' => array(
 					'action' => 'view'
 				)

@@ -36,8 +36,9 @@ class Controller
 			if($this->uri[0] === 'event') {
 				$this->invokeRegistration();
 			}
-			// eventually should be like '/admin/...'
-			else if($this->uri[0] === 'admin') {
+			// eventually should be like '/admin/...', but for
+			// now 'admin' is in the second position of the uri.
+			else if($this->uri[1] === 'admin') {
 				$this->invokeAdmin();
 			}
 			else {
@@ -59,6 +60,23 @@ class Controller
 	}
 
 	private function invokeAdmin() {
+		// if the user isn't logged in, then redirect to the login page. 
+		//
+		// but don't redirect if this is a login request. since the login request goes 
+		// through this code path too, we want to make sure we don't redirect 
+		// AGAIN and get into an infinite redirect loop.
+		
+		$user = SessionUtil::getAdminUser();
+		
+		$loginRequest = strpos(implode('/', $this->uri), 'action/admin/Login');
+		$loginRequest = $loginRequest !== false && $loginRequest === 0;
+		
+		if(empty($user) && !$loginRequest) {
+			$redirect = new template_Redirect('/action/admin/Login?a=view');
+			echo $redirect->html();
+			return;
+		}
+		
 		$this->invoke();
 	}
 	

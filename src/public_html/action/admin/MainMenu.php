@@ -1,6 +1,6 @@
 <?php
 
-class action_MainMenu extends action_BaseAction
+class action_admin_MainMenu extends action_BaseAction
 {
 	function __construct() {
 		parent::__construct();

@@ -38,7 +38,7 @@ abstract class template_AdminPage extends template_Template
 		</script>
 
 		<div id="header">
-			<a href="/action/MainMenu?action=view">
+			<a href="/action/admin/MainMenu?action=view">
 				Registration System
 			</a>
 		</div>	
@@ -47,7 +47,7 @@ abstract class template_AdminPage extends template_Template
 		<td>
 			{$this->getBreadcrumbs()->html()}
 		</td>
-		<td style="text-align:right; padding-right:20px;">
+		<td style="text-align:right; padding:10px 20px 0 0;">
 			{$this->HTML->link(array(
 				'label' => 'Logout',
 				'href' => '/action/admin/Login',
