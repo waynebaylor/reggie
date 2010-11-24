@@ -1,5 +1,5 @@
 
-drop table if exists EventPermission;
+drop table if exists User_Event;
 drop table if exists User;
 drop table if exists Report_ContactField;
 drop table if exists Report;
@@ -1357,7 +1357,7 @@ unique
 
 -- --------------------------------------------------
 
-create table if not exists `EventPermission` (
+create table if not exists `User_Event` (
 	`id`		integer 	not null auto_increment,
 	`userId`	integer		not null,
 	`eventId`	integer		not null,
@@ -1365,27 +1365,27 @@ create table if not exists `EventPermission` (
 ) ENGINE=InnoDB default CHARSET=utf8;
 
 alter table
-	EventPermission
+	User_Event
 add constraint
-	eventPermission_userId_fk
+	userEvent_userId_fk
 foreign key
 	(userId)
 references
 	User(id);
 
 alter table
-	EventPermission
+	User_Event
 add constraint
-	eventPermission_eventId_fk
+	userEvent_eventId_fk
 foreign key
 	(eventId)
 references
 	Event(id);
 
 alter table 
-	EventPermission
+	User_Event
 add constraint
-	eventPermission_userId_eventId_uni
+	userEvent_userId_eventId_uni
 unique
 	(userId, eventId);
 

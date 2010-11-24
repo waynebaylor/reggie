@@ -12,11 +12,25 @@ abstract class action_ValidatorAction extends action_BaseAction
 	}
 	
 	/**
-	 * Perform the validation.
+	 * Perform the validation. If fieldNames is non-empty, then only the fields
+	 * specified will be validated.
 	 */
-	public function validate() {
-		$v = $this->getValidationConfig();
-		return ValidationUtil::validate($v);
+	public function validate($fieldNames = array()) {
+		$allFields = $this->getValidationConfig();
+		
+		$fields = array();
+		if(!empty($fieldNames)) {
+			foreach($allFields as $fieldConfig) {
+				if(in_array($fieldConfig['name'], $fieldNames)) {
+					$fields[] = $fieldConfig;
+				}
+			}
+		}
+		else {
+			$fields = $allFields;
+		}
+		
+		return ValidationUtil::validate($fields);
 	}	
 	
 	/**

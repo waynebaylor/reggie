@@ -60,8 +60,8 @@ class action_reg_Payment extends action_ValidatorAction
 	}
 	
 	
-	public function validate() {
-		$errors = parent::validate();
+	public function validate($fieldNames = array()) {
+		$errors = parent::validate($fieldNames);
 		
 		$validator = new validation_reg_PaymentValidator($this->event);
 		

@@ -33,6 +33,11 @@ class fragment_Breadcrumb extends template_Template
 		$html = '';
 		
 		switch($this->config['location']) {
+			case 'User':
+				$html = $this->event();
+				$html .= $this->SEPARATOR;
+				$html .= 'Users';
+				break;
 			case 'Reports':
 				$html = $this->reports();
 				$html .= $this->SEPARATOR;
@@ -123,7 +128,7 @@ _;
 	private function event() {
 		return <<<_
 			{$this->HTML->link(array(
-				'label' => 'Events',
+				'label' => 'Main Menu',
 				'href' => '/action/admin/MainMenu',
 				'parameters' => array(
 					'action' => 'view'

@@ -23,9 +23,18 @@ _;
 	}
 	
 	private function getAllRows() {
-		$active = db_EventManager::getInstance()->getActiveEvents();
-		$upcoming = db_EventManager::getInstance()->getUpcomingEvents();
-		$inactive = db_EventManager::getInstance()->getInactiveEvents();
+		$user = SessionUtil::getAdminUser();
+		
+		if(security_SecurityUtil::isAdmin($user)) {
+			$active = db_EventManager::getInstance()->getAllActive();
+			$upcoming = db_EventManager::getInstance()->getAllUpcoming();
+			$inactive = db_EventManager::getInstance()->getAllInactive();
+		}
+		else {
+			$active = db_EventManager::getInstance()->getUserActive($user);
+			$upcoming = db_EventManager::getInstance()->getUserUpcoming($user);
+			$inactive = db_EventManager::getInstance()->getUserInactive($user);
+		}
 		
 		if(empty($active) && empty($upcoming) && empty($inactive)) {
 			return <<<_

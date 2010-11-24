@@ -32,8 +32,8 @@ class action_admin_Login extends action_ValidatorAction
 		return new template_Redirect('/index.php');
 	}
 	
-	public function validate() {
-		$errors = parent::validate();
+	public function validate($fieldNames = array()) {
+		$errors = parent::validate($fieldNames);
 
 		if(empty($errors)) {
 			$info = RequestUtil::getParameters(array('email', 'password'));

@@ -39,7 +39,26 @@ class db_UserManager extends db_Manager
 		return $this->queryUnique($sql, $params, 'Find user.');
 	}
 	
-	public function findAll($id) {
+	public function findByEmail($email) {
+		$sql = '
+			SELECT
+				id,
+				email,
+				isAdmin
+			FROM
+				User
+			WHERE
+				email = :email
+		';
+		
+		$params = array(
+			'email' => $email
+		);
+		
+		return $this->queryUnique($sql, $params, 'Find user by email.');
+	}
+	
+	public function findAll() {
 		$sql = '
 			SELECT
 				id,
@@ -61,11 +80,11 @@ class db_UserManager extends db_Manager
 			FROM
 				User
 			INNER JOIN
-				EventPermission
+				User_Event
 			ON
-				User.id = EventPermission.userId
+				User.id = User_Event.userId
 			WHERE
-				EventPermission.eventId = :eventId
+				User_Event.eventId = :eventId
 		';
 		
 		$params = array(
@@ -123,7 +142,7 @@ class db_UserManager extends db_Manager
 	
 	public function deleteUser($user) {
 		// remove permissions before deleting user.
-		$this->removeAllPermissions($user);
+		$this->removeAllEvents($user);
 		
 		// delete the user.
 		$sql = '
@@ -141,32 +160,39 @@ class db_UserManager extends db_Manager
 	}
 	
 	public function saveUser($user) {
-		$sql = '
+		// this is only if they change their password.
+		$password = empty($user['password'])? '' : 'password = :password,';
+		
+		$sql = "
 			UPDATE 
 				User
 			SET
 				email = :email,
+				{$password}
 				isAdmin = :isAdmin
 			WHERE
 				id = :id
-		';
+		";
 		
 		$params = array(
 			'id' => $user['id'],
 			'email' => $user['email'],
-			'password' => $this->hash($user),
-			'isAdmin' => $user['idAdmin']
+			'isAdmin' => $user['isAdmin']
 		);
+		
+		if(!empty($user['password'])) {
+			$params['password'] = $this->hash($user);
+		}
 		
 		$this->execute($sql, $params, 'Save user.');
 	}
 	
-	public function findEventPermissions($user) {
+	public function findEventIds($user) {
 		$sql = '
 			SELECT
-				EventPermission.eventId
+				User_Event.eventId
 			FROM
-				EventPermission
+				User_Event
 			WHERE
 				userId = :userId
 		';
@@ -175,15 +201,13 @@ class db_UserManager extends db_Manager
 			'userId' => $user['id'],
 		);
 		
-		return $this->rawQuery($sql, $params, 'Find user event permissions.');
+		return $this->rawQuery($sql, $params, 'Find user event ids.');
 	}
 	
-	public function setEventPermission($user, $events) {
-		$this->removeEventPermission($user, $event);
-		
+	public function setEvent($user, $event) {
 		$sql = '
 			INSERT INTO
-				EventPermission (
+				User_Event (
 					userId,
 					eventId
 				)
@@ -198,17 +222,17 @@ class db_UserManager extends db_Manager
 			'eventId' => $event['id']
 		);
 		
-		$this->execute($sql, $params, 'Give user event permission.');
+		$this->execute($sql, $params, 'Give user access to event.');
 	}
 	
 	private function hash($user) {
 		return sha1(sha1($user['email'].$user['password']));
 	}
 	
-	private function removeEventPermission($user, $event) {
+	private function removeEvent($user, $event) {
 		$sql = '
 			DELETE FROM
-				EventPermission
+				User_Event
 			WHERE
 				userId = :userId
 			AND
@@ -220,13 +244,13 @@ class db_UserManager extends db_Manager
 			'eventId' => $event['id']
 		);
 		
-		$this->execute($sql, $params, 'Delete user event permissions.');
+		$this->execute($sql, $params, 'Delete user event access.');
 	}
 	
-	private function removeAllPermissions($user) {
+	private function removeAllEvents($user) {
 		$sql = '
 			DELETE FROM
-				EventPermission
+				User_Event
 			WHERE
 				userId = :userId
 		';
@@ -235,7 +259,7 @@ class db_UserManager extends db_Manager
 			'userId' => $user['id'],
 		);
 		
-		$this->execute($sql, $params, 'Delete all user event permissions.');
+		$this->execute($sql, $params, 'Delete all user event access.');
 	}
 }
 

@@ -42,7 +42,7 @@ class Controller
 				$this->invokeAdmin();
 			}
 			else {
-				$this->invoke();
+				throw new Exception('Invalid action: '.implode('/', $this->uri));
 			}
 		}
 		catch(Exception $ex) {

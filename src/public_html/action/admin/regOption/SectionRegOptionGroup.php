@@ -94,8 +94,8 @@ class action_admin_regOption_SectionRegOptionGroup extends action_ValidatorActio
 		return new fragment_Success();
 	}
 	
-	public function validate() {
-		$errors = parent::validate();
+	public function validate($fieldNames = array()) {
+		$errors = parent::validate($fieldNames);
 		
 		$validBooleans = array('true', 'false');
 		

@@ -90,8 +90,8 @@ class action_reg_Registration extends action_ValidatorAction
 		));
 	}
 	
-	public function validate() {
-		$errors = parent::validate();
+	public function validate($fieldNames = array()) {
+		$errors = parent::validate($fieldNames);
 		
 		$page = model_Event::getPageById($this->event, $this->pageId);
 		$pageValidator = new validation_reg_PageValidator($this->event, $page);

@@ -39,7 +39,103 @@ class db_EventManager extends db_Manager
 		return self::$instance;
 	}
 	
-	public function getActiveEvents() {
+	public function getUserActive($user) {
+		$sql = '
+			SELECT
+				Event.id,
+				Event.code,
+				Event.displayName,
+				Event.regOpen,
+				Event.regClosed,
+				Event.capacity,
+				Event.cancellationPolicy,
+				Event.regClosedText
+			FROM
+				Event
+			INNER JOIN
+				User_Event
+			ON
+				User_Event.eventId = Event.id
+			WHERE
+				User_Event.userId = :userId
+			AND
+				regOpen<=:openDate
+			AND
+				regClosed>:closedDate
+		';
+
+		$params = array(
+			'userId' => $user['id'],
+			'openDate' => date(db_Manager::$DATE_FORMAT),
+			'closedDate' => date(db_Manager::$DATE_FORMAT)
+		);
+		
+		return $this->query($sql, $params, 'Find active user events.');
+	}
+	
+	public function getUserUpcoming($user) {
+		$sql = '
+			SELECT
+				Event.id,
+				Event.code,
+				Event.displayName,
+				Event.regOpen,
+				Event.regClosed,
+				Event.capacity,
+				Event.cancellationPolicy,
+				Event.regClosedText
+			FROM
+				Event
+			INNER JOIN
+				User_Event
+			ON
+				User_Event.eventId = Event.id
+			WHERE
+				User_Event.userId = :userId
+			AND
+				regOpen>:openDate
+		';
+
+		$params = array(
+			'userId' => $user['id'],
+			'openDate' => date(db_Manager::$DATE_FORMAT)
+		);
+		
+		return $this->query($sql, $params, 'Find upcoming user events.');
+	}
+	
+	public function getUserInactive($user) {
+		$sql = '
+			SELECT
+				Event.id,
+				Event.code,
+				Event.displayName,
+				Event.regOpen,
+				Event.regClosed,
+				Event.capacity,
+				Event.cancellationPolicy,
+				Event.regClosedText
+			FROM
+				Event
+			INNER JOIN
+				User_Event
+			ON
+				User_Event.eventId = Event.id
+			WHERE
+				User_Event.userId = :userId
+			AND
+				regClosed<=:closedDate
+		';
+
+		$params = array(
+			'userId' => $user['id'],
+			'closedDate' => date(db_Manager::$DATE_FORMAT)
+		);
+		
+		return $this->query($sql, $params, 'Find active user events.');
+	}
+	
+	public function getAllActive() {
 		$sql = '
 			SELECT
 				id,
@@ -66,7 +162,7 @@ class db_EventManager extends db_Manager
 		return $this->query($sql, $params, 'Find active events.');
 	}
 	
-	public function getUpcomingEvents() {
+	public function getAllUpcoming() {
 		$sql = '
 			SELECT
 				id,
@@ -90,7 +186,7 @@ class db_EventManager extends db_Manager
 		return $this->query($sql, $params, 'Find upcoming events.');
 	}
 	
-	public function getInactiveEvents() {
+	public function getAllInactive() {
 		$sql = '
 			SELECT
 				id,

@@ -3,12 +3,12 @@
 class security_SecurityUtil
 {
 	public static function isAdmin($user) {
-		$user = SessionUtil::getUser();
+		$user = SessionUtil::getAdminUser();
 		return $user['isAdmin'] === 'true';
 	}
 	
-	public static function hasEventPermission($user, $event) {
-		$eventIds = db_UserManager::getInstance()->findEventPermissions($user);
+	public static function hasEvent($user, $event) {
+		$eventIds = db_UserManager::getInstance()->findEventIds($user);
 		return in_array($event['id'], $eventIds);
 	}	
 }

@@ -61,6 +61,11 @@ dojo.require("hhreg.validation");
 		}
 		else {
 			showSuccessIcon(form);
+			
+			setTimeout(function() {
+				hideIcons();
+			}, 5000);
+			
 			status = true;
 		}
 		

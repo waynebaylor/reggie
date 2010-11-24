@@ -95,8 +95,8 @@ class action_admin_regOption_RegOptionPrice extends action_ValidatorAction
 		return new fragment_Success();
 	}
 	
-	public function validate() {
-		$errors = parent::validate();
+	public function validate($fieldNames = array()) {
+		$errors = parent::validate($fieldNames);
 		
 		// 'regOptionId' will be present if this is a new price being added.
 		// 'id' will be present if this is an existing price being saved.

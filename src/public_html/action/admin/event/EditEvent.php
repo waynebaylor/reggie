@@ -28,6 +28,8 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 		$event = RequestUtil::getParameters(array('code', 'displayName', 'regOpen', 'regClosed'));
 		
 		$id = db_EventManager::getInstance()->createEvent($event);
+		db_UserManager::getInstance()->setEvent(SessionUtil::getAdminUser(), array('id' => $id));
+		
 		$event = db_EventManager::getInstance()->find($id);
 		
 		FileUtil::createEventDir($event);
@@ -54,13 +56,13 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 		return new fragment_Success();	
 	}
 	
-	public function validate() {
-		$errors = parent::validate();
+	public function validate($fieldNames = array()) {
+		$errors = parent::validate($fieldNames);
 		
 		// check if an event with this code already exists.
 		if(empty($errors['code'])) {
 			$event = db_EventManager::getInstance()->findByCode($_REQUEST['code']); 
-			if(isset($event) && intval($event['id'], 10) !== intval($_REQUEST['id'], 10)) {
+			if(isset($event) && intval($event['id'], 10) !== intval(RequestUtil::getValue('id', 0), 10)) {
 				$errors['code'] = 'An event with this Code already exists.';
 			}
 		}

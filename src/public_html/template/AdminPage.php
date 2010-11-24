@@ -15,11 +15,12 @@ abstract class template_AdminPage extends template_Template
 		$user = SessionUtil::getAdminUser();
 		if(!empty($user)) { 
 			$logoutLink = $this->HTML->link(array(
-				'label' => 'Logout',
+				'label' => "Logout",
 				'href' => '/action/admin/Login',
 				'parameters' => array(
 					'a' => 'logout'
-				)
+				),
+				'title' => "Logout {$user['email']}"
 			));
 		}
 		
