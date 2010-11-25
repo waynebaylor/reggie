@@ -105,8 +105,8 @@ class action_admin_user_User extends action_ValidatorAction
 	}
 	
 	private function checkRole() {
-		$user = SessionUtil::getAdminUser();
-		if(!security_SecurityUtil::isAdmin($user)) {
+		$user = SessionUtil::getUser();
+		if(!SecurityUtil::isAdmin($user)) {
 			throw new Exception("User: {$user['email']} does not have 'Admin' role.");
 		}
 	}

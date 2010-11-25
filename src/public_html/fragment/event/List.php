@@ -23,9 +23,9 @@ _;
 	}
 	
 	private function getAllRows() {
-		$user = SessionUtil::getAdminUser();
+		$user = SessionUtil::getUser();
 		
-		if(security_SecurityUtil::isAdmin($user)) {
+		if(SecurityUtil::isAdmin($user)) {
 			$active = db_EventManager::getInstance()->getAllActive();
 			$upcoming = db_EventManager::getInstance()->getAllUpcoming();
 			$inactive = db_EventManager::getInstance()->getAllInactive();

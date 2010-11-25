@@ -7,7 +7,7 @@ class action_admin_Login extends action_ValidatorAction
 	}
 	
 	public function view() {
-		$user = SessionUtil::getAdminUser();
+		$user = SessionUtil::getUser();
 		
 		if(empty($user)) {
 			return new template_admin_Login();			
@@ -43,7 +43,7 @@ class action_admin_Login extends action_ValidatorAction
 				$errors['general'] = array('Invalid email or password.');	
 			}
 			else {
-				SessionUtil::setAdminUser($user);
+				SessionUtil::setUser($user);
 			}
 		}
 		

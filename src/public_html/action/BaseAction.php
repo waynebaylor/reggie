@@ -9,11 +9,35 @@ class action_BaseAction implements action_Action
 	}
 
 	public function execute() {
-		//
-		// invokes the method named by the 'action' request parameter.
-		//
-
 		$action = $_REQUEST['action'];
+		
+		$this->performSecurityCheck($action);
+		
+		$this->performAction($action);
+	}
+	
+	protected function strictFindById($manager, $id) {
+		$obj = $manager->find($id);
+		
+		if(empty($obj)) {
+			throw new Exception('Object does not exist: '.$id);
+		}
+		
+		return $obj;
+	}
+	
+	/**
+	 * Map from restriction type to an array of method names on which the 
+	 * restriction should be applied.
+	 */
+	protected function getSecurityConfig() {
+		return array();	
+	}
+	
+	/**
+	 * invokes the method named by the 'action' request parameter.
+	 */
+	private function performAction($action) {
 		if(!empty($action) && method_exists($this, $action)) {
 			try {
 				$page = call_user_func(array($this, $action));
@@ -34,13 +58,18 @@ class action_BaseAction implements action_Action
 		echo $page->html();
 	}
 	
-	protected function strictFindById($manager, $id) {
-		$obj = $manager->find($id);
+	private function performSecurityCheck($action) {
+		$config = $this->getSecurityConfig();
 		
-		if(empty($obj)) {
-			throw new Exception('Object does not exist: '.$id);
+		foreach($config as $type => $methods) {
+			if(in_array($action, $methods)) {
+				switch($type) {
+					case security_Restriction::$EVENT:
+						break;
+					case security_Restriction::$USER:
+						break;
+				}
+			}
 		}
-		
-		return $obj;
 	}
 }

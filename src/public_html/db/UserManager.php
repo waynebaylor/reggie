@@ -201,7 +201,14 @@ class db_UserManager extends db_Manager
 			'userId' => $user['id'],
 		);
 		
-		return $this->rawQuery($sql, $params, 'Find user event ids.');
+		$results = $this->rawQuery($sql, $params, 'Find user event ids.');
+		
+		$eventIds = array();
+		foreach($results as $result) {
+			$eventIds[] = $result['eventId'];
+		}
+		
+		return $eventIds;
 	}
 	
 	public function setEvent($user, $event) {

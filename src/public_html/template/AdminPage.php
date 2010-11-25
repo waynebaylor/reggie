@@ -12,7 +12,7 @@ abstract class template_AdminPage extends template_Template
 	
 	public function html() {
 		$logoutLink = '';
-		$user = SessionUtil::getAdminUser();
+		$user = SessionUtil::getUser();
 		if(!empty($user)) { 
 			$logoutLink = $this->HTML->link(array(
 				'label' => "Logout",
@@ -32,7 +32,10 @@ abstract class template_AdminPage extends template_Template
 	<link rel="stylesheet" type="text/css" href="/js/dojo/resources/dojo.css"/>
 	<link rel="stylesheet" type="text/css" href="/js/dijit/themes/dijit.css"/>
 	<link rel="stylesheet" type="text/css" href="/js/dijit/themes/tundra/tundra.css"/>
-	<link rel="stylesheet" type="text/css" href="/css/style.css"/>
+	
+	<link rel="stylesheet/less" type="text/css" href="/css/admin.less">
+
+	<script type="text/javascript" src="/js/less.js"></script>
 	<script type="text/javascript" src="/js/dojo/dojo.js"></script>
 	<script type="text/javascript" src="/js/hhreg.js"></script>
 </head>

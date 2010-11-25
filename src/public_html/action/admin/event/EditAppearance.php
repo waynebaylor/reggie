@@ -7,7 +7,8 @@ class action_admin_event_EditAppearance extends action_BaseAction
 	}
 	
 	public function view() {
-		$id = $_REQUEST['eventId'];
+		$id = RequestUtil::getValue('eventId', 0);
+		
 		$event = db_EventManager::getInstance()->find($id);
 		
 		if(empty($event)) {

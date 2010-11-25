@@ -7,7 +7,8 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 	}
 	
 	public function view() {
-		$id = $_REQUEST['id'];
+		$id = RequestUtil::getValue('id', 0);
+		
 		$event = db_EventManager::getInstance()->find($id);
 		
 		if(empty($event)) {
@@ -28,7 +29,7 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 		$event = RequestUtil::getParameters(array('code', 'displayName', 'regOpen', 'regClosed'));
 		
 		$id = db_EventManager::getInstance()->createEvent($event);
-		db_UserManager::getInstance()->setEvent(SessionUtil::getAdminUser(), array('id' => $id));
+		db_UserManager::getInstance()->setEvent(SessionUtil::getUser(), array('id' => $id));
 		
 		$event = db_EventManager::getInstance()->find($id);
 		
@@ -44,8 +45,16 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 			return new fragment_validation_ValidationErrors($errors);
 		}
 		
-		$event = array();
-		ObjectUtils::populate($event, $_REQUEST);
+		$event = RequestUtil::getParameters(array(
+			'id',
+			'code',
+			'displayName',
+			'regOpen',
+			'regClosed',
+			'capacity',
+			'regClosedText',
+			'cancellationPolicy'
+		));
 		
 		$oldEvent = db_EventManager::getInstance()->find($event['id']);
 		
@@ -68,6 +77,16 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 		}
 		
 		return $errors;
+	}
+	
+	protected function getSecurityConfig() {
+		$config = parent::getSecurityConfig();
+		
+		$config = array_merge($config, array(
+			security_Restriction::$EVENT => array('view', 'saveEvent')
+		));
+
+		return $config;
 	}
 	
 	protected function getValidationConfig() {

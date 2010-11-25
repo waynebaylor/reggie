@@ -13,8 +13,8 @@ class template_admin_MainMenu extends template_AdminPage
 	protected function getContent() {
 		$events = new fragment_event_Events();
 		
-		$currentUser = SessionUtil::getAdminUser();
-		$users = security_SecurityUtil::isAdmin($currentUser)? 
+		$currentUser = SessionUtil::getUser();
+		$users = SecurityUtil::isAdmin($currentUser)? 
 			new fragment_user_Users() : new fragment_Empty();
 		
 		return <<<_

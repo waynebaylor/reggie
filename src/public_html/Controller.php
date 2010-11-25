@@ -66,7 +66,7 @@ class Controller
 		// through this code path too, we want to make sure we don't redirect 
 		// AGAIN and get into an infinite redirect loop.
 		
-		$user = SessionUtil::getAdminUser();
+		$user = SessionUtil::getUser();
 		
 		$loginRequest = strpos(implode('/', $this->uri), 'action/admin/Login');
 		$loginRequest = $loginRequest !== false && $loginRequest === 0;
