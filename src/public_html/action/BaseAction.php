@@ -27,12 +27,11 @@ class action_BaseAction implements action_Action
 	}
 	
 	/**
-	 * Map from restriction type to an array of method names on which the 
-	 * restriction should be applied.
+	 * Performs any security related tasks. This method is called before the
+	 * action is performed, and should throw an exception if any security 
+	 * requirements are not met.
 	 */
-	protected function getSecurityConfig() {
-		return array();	
-	}
+	protected function performSecurityCheck($action) {}
 	
 	/**
 	 * invokes the method named by the 'action' request parameter.
@@ -56,20 +55,5 @@ class action_BaseAction implements action_Action
 		}
 
 		echo $page->html();
-	}
-	
-	private function performSecurityCheck($action) {
-		$config = $this->getSecurityConfig();
-		
-		foreach($config as $type => $methods) {
-			if(in_array($action, $methods)) {
-				switch($type) {
-					case security_Restriction::$EVENT:
-						break;
-					case security_Restriction::$USER:
-						break;
-				}
-			}
-		}
 	}
 }
