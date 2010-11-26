@@ -56,6 +56,16 @@ _;
 					'id' => $this->event['id']
 				)
 			))}
+			&nbsp;
+			{$this->HTML->link(array(
+				'label' => 'Group Registration',
+				'href' => '/action/admin/event/EditGroupRegistration',
+				'title' => 'Edit event group registration options.',
+				'parameters' => array(
+					'a' => 'view',
+					'id' => $this->event['id']
+				)
+			))}
 			
 			<div class="sub-divider"></div>
 _;
