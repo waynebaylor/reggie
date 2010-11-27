@@ -24,6 +24,8 @@ class db_EventManager extends db_Manager
 		
 		$obj['appearance'] = db_AppearanceManager::getInstance()->findByEvent($obj);
 		$obj['emailTemplate'] = db_EmailTemplateManager::getInstance()->findByEvent($obj);
+		$obj['groupRegistration'] = db_GroupRegistrationManager::getInstance()->findByEvent($obj);
+		
 		$obj['reports'] = db_ReportManager::getInstance()->findByEvent($obj);
 		
 		$obj['paymentTypes'] = db_payment_PaymentTypeManager::getInstance()->findByEvent($obj);
@@ -250,8 +252,11 @@ class db_EventManager extends db_Manager
 		// create the event's appearance information.
 		db_AppearanceManager::getInstance()->createAppearance($id);
 		 
-		//create the event's email template.
+		// create the event's email template.
 		db_EmailTemplateManager::getInstance()->createEmailTemplate($id);
+		
+		// create the event's group registration information.
+		db_GroupRegistrationManager::getInstance()->createGroupRegistration($id);
 		
 		return $id;
 	}

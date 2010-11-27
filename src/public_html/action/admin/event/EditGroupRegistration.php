@@ -3,7 +3,7 @@
 class action_admin_event_EditGroupRegistration extends action_BaseAction
 {
 	function __construct() {
-		parent::_construct();
+		parent::__construct();
 	}
 	
 	public function view() {
@@ -14,7 +14,13 @@ class action_admin_event_EditGroupRegistration extends action_BaseAction
 	}
 	
 	public function saveGroupReg() {
-		$groupReg = RequestUtil::getParameters(array());
+		$groupReg = RequestUtil::getParameters(array(
+			'id',
+			'eventId'
+		));
+		
+		$groupReg['enabled'] = RequestUtil::getValue('enabled', 'false');
+		$groupReg['defaultRegType'] = RequestUtil::getValue('defaultRegType', 'false');
 		
 		db_GroupRegistrationManager::getInstance()->save($groupReg);
 		

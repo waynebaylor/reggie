@@ -1,4 +1,5 @@
 
+drop table if exists GroupRegistration;
 drop table if exists User_Event;
 drop table if exists User;
 drop table if exists Report_ContactField;
@@ -1389,7 +1390,32 @@ add constraint
 unique
 	(userId, eventId);
 
+-- --------------------------------------------------
 
+create table if not exists `GroupRegistration` (
+	`id`			integer 	not null auto_increment,
+	`eventId`		integer		not null,
+	`enabled`		varchar(255)	not null,
+	`defaultRegType`	varchar(255)	not null,
+	primary key(`id`)
+) ENGINE=InnoDB default CHARSET=utf8;
+
+alter table 
+	GroupRegistration
+add constraint
+	groupRegistration_eventId_fk
+foreign key
+	(eventId)
+references
+	Event(id)
+on delete cascade;
+
+alter table
+	GroupRegistration
+add constraint
+	groupRegistration_eventId_uni
+unique
+	(eventId);
 
 
 
