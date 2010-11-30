@@ -26,6 +26,28 @@ class action_admin_event_EditGroupRegistration extends action_BaseAction
 		
 		return new fragment_Success();
 	}
+	
+	public function addField() {
+		$field = RequestUtil::getParameters(array('groupRegistrationId', 'contactFieldId'));
+		
+		db_GroupRegistrationFieldManager::getInstance()->createField($field);
+
+		$groupReg = $this->strictFindById(db_GroupRegistrationManager::getInstance(), $field['groupRegistrationId']);
+		$event = $this->strictFindById(db_EventManager::getInstance(), $groupReg['eventId']);
+		
+		return new fragment_groupRegistration_field_List($event);
+	}
+	
+	public function removeField() {
+		$field = $this->strictFindById(db_GroupRegistrationFieldManager::getInstance(), RequestUtil::getValue('id', 0));
+		
+		db_GroupRegistrationFieldManager::getInstance()->deleteField($field);
+		
+		$groupReg = $this->strictFindById(db_GroupRegistrationManager::getInstance(), $field['groupRegistrationId']);
+		$event = $this->strictFindById(db_EventManager::getInstance(), $groupReg['eventId']);
+		
+		return new fragment_groupRegistration_field_List($event);
+	}
 }
 
 ?>

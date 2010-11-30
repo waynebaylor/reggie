@@ -54,7 +54,8 @@ _;
 	public function checkbox($config) {
 		// convert the checked value to the valid value.		
 		if(isset($config['checked'])) {
-			if(isset($config['checked']) && in_array($config['checked'], array('checked', 'true', true))) {
+			$checked = $config['checked'];
+			if($checked === 'checked' || $checked === 'true' || $checked === true) {
 				$config['checked'] = 'checked';
 			}
 			else {
@@ -148,12 +149,15 @@ _;
 	public function radio($config) {
 		$label = $config['label'];
 		unset($config['label']);
-		
-		if(isset($config['checked']) && in_array($config['checked'], array('checked', 'true', true))) {
-			$config['checked'] = 'checked';
-		}
-		else {
-			unset($config['checked']);
+
+		if(isset($config['checked'])) {
+			$checked = $config['checked'];
+			if($checked === 'checked' || $checked === 'true' || $checked === true) {
+				$config['checked'] = 'checked';
+			}
+			else {
+				unset($config['checked']);
+			}
 		}
 		
 		// if the id is given, then use it.

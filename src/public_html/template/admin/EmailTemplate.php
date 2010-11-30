@@ -79,10 +79,12 @@ _;
 						'value' => $this->escapeHtml($template['enabled']),
 						'items' => array(
 							array(
+								'id' => 'enabled_true',
 								'label' => 'Enabled',
 								'value' => 'true'
 							),
 							array(
+								'id' => 'enabled_false',
 								'label' => 'Disabled',
 								'value' => 'false'
 							)

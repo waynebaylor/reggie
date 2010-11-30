@@ -47,15 +47,7 @@ class RequestUtil
 	 * @param $paramNames
 	 */
 	public static function getParameters($paramNames) {
-		$params = array();
-
-		foreach($_REQUEST as $key => $value) {
-			if(in_array($key, $paramNames)) {
-				$params[$key] = $value; 
-			}	
-		}
-		
-		return $params;
+		return ArrayUtil::keyIntersect($_REQUEST, $paramNames);
 	}
 }
 

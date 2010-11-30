@@ -44,7 +44,7 @@ _;
 							'label' => 'Remove',
 							'href' => '/action/admin/report/ReportField',
 							'parameters' => array(
-								'action' => 'removeField',
+								'a' => 'removeField',
 								'id' => 'date_registered',
 								'reportId' => $this->report['id']
 							),
@@ -65,7 +65,7 @@ _;
 							'label' => 'Remove',
 							'href' => '/action/admin/report/ReportField',
 							'parameters' => array(
-								'action' => 'removeField',
+								'a' => 'removeField',
 								'id' => 'category',
 								'reportId' => $this->report['id']
 							),
@@ -86,7 +86,7 @@ _;
 							'label' => 'Remove',
 							'href' => '/action/admin/report/ReportField',
 							'parameters' => array(
-								'action' => 'removeField',
+								'a' => 'removeField',
 								'id' => 'registration_type',
 								'reportId' => $this->report['id']
 							),
@@ -105,11 +105,11 @@ _;
 					'reportId' => $this->report['id']
 				),
 				'up' => array(
-					'action' => 'moveFieldUp',
+					'a' => 'moveFieldUp',
 					'id' => $field['id']
 				),
 				'down' => array(
-					'action' => 'moveFieldDown',
+					'a' => 'moveFieldDown',
 					'id' => $field['id']
 				)
 			));
@@ -125,7 +125,7 @@ _;
 							'label' => 'Remove',
 							'href' => '/action/admin/report/ReportField',
 							'parameters' => array(
-								'action' => 'removeField',
+								'a' => 'removeField',
 								'id' => $field['id']
 							),
 							'class' => 'remove'
@@ -145,7 +145,7 @@ _;
 							'label' => 'Remove',
 							'href' => '/action/admin/report/ReportField',
 							'parameters' => array(
-								'action' => 'removeField',
+								'a' => 'removeField',
 								'id' => 'payment_type',
 								'reportId' => $this->report['id']
 							),
@@ -166,7 +166,7 @@ _;
 							'label' => 'Remove',
 							'href' => '/action/admin/report/ReportField',
 							'parameters' => array(
-								'action' => 'removeField',
+								'a' => 'removeField',
 								'id' => 'total_cost',
 								'reportId' => $this->report['id']
 							),
@@ -187,7 +187,7 @@ _;
 							'label' => 'Remove',
 							'href' => '/action/admin/report/ReportField',
 							'parameters' => array(
-								'action' => 'removeField',
+								'a' => 'removeField',
 								'id' => 'total_paid',
 								'reportId' => $this->report['id']
 							),
@@ -208,7 +208,7 @@ _;
 							'label' => 'Remove',
 							'href' => '/action/admin/report/ReportField',
 							'parameters' => array(
-								'action' => 'removeField',
+								'a' => 'removeField',
 								'id' => 'remaining_balance',
 								'reportId' => $this->report['id']
 							),

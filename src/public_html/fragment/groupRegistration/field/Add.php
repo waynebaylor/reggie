@@ -1,25 +1,23 @@
 <?php
 
-class fragment_report_field_Add extends template_Template
+class fragment_groupRegistration_field_Add extends template_Template
 {
 	private $event;
-	private $report;
 	
-	function __construct($event, $report) {
+	function __construct($event) {
 		parent::__construct();
 		
 		$this->event = $event;
-		$this->report = $report;
 	}
 	
 	public function html() {
 		$form = new fragment_XhrAddForm(
-			'Add Field',
-			'/action/admin/report/ReportField',
-			'addField',
+			'Add Field', 
+			'/action/admin/event/EditGroupRegistration', 
+			'addField', 
 			$this->getFormRows()
 		);
-			
+		
 		return <<<_
 			<div class="fragment-add">
 				{$form->html()}
@@ -33,8 +31,8 @@ _;
 				<td class="required label">Field</td>
 				<td>
 					{$this->HTML->hidden(array(
-						'name' => 'reportId',
-						'value' => $this->report['id']
+						'name' => 'groupRegistrationId',
+						'value' => $this->event['groupRegistration']['id']
 					))}
 					
 					{$this->HTML->select(array(
@@ -50,53 +48,12 @@ _;
 	private function getFields() {
 		$opts = array();
 		
-		$opts[] = array(
-			'label' => 'General',
-			'value' => array(
-				array(
-					'label' => 'Date Registered',
-					'value' => 'date_registered'
-				),
-				array(
-					'label' => 'Category',
-					'value' => 'category'
-				),
-				array(
-					'label' => 'Registration Type',
-					'value' => 'registration_type'
-				)
-			)
-		);
-		
-		$opts[] = array(
-			'label' => 'Payment Information',
-			'value' => array(
-				array(
-					'label' => 'Payment Type',
-					'value' => 'payment_type'
-				),
-				array(
-					'label' => 'Total Cost',
-					'value' => 'total_cost'
-				),
-				array(
-					'label' => 'Total Paid',
-					'value' => 'total_paid'
-				),
-				array(
-					'label' => 'Remaining Balance',
-					'value' => 'remaining_balance'
-				)
-			)
-		);
-		
-		// group all the information fields by section id.
 		$sectionFields = array();
 		
 		$fields = model_Event::getInformationFields($this->event);
 		foreach($fields as $field) {
 			$section = model_Event::getSectionById($this->event, $field['sectionId']);
-			
+
 			if(empty($sectionFields[$section['id']])) {
 				$sectionFields[$section['id']] = array();
 			}

@@ -52,7 +52,7 @@ class action_admin_fileUpload_FileUpload extends action_BaseAction
 	
 	private function getAllowedExtensions() {
 		return array(
-			'pdf', 'jpg', 'gif', 'jpeg', 'doc', 'txt', 'xls'
+			'pdf', 'png', 'jpg', 'gif', 'jpeg', 'doc', 'txt', 'xls'
 		); 
 	}
 }

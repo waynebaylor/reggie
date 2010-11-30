@@ -33,6 +33,11 @@ class fragment_Breadcrumb extends template_Template
 		$html = '';
 		
 		switch($this->config['location']) {
+			case 'GroupRegistration':
+				$html = $this->groupReg();
+				$html .= $this->SEPARATOR;
+				$html .= 'Group Registration';
+				break;
 			case 'User':
 				$html = $this->event();
 				$html .= $this->SEPARATOR;
@@ -131,7 +136,7 @@ _;
 				'label' => 'Main Menu',
 				'href' => '/action/admin/MainMenu',
 				'parameters' => array(
-					'action' => 'view'
+					'a' => 'view'
 				)
 			))}
 _;
@@ -145,7 +150,7 @@ _;
 				'label' => "Event ({$this->config['eventCode']})",
 				'href' => '/action/admin/event/EditEvent',
 				'parameters' => array(
-					'action' => 'view',
+					'a' => 'view',
 					'id' => $this->config['eventId']
 				)
 			))}
@@ -160,7 +165,7 @@ _;
 				'label' => 'Page',
 				'href' => '/action/admin/page/Page',
 				'parameters' => array(
-					'action' => 'view',
+					'a' => 'view',
 					'id' => $this->config['pageId'],
 					'eventId' => $this->config['eventId']
 				)
@@ -176,7 +181,7 @@ _;
 				'label' => 'Section',
 				'href' => '/action/admin/section/Section',
 				'parameters' => array(
-					'action' => 'view',
+					'a' => 'view',
 					'id' => $this->config['sectionId'],
 					'eventId' => $this->config['eventId']
 				)
@@ -192,7 +197,7 @@ _;
 				'label' => 'Section',
 				'href' => '/action/admin/section/Section',
 				'parameters' => array(
-					'action' => 'view',
+					'a' => 'view',
 					'id' => $this->config['sectionId'],
 					'eventId' => $this->config['eventId']
 				)
@@ -213,7 +218,7 @@ _;
 					'label' => 'Section',
 					'href' => '/action/admin/section/Section',
 					'parameters' => array(
-						'action' => 'view',
+						'a' => 'view',
 						'id' => $this->config['sectionId'],
 						'eventId' => $this->config['eventId']
 					)
@@ -230,7 +235,7 @@ _;
 					'label' => 'Reg Option',
 					'href' => '/action/admin/regOption/RegOption',
 					'parameters' => array(
-						'action' => 'view',
+						'a' => 'view',
 						'id' => $group['regOptionId'],
 						'eventId' => $this->config['eventId']
 					)
@@ -258,7 +263,7 @@ _;
 				'label' => 'Option Group',
 				'href' => $action,
 				'parameters' => array(
-					'action' => 'view',
+					'a' => 'view',
 					'id' => $option['parentGroupId'],
 					'eventId' => $this->config['eventId']
 				)
@@ -277,7 +282,7 @@ _;
 					'label' => 'Variable Quantity Option',
 					'href' => '/action/admin/regOption/VariableQuantity',
 					'parameters' => array(
-						'action' => 'view',
+						'a' => 'view',
 						'id' => $price['regOptionId'],
 						'eventId' => $this->config['eventId']
 					)
@@ -292,7 +297,7 @@ _;
 					'label' => 'Reg Option',
 					'href' => '/action/admin/regOption/RegOption',
 					'parameters' => array(
-						'action' => 'view',
+						'a' => 'view',
 						'id' => $price['regOptionId'],
 						'eventId' => $this->config['eventId']
 					)
@@ -312,7 +317,7 @@ _;
 				'label' => 'Section',
 				'href' => '/action/admin/section/Section',
 				'parameters' => array(
-					'action' => 'view',
+					'a' => 'view',
 					'id' => $this->config['sectionId'],
 					'eventId' => $this->config['eventId']
 				)
@@ -328,7 +333,7 @@ _;
 				'label' => "{$this->config['eventCode']} Reports",
 				'href' => '/action/admin/report/Report',
 				'parameters' => array(
-					'action' => 'eventReports',
+					'a' => 'eventReports',
 					'id' => $this->config['eventId']
 				)
 			))}	
@@ -343,7 +348,7 @@ _;
 				'label' => "Event ({$this->config['eventCode']})",
 				'href' => '/action/admin/event/EditEvent',
 				'parameters' => array(
-					'action' => 'view',
+					'a' => 'view',
 					'id' => $this->config['eventId']
 				)
 			))}	
@@ -358,7 +363,7 @@ _;
 				'label' => "Event ({$this->config['eventCode']})",
 				'href' => '/action/admin/event/EditEvent',
 				'parameters' => array(
-					'action' => 'view',
+					'a' => 'view',
 					'id' => $this->config['eventId']
 				)
 			))}	
@@ -373,7 +378,7 @@ _;
 				'label' => "Event ({$this->config['eventCode']})",
 				'href' => '/action/admin/event/EditEvent',
 				'parameters' => array(
-					'action' => 'view',
+					'a' => 'view',
 					'id' => $this->config['eventId']
 				)
 			))}	
@@ -386,6 +391,21 @@ _;
 	
 	private function reports() {
 		return $this->event();
+	}
+	
+	private function groupReg() {
+		return <<<_
+			{$this->event()}
+			{$this->SEPARATOR}
+			{$this->HTML->link(array(
+				'label' => "Event ({$this->config['eventCode']})",
+				'href' => '/action/admin/event/EditEvent',
+				'parameters' => array(
+					'a' => 'view',
+					'id' => $this->config['eventId']
+				)
+			))}	
+_;
 	}
 }
 
