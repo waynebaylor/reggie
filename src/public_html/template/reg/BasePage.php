@@ -152,16 +152,16 @@ _;
 		$disabledClass = $disabled? 'disabled-button' : '';
 		
 		return <<<_
-			<input type="submit" id="prev-button" class="button {$disabledClass}" name="action" value="Previous" {$disabledAttr}/>
+			<input type="submit" id="prev-button" class="button {$disabledClass}" name="a" value="Previous" {$disabledAttr}/>
 _;
 	}
 	
 	private function getNextButton() {
 		if($this->id === model_RegistrationPage::$SUMMARY_PAGE_ID) {
-			return '<input type="submit" id="next-button" class="button" name="action" value="Submit"/>';
+			return '<input type="submit" id="next-button" class="button" name="a" value="Submit"/>';
 		}
 		else {
-			return '<input type="submit" id="next-button" class="button" name="action" value="Next"/>';
+			return '<input type="submit" id="next-button" class="button" name="a" value="Next"/>';
 		}
 	}
 }

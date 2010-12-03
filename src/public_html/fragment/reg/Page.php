@@ -17,9 +17,6 @@ class fragment_reg_Page extends template_Template
 			$s = new fragment_reg_Section($section);
 			
 			$html .= $s->html();
-			$html .= <<<_
-				<div class="section-divider"></div>		
-_;
 		}
 		
 		return $html;		

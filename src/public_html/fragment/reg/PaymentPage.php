@@ -2,6 +2,10 @@
 
 class fragment_reg_PaymentPage extends template_Template
 {
+	// text used on the group registration button for adding another person. access to this
+	// property is needed by other resources since it's not a valid action value (it has spaces).
+	public static $ADD_PERSON_ACTION = 'Add another person';
+	
 	private $event;
 	
 	function __construct($event) {
@@ -20,6 +24,8 @@ class fragment_reg_PaymentPage extends template_Template
 				Total Due: {$this->getTotalDue()}
 			</div>
 
+			{$this->getGroupRegistration()}
+			
 			<table class="payment-types">
 				<tr>
 					<td class="tab-cell">{$this->getPaymentTypeTabs()}</td>
@@ -29,6 +35,26 @@ class fragment_reg_PaymentPage extends template_Template
 			
 			<div class="section-divider"></div>
 _;
+	}
+	
+	private function getGroupRegistration() {
+		$html = '';
+		
+		$value = self::$ADD_PERSON_ACTION;
+		
+		if($this->event['groupRegistration']['enabled'] === 'true') {
+			$html = <<<_
+				<div style="padding: 10px 0 0;">
+					You may add another person to your group before entering payment information.
+					<br/><br/>
+					<input type="submit" class="button" name="a" value="{$value}"/>
+				</div>
+				
+				<div class="divider"></div>
+_;
+		}
+		
+		return $html;
 	}
 	
 	private function getPaymentTypeTabs() {
@@ -75,8 +101,6 @@ _;
 		
 		return <<<_
 			<div class="payment-instructions">
-				<div class="sub-divider"></div>
-				
 				{$html}
 				
 				<div class="sub-divider"></div>

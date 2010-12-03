@@ -53,15 +53,19 @@ class RegistrationDispatcher
 		// event is open, so find the right page.
 		if(model_RegistrationPage::isViewable($this->event, $this->pageId)) {
 			switch($this->pageId) {
-				case model_RegistrationPage::$PAYMENT_PAGE_ID:
+				case model_RegistrationPage::$PAYMENT_PAGE_ID: 
+					// rename the action if we're adding another person.
+					if($_REQUEST['action'] === fragment_reg_PaymentPage::$ADD_PERSON_ACTION) {
+						$_REQUEST['action'] = 'addPerson';
+					}
+					
 					return new action_reg_Payment($this->event);
-					break;
+					
 				case model_RegistrationPage::$SUMMARY_PAGE_ID:
 					return new action_reg_Summary($this->event);
-					break;
+					
 				case model_RegistrationPage::$CONFIRMATION_PAGE_ID:
 					return new action_reg_Confirmation($this->event);
-					break;
 			}
 		}
 

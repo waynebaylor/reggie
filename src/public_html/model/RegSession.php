@@ -22,6 +22,35 @@ class model_RegSession
 		);
 	}
 	
+	public static function addPerson($event) {
+		$groupReg = $event['groupRegistration'];
+		
+		if($groupReg['enabled'] === 'true') {
+			$newReg = array(
+				'completedPages' => array(),
+				'regType' => NULL,
+				'information' => array(),
+				'regOptions' => array(),
+				'variableQuantity' => array()
+			);
+				
+			if($groupReg['defaultRegType'] === 'true') {
+				$newReg['regType'] = self::getRegType(self::getCurrent());
+			}
+			
+			foreach($groupReg['fields'] as $field) {
+				$name = model_ContentType::$CONTACT_FIELD.'_'.$field['contactFieldId'];
+				$value = self::getContactField($name, self::getCurrent());
+				
+				$newReg['information'][$name] = $value; 
+			}
+
+			$_SESSION['reg']['registrations'][] = $newReg;
+				
+			self::setCurrent(count($_SESSION['reg']['registrations'])-1);
+		}
+	}
+	
 	/**
 	 * Read only.
 	 */
@@ -81,14 +110,6 @@ class model_RegSession
 	 */
 	public static function getRegistrations() {
 		return $_SESSION['reg']['registrations'];
-	}
-	
-	/**
-	 * Read only.
-	 * @param $index
-	 */
-	public static function getRegistration($index) {
-		return $_SESSION['reg']['registrations'][$index];
 	}
 	
 	/**

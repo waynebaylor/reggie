@@ -59,6 +59,14 @@ class action_reg_Payment extends action_ValidatorAction
 		return new template_Redirect("/event/{$this->event['code']}/{$cat}/{$pageId}");
 	}
 	
+	public function addPerson() {
+		model_RegSession::addPerson($this->event);
+		
+		$category = model_RegSession::getCategory();
+		$cat = model_Category::code($category);
+		
+		return new template_Redirect("/event/{$this->event['code']}/{$cat}");
+	}
 	
 	public function validate($fieldNames = array()) {
 		$errors = parent::validate($fieldNames);

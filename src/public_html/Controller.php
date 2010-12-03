@@ -34,11 +34,16 @@ class Controller
 			// requests starting with '/event' are handled 
 			// by the registration dispatcher.
 			if($this->uri[0] === 'event') {
+				// the action for reg urls will be in one of the two parameters: 'action' or 'a'.
+				if(empty($_REQUEST['action'])) {
+					$_REQUEST['action'] = RequestUtil::getValue('a', 'view');
+				}
 				$this->invokeRegistration();
 			}
 			// eventually should be like '/admin/...', but for
 			// now 'admin' is in the second position of the uri.
 			else if($this->uri[1] === 'admin') {
+				$_REQUEST['action'] = $this->getAdminAction();
 				$this->invokeAdmin();
 			}
 			else {
@@ -81,29 +86,12 @@ class Controller
 	}
 	
 	private function invoke() {
-		//
-		// there are three ways to indicate the method to execute:
-		// 1) include it in the request - localhost/action/admin/MainMenu?a=view
-		// 2) include it as part of the url - localhost/action/admin/MainMenu/view
-		// 3) DEPRECATED: include it in the request - localhost/action/admin/MainMenu?action=view
-		//
-		
-		if(isset($_REQUEST['a'])) {
-			$method = $_REQUEST['a'];
-			$className = implode('_', $this->uri);
-		}
-		else if(isset($_REQUEST['action'])) {
-			$method = $_REQUEST['action'];
-			$className = implode('_', $this->uri);
-		}
-		else {
-			// the last segment is the name of the method to execute.
-			$method = $this->uri[count($this->uri)-1];
-			$className = implode('_', array_slice($this->uri, 0, -1));
-		}
-		
-		$_REQUEST['action'] = $method;
-		
+		// getting the class name depends on whether the last uri segment is 
+		// used to indicate the action.
+		$className = isset($_REQUEST['a']) || isset($_REQUEST['action'])? 
+			implode('_', $this->uri) :
+			implode('_', array_slice($this->uri, 0, -1));
+			
 		$path = implode('/', explode('_', $className));
 		$file = $path.'.php';
 		
@@ -116,6 +104,29 @@ class Controller
 		else {
 			throw new Exception('Invalid URL. Script does not exist: '.$path);
 		}
+	}
+	
+	private function getAdminAction() {
+		//
+		// there are three ways to indicate the method to execute:
+		// 1) include it in the request - localhost/action/admin/MainMenu?a=view
+		// 2) include it as part of the url - localhost/action/admin/MainMenu/view
+		// 3) DEPRECATED: include it in the request - localhost/action/admin/MainMenu?action=view
+		//
+		
+		if(isset($_REQUEST['a'])) {
+			$method = $_REQUEST['a'];
+		}
+		else if(isset($_REQUEST['action'])) {
+			$method = $_REQUEST['action'];
+		}
+		else {
+			// the last segment is the name of the method to execute. this is only valid for 
+			// admin urls.
+			$method = $this->uri[count($this->uri)-1];
+		}
+		
+		return $method;
 	}
 }
 
