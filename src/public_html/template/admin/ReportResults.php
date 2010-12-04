@@ -7,7 +7,11 @@ class template_admin_ReportResults extends template_AdminPage
 	private $results;
 	
 	function __construct($report, $fieldHeadings, $results) {
-		parent::__construct('Report Results');
+		parent::__construct(array(
+			'title' => 'Report Results',
+			'showLogoutLink' => false,
+			'bannerLinkActive' => false
+		));
 		
 		$this->report = $report;
 		$this->fieldHeadings = $fieldHeadings;

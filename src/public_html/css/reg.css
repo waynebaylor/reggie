@@ -112,6 +112,7 @@ table.reg-content td {
 	border: 1px solid black;
 	color: white;
 	background-color: #333333;	
+	padding: 0 2px;
 }
 
 .disabled-button {

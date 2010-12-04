@@ -73,6 +73,35 @@ dojo.require("hhreg.validation");
 			.removeClass("hide");
 	};
 	
+	var submitForm = function(/*DOM Node[form]*/ form, /*DOM Node[.add-form]*/ formDiv, 
+			                  /*DOM Node[.add-link]*/ addLink, /*function(optional)*/ callback) {
+		hhreg.validation.removeMessages(form);
+		
+		var post = dojo.xhrPost({
+			url: dojo.attr(form, "action"),
+			content: dojo.formToObject(form),
+			handleAs: "text"
+		});
+		
+		post.addCallback(function(response) {
+			var success = handleResponse(form, response);
+			
+			if(success) {
+				dojo.addClass(formDiv, "hide");
+				dojo.removeClass(addLink, "hide");
+				resetForm(form);
+				
+				if(callback) {
+					callback(response);
+				}
+			}
+		});
+		
+		post.addErrback(function(error) {
+			showErrorIcon(form);
+		});
+	};
+	
 	var handleResponse = function(/*DOM Node[form]*/ form, /*String*/ response) {
 		var status = false;
 		
@@ -122,33 +151,17 @@ dojo.require("hhreg.validation");
 			
 		});
 		
+		// xhr form when user hits enter key. as if the continue button were
+		// a submit button.
+		dojo.connect(form, "onkeypress", function(event) {
+			if(event.keyCode === dojo.keys.ENTER && event.target.tagName.toLowerCase() !== 'textarea') {
+				submitForm(form, formDiv, addLink, callback);
+			}
+		});
+		
 		// xhr form when user clicks continue button.
 		dojo.connect(continueButton, "onclick", function() {
-			hhreg.validation.removeMessages(form);
-			
-			var post = dojo.xhrPost({
-				url: dojo.attr(form, "action"),
-				content: dojo.formToObject(form),
-				handleAs: "text"
-			});
-			
-			post.addCallback(function(response) {
-				var success = handleResponse(form, response);
-				
-				if(success) {
-					dojo.addClass(formDiv, "hide");
-					dojo.removeClass(addLink, "hide");
-					resetForm(form);
-					
-					if(callback) {
-						callback(response);
-					}
-				}
-			});
-			
-			post.addErrback(function(error) {
-				showErrorIcon(form);
-			});
+			submitForm(form, formDiv, addLink, callback);
 		});
 
 		// hide the form when user clicks cancel link.

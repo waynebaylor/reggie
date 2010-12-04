@@ -3,17 +3,29 @@
 abstract class template_AdminPage extends template_Template
 {
 	private $title;
+	private $showLogoutLink;
+	private $bannerLinkActive;
 	
 	function __construct($t) {
 		parent::__construct();
 		
-		$this->title = $t;
+		if(!is_array($t)) {
+			$t = array(
+				'title' => $t,
+				'showLogoutLink' => true,
+				'bannerLinkActive' => true
+			);
+		}
+		
+		$this->title = $t['title'];
+		$this->showLogoutLink = $t['showLogoutLink'];
+		$this->bannerLinkActive = $t['bannerLinkActive'];
 	}
 	
 	public function html() {
 		$logoutLink = '';
 		$user = SessionUtil::getUser();
-		if(!empty($user)) { 
+		if(!empty($user) && $this->showLogoutLink) { 
 			$logoutLink = $this->HTML->link(array(
 				'label' => "Logout",
 				'href' => '/action/admin/Login',
@@ -22,6 +34,15 @@ abstract class template_AdminPage extends template_Template
 				),
 				'title' => "Logout {$user['email']}"
 			));
+		}
+		
+		$banner = 'Registration System';
+		if($this->bannerLinkActive) {
+			$banner = <<<_
+				<a href="/action/admin/MainMenu?action=view">
+					{$banner}
+				</a>	
+_;
 		}
 		
 		return <<<_
@@ -53,9 +74,7 @@ abstract class template_AdminPage extends template_Template
 		</script>
 
 		<div id="header">
-			<a href="/action/admin/MainMenu?action=view">
-				Registration System
-			</a>
+			{$banner}
 		</div>	
 		
 		<table class="sub-header-links"><tr>

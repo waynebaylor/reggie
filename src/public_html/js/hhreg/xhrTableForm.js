@@ -36,6 +36,29 @@ dojo.require("hhreg.validation");
 			.removeClass("hide");
 	};
 	
+	var submitForm = function(/*DOM Node[form]*/ form, /*function(optional)*/ callback) {
+		// remove any previous error messages.
+		hhreg.validation.removeMessages(form);
+	
+		var post = dojo.xhrPost({
+			url: dojo.attr(form, "action"),
+			content: dojo.formToObject(form),
+			handleAs: "text"
+		});
+		
+		post.addCallback(function(response) { 
+			var success = handleResponse(form, response);
+
+			if(success && callback) {
+				callback(response);
+			}
+		});
+		
+		post.addErrback(function(error) { 
+			showErrorIcon(form);
+		});
+	};
+	
 	var handleResponse = function(/*DOM Node*/ form, /*String*/ response) {
 		var status = false;
 		
@@ -75,27 +98,16 @@ dojo.require("hhreg.validation");
 	};
 	
 	xhrTableForm.bind = function(/*DOM Node[form]*/ form, /*function(optional)*/ callback) {
-		dojo.query("input[type=button]", form).connect("onclick", function() {
-			// remove any previous error messages.
-			hhreg.validation.removeMessages(form);
+		// xhr form when user hits enter key. as if the continue button were
+		// a submit button.
+		dojo.connect(form, "onkeypress", function(event) {
+			if(event.keyCode === dojo.keys.ENTER && event.target.tagName.toLowerCase() !== 'textarea') {
+				submitForm(form, callback);
+			}
+		});
 		
-			var post = dojo.xhrPost({
-				url: dojo.attr(form, "action"),
-				content: dojo.formToObject(form),
-				handleAs: "text"
-			});
-			
-			post.addCallback(function(response) { 
-				var success = handleResponse(form, response);
-
-				if(success && callback) {
-					callback(response);
-				}
-			});
-			
-			post.addErrback(function(error) { 
-				showErrorIcon(form);
-			});
+		dojo.query("input[type=button]", form).connect("onclick", function() {
+			submitForm(form, callback);
 		});
 	};
 	
