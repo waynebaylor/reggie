@@ -3,11 +3,13 @@
 class fragment_reg_summary_RegOptions extends template_Template
 {
 	private $event;
+	private $index;
 	
-	function __construct($event) {
+	function __construct($event, $index) {
 		parent::__construct();
 		
 		$this->event = $event;
+		$this->index = $index;
 	}
 	
 	public function html() {
@@ -16,11 +18,6 @@ class fragment_reg_summary_RegOptions extends template_Template
 				<td class="label">Registration Options</td>
 				<td class="details">
 					{$this->getRegOptions()}
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<div class="summary-divider"></div>
 				</td>
 			</tr>
 _;
@@ -52,8 +49,8 @@ _;
 	private function getRegOption($option) {
 		$html = '';
 		
-		if(model_Registration::isRegOptionSelected($option)) {
-			$regType = model_RegSession::getRegType();
+		if(model_Registration::isRegOptionSelected($option, $this->index)) {
+			$regType = model_RegSession::getRegType($this->index);
 			$price = model_RegOption::getPrice($regType, $option);
 			$priceDisplayed = ($option['showPrice'] === 'true')? '$'.number_format($price['price'], 2) : '';
 			$html .= <<<_

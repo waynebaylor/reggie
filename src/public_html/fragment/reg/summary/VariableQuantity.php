@@ -3,11 +3,13 @@
 class fragment_reg_summary_VariableQuantity extends template_Template
 {
 	private $event;
+	private $index;
 	
-	function __construct($event) {
+	function __construct($event, $index) {
 		parent::__construct();
 		
 		$this->event = $event;
+		$this->index = $index;
 	}
 	
 	public function html() {
@@ -18,7 +20,7 @@ class fragment_reg_summary_VariableQuantity extends template_Template
 				if(model_Section::containsVariableQuantityOptions($section)) {
 					foreach($section['content'] as $option) {
 						$name = model_ContentType::$VAR_QUANTITY_OPTION.'_'.$option['id'];
-						$quantity = model_RegSession::getVariableQuantityOption($name);
+						$quantity = model_RegSession::getVariableQuantityOption($name, $index);
 						if(!empty($quantity) && $quantity > 0) {
 							$price = model_RegOption::getPrice($this->event, $option);
 							$priceDisplay = number_format($price['price'], 2);
@@ -44,15 +46,7 @@ _;
 			return '';
 		}
 		else {
-			return <<<_
-				{$html}
-				
-				<tr>
-					<td colspan="2">
-						<div class="summary-divider"></div>
-					</td>
-				</tr>
-_;
+			return $html;
 		}
 	}
 }

@@ -3,21 +3,25 @@
 class fragment_reg_summary_Information extends template_Template
 {
 	private $event;
+	private $index;
 	
-	function __construct($event) {
+	function __construct($event, $index) {
 		parent::__construct();
 		
 		$this->event = $event;
+		$this->index = $index;
 	}
 	
 	public function html() {
 		$html = '';
 		
+		$regType = model_RegSession::getRegType($this->index);
+		
 		$eventFields = model_Event::getInformationFields($this->event);
 		foreach($eventFields as $field) {
-			if(model_ContactField::isRequired($field)) {
+			if(model_ContactField::isVisibleTo($field, $regType) && model_ContactField::isRequired($field)) {
 				$name = model_ContentType::$CONTACT_FIELD.'_'.$field['id'];
-				$value = model_RegSession::getContactField($name);			
+				$value = model_RegSession::getContactField($name, $this->index);			
 						
 				// if the contact field has options, then the value will be
 				// the option id.
@@ -49,14 +53,7 @@ _;
 			return '';
 		}
 		else {
-			return <<<_
-				{$html}
-				<tr>
-					<td colspan="2">
-						<div class="summary-divider"></div>
-					</td>
-				</tr>
-_;
+			return $html;
 		}
 	}
 }

@@ -16,7 +16,7 @@ class action_reg_Summary extends action_ValidatorAction
 		return new template_reg_BasePage(array(
 			'event' => $this->event,
 			'title' => 'Review &amp; Confirm',
-			'id' => 'summary',
+			'id' => model_RegistrationPage::$SUMMARY_PAGE_ID,
 			'page' => $summary
 		));	
 	}
@@ -37,15 +37,15 @@ class action_reg_Summary extends action_ValidatorAction
 			return new template_reg_BasePage(array(
 				'event' => $this->event,
 				'title' => 'Review &amp; Confirm',
-				'id' => 'summary',
+				'id' => model_RegistrationPage::$SUMMARY_PAGE_ID,
 				'page' => $summary,
 				'errors' => $errors
 			));
 		}
 		
-		model_RegSession::addCompletedPage('summary');
+		model_RegSession::addCompletedPage(model_RegistrationPage::$SUMMARY_PAGE_ID);
 		
-		$registrations = $this->completeRegistration($this->payment);
+		$this->completeRegistration($this->payment);
 		
 		$a = new action_reg_Confirmation($this->event);
 		return $a->view();
@@ -90,7 +90,7 @@ class action_reg_Summary extends action_ValidatorAction
 	 * save stuff to the database, send any emails, etc.
 	 */
 	private function completeRegistration($payment) {
-		$registrations = model_Registration::getCompletedFromSession($this->event);
+		$registrations = model_Registration::getConvertedRegistrationsFromSession($this->event);
 		
 		$newRegIds = db_reg_RegistrationManager::getInstance()->createRegistrations($registrations, $payment);
 
@@ -100,8 +100,6 @@ class action_reg_Summary extends action_ValidatorAction
 		}
 		
 		$this->sendConfirmationEmail($completedRegs);
-		
-		return $completedRegs;
 	}
 	
 	private function performPayment() {

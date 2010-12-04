@@ -19,13 +19,13 @@ class fragment_reg_PaymentPage extends template_Template
 			<script type="text/javascript">
 				dojo.require("hhreg.reg.paymentTypes");
 			</script>
+
+			{$this->getGroupRegistration()}
 			
 			<div class="amount-due">
 				Total Due: {$this->getTotalDue()}
 			</div>
 
-			{$this->getGroupRegistration()}
-			
 			<table class="payment-types">
 				<tr>
 					<td class="tab-cell">{$this->getPaymentTypeTabs()}</td>
@@ -44,13 +44,11 @@ _;
 		
 		if($this->event['groupRegistration']['enabled'] === 'true') {
 			$html = <<<_
-				<div style="padding: 10px 0 0;">
+				<div>
 					You may add another person to your group before entering payment information.
 					<br/><br/>
 					<input type="submit" class="button" name="a" value="{$value}"/>
 				</div>
-				
-				<div class="divider"></div>
 _;
 		}
 		

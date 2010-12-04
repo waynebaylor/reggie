@@ -95,10 +95,8 @@ class model_RegSession
 		return $_SESSION['reg']['registrations'][$index]['completedPages'];	
 	}
 	
-	public static function addCompletedPage($pageId, $index = -1) {
-		if($index < 0) {
-			$index = self::getCurrent();
-		}
+	public static function addCompletedPage($pageId) {
+		$index = self::getCurrent();
 		
 		if(!in_array($pageId, self::getCompletedPages($index))) {
 			$_SESSION['reg']['registrations'][$index]['completedPages'][] = $pageId;
@@ -235,6 +233,10 @@ class model_RegSession
 	
 	public static function setPaymentInfo($info) {
 		$_SESSION['reg']['payment'] = $info;
+	}
+	
+	public static function removeRegistration($index) {
+		unset($_SESSION['reg']['registrations'][$index]);
 	}
 }
 

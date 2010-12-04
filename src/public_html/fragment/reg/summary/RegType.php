@@ -3,15 +3,17 @@
 class fragment_reg_summary_RegType extends template_Template
 {
 	private $event;
+	private $index;
 	
-	function __construct($event) {
+	function __construct($event, $index) {
 		parent::__construct();
 		
 		$this->event = $event;
+		$this->index = $index;
 	}
 	
 	public function html() {
-		$regTypeId = model_RegSession::getRegType();
+		$regTypeId = model_RegSession::getRegType($this->index);
 		
 		// if the event doesn't have a reg type section, then don't 
 		// show anything for reg type.
@@ -26,11 +28,6 @@ class fragment_reg_summary_RegType extends template_Template
 				<td class="label">Registration Type</td>
 				<td class="details">
 					{$regType['description']}
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<div class="summary-divider"></div>
 				</td>
 			</tr>
 _;

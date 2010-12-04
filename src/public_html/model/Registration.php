@@ -12,7 +12,7 @@ class model_Registration
 		return number_format($total, 2);
 	}
 	
-	private static function getTotalPersonCost($event, $index) {
+	public static function getTotalPersonCost($event, $index) {
 		$total = 0.0;
 		
 		// add up the reg options.
@@ -35,19 +35,23 @@ class model_Registration
 		return number_format($total, 2);
 	}
 	
-	public static function getCompletedFromSession($event) {
+	public static function getConvertedRegistrationsFromSession($event) {
 		$regs = array();
 		
 		foreach(model_RegSession::getRegistrations() as $index => $reg) {
-			if(self::isComplete($event, $index)) {
-				$regs[] = self::convertFromSession($index);
-			}
+			$regs[] = self::convertFromSession($index);
 		}
 		
 		return $regs;
 	}
 	
+	/**
+	 * complete means all reg pages have been
+	 * filled out, but does not require the payment or summary page.
+	 */
 	private static function isComplete($event, $index) {
+		$count = count(model_RegSession::getRegistrations());
+		
 		// put together the list of page IDs that must be completed.
 		$pageIds = array();
 		$category = model_RegSession::getCategory();
@@ -56,20 +60,11 @@ class model_Registration
 			$pageIds[] = $p['id'];
 		}
 		
-		if(!empty($event['paymentTypes'])) {
-			$pageIds[] = model_RegistrationPage::$PAYMENT_PAGE_ID;	
-		}
-		
-		$pageIds[] = model_RegistrationPage::$SUMMARY_PAGE_ID;
-		
 		// if they've completed all the reg pages, then we consider it complete.
 		$completed = model_RegSession::getCompletedPages($index);
 		$diff = array_diff($pageIds, $completed);
-		if(empty($diff)) {
-			return true;
-		}
 		
-		return false;
+		return empty($diff);
 	}
 	
 	/**
@@ -148,6 +143,20 @@ class model_Registration
 		$optionSelected = ($option['id'] === $value) || (is_array($value) && in_array($option['id'], $value));
 		
 		return $optionSelected;
+	}
+	
+	public static function removeIncompleteRegistrationsFromSession($event) {
+		$incompleteIndexes = array();
+		
+		foreach(model_RegSession::getRegistrations() as $index => $reg) {
+			if(!self::isComplete($event, $index)) {
+				$incomplete[] = $index;
+			}
+		}
+		
+		foreach($incompleteIndexes as $index) {
+			model_RegSession::removeRegistration($index);
+		}
 	}
 }
 

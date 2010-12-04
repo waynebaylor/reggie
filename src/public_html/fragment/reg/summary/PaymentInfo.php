@@ -22,11 +22,6 @@ class fragment_reg_summary_PaymentInfo extends template_Template
 						{$this->getPaymentInfo()}
 					</td>
 				</tr>
-				<tr>
-					<td colspan="2">
-						<div class="summary-divider"></div>
-					</td>
-				</tr>	
 _;
 		}
 		

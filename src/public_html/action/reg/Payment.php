@@ -15,7 +15,7 @@ class action_reg_Payment extends action_ValidatorAction
 		return new template_reg_BasePage(array(
 			'event' => $this->event,
 			'title' => 'Payment Information',
-			'id' => 'payment',
+			'id' => model_RegistrationPage::$PAYMENT_PAGE_ID,
 			'page' => $payment
 		));
 	}
@@ -37,13 +37,15 @@ class action_reg_Payment extends action_ValidatorAction
 			return new template_reg_BasePage(array(
 				'event' => $this->event,
 				'title' => 'Payment Information',
-				'id' => 'payment',
+				'id' => model_RegistrationPage::$PAYMENT_PAGE_ID,
 				'page' => $page,
 				'errors' => $errors
 			));
 		}
 		
-		model_RegSession::addCompletedPage('payment');
+		model_RegSession::addCompletedPage(model_RegistrationPage::$PAYMENT_PAGE_ID);
+		
+		model_Registration::removeIncompleteRegistrationsFromSession($this->event);
 		
 		// go to the next page.
 		$a = new action_reg_Summary($this->event);
