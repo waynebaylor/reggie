@@ -52,7 +52,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Edit',
-							'href' => '/action/admin/regOption/RegOptionPrice',
+							'href' => '/admin/regOption/RegOptionPrice',
 							'parameters' => array(
 								'action' => 'view',
 								'id' => $price['id'],
@@ -62,7 +62,7 @@ _;
 						
 						{$this->HTML->link(array(
 							'label' => 'Remove',
-							'href' => '/action/admin/regOption/RegOptionPrice',
+							'href' => '/admin/regOption/RegOptionPrice',
 							'parameters' => array(
 								'action' => 'removePrice',
 								'id' => $price['id'],

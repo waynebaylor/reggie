@@ -41,7 +41,7 @@ _;
 		$groups = $this->section['content'];
 		foreach($groups as $group) {
 			$arrows = new fragment_Arrows(array(
-				'href' => '/action/admin/regOption/SectionRegOptionGroup',
+				'href' => '/admin/regOption/SectionRegOptionGroup',
 				'parameters' => array(
 					'eventId' => $this->event['id']
 				),
@@ -77,7 +77,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Edit',
-							'href' => '/action/admin/regOption/SectionRegOptionGroup',
+							'href' => '/admin/regOption/SectionRegOptionGroup',
 							'parameters' => array(
 								'action' => 'view',
 								'id' => $group['id'],
@@ -87,7 +87,7 @@ _;
 						
 						{$this->HTML->link(array(
 							'label' => 'Remove',
-							'href' => '/action/admin/regOption/SectionRegOptionGroup',
+							'href' => '/admin/regOption/SectionRegOptionGroup',
 							'parameters' => array(
 								'action' => 'removeGroup',
 								'id' => $group['id'],

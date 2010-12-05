@@ -12,7 +12,7 @@ class fragment_user_Edit extends template_Template
 	
 	public function html() {
 		$form = new fragment_XhrTableForm(
-			'/action/admin/user/User', 
+			'/admin/user/User', 
 			'saveUser', 
 			$this->getFormRows()
 		);

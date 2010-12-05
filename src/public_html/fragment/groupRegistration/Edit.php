@@ -12,7 +12,7 @@ class fragment_groupRegistration_Edit extends template_Template
 	
 	public function html() {
 		$form = new fragment_XhrTableForm(
-			'/action/admin/event/EditGroupRegistration', 
+			'/admin/event/EditGroupRegistration', 
 			'saveGroupReg', 
 			$this->getFormRows()
 		);

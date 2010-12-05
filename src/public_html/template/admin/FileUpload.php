@@ -26,7 +26,7 @@ class template_admin_FileUpload extends template_AdminPage
 				<div class="file-upload">
 					<h3>Upload file for {$this->event['code']}</h3>
 					
-					<form method="post" enctype="multipart/form-data" action="/action/admin/fileUpload/FileUpload">
+					<form method="post" enctype="multipart/form-data" action="/admin/fileUpload/FileUpload">
 						<input type="hidden" name="id" value="{$this->event['id']}"/>
 						
 						<table>
@@ -94,7 +94,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Delete',
-							'href' => '/action/admin/fileUpload/FileUpload',
+							'href' => '/admin/fileUpload/FileUpload',
 							'parameters' => array(
 								'id' => $this->event['id'],
 								'fileName' => $file,

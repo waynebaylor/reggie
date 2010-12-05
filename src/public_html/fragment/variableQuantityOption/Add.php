@@ -15,7 +15,7 @@ class fragment_variableQuantityOption_Add extends template_Template
 	public function html() {
 		$form = new fragment_XhrAddForm(
 			'Add Variable Quantity Option',
-			'/action/admin/regOption/VariableQuantity',
+			'/admin/regOption/VariableQuantity',
 			'addOption',
 			$this->getFormRows());
 			

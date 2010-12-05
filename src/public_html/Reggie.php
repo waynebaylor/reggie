@@ -22,6 +22,23 @@ class Reggie
 		require_once str_replace('_', '/', $c).'.php';
 	}
 	
+	/**
+	 * converts a url into an action class name. given the url '/admin/event/EditEvent',
+	 * the class name 'action_admin_event_EditEvent' would be returned.
+	 */
+	public static function actionClass($url) {
+		// remove leading slash, since we assume a full path.
+		$url = ltrim($url, '/');
+
+		// if url doesn't start with action base, then prefix it 
+		// before converting to a class name.
+		if(strpos($url, Config::$SETTINGS['ACTION_BASE']) !== 0) {
+			$url = Config::$SETTINGS['ACTION_BASE'].'/'.$url;
+		}	
+		
+		return str_replace('/', '_', $url);
+	}
+	
 	// do any application specific initialization.
 	public static function setup() {
 		// these need to run first since they initialize the

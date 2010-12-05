@@ -65,7 +65,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Edit',
-							'href' => '/action/admin/event/EditEvent',
+							'href' => '/admin/event/EditEvent',
 							'parameters' => array(
 								'action' => 'view',
 								'id' => $event['id']
@@ -74,7 +74,7 @@ _;
 						))}
 						{$this->HTML->link(array(
 							'label' => 'Reports',
-							'href' => '/action/admin/report/Report',
+							'href' => '/admin/report/Report',
 							'parameters' => array(
 								'action' => 'eventReports',
 								'id' => $event['id']
@@ -83,7 +83,7 @@ _;
 						))}
 						{$this->HTML->link(array(
 							'label' => 'Files',
-							'href' => '/action/admin/fileUpload/FileUpload',
+							'href' => '/admin/fileUpload/FileUpload',
 							'parameters' => array(
 								'action' => 'view',
 								'id' => $event['id']

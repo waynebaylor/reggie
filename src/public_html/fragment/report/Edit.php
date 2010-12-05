@@ -12,7 +12,7 @@ class fragment_report_Edit extends template_Template
 	
 	public function html() {
 		$form = new fragment_XhrTableForm(
-			'/action/admin/report/Report',
+			'/admin/report/Report',
 			'saveReport',
 			$this->getFormRows());
 			

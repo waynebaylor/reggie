@@ -23,8 +23,8 @@ class template_admin_EditSectionRegOptionGroup extends template_AdminPage
 	
 	protected function getContent() {
 		$action = model_Group::isSectionGroup($this->group)? 
-			'/action/admin/regOption/SectionRegOptionGroup' : 
-			'/action/admin/regOption/RegOptionGroup';
+			'/admin/regOption/SectionRegOptionGroup' : 
+			'/admin/regOption/RegOptionGroup';
 		
 		$edit = new fragment_sectionRegOptionGroup_Edit($this->group, $action);
 		$options = new fragment_sectionRegOption_RegOptions($this->event, $this->group);

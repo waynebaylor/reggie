@@ -12,7 +12,7 @@ class fragment_variableQuantityOption_Edit extends template_Template
 	
 	public function html() {
 		$form = new fragment_XhrTableForm(
-			'/action/admin/regOption/VariableQuantity', 
+			'/admin/regOption/VariableQuantity', 
 			'saveOption', 
 			$this->getFormRows());
 			

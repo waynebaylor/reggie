@@ -12,7 +12,7 @@ class fragment_sectionRegOption_Edit extends template_Template
 	
 	public function html() {
 		$form = new fragment_XhrTableForm(
-			'/action/admin/regOption/RegOption',
+			'/admin/regOption/RegOption',
 			'saveOption',
 			$this->getFormRows());
 		

@@ -41,7 +41,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Edit',
-							'href' => '/action/admin/user/User',
+							'href' => '/admin/user/User',
 							'parameters' => array(
 								'a' => 'view',
 								'id' => $user['id']
@@ -50,7 +50,7 @@ _;
 						&nbsp;
 						{$this->HTML->link(array(
 							'label' => 'Remove',
-							'href' => '/action/admin/user/User',
+							'href' => '/admin/user/User',
 							'parameters' => array(
 								'action' => 'removeUser',
 								'id' => $user['id']

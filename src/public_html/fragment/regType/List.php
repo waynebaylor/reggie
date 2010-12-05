@@ -42,7 +42,7 @@ _;
 		$regTypes = $this->section['content'];
 		foreach($regTypes as $type) {
 			$arrows = new fragment_Arrows(array(
-				'href' => '/action/admin/regType/RegType',
+				'href' => '/admin/regType/RegType',
 				'parameters' => array(
 					'eventId' => $this->event['id']
 				),
@@ -71,7 +71,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Edit',
-							'href' => '/action/admin/regType/RegType',
+							'href' => '/admin/regType/RegType',
 							'parameters' => array(
 								'action' => 'view',
 								'id' => $type['id'],
@@ -81,7 +81,7 @@ _;
 						
 						{$this->HTML->link(array(
 							'label' => 'Remove',
-							'href' => '/action/admin/regType/RegType',
+							'href' => '/admin/regType/RegType',
 							'parameters' => array(
 								'action' => 'removeRegType',
 								'id' => $type['id'],

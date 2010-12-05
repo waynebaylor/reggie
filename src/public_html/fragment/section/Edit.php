@@ -11,7 +11,7 @@ class fragment_section_Edit extends template_Template
 	
 	public function html() {
 		$form = new fragment_XhrTableForm(
-			'/action/admin/section/Section', 
+			'/admin/section/Section', 
 			'saveSection', 
 			$this->getFormRows());
 		

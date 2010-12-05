@@ -43,7 +43,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => $report['name'],
-							'href' => '/action/admin/report/RunReport',
+							'href' => '/admin/report/RunReport',
 							'title' => 'Generate Report',
 							'target' => '_blank',
 							'parameters' => array(
@@ -55,7 +55,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Edit',
-							'href' => '/action/admin/report/Report',
+							'href' => '/admin/report/Report',
 							'parameters' => array(
 								'action' => 'view',
 								'id' => $report['id'],
@@ -65,7 +65,7 @@ _;
 						
 						{$this->HTML->link(array(
 							'label' => 'Remove',
-							'href' => '/action/admin/report/Report',
+							'href' => '/admin/report/Report',
 							'parameters' => array(
 								'action' => 'removeReport',
 								'id' => $report['id']

@@ -13,7 +13,7 @@ class fragment_report_Add extends template_Template
 	public function html() {
 		$form = new fragment_XhrAddForm(
 			'Add Report', 
-			'/action/admin/report/Report',
+			'/admin/report/Report',
 			'addReport',
 			$this->getFormRows()
 		);

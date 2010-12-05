@@ -1,6 +1,6 @@
 <?php
 
-header('Location: /action/admin/Login?a=view');
+header('Location: /admin/Login?a=view');
 return;
 	
 ?>

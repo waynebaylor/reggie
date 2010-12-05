@@ -28,7 +28,7 @@ abstract class template_AdminPage extends template_Template
 		if(!empty($user) && $this->showLogoutLink) { 
 			$logoutLink = $this->HTML->link(array(
 				'label' => "Logout",
-				'href' => '/action/admin/Login',
+				'href' => '/admin/Login',
 				'parameters' => array(
 					'a' => 'logout'
 				),
@@ -39,7 +39,7 @@ abstract class template_AdminPage extends template_Template
 		$banner = 'Registration System';
 		if($this->bannerLinkActive) {
 			$banner = <<<_
-				<a href="/action/admin/MainMenu?action=view">
+				<a href="/admin/MainMenu?action=view">
 					{$banner}
 				</a>	
 _;

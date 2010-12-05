@@ -34,7 +34,7 @@ class action_admin_fileUpload_FileUpload extends action_BaseAction
 			FileUtil::saveEventFile($event, $file);
 		}
 		
-		return new template_Redirect('/action/admin/fileUpload/FileUpload?action=view&id='.$eventId);
+		return new template_Redirect('/admin/fileUpload/FileUpload?action=view&id='.$eventId);
 	}
 	
 	public function deleteFile() {
@@ -47,7 +47,7 @@ class action_admin_fileUpload_FileUpload extends action_BaseAction
 		
 		FileUtil::deleteEventFile($event, $_REQUEST['fileName']);
 		
-		return new template_Redirect('/action/admin/fileUpload/FileUpload?action=view&id='.$eventId);
+		return new template_Redirect('/admin/fileUpload/FileUpload?action=view&id='.$eventId);
 	}
 	
 	private function getAllowedExtensions() {

@@ -11,14 +11,14 @@ Reggie::setup();
 class Controller
 {
 	private $logger;
-	private $uri;
+	private $url;
 
 	function __construct($uri) {
 		$this->logger = new Logger();
 
-		$uri = explode('?', $uri);
-		$uri = $uri[0];
-		$this->uri = explode('/', trim($uri, '/'));
+		$url = explode('?', $uri); 
+		$url = trim($url[0], '/');
+		$this->url = $url;
 	}
 
 	public function run() {
@@ -26,28 +26,22 @@ class Controller
 		$this->invokeAction();
 	}
 
-	// parse the uri
 	private function invokeAction() {
 		try {
 			session_start();
 			
+			$_REQUEST['action'] = $this->getAction();
+			
 			// requests starting with '/event' are handled 
 			// by the registration dispatcher.
-			if($this->uri[0] === 'event') {
-				// the action for reg urls will be in one of the two parameters: 'action' or 'a'.
-				if(empty($_REQUEST['action'])) {
-					$_REQUEST['action'] = RequestUtil::getValue('a', 'view');
-				}
+			if($this->isRegRequest()) {
 				$this->invokeRegistration();
 			}
-			// eventually should be like '/admin/...', but for
-			// now 'admin' is in the second position of the uri.
-			else if($this->uri[1] === 'admin') {
-				$_REQUEST['action'] = $this->getAdminAction();
+			else if($this->isAdminRequest()) {
 				$this->invokeAdmin();
 			}
 			else {
-				throw new Exception('Invalid action: '.implode('/', $this->uri));
+				throw new Exception('Invalid action: '.$this->url);
 			}
 		}
 		catch(Exception $ex) {
@@ -59,7 +53,8 @@ class Controller
 	}
 	
 	private function invokeRegistration() {
-		$regDispatcher = new RegistrationDispatcher($this->uri);
+		$segments = explode('/', $this->url);
+		$regDispatcher = new RegistrationDispatcher($segments);
 		$action = $regDispatcher->getRegistrationAction();
 		$action->execute();
 	}
@@ -73,11 +68,11 @@ class Controller
 		
 		$user = SessionUtil::getUser();
 		
-		$loginRequest = strpos(implode('/', $this->uri), 'action/admin/Login');
+		$loginRequest = strpos($this->url, 'admin/Login');
 		$loginRequest = $loginRequest !== false && $loginRequest === 0;
 		
 		if(empty($user) && !$loginRequest) {
-			$redirect = new template_Redirect('/action/admin/Login?a=view');
+			$redirect = new template_Redirect('/admin/Login?a=view');
 			echo $redirect->html();
 			return;
 		}
@@ -86,47 +81,35 @@ class Controller
 	}
 	
 	private function invoke() {
-		// getting the class name depends on whether the last uri segment is 
-		// used to indicate the action.
-		$className = isset($_REQUEST['a']) || isset($_REQUEST['action'])? 
-			implode('_', $this->uri) :
-			implode('_', array_slice($this->uri, 0, -1));
+		$className = Reggie::actionClass($this->url);
 			
-		$path = implode('/', explode('_', $className));
-		$file = $path.'.php';
-		
-		if(file_exists(Reggie::$PATH.'/'.$file)) {
-			require_once $file;
-			
-			$action = new $className();
-			$action->execute();
-		}
-		else {
-			throw new Exception('Invalid URL. Script does not exist: '.$path);
-		}
+		$action = new $className();
+		$action->execute();
 	}
 	
-	private function getAdminAction() {
+	private function getAction() {
 		//
-		// there are three ways to indicate the method to execute:
-		// 1) include it in the request - localhost/action/admin/MainMenu?a=view
-		// 2) include it as part of the url - localhost/action/admin/MainMenu/view
-		// 3) DEPRECATED: include it in the request - localhost/action/admin/MainMenu?action=view
+		// there are two ways to indicate the method to execute:
+		// 1) include it in the request - localhost/admin/MainMenu?a=view
+		// 2) DEPRECATED: include it in the request - localhost/admin/MainMenu?action=view
 		//
 		
-		if(isset($_REQUEST['a'])) {
-			$method = $_REQUEST['a'];
-		}
-		else if(isset($_REQUEST['action'])) {
+		if(isset($_REQUEST['action'])) {
 			$method = $_REQUEST['action'];
 		}
 		else {
-			// the last segment is the name of the method to execute. this is only valid for 
-			// admin urls.
-			$method = $this->uri[count($this->uri)-1];
+			$method = RequestUtil::getValue('a', 'view');
 		}
 		
 		return $method;
+	}
+	
+	private function isRegRequest() {
+		return strpos($this->url, 'event') === 0;
+	}
+	
+	private function isAdminRequest() {
+		return strpos($this->url, 'admin') === 0;
 	}
 }
 

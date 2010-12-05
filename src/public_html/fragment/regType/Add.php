@@ -15,7 +15,7 @@ class fragment_regType_Add extends template_Template
 	public function html() {
 		$form = new fragment_XhrAddForm(
 			'Add Registration Type', 
-			'/action/admin/regType/RegType', 
+			'/admin/regType/RegType', 
 			'addRegType', 
 			$this->getFormRows());
 		

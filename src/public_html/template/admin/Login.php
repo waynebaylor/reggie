@@ -12,7 +12,7 @@ class template_admin_Login extends template_AdminPage
 	
 	protected function getContent() {
 		$form = new fragment_XhrTableForm(
-			'/action/admin/Login', 
+			'/admin/Login', 
 			'login', 
 			$this->getFormRows(),
 			'Submit',

@@ -9,7 +9,7 @@ class fragment_event_Add extends template_Template
 	public function html() {
 		$form = new fragment_XhrAddForm(
 			'Add Event',
-			'/action/admin/event/EditEvent',
+			'/admin/event/EditEvent',
 			'addEvent',
 			$this->getFormRows());
 		

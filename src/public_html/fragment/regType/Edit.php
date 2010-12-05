@@ -11,7 +11,7 @@ class fragment_regType_Edit extends template_Template
 	}
 
 	public function html() {
-		$form = new fragment_XhrTableForm('/action/admin/regType/RegType', 'saveRegType', $this->getFormRows());
+		$form = new fragment_XhrTableForm('/admin/regType/RegType', 'saveRegType', $this->getFormRows());
 
 		return <<<_
 			<div class="fragment-edit">

@@ -42,7 +42,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Remove',
-							'href' => '/action/admin/report/ReportField',
+							'href' => '/admin/report/ReportField',
 							'parameters' => array(
 								'a' => 'removeField',
 								'id' => 'date_registered',
@@ -63,7 +63,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Remove',
-							'href' => '/action/admin/report/ReportField',
+							'href' => '/admin/report/ReportField',
 							'parameters' => array(
 								'a' => 'removeField',
 								'id' => 'category',
@@ -84,7 +84,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Remove',
-							'href' => '/action/admin/report/ReportField',
+							'href' => '/admin/report/ReportField',
 							'parameters' => array(
 								'a' => 'removeField',
 								'id' => 'registration_type',
@@ -100,7 +100,7 @@ _;
 		$fields = $this->report['fields'];
 		foreach($fields as $field) {
 			$arrows = new fragment_Arrows(array(
-				'href' => '/action/admin/report/ReportField',
+				'href' => '/admin/report/ReportField',
 				'parameters' => array(
 					'reportId' => $this->report['id']
 				),
@@ -123,7 +123,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Remove',
-							'href' => '/action/admin/report/ReportField',
+							'href' => '/admin/report/ReportField',
 							'parameters' => array(
 								'a' => 'removeField',
 								'id' => $field['id']
@@ -143,7 +143,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Remove',
-							'href' => '/action/admin/report/ReportField',
+							'href' => '/admin/report/ReportField',
 							'parameters' => array(
 								'a' => 'removeField',
 								'id' => 'payment_type',
@@ -164,7 +164,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Remove',
-							'href' => '/action/admin/report/ReportField',
+							'href' => '/admin/report/ReportField',
 							'parameters' => array(
 								'a' => 'removeField',
 								'id' => 'total_cost',
@@ -185,7 +185,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Remove',
-							'href' => '/action/admin/report/ReportField',
+							'href' => '/admin/report/ReportField',
 							'parameters' => array(
 								'a' => 'removeField',
 								'id' => 'total_paid',
@@ -206,7 +206,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Remove',
-							'href' => '/action/admin/report/ReportField',
+							'href' => '/admin/report/ReportField',
 							'parameters' => array(
 								'a' => 'removeField',
 								'id' => 'remaining_balance',

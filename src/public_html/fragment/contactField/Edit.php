@@ -14,7 +14,7 @@ class fragment_contactField_Edit extends template_Template
 	
 	public function html() {
 		$form = new fragment_XhrTableForm(
-			'/action/admin/contactField/ContactField', 
+			'/admin/contactField/ContactField', 
 			'save', 
 			$this->getFormRows());
 		

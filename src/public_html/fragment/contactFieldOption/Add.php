@@ -13,7 +13,7 @@ class fragment_contactFieldOption_Add extends template_Template
 	}
 	
 	public function html() {
-		$addForm = new fragment_XhrAddForm('Add Option', '/action/admin/contactField/Option', 
+		$addForm = new fragment_XhrAddForm('Add Option', '/admin/contactField/Option', 
 											'addOption', $this->getFormRows());
 		
 		return <<<_

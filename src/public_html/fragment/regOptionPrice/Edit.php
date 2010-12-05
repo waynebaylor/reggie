@@ -14,7 +14,7 @@ class fragment_regOptionPrice_Edit extends template_Template
 	
 	public function html() {
 		$form = new fragment_XhrTableForm(
-			'/action/admin/regOption/RegOptionPrice',
+			'/admin/regOption/RegOptionPrice',
 			'savePrice',
 			$this->getFormRows());
 		

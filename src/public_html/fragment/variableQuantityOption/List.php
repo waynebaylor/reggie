@@ -42,7 +42,7 @@ _;
 		$options = $this->section['content'];
 		foreach($options as $option) {
 			$arrows = new fragment_Arrows(array(
-				'href' => '/action/admin/regOption/VariableQuantity',
+				'href' => '/admin/regOption/VariableQuantity',
 				'parameters' => array(
 					'eventId' => $this->event['id']
 				),
@@ -75,7 +75,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Edit',
-							'href' => '/action/admin/regOption/VariableQuantity',
+							'href' => '/admin/regOption/VariableQuantity',
 							'parameters' => array(
 								'action' => 'view',
 								'id' => $option['id'],
@@ -85,7 +85,7 @@ _;
 						
 						{$this->HTML->link(array(
 							'label' => 'Remove',
-							'href' => '/action/admin/regOption/VariableQuantity',
+							'href' => '/admin/regOption/VariableQuantity',
 							'parameters' => array(
 								'action' => 'removeOption',
 								'id' => $option['id'],

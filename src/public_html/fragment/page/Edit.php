@@ -11,7 +11,7 @@ class fragment_page_Edit extends template_Template
 	}
 	
 	public function html() {
-		$form = new fragment_XhrTableForm('/action/admin/page/Page', 'savePage', $this->getFormRows());
+		$form = new fragment_XhrTableForm('/admin/page/Page', 'savePage', $this->getFormRows());
 		
 		return <<<_
 			<div class="fragment-edit">

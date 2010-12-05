@@ -13,7 +13,7 @@ class fragment_page_Add extends template_Template
 	public function html() {
 		$form = new fragment_XhrAddForm(
 			'Add Page', 
-			'/action/admin/page/Page', 
+			'/admin/page/Page', 
 			'addPage', 
 			$this->getFormRows());
 		

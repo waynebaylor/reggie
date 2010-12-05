@@ -134,7 +134,7 @@ _;
 		return <<<_
 			{$this->HTML->link(array(
 				'label' => 'Main Menu',
-				'href' => '/action/admin/MainMenu',
+				'href' => '/admin/MainMenu',
 				'parameters' => array(
 					'a' => 'view'
 				)
@@ -148,7 +148,7 @@ _;
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
 				'label' => "Event ({$this->config['eventCode']})",
-				'href' => '/action/admin/event/EditEvent',
+				'href' => '/admin/event/EditEvent',
 				'parameters' => array(
 					'a' => 'view',
 					'id' => $this->config['eventId']
@@ -163,7 +163,7 @@ _;
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
 				'label' => 'Page',
-				'href' => '/action/admin/page/Page',
+				'href' => '/admin/page/Page',
 				'parameters' => array(
 					'a' => 'view',
 					'id' => $this->config['pageId'],
@@ -179,7 +179,7 @@ _;
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
 				'label' => 'Section',
-				'href' => '/action/admin/section/Section',
+				'href' => '/admin/section/Section',
 				'parameters' => array(
 					'a' => 'view',
 					'id' => $this->config['sectionId'],
@@ -195,7 +195,7 @@ _;
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
 				'label' => 'Section',
-				'href' => '/action/admin/section/Section',
+				'href' => '/admin/section/Section',
 				'parameters' => array(
 					'a' => 'view',
 					'id' => $this->config['sectionId'],
@@ -216,7 +216,7 @@ _;
 				{$this->SEPARATOR}
 				{$this->HTML->link(array(
 					'label' => 'Section',
-					'href' => '/action/admin/section/Section',
+					'href' => '/admin/section/Section',
 					'parameters' => array(
 						'a' => 'view',
 						'id' => $this->config['sectionId'],
@@ -233,7 +233,7 @@ _;
 				{$this->SEPARATOR}
 				{$this->HTML->link(array(
 					'label' => 'Reg Option',
-					'href' => '/action/admin/regOption/RegOption',
+					'href' => '/admin/regOption/RegOption',
 					'parameters' => array(
 						'a' => 'view',
 						'id' => $group['regOptionId'],
@@ -253,8 +253,8 @@ _;
 		}
 		
 		$action = model_Group::isSectionGroup($group)? 
-			'/action/admin/regOption/SectionRegOptionGroup' : 
-			'/action/admin/regOption/RegOptionGroup';
+			'/admin/regOption/SectionRegOptionGroup' : 
+			'/admin/regOption/RegOptionGroup';
 	
 		return <<<_
 			{$this->optionGroup($option['parentGroupId'], model_Group::isSectionGroup($group))}
@@ -280,7 +280,7 @@ _;
 				{$this->SEPARATOR}
 				{$this->HTML->link(array(
 					'label' => 'Variable Quantity Option',
-					'href' => '/action/admin/regOption/VariableQuantity',
+					'href' => '/admin/regOption/VariableQuantity',
 					'parameters' => array(
 						'a' => 'view',
 						'id' => $price['regOptionId'],
@@ -295,7 +295,7 @@ _;
 				{$this->SEPARATOR}
 				{$this->HTML->link(array(
 					'label' => 'Reg Option',
-					'href' => '/action/admin/regOption/RegOption',
+					'href' => '/admin/regOption/RegOption',
 					'parameters' => array(
 						'a' => 'view',
 						'id' => $price['regOptionId'],
@@ -315,7 +315,7 @@ _;
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
 				'label' => 'Section',
-				'href' => '/action/admin/section/Section',
+				'href' => '/admin/section/Section',
 				'parameters' => array(
 					'a' => 'view',
 					'id' => $this->config['sectionId'],
@@ -331,7 +331,7 @@ _;
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
 				'label' => "{$this->config['eventCode']} Reports",
-				'href' => '/action/admin/report/Report',
+				'href' => '/admin/report/Report',
 				'parameters' => array(
 					'a' => 'eventReports',
 					'id' => $this->config['eventId']
@@ -346,7 +346,7 @@ _;
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
 				'label' => "Event ({$this->config['eventCode']})",
-				'href' => '/action/admin/event/EditEvent',
+				'href' => '/admin/event/EditEvent',
 				'parameters' => array(
 					'a' => 'view',
 					'id' => $this->config['eventId']
@@ -361,7 +361,7 @@ _;
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
 				'label' => "Event ({$this->config['eventCode']})",
-				'href' => '/action/admin/event/EditEvent',
+				'href' => '/admin/event/EditEvent',
 				'parameters' => array(
 					'a' => 'view',
 					'id' => $this->config['eventId']
@@ -376,7 +376,7 @@ _;
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
 				'label' => "Event ({$this->config['eventCode']})",
-				'href' => '/action/admin/event/EditEvent',
+				'href' => '/admin/event/EditEvent',
 				'parameters' => array(
 					'a' => 'view',
 					'id' => $this->config['eventId']
@@ -399,7 +399,7 @@ _;
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
 				'label' => "Event ({$this->config['eventCode']})",
-				'href' => '/action/admin/event/EditEvent',
+				'href' => '/admin/event/EditEvent',
 				'parameters' => array(
 					'a' => 'view',
 					'id' => $this->config['eventId']

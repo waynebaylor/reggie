@@ -18,7 +18,7 @@ dojo.require("hhreg.xhrAddForm");
 	
 	var connectArrowHandlers = function() {
 		hhreg.arrows.bind({
-			url: "/action/EditSection",
+			url: "/admin/regType/RegType",
 			upAction: "moveRegTypeUp",
 			downAction: "moveRegTypeDown",
 			callback: function(response) {

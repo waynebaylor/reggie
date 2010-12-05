@@ -20,7 +20,7 @@ class template_admin_EditAppearance extends template_AdminPage
 	
 	protected function getContent() {
 		$form = new fragment_XhrTableForm(
-			'/action/admin/event/EditAppearance', 
+			'/admin/event/EditAppearance', 
 			'saveAppearance', 
 			$this->getFormRows()
 		);

@@ -42,7 +42,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Remove',
-							'href' => '/action/admin/event/EditGroupRegistration',
+							'href' => '/admin/event/EditGroupRegistration',
 							'parameters' => array(
 								'a' => 'removeField',
 								'id' => $field['id']

@@ -20,7 +20,7 @@ class fragment_regOptionPrice_Add extends template_Template
 		
 		$form = new fragment_XhrAddForm(
 			'Add Option Price',
-			'/action/admin/regOption/RegOptionPrice',
+			'/admin/regOption/RegOptionPrice',
 			$action,
 			$this->getFormRows());
 		

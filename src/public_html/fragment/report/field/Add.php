@@ -15,7 +15,7 @@ class fragment_report_field_Add extends template_Template
 	public function html() {
 		$form = new fragment_XhrAddForm(
 			'Add Field',
-			'/action/admin/report/ReportField',
+			'/admin/report/ReportField',
 			'addField',
 			$this->getFormRows()
 		);

@@ -19,7 +19,7 @@ class template_admin_EditPaymentOptions extends template_AdminPage
 	}
 	protected function getContent() {
 		$form = new fragment_XhrTableForm(
-			'/action/admin/event/EditPaymentOptions',
+			'/admin/event/EditPaymentOptions',
 			'savePaymentTypes',
 			$this->getFormRows());
 		

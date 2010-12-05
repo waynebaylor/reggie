@@ -15,7 +15,7 @@ class fragment_regOptionGroup_Add extends template_Template
 	public function html() {
 		$form = new fragment_XhrAddForm(
 			'Add Option Group',
-			'/action/admin/regOption/RegOptionGroup',
+			'/admin/regOption/RegOptionGroup',
 			'addGroup',
 			$this->getFormRows());
 		

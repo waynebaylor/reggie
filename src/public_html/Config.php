@@ -36,6 +36,10 @@ class Config
 		'DB_NAME'     => 'reggie',
 		'DB_USERNAME' => 'reggie',
 		'DB_PASSWORD' => 'reggie',
+	
+		//
+		// the directory from which all actions are autoloaded.
+		'ACTION_BASE' => 'action',
 		
 		//
 		// Authorize.NET properties.

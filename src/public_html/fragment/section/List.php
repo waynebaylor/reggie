@@ -39,7 +39,7 @@ _;
 		$sections = $this->page['sections'];
 		foreach($sections as $section) {
 			$arrows = new fragment_Arrows(array(
-				'href' => '/action/admin/section/Section',
+				'href' => '/admin/section/Section',
 				'parameters' => array(
 					'eventId' => $this->page['eventId']
 				),
@@ -70,7 +70,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Edit',
-							'href' => '/action/admin/section/Section',
+							'href' => '/admin/section/Section',
 							'parameters' => array(
 								'action' => 'view',
 								'id' => $section['id'],
@@ -80,7 +80,7 @@ _;
 						
 						{$this->HTML->link(array(
 							'label' => 'Remove',
-							'href' => '/action/admin/section/Section',
+							'href' => '/admin/section/Section',
 							'parameters' => array(
 								'action' => 'removeSection',
 								'id' => $section['id']

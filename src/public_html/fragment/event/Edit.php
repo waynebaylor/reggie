@@ -12,7 +12,7 @@ class fragment_event_Edit extends template_Template
 	
 	public function html() {
 		$form = new fragment_XhrTableForm(
-			'/action/admin/event/EditEvent', 
+			'/admin/event/EditEvent', 
 			'saveEvent', 
 			$this->getFormRows());
 		
@@ -29,7 +29,7 @@ _;
 		return <<<_
 			{$this->HTML->link(array(
 				'label' => 'Appearance',
-				'href' => '/action/admin/event/EditAppearance',
+				'href' => '/admin/event/EditAppearance',
 				'title' => 'Edit event appearance',
 				'parameters' => array(
 					'action' => 'view',
@@ -39,7 +39,7 @@ _;
 			&nbsp;
 			{$this->HTML->link(array(
 				'label' => 'Payment Options',
-				'href' => '/action/admin/event/EditPaymentOptions',
+				'href' => '/admin/event/EditPaymentOptions',
 				'title' => 'Edit event payment options',
 				'parameters' => array(
 					'action' => 'view',
@@ -49,7 +49,7 @@ _;
 			&nbsp;
 			{$this->HTML->link(array(
 				'label' => 'Email Template',
-				'href' => '/action/admin/email/EmailTemplate',
+				'href' => '/admin/email/EmailTemplate',
 				'title' => 'Edit event email template',
 				'parameters' => array(
 					'action' => 'view',
@@ -59,7 +59,7 @@ _;
 			&nbsp;
 			{$this->HTML->link(array(
 				'label' => 'Group Registration',
-				'href' => '/action/admin/event/EditGroupRegistration',
+				'href' => '/admin/event/EditGroupRegistration',
 				'title' => 'Edit event group registration options.',
 				'parameters' => array(
 					'a' => 'view',

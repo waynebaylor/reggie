@@ -46,7 +46,7 @@ _;
 		$options = $this->field['options'];
 		foreach($options as $option) {
 			$arrows = new fragment_Arrows(array(
-				'href' => '/action/admin/contactField/Option',
+				'href' => '/admin/contactField/Option',
 				'parameters' => array(
 					'eventId' => $this->event['id']
 				),
@@ -76,7 +76,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Remove',
-							'href'  => '/action/admin/contactField/Option',
+							'href'  => '/admin/contactField/Option',
 							'parameters' => array(
 								'action' => 'removeOption',
 								'id'     => $option['id'],

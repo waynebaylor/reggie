@@ -11,7 +11,7 @@ class fragment_section_Add extends template_Template
 	}
 	
 	public function html() {
-		$form = new fragment_XhrAddForm('Add Section', '/action/admin/section/Section', 'addSection', $this->getFormRows());
+		$form = new fragment_XhrAddForm('Add Section', '/admin/section/Section', 'addSection', $this->getFormRows());
 		
 		return <<<_
 			<div class="fragment-add">
