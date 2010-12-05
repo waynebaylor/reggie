@@ -10,8 +10,8 @@ RewriteEngine on
 
 RewriteRule ^/?$ index.php
 
-RewriteCond $1 !^\/?(index\.php|favicon\.ico|js|css|images|pdf|files)
-RewriteRule ^(.*)$ Controller.php [L]
+RewriteCond $1 !^\/?(favicon\.ico|js|css|images|pdf|files)
+RewriteRule ^(.*)$ index.php [L]
 
 #
 # php settings must be set by adhost in their environment. the following

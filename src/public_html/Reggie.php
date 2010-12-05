@@ -82,9 +82,9 @@ class Reggie
 		// set the path to the application root.
 		Reggie::$PATH = dirname(__FILE__);
 		
-		// set the context path. all requests are sent to Controller, so
-		// we know the path will end with 'Controller.php'.
-		Reggie::$CONTEXT = str_replace('Controller.php', '', $_SERVER['SCRIPT_NAME']);
+		// set the context path. all requests are sent to index.php, so
+		// we know the path will end with 'index.php'.
+		Reggie::$CONTEXT = str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
 	}
 }
 

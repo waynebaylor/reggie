@@ -29,7 +29,7 @@ class action_admin_Login extends action_ValidatorAction
 	
 	public function logout() {
 		session_destroy();
-		return new template_Redirect('/index.php');
+		return new template_Redirect('/admin/Login');
 	}
 	
 	public function validate($fieldNames = array()) {
