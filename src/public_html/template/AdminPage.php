@@ -1,6 +1,6 @@
 <?php 
 
-abstract class template_AdminPage extends template_Template
+abstract class template_AdminPage extends template_Page
 {
 	private $title;
 	private $showLogoutLink;
@@ -22,7 +22,30 @@ abstract class template_AdminPage extends template_Template
 		$this->bannerLinkActive = $t['bannerLinkActive'];
 	}
 	
-	public function html() {
+	protected function head() {
+		return <<<_
+			<title>{$this->title}</title>
+	
+			{$this->HTML->css(array('href' => '/js/dojo/resources/dojo.css'))}
+			{$this->HTML->css(array('href' => '/js/dijit/themes/dijit.css'))}
+			{$this->HTML->css(array('href' => '/js/dijit/themes/tundra/tundra.css'))}
+			
+			{$this->HTML->css(array(
+				'rel' => 'stylesheet/less',
+				'href' => '/css/admin.less'))
+			}
+		
+			{$this->HTML->script(array('src' => '/js/less.js'))}
+			{$this->HTML->script(array('src' => '/js/dojo/dojo.js'))}
+			
+			<script type="text/javascript">
+				dojo.registerModulePath("hhreg", "{$this->contextUrl('/js/hhreg')}");
+				dojo.require("hhreg");
+			</script>
+_;
+	}
+	
+	protected function body() {
 		$logoutLink = '';
 		$user = SessionUtil::getUser();
 		if(!empty($user) && $this->showLogoutLink) { 
@@ -38,58 +61,42 @@ abstract class template_AdminPage extends template_Template
 		
 		$banner = 'Registration System';
 		if($this->bannerLinkActive) {
-			$banner = <<<_
-				<a href="/admin/MainMenu?action=view">
-					{$banner}
-				</a>	
-_;
+			$banner = $this->HTML->link(array(
+				'label' => $banner,
+				'href' => '/admin/MainMenu',
+				'parameters' => array(
+					'a' => 'view'
+				)
+			));
 		}
 		
 		return <<<_
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-	<title>{$this->title}</title>
-	<link rel="stylesheet" type="text/css" href="/js/dojo/resources/dojo.css"/>
-	<link rel="stylesheet" type="text/css" href="/js/dijit/themes/dijit.css"/>
-	<link rel="stylesheet" type="text/css" href="/js/dijit/themes/tundra/tundra.css"/>
-	
-	<link rel="stylesheet/less" type="text/css" href="/css/admin.less">
-
-	<script type="text/javascript" src="/js/less.js"></script>
-	<script type="text/javascript" src="/js/dojo/dojo.js"></script>
-	<script type="text/javascript" src="/js/hhreg.js"></script>
-</head>
-<body class="tundra">
-	<div id="body">
-		<script type="text/javascript">
-			dojo.addOnLoad(function() {
-				// cancel button
-				if(dojo.byId("cancelButton")) {
-					dojo.connect(dojo.byId("cancelButton"), "onclick", function() {
-						history.back();
+			<div id="body">
+				<script type="text/javascript">
+					dojo.addOnLoad(function() { 
+						// cancel button
+						if(dojo.byId("cancelButton")) {
+							dojo.connect(dojo.byId("cancelButton"), "onclick", function() {
+								history.back();
+							});
+						}
 					});
-				}
-			});
-		</script>
-
-		<div id="header">
-			{$banner}
-		</div>	
+				</script>
 		
-		<table class="sub-header-links"><tr>
-		<td>
-			{$this->getBreadcrumbs()->html()}
-		</td>
-		<td style="text-align:right; padding:10px 20px 0 0;">
-			{$logoutLink}
-		</td>
-		</tr></table>
-		{$this->getContent()}
-	</div>
-</body>
-</html>
-		
+				<div id="header">
+					{$banner}
+				</div>	
+				
+				<table class="sub-header-links"><tr>
+				<td>
+					{$this->getBreadcrumbs()->html()}
+				</td>
+				<td style="text-align:right; padding:10px 20px 0 0;">
+					{$logoutLink}
+				</td>
+				</tr></table>
+				{$this->getContent()}
+			</div>
 _;
 	}
 	

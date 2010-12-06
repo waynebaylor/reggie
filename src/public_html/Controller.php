@@ -8,8 +8,19 @@ class Controller
 	function __construct($uri) {
 		$this->logger = new Logger();
 
+		// strip any parameters.
 		$url = explode('?', $uri); 
-		$url = trim($url[0], '/');
+		$url = '/'.trim($url[0], '/');
+		
+		// strip the context.
+		if(strpos($url, Reggie::$CONTEXT) === 0) {
+			$url = substr($url, strlen(Reggie::$CONTEXT));
+		}
+		
+		// make sure url starts with a '/'.
+		$url = '/'.$url;
+		$url = str_replace('//', '/', $url);
+		
 		$this->url = $url;
 	}
 
@@ -45,7 +56,7 @@ class Controller
 	}
 	
 	private function invokeRegistration() {
-		$segments = explode('/', $this->url);
+		$segments = explode('/', ltrim($this->url, '/'));
 		$regDispatcher = new RegistrationDispatcher($segments);
 		$action = $regDispatcher->getRegistrationAction();
 		$action->execute();
@@ -60,9 +71,9 @@ class Controller
 		
 		$user = SessionUtil::getUser();
 		
-		$loginRequest = strpos($this->url, 'admin/Login');
+		$loginRequest = strpos($this->url, '/admin/Login');
 		$loginRequest = $loginRequest !== false && $loginRequest === 0;
-		
+
 		if(empty($user) && !$loginRequest) {
 			$redirect = new template_Redirect('/admin/Login?a=view');
 			echo $redirect->html();
@@ -97,11 +108,11 @@ class Controller
 	}
 	
 	private function isRegRequest() {
-		return strpos($this->url, 'event') === 0;
+		return strpos($this->url, '/event') === 0;
 	}
 	
 	private function isAdminRequest() {
-		return strpos($this->url, 'admin') === 0;
+		return strpos($this->url, '/admin') === 0;
 	}
 }
 

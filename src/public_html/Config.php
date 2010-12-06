@@ -22,12 +22,12 @@ class Config
 		//
 		// log file errors are written to.
 		//
-		'ERROR_LOG' => '/var/www/hhreg.error',
+		'ERROR_LOG' => '/var/www/reggie/hhreg.error',
 	
 		//
 		// payment information is written to this file.
 		//
-		'PAYMENT_LOG' => '/var/www/payment.log',
+		'PAYMENT_LOG' => '/var/www/reggie/payment.log',
 	
 		//
 		// database properties

@@ -1,6 +1,6 @@
 <?php
 
-class template_reg_BasePage extends template_Template
+class template_reg_BasePage extends template_Page
 {
 	protected $errors;
 	protected $event;
@@ -20,7 +20,59 @@ class template_reg_BasePage extends template_Template
 		$this->showControls = isset($config['showControls'])? $config['showControls'] : true;
 	}	
 	
-	public function html() {
+	protected function head() {
+		return <<<_
+			<title>{$this->event['displayName']} - {$this->title}</title>
+	
+			{$this->HTML->css(array('href' => '/js/dojo/resources/dojo.css'))}
+			{$this->HTML->css(array('href' => '/js/dijit/themes/dijit.css'))}
+			{$this->HTML->css(array('href' => '/js/dijit/themes/tundra/tundra.css'))}
+			
+			{$this->HTML->css(array('href' => '/css/reg.css'))}
+		
+			{$this->HTML->script(array('src' => '/js/dojo/dojo.js'))}
+			
+			<script type="text/javascript">
+				dojo.registerModulePath("hhreg", "{$this->contextUrl('/js/hhreg')}");
+				dojo.require("hhreg");
+				
+				dojo.addOnLoad(function() {
+					dojo.require("hhreg.validation");
+					
+					var messages = dojo.byId("xhr-response");
+					hhreg.validation.showMessages(dojo.fromJson(messages.value), messages.form);
+				});
+			</script>
+			
+			<style type="text/css">
+				body {
+					background-color: #{$this->escapeHtml($this->event['appearance']['backgroundColor'])}
+				}
+				
+				#header {
+					background-color: #{$this->escapeHtml($this->event['appearance']['headerColor'])}
+				}
+				
+				#footer {
+					background-color: #{$this->escapeHtml($this->event['appearance']['footerColor'])}
+				}
+				
+				.menu {
+					background-color: #{$this->escapeHtml($this->event['appearance']['menuColor'])}
+				}
+				
+				.reg-form-content {
+					background-color: #{$this->escapeHtml($this->event['appearance']['formColor'])}
+				}
+				
+				.button {
+					background-color: #{$this->escapeHtml($this->event['appearance']['buttonColor'])}
+				}
+			</style>	
+_;
+	}
+	
+	protected function body() {
 		// category code for the form's post action.
 		$category = model_RegSession::getCategory();
 		$cat = model_Category::code($category);
@@ -47,79 +99,31 @@ _;
 		}
 		
 		return <<<_
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-	<title>{$this->event['displayName']} - {$this->title}</title>
-	<link rel="stylesheet" type="text/css" href="/js/dojo/resources/dojo.css"/>
-	<link rel="stylesheet" type="text/css" href="/js/dijit/themes/dijit.css"/>
-	<link rel="stylesheet" type="text/css" href="/js/dijit/themes/tundra/tundra.css"/>
-	<link rel="stylesheet" type="text/css" href="/css/reg.css"/>
-	<script type="text/javascript" src="/js/dojo/dojo.js"></script>
-	<script type="text/javascript" src="/js/hhreg.js"></script>
-	<script type="text/javascript">
-		dojo.addOnLoad(function() {
-			dojo.require("hhreg.validation");
-			
-			var messages = dojo.byId("xhr-response");
-			hhreg.validation.showMessages(dojo.fromJson(messages.value), messages.form);
-		});
-	</script>
-	
-	<style type="text/css">
-		body {
-			background-color: #{$this->escapeHtml($this->event['appearance']['backgroundColor'])}
-		}
-		
-		#header {
-			background-color: #{$this->escapeHtml($this->event['appearance']['headerColor'])}
-		}
-		
-		#footer {
-			background-color: #{$this->escapeHtml($this->event['appearance']['footerColor'])}
-		}
-		
-		.menu {
-			background-color: #{$this->escapeHtml($this->event['appearance']['menuColor'])}
-		}
-		
-		.reg-form-content {
-			background-color: #{$this->escapeHtml($this->event['appearance']['formColor'])}
-		}
-		
-		.button {
-			background-color: #{$this->escapeHtml($this->event['appearance']['buttonColor'])}
-		}
-	</style>
-</head>
-<body class="tundra">
-	<div id="header">
-		{$this->event['appearance']['headerContent']}
-	</div>
-	<div id="content">	
-		<form method="post" action="/event/{$this->event['code']}/{$cat}">
-			<input type="hidden" name="pageId" value="{$this->id}"/>
-			
-			<table class="reg-content"><tr>
-				<td>
-					{$menu->html()}
-				</td>
-				<td class="reg-form-content">
-					<div class="reg-form-title">{$this->title}</div>
+			<div id="header">
+				{$this->event['appearance']['headerContent']}
+			</div>
+			<div id="content">	
+				<form method="post" action="{$this->contextUrl("/event/{$this->event['code']}/{$cat}")}">
+					<input type="hidden" name="pageId" value="{$this->id}"/>
 					
-					{$this->page->html()}
+					<table class="reg-content"><tr>
+						<td>
+							{$menu->html()}
+						</td>
+						<td class="reg-form-content">
+							<div class="reg-form-title">{$this->title}</div>
+							
+							{$this->page->html()}
+							
+							{$this->getFormControls()}
+						</td>
+					</tr></table>
 					
-					{$this->getFormControls()}
-				</td>
-			</tr></table>
+					{$errorMessages->html()}
+				</form>
+			</div>
 			
-			{$errorMessages->html()}
-		</form>
-	</div>
-	
-	{$footer}
-</body>
-</html>
+			{$footer}
 _;
 	}
 	
@@ -133,9 +137,13 @@ _;
 					{$this->getNextButton()}
 					
 					<div class="{$hasErrors}">
-						<img src="/images/caution_red.gif" alt="Validation Errors" title="Validation Errors"/>
-					<span class="error-text">Please correct the above errors.</span>
-				</div>
+						{$this->HTML->img(array(
+							'src' => '/images/caution_red.gif',
+							'alt' => 'Validation Errors',
+							'title' => 'Validation Errors'
+						))}
+						<span class="error-text">Please correct the above errors.</span>
+					</div>
 				</div>		
 _;
 		}	

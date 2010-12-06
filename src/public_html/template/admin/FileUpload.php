@@ -26,7 +26,7 @@ class template_admin_FileUpload extends template_AdminPage
 				<div class="file-upload">
 					<h3>Upload file for {$this->event['code']}</h3>
 					
-					<form method="post" enctype="multipart/form-data" action="/admin/fileUpload/FileUpload">
+					<form method="post" enctype="multipart/form-data" action="{$this->contextUrl('/admin/fileUpload/FileUpload')}">
 						<input type="hidden" name="id" value="{$this->event['id']}"/>
 						
 						<table>
@@ -77,7 +77,7 @@ _;
 			$evenRow = !$evenRow;
 			$rowClass = $evenRow? 'even' : 'odd';
 			
-			$link = 'http://'.$_SERVER['SERVER_NAME'].Reggie::$CONTEXT.'files/'.$this->event['code'].'/'.$file;
+			$link = $this->contextUrl('/files/'.$this->event['code'].'/'.$file);
 			
 			$html .= <<<_
 				<tr class="{$rowClass}">
@@ -86,7 +86,7 @@ _;
 					</td>
 					<td>
 						{$this->HTML->link(array(
-							'label' => $link,
+							'label' => 'http://'.$_SERVER['SERVER_NAME'].$link,
 							'href' => $link,
 							'target' => '_blank',
 						))}
@@ -98,7 +98,7 @@ _;
 							'parameters' => array(
 								'id' => $this->event['id'],
 								'fileName' => $file,
-								'action' => 'deleteFile'
+								'a' => 'deleteFile'
 							),
 							'class' => 'remove'
 						))}

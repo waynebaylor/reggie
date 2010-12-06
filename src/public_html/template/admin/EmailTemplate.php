@@ -40,7 +40,7 @@ class template_admin_EmailTemplate extends template_AdminPage
 				<div class="divider"></div>
 				
 				<div id="email-test">
-					<form method="post" action="/admin/email/EmailTemplate">
+					<form method="post" action="{$this->contextUrl('/admin/email/EmailTemplate')}">
 						{$this->HTML->hidden(array(
 							'name' => 'id',
 							'value' => $this->event['emailTemplate']['id']

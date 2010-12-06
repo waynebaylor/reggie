@@ -13,4 +13,8 @@ abstract class template_Template
 	protected function escapeHtml($text) {
 		return htmlspecialchars($text);			
 	}
+	
+	protected function contextUrl($url) {
+		return Reggie::contextUrl($url);
+	}
 }

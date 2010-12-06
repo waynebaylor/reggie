@@ -136,6 +136,7 @@ _;
 			}
 		}
 		$url = trim($url, '&');
+		$url = Reggie::contextUrl($url);
 		
 		unset($config['label']);
 		unset($config['href']);
@@ -273,6 +274,36 @@ _;
 		}
 		
 		return $html;
+	}
+	
+	public function css($config) {
+		$rel = isset($config['rel'])? $config['rel'] : 'stylesheet';
+		
+		$url = Reggie::contextUrl($config['href']);
+		
+		return <<<_
+			<link rel="{$rel}" type="text/css" href="{$url}"/>	
+_;
+	}
+	
+	public function script($config) {
+		$src = Reggie::contextUrl($config['src']);
+		
+		return <<<_
+			<script type="text/javascript" src="{$src}"></script>	
+_;
+	}
+	
+	public function img($config) {
+		$src = Reggie::contextUrl($config['src']);
+		
+		unset($config['src']);
+		
+		$attrs = $this->getAttributeString($config);
+		
+		return <<<_
+			<img {$attrs} src="{$src}"/>	
+_;
 	}
 }
 

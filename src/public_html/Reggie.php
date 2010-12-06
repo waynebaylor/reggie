@@ -2,12 +2,17 @@
 
 class Reggie
 {
-	// application context path. e.g. "/apps/reggie" is the context path 
-	// if the application were located in "/var/www/apps/reggie". 
+	/**
+	 * application context path. e.g. "/apps/reggie" is the context path 
+	 * if the application were located in "/var/www/apps/reggie". it will 
+	 * always start with a '/'.
+	 */
 	public static $CONTEXT;
 	
-	// the path to the application root. e.g. "/var/www/apps/reggie" would
-	// be the path to the application.
+	/**
+	 * the path to the application root. e.g. "/var/www/apps/reggie" would
+	 * be the path to the application.
+	 */
 	public static $PATH;
 	
 	
@@ -37,6 +42,20 @@ class Reggie
 		}	
 		
 		return str_replace('/', '_', $url);
+	}
+	
+	/**
+	 * prefixes the given url with the applications context root. this is useful
+	 * because the application can reference urls as if it were running in the
+	 * root dir ('/').
+	 */
+	public static function contextUrl($url) { 
+		if(strpos($url, self::$CONTEXT) !== 0) {
+			return str_replace('//', '/', self::$CONTEXT.'/'.ltrim($url, '/'));
+		}
+		else {
+			return $url;
+		} 
 	}
 	
 	// do any application specific initialization.
@@ -84,7 +103,7 @@ class Reggie
 		
 		// set the context path. all requests are sent to index.php, so
 		// we know the path will end with 'index.php'.
-		Reggie::$CONTEXT = str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
+		Reggie::$CONTEXT = '/'.trim(str_replace('index.php', '', $_SERVER['SCRIPT_NAME']), '/');
 	}
 }
 

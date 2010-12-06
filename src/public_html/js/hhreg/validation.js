@@ -32,7 +32,7 @@
 		
 		var img = dojo.create(
 			"img", {
-				src: "/images/caution_red.gif", 
+				src: hhreg.contextUrl("/images/caution_red.gif"), 
 				alt: "Validation Error", 
 				title: "Validation Error"
 		});

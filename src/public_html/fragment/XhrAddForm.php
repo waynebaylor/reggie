@@ -22,7 +22,7 @@ class fragment_XhrAddForm extends template_Template
 <div class="xhr-add-form">
 	<span class="add-link link">{$this->link}</span>
 	<div class="add-form hide">
-		<form method="post" action="{$this->url}">
+		<form method="post" action="{$this->contextUrl($this->url)}">
 			<table>
 				{$this->rows}
 				<tr>
@@ -34,14 +34,26 @@ class fragment_XhrAddForm extends template_Template
 						<span class="cancel-link link">Cancel</span>
 						
 						<div class="xhr-save-success hide">
-							<img src="/images/check.gif" alt="Success" title="Success"/>
+							{$this->HTML->img(array(
+								'src' => '/images/check.gif',
+								'alt' => 'Success',
+								'title' => 'Success'
+							))}
 						</div>
 						<div class="xhr-validation-error hide">
-							<img src="/images/caution_red.gif" alt="Validation Errors" title="Validation Errors"/>
+							{$this->HTML->img(array(
+								'src' => '/images/caution_red.gif',
+								'alt' => 'Validation Errors',
+								'title' => 'Validation Errors'
+							))}
 							<span class="error-text">Please correct the above errors.</span>
 						</div>
 						<div class="xhr-save-error hide">
-							<img src="/images/ex.gif" alt="Error" title="Error"/>
+							{$this->HTML->img(array(
+								'src' => '/images/ex.gif',
+								'alt' => 'Error',
+								'title' => 'Error'
+							))}
 							<span class="error-text">There was a problem saving. Please try again.</span>
 						</div>
 					</td>
