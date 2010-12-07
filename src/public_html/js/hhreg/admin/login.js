@@ -6,7 +6,7 @@ dojo.require("hhreg.xhrTableForm");
 	dojo.addOnLoad(function() {
 		dojo.query(".fragment-edit form").forEach(function(item) {
 			hhreg.xhrTableForm.bind(item, function() {
-				window.location.href = "/admin/MainMenu?a=view";
+				window.location.href = hhreg.contextUrl("/admin/MainMenu?a=view");
 			});
 		});
 		

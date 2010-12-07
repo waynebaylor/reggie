@@ -71,8 +71,7 @@ class Controller
 		
 		$user = SessionUtil::getUser();
 		
-		$loginRequest = strpos($this->url, '/admin/Login');
-		$loginRequest = $loginRequest !== false && $loginRequest === 0;
+		$loginRequest = strpos($this->url, '/admin/Login') === 0;
 
 		if(empty($user) && !$loginRequest) {
 			$redirect = new template_Redirect('/admin/Login?a=view');
