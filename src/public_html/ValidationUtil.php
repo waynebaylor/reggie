@@ -23,7 +23,7 @@ class ValidationUtil
 	private static function isValid($restriction, $value) {
 		switch($restriction['name']) {
 			case 'required': 
-				return !empty($value);
+				return $value === 0 || $value === '0' || !empty($value);
 			case 'pattern':
 				return preg_match($restriction['regex'], $value);
 			default:
