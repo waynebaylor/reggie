@@ -25,8 +25,20 @@ class Controller
 	}
 
 	public function run() {
-		// execute the action based on the url.
-		$this->invokeAction();
+		try {
+			db_EventManager::getInstance()->beginTransaction();
+			
+			// execute the action based on the url.
+			$this->invokeAction();
+			
+			db_EventManager::getInstance()->commitTransaction();
+		}
+		catch(Exception $ex) {
+			db_EventManager::getInstance()->rollbackTransaction();			
+			
+			$this->logger->log($ex, 'Error. Transaction rolled back.');
+		}
+		
 	}
 
 	private function invokeAction() {

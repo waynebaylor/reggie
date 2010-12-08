@@ -46,7 +46,7 @@ table.reg-content td {
 	text-align: center;
 	padding: 10px;
 	font-weight: bold;
-	font-size: 14pt;
+	font-size: 1.5em;
 	border-bottom: 1px solid black;
 	margin-bottom: 15px;	
 }
@@ -83,12 +83,9 @@ table.reg-content td {
  
 .menu-title {
 	font-weight: bold;
-	font-size: 12pt;
+	font-size: 1.2em;
  	text-align: center;
- 	padding: 5px 0;
- 	background-color: #abc;
- 	border-bottom: 1px solid black;
- }
+}
  
 .menu-link {
 	white-space:nowrap;

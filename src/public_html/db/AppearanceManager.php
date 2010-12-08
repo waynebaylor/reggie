@@ -29,9 +29,11 @@ class db_AppearanceManager extends db_Manager
 				footerContent,
 				headerColor,
 				footerColor,
+				menuTitle,
 				menuColor,
 				backgroundColor,
 				formColor,
+				buttonTextColor,
 				buttonColor
 			FROM
 				Appearance
@@ -55,9 +57,11 @@ class db_AppearanceManager extends db_Manager
 				footerContent,
 				headerColor,
 				footerColor,
+				menuTitle,
 				menuColor,
 				backgroundColor,
 				formColor,
+				buttonTextColor,
 				buttonColor
 			FROM
 				Appearance
@@ -80,27 +84,33 @@ class db_AppearanceManager extends db_Manager
 					headerContent,
 					footerContent,
 					headerColor,
-					footerColor,
-					menuColor,
 					backgroundColor,
+					footerColor,
+					menuTitle,
+					menuColor,
 					formColor,
+					buttonTextColor,
 					buttonColor
 				)
 			VALUES(
 				:eventId,
-				"<h1>New Event</h1>",
-				"New Event",
+				:headerContent,
+				"",
 				"ffffff",
 				"ffffff",
 				"ffffff",
+				:menuTitle,
+				"000000",
 				"ffffff",
-				"ffffff",
+				"000000",
 				"ffffff"
 			)
 		';
 
 		$params = array(
-			'eventId' => $eventId
+			'eventId' => $eventId,
+			'headerContent' => '<span style="font-size:2em;">New Event</span>',
+			'menuTitle' => '<div style="background-color:#aff; border-bottom:1px solid black; padding:5px;">Registration Menu</div>'
 		);
 		
 		$this->execute($sql, $params, 'Create event appearance.');
@@ -111,16 +121,18 @@ class db_AppearanceManager extends db_Manager
 			UPDATE
 				Appearance
 			SET
-				headerContent=:headerContent,
-				footerContent=:footerContent,
-				headerColor=:headerColor,
-				footerColor=:footerColor,
-				menuColor=:menuColor,
-				backgroundColor=:backgroundColor,
-				formColor=:formColor,
-				buttonColor=:buttonColor
+				headerContent = :headerContent,
+				footerContent = :footerContent,
+				headerColor = :headerColor,
+				footerColor = :footerColor,
+				menuTitle = :menuTitle,
+				menuColor = :menuColor,
+				backgroundColor = :backgroundColor,
+				formColor = :formColor,
+				buttonTextColor = :buttonTextColor,
+				buttonColor = :buttonColor
 			WHERE
-				id=:id
+				id = :id
 		';
 		
 		$params = RequestUtil::getParameters(array(
@@ -129,9 +141,11 @@ class db_AppearanceManager extends db_Manager
 			'footerContent',
 			'headerColor',
 			'footerColor',
+			'menuTitle',
 			'menuColor',
 			'backgroundColor',
 			'formColor',
+			'buttonTextColor',
 			'buttonColor'
 		));
 		

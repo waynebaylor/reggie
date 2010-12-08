@@ -15,7 +15,9 @@ class fragment_reg_Menu extends template_Template
 	public function html() {
 		return <<<_
 			<div class="menu">
-				<div class="menu-title">Menu</div>
+				<div class="menu-title">
+					{$this->event['appearance']['menuTitle']}
+				</div>
 				{$this->links()}
 			</div>
 _;

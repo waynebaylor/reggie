@@ -10,7 +10,7 @@ class template_Redirect extends template_Template
 		$this->location = $url;	
 	}
 	
-	public function html() {error_log('oooo: '.$this->contextUrl($this->location));
+	public function html() {
 		header('Location: '.$this->contextUrl($this->location));
 		return '';
 	}

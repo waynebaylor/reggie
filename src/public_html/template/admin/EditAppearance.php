@@ -65,8 +65,8 @@ _;
 					{$this->HTML->textarea(array(
 						'name' => 'headerContent',
 						'value' => $this->escapeHtml($appearance['headerContent']),
-						'rows' => '5',
-						'cols' => '50'
+						'rows' => 5,
+						'cols' => 50
 					))}
 				</td>
 			</tr>
@@ -76,21 +76,32 @@ _;
 					{$this->HTML->textarea(array(
 						'name' => 'footerContent',
 						'value' => $this->escapeHtml($appearance['footerContent']),
-						'rows' => '5',
-						'cols' => '50'
+						'rows' => 5,
+						'cols' => 50
 					))}
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Background Color</td>
+				<td class="label">Menu Title</td>
 				<td>
-					{$this->getColorInputs('backgroundColor')}
+					{$this->HTML->textarea(array(
+						'name' => 'menuTitle',
+						'value' => $this->escapeHtml($appearance['menuTitle']),
+						'rows' => 5,
+						'cols' => 50
+					))}
 				</td>
 			</tr>
 			<tr>
 				<td class="label">Header Color</td>
 				<td>
 					{$this->getColorInputs('headerColor')}
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Background Color</td>
+				<td>
+					{$this->getColorInputs('backgroundColor')}
 				</td>
 			</tr>
 			<tr>
@@ -109,6 +120,12 @@ _;
 				<td class="label">Form Color</td>
 				<td>
 					{$this->getColorInputs('formColor')}
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Button Text</td>
+				<td>
+					{$this->getColorInputs('buttonTextColor')}
 				</td>
 			</tr>
 			<tr>

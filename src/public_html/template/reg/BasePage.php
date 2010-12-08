@@ -66,6 +66,7 @@ class template_reg_BasePage extends template_Page
 				}
 				
 				.button {
+					color: #{$this->escapeHtml($this->event['appearance']['buttonTextColor'])}
 					background-color: #{$this->escapeHtml($this->event['appearance']['buttonColor'])}
 				}
 			</style>	

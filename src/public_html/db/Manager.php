@@ -11,7 +11,7 @@ abstract class db_Manager
 
 	protected function __construct() {
 		$this->logger = new Logger();
-		if(empty(db_Manager::$conn)) {
+		if(empty(self::$conn)) {
 			self::$conn = new db_Connection();
 		}
 	}
@@ -32,7 +32,7 @@ abstract class db_Manager
 			}
 		}
 		
-		$ps = db_Manager::$conn->prepare($sql);
+		$ps = self::$conn->prepare($sql);
 
 		$success = $ps->execute($params);
 
@@ -119,7 +119,7 @@ abstract class db_Manager
 			}
 		}
 		
-		$ps = db_Manager::$conn->prepare($sql);
+		$ps = self::$conn->prepare($sql);
 
 		$success = $ps->execute($params);
 
@@ -135,7 +135,7 @@ abstract class db_Manager
 	 * after executing an INSERT statement.
 	 */
 	protected function lastInsertId() {
-		return db_Manager::$conn->lastInsertId();
+		return self::$conn->lastInsertId();
 	}
 	
 	/**
@@ -148,6 +148,18 @@ abstract class db_Manager
 	}
 	
 	protected abstract function getTableName();
+	
+	public function beginTransaction() {
+		self::$conn->beginTransaction();
+	}
+	
+	public function commitTransaction() {
+		self::$conn->commit();
+	}
+	
+	public function rollbackTransaction() {
+		self::$conn->rollBack();
+	}
 }
 
 ?>

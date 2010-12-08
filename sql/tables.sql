@@ -2,7 +2,7 @@
 drop table if exists GroupRegistration_ContactField;
 drop table if exists GroupRegistration;
 drop table if exists User_Event;
-drop table if exists User;
+drop table if exists `User`;
 drop table if exists Report_ContactField;
 drop table if exists Report;
 drop table if exists Payment;
@@ -867,10 +867,12 @@ create table if not exists `Appearance` (
 	`footerContent` 	text 		not null,
 	`headerColor`		varchar(6)	not null,
 	`footerColor`		varchar(6)	not null,
+	`menuTitle`		text		not null,
 	`menuColor`		varchar(6)	not null,
 	`backgroundColor`	varchar(6)	not null,
 	`formColor`		varchar(6)	not null,
-	`buttonColor`		varchar(6),
+	`buttonTextColor`	varchar(6)	not null,
+	`buttonColor`		varchar(6)	not null,
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
@@ -1351,7 +1353,7 @@ create table if not exists `User` (
 ) ENGINE=InnoDB default CHARSET=utf8;
 
 alter table 
-	User
+	`User`
 add constraint
 	user_email_uni
 unique
@@ -1373,7 +1375,7 @@ add constraint
 foreign key
 	(userId)
 references
-	User(id);
+	`User`(id);
 
 alter table
 	User_Event
