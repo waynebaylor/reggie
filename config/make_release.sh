@@ -19,6 +19,8 @@ rm -rf `find ./$1 -type d -name .svn`
 
 tar -cvf $1.tar $1 $1-sql
 
+gzip $1.tar
+
 rm -rf $1 $1-sql
 
 # comments
