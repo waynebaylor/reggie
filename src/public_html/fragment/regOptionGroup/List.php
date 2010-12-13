@@ -1,9 +1,5 @@
 <?php
 
-require_once 'HTML.php';
-require_once 'template/Template.php';
-require_once 'fragment/Arrows.php';
-
 class fragment_regOptionGroup_List extends template_Template
 {
 	private $option;
@@ -55,6 +51,8 @@ _;
 				)
 			));
 			
+			$required = $group['required'] === 'true'? 'Required' : '';
+			
 			$evenRow = !$evenRow;
 			$rowClass = $evenRow? 'even' : 'odd';
 			$html .= <<<_
@@ -67,7 +65,7 @@ _;
 					</td>
 					<td>
 						<div>
-							Required: {$group['required']}
+							{$required}
 						</div>
 						<div>
 							Allow Multiple: {$group['multiple']}

@@ -1,9 +1,5 @@
 <?php
 
-require_once 'template/Template.php';
-require_once 'HTML.php';
-require_once 'fragment/Arrows.php';
-
 class fragment_contactField_List extends template_Template
 {
 	private $section;
@@ -18,7 +14,7 @@ class fragment_contactField_List extends template_Template
 	
 	public function html() {
 		return <<<_
-			<h3>Contact Fields</h3>
+			<h3>Information Fields</h3>
 			
 			<div class="fragment-list">
 				<table class="admin">
@@ -110,7 +106,15 @@ _;
 		
 		$rules = $field['validationRules'];
 		foreach($rules as $rule) {
-			$html .= "<div>".$rule['displayName'].": ".$rule['value']."</div>";
+			$value = ": {$rule['value']}";
+			
+			// if the validation restriction is a true/false flag,
+			// then we don't need to display the value.
+			if($rule['value'] === 'true') {
+				$value = ''; 
+			}
+			
+			$html .= "<div>{$rule['displayName']}{$value}</div>";
 		}
 		
 		$attributes = $field['attributes'];
@@ -142,4 +146,3 @@ _;
 	}
 }
 
-?>

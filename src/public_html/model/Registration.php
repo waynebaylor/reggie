@@ -6,10 +6,11 @@ class model_Registration
 		$total = 0.0;
 		
 		foreach(model_RegSession::getRegistrations() as $index => $reg) {
-			$total += self::getTotalPersonCost($event, $index);
+			$cost = self::getTotalPersonCost($event, $index); 
+			$total += $cost;
 		}
 		
-		return number_format($total, 2);
+		return $total;
 	}
 	
 	public static function getTotalPersonCost($event, $index) {
@@ -32,7 +33,7 @@ class model_Registration
 			$total += $quantity*$price['price'];
 		}
 		
-		return number_format($total, 2);
+		return $total;
 	}
 	
 	public static function getConvertedRegistrationsFromSession($event) {
@@ -119,7 +120,9 @@ class model_Registration
 		foreach($group['options'] as $option) {
 			if(self::isRegOptionSelected($option, $index)) {
 				$price = model_RegOption::getPrice($regType, $option);
-				$total += $price['price'];
+				if(!empty($price)) {
+					$total += $price['price'];
+				}
 				
 				foreach($option['groups'] as $g) {
 					$total += self::getTotalOptionGroupCost($g, $index);

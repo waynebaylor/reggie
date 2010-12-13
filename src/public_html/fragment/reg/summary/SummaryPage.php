@@ -96,12 +96,14 @@ _;
 	private function getIndividualTotal($index) {
 		$cost = model_Registration::getTotalPersonCost($this->event, $index);
 		
+		$costDisplay = number_format($cost, 2);
+		
 		if($cost > 0) {
 			return <<<_
 				<tr>
-					<td class="label">Individual Subtotal</td>
+					<td class="label">Registrant Subtotal</td>
 					<td class="details">
-						<div class="price">\${$cost}</div>
+						<div class="price">\${$costDisplay}</div>
 					</td>
 				</tr>
 _;
@@ -112,12 +114,13 @@ _;
 	
 	private function getGrandTotal() {
 		$cost = model_Registration::getTotalCost($this->event);
+		$costDisplay = number_format($cost, 2);
 		
 		return <<<_
 			<tr>	
 				<td class="label">Total Due</td>
 				<td class="details">
-					<div class="price">\${$cost}</div>
+					<div class="price">\${$costDisplay}</div>
 				</td>
 			</tr>
 			<tr>

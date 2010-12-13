@@ -1,9 +1,5 @@
 <?php
 
-require_once 'HTML.php';
-require_once 'template/Template.php';
-require_once 'fragment/Arrows.php';
-
 class fragment_sectionRegOptionGroup_List extends template_Template
 {
 	private $event;
@@ -55,6 +51,9 @@ _;
 				)
 			));
 			
+			$required = $group['required'] === 'true'? 'Required' : '';
+			$multiple = $group['multiple'] === 'true'? 'Allow Multiple' : '';
+			
 			$evenRow = !$evenRow;
 			$rowClass = $evenRow? 'even' : 'odd';
 			$html .= <<<_
@@ -67,10 +66,10 @@ _;
 					</td>
 					<td>
 						<div>
-							Required: {$group['required']}
+							{$required}
 						</div>
 						<div>
-							Allow Multiple: {$group['multiple']}
+							{$multiple}
 						</div>
 						{$this->getMultipleRestrictions($group)}
 					</td>
@@ -105,14 +104,14 @@ _;
 	
 	private function getMultipleRestrictions($group) {
 		if($group['multiple'] === 'true') {
-			return <<<_
-				<div>
-					Minimum Required: {$group['minimum']}
-				</div>
-				<div>
-					Maximum Allowed: {$group['maximum']}
-				</div>
-_;
+			$min = $group['minimum'];
+			$max = $group['maximum'];
+			
+			$min = $min > 0? "<div>Minimum Required: {$min}</div>" : '';
+			
+			$max = $max > 0? "<div>Maximum Allowed: {$max}</div>" : '';
+			
+			return $min.$max;
 		}
 		else {
 			return '';

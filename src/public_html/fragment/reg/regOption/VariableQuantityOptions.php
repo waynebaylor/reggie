@@ -28,16 +28,11 @@ _;
 		$price = $this->getPrice($option);
 
 		if(!empty($price)) {
-			$name = model_ContentType::$VAR_QUANTITY_OPTION.'_'.$option['id'];
-			$value = model_RegSession::getVariableQuantityOption($name);
-			
-			$priceDisplay = ' &#64; $'.number_format($price['price'], 2);
-			
 			return <<<_
 				<tr>
 					<td>{$option['description']}</td>
 					<td class="price">
-						<input type="text" name="{$name}" value="{$value}" size="2"/>{$priceDisplay}
+						{$price}
 					</td>
 				</tr>
 _;
@@ -45,9 +40,36 @@ _;
 	}
 	
 	private function getPrice($option) {
-		$regType = model_RegSession::getRegType();
+		if($option['showPrice'] !== 'true') {
+			return '&nbsp;';
+		}
 		
-		return model_RegOption::getPrice($regType, $option);
+		if($this->optionAtCapacity($option)) {
+			return 'Sold out.';
+		}
+		else {
+			$name = model_ContentType::$VAR_QUANTITY_OPTION.'_'.$option['id'];
+			$value = model_RegSession::getVariableQuantityOption($name);
+			
+			$regType = model_RegSession::getRegType();
+			$price = model_RegOption::getPrice($regType, $option);
+			
+			//display like: @ $45.95
+			$priceDisplay = ' &#64; $'.number_format($price['price'], 2);
+			
+			return <<<_
+				<input type="text" name="{$name}" value="{$value}" size="2"/>{$priceDisplay}		
+_;
+		}
+	}
+	
+	private function optionAtCapacity($option) {
+		if(is_numeric($option['capacity']) && $option['capacity'] > 0) {
+			$currentCount = db_reg_RegistrationManager::getInstance()->findVariableOptionCount($option);
+			return $currentCount >= $option['capacity'];
+		}
+		
+		return false;
 	}
 }
 

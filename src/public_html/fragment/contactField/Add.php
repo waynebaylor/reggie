@@ -14,7 +14,7 @@ class fragment_contactField_Add extends template_Template
 
 	public function html() {
 		$form = new fragment_XhrAddForm(
-			'Add Contact Field', 
+			'Add Information Field', 
 			'/admin/contactField/ContactField', 
 			'addField', 
 			$this->getFormRows());

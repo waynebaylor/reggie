@@ -330,7 +330,7 @@ _;
 			{$this->event()}
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
-				'label' => "{$this->config['eventCode']} Reports",
+				'label' => "Reports ({$this->config['eventCode']})",
 				'href' => '/admin/report/Report',
 				'parameters' => array(
 					'a' => 'eventReports',

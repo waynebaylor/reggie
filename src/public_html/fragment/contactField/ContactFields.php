@@ -1,15 +1,13 @@
 <?php
 
-require_once 'template/Template.php';
-require_once 'fragment/contactField/List.php';
-require_once 'fragment/contactField/Add.php';
-
 class fragment_contactField_ContactFields extends template_Template
 {
 	private $section;
 	private $event;
 	
 	function __construct($event, $section) {
+		parent::__construct();
+		
 		$this->section = $section;
 		$this->event = $event;
 	}

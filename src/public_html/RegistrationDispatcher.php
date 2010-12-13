@@ -116,8 +116,8 @@ class RegistrationDispatcher
 	}
 	
 	private function eventAtCapacity() {
-		if($this->event['capacity'] > 0) {
-			$regCount = db_reg_RegistrationManager::getInstance()->findRegisteredCount($this->event);
+		if(is_numeric($this->event['capacity']) && $this->event['capacity'] > 0) {
+			$regCount = db_reg_RegistrationManager::getInstance()->findEventCount($this->event);
 			
 			return $regCount >= $this->event['capacity'];
 		}

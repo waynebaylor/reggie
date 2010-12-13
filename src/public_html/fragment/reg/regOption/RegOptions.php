@@ -28,8 +28,6 @@ _;
 				$groupsTemplate = new fragment_reg_regOptionGroup_RegOptionGroups($option['groups']);
 				$optionGroupsHtml = $groupsTemplate->html();
 				
-				$priceDisplay = '$'.number_format($price['price'], 2);
-				
 				$html .= <<<_
 					<tr>
 						<td class="reg-option">
@@ -37,7 +35,7 @@ _;
 							{$optionGroupsHtml}
 						</td>
 						<td class ="price">
-							{$priceDisplay}
+							{$price}
 						</td>
 					</tr>
 _;
@@ -68,9 +66,19 @@ _;
 	}
 	
 	private function getPrice($option) {
-		$regType = model_RegSession::getRegType();
-		
-		return model_RegOption::getPrice($regType, $option);
+		// use a space if the price won't be displayed.
+		if($option['showPrice'] !== 'true') {
+			return '&nbsp;';
+		}
+
+		if($this->optionAtCapacity($option)) {
+			return 'Sold out.';
+		}
+		else {
+			$regType = model_RegSession::getRegType();
+			$price = model_RegOption::getPrice($regType, $option);
+			return '$'.number_format($price['price'], 2);
+		}
 	}
 	
 	/**
@@ -89,6 +97,15 @@ _;
 		else {
 			return $option['id'] === $value;
 		}
+	}
+	
+	private function optionAtCapacity($option) { 
+		if(is_numeric($option['capacity']) && $option['capacity'] > 0) {
+			$currentCount = db_reg_RegistrationManager::getInstance()->findOptionCount($option); 
+			return $currentCount >= $option['capacity'];
+		}
+		
+		return false;
 	}
 }
 

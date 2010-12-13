@@ -101,15 +101,19 @@ _;
 	}
 	
 	private function getRestrictions($option) {
+		$default = $option['defaultSelected'] === 'true'? 'Selected By Default' : '';
+		$showPrice = $option['showPrice'] === 'true'? 'Show Price' : '';
+		$capacity = (is_numeric($option['capacity']) && $option['capacity'] > 0)? "Capacity: {$this->escapeHtml($option['capacity'])}" : '';
+		
 		return <<<_
 			<div>
-				Selected By Default: {$this->escapeHtml($option['defaultSelected'])}
+				{$default}
 			</div>
 			<div>
-				Show Price: {$this->escapeHtml($option['showPrice'])}
+				{$showPrice}
 			</div>
 			<div>
-				Capacity: {$this->escapeHtml($option['capacity'])}
+				{$capacity}
 			</div>
 _;
 	}

@@ -125,13 +125,15 @@ class db_reg_RegistrationManager extends db_Manager
 		return $ids;
 	}
 	
-	public function findRegisteredCount($event) {
+	public function findEventCount($event) {
 		$sql = '
 			SELECT
 				count(*) as regCount
 			FROM
 				Registration
 			WHERE
+				dateCancelled is NULL
+			AND
 				eventId = :id
 		';
 		
@@ -142,6 +144,60 @@ class db_reg_RegistrationManager extends db_Manager
 		$result = $this->rawQueryUnique($sql, $params, 'Find number registered for event.');
 		
 		return $result['regCount'];
+	}
+	
+	public function findOptionCount($option) {
+		$sql = '
+			SELECT
+				count(*) as regOptionCount
+			FROM
+				Registration
+			INNER JOIN
+				Registration_RegOption
+			ON
+				Registration.id = Registration_RegOption.registrationId
+			WHERE
+				Registration.dateCancelled is NULL
+			AND
+				Registration_RegOption.dateCancelled is NULL
+			AND
+				regOptionId = :regOptionId
+		';
+		
+		$params = array(
+			'regOptionId' => $option['id']
+		);
+		
+		$result = $this->rawQueryUnique($sql, $params, 'Find number registered for reg option.');
+		
+		return $result['regOptionCount'];
+	}
+	
+	public function findVariableOptionCount($option) {
+		$sql = '
+			SELECT
+				count(*) as regOptionCount
+			FROM
+				Registration
+			INNER JOIN
+				Registration_VariableQuantityOption
+			ON
+				Registration.id = Registration_VariableQuantityOption.variableQuantityId
+			WHERE
+				Registration.dateCancelled is NULL
+			AND
+				Registration_VariableQuantityOption.dateCancelled is NULL
+			AND
+				variableQuantityId = :variableQuantityId
+		';
+		
+		$params = array(
+			'variableQuantityId' => $option['id']
+		);
+		
+		$result = $this->rawQueryUnique($sql, $params, 'Find number registered for reg option.');
+		
+		return $result['regOptionCount'];
 	}
 }
 

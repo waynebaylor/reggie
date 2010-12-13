@@ -295,7 +295,7 @@ _;
 	private function getTotalDue() {
 		$total = model_Registration::getTotalCost($this->event);
 		
-		return '$'.$total;
+		return '$'.number_format($total, 2);
 	}
 	
 	private function getMonth() {

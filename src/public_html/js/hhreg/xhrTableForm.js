@@ -102,6 +102,7 @@ dojo.require("hhreg.validation");
 		// a submit button.
 		dojo.connect(form, "onkeypress", function(event) {
 			if(event.keyCode === dojo.keys.ENTER && event.target.tagName.toLowerCase() !== 'textarea') {
+				dojo.stopEvent(event);
 				submitForm(form, callback);
 			}
 		});
