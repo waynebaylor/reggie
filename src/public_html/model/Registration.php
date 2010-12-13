@@ -94,10 +94,21 @@ class model_Registration
 				);
 			}
 		}
-		
+	
+		// $value can be an id or an array of ids depending on whether
+		// it was a radio or checkbox. 
 		foreach(model_RegSession::getRegOptions($index) as $key => $value) {
-			if(!empty($key) && !empty($value) && is_numeric($value)) {
-				$registration['regOptionIds'][] = $value;
+			if(!empty($key) && !empty($value)) {
+				if(is_array($value)) {
+					foreach($value as $id) {
+						if(is_numeric($id)) {
+							$registration['regOptionIds'][] = $id;
+						}
+					}
+				}
+				else if(is_numeric($value)) {
+					$registration['regOptionIds'][] = $value;	
+				}
 			}
 		}
 		
