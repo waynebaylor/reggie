@@ -75,7 +75,7 @@ _;
 			return 'Sold out.';
 		}
 		else {
-			$regType = model_RegSession::getRegType();
+			$regType = model_reg_Session::getRegType();
 			$price = model_RegOption::getPrice($regType, $option);
 			return '$'.number_format($price['price'], 2);
 		}
@@ -87,7 +87,7 @@ _;
 	 * @param $option
 	 */
 	private function isOptionChecked($name, $option) {
-		$value = model_RegSession::getRegOption($name);
+		$value = model_reg_Session::getRegOption($name);
 		
 		// checkboxes could have multiple checked, hence the value array.
 		if(is_array($value)) {

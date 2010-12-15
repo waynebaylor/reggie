@@ -49,9 +49,9 @@ _;
 		}
 		else {
 			$name = model_ContentType::$VAR_QUANTITY_OPTION.'_'.$option['id'];
-			$value = model_RegSession::getVariableQuantityOption($name);
+			$value = model_reg_Session::getVariableQuantityOption($name);
 			
-			$regType = model_RegSession::getRegType();
+			$regType = model_reg_Session::getRegType();
 			$price = model_RegOption::getPrice($regType, $option);
 			
 			//display like: @ $45.95

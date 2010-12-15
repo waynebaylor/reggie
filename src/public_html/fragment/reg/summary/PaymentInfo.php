@@ -11,7 +11,7 @@ class fragment_reg_summary_PaymentInfo extends template_Template
 	}
 	
 	public function html() {
-		$cost = model_Registration::getTotalCost($this->event);
+		$cost = model_reg_Registration::getTotalCost($this->event);
 		
 		if(!empty($this->event['paymentTypes']) && $cost > 0) {
 			return <<<_
@@ -31,7 +31,7 @@ _;
 	private function getPaymentInfo() {
 		$rows = '';
 		
-		$info = model_RegSession::getPaymentInfo();
+		$info = model_reg_Session::getPaymentInfo();
 		
 		switch($info['paymentType']) {
 			case model_PaymentType::$CHECK:

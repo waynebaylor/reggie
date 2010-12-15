@@ -50,6 +50,7 @@ _;
 	private function getFields() {
 		$opts = array();
 		
+		// general registrant info comes first.
 		$opts[] = array(
 			'label' => 'General',
 			'value' => array(
@@ -64,28 +65,6 @@ _;
 				array(
 					'label' => 'Registration Type',
 					'value' => 'registration_type'
-				)
-			)
-		);
-		
-		$opts[] = array(
-			'label' => 'Payment Information',
-			'value' => array(
-				array(
-					'label' => 'Payment Type',
-					'value' => 'payment_type'
-				),
-				array(
-					'label' => 'Total Cost',
-					'value' => 'total_cost'
-				),
-				array(
-					'label' => 'Total Paid',
-					'value' => 'total_paid'
-				),
-				array(
-					'label' => 'Remaining Balance',
-					'value' => 'remaining_balance'
 				)
 			)
 		);
@@ -114,6 +93,29 @@ _;
 				'value' => $fields
 			);
 		}
+		
+		// payment fields come last.
+		$opts[] = array(
+			'label' => 'Payment Information',
+			'value' => array(
+				array(
+					'label' => 'Payment Type',
+					'value' => 'payment_type'
+				),
+				array(
+					'label' => 'Total Cost',
+					'value' => 'total_cost'
+				),
+				array(
+					'label' => 'Total Paid',
+					'value' => 'total_paid'
+				),
+				array(
+					'label' => 'Remaining Balance',
+					'value' => 'remaining_balance'
+				)
+			)
+		);
 		
 		return $opts;
 	}

@@ -58,7 +58,7 @@ _;
 	private function getPaymentTypeTabs() {
 		$html = '<table class="payment-type-tabs">';
 		
-		$paymentInfo = model_RegSession::getPaymentInfo();
+		$paymentInfo = model_reg_Session::getPaymentInfo();
 		$paymentTypeFromSession = $paymentInfo['paymentType']; 
 		$selectedTypeId = empty($paymentTypeFromSession)? model_PaymentType::$AUTHORIZE_NET : intval($paymentTypeFromSession, 10);
 		
@@ -128,7 +128,7 @@ _;
 	}
 	
 	private function checkForm($type) {
-		$info = model_RegSession::getPaymentInfo();
+		$info = model_reg_Session::getPaymentInfo();
 		
 		$showForm = 'hide';
 		if(isset($info['paymentType']) && (model_PaymentType::$CHECK === intval($info['paymentType'], 10))) {
@@ -154,7 +154,7 @@ _;
 	}
 	
 	private function purchaseOrderForm($type) {
-		$info = model_RegSession::getPaymentInfo();
+		$info = model_reg_Session::getPaymentInfo();
 		
 		$showForm = 'hide';
 		if(isset($info['paymentType']) && (model_PaymentType::$PO === intval($info['paymentType'], 10))) {
@@ -180,7 +180,7 @@ _;
 	}
 	
 	private function authorizeNetForm($type) {
-		$info = model_RegSession::getPaymentInfo();
+		$info = model_reg_Session::getPaymentInfo();
 		
 		$showForm = 'hide';
 		if(empty($info['paymentType']) || (model_PaymentType::$AUTHORIZE_NET === intval($info['paymentType'], 10))) {
@@ -292,14 +292,14 @@ _;
 _;
 	}
 	
-	private function getTotalDue() {
-		$total = model_Registration::getTotalCost($this->event);
+	private function getTotalDue() { 
+		$total = model_reg_Registration::getTotalCost($this->event);
 		
 		return '$'.number_format($total, 2);
 	}
 	
 	private function getMonth() {
-		$info = model_RegSession::getPaymentInfo();
+		$info = model_reg_Session::getPaymentInfo();
 		
 		return $this->HTML->select(array(
 			'name' => 'month',
@@ -322,7 +322,7 @@ _;
 	}
 	
 	private function getYear() {
-		$info = model_RegSession::getPaymentInfo();
+		$info = model_reg_Session::getPaymentInfo();
 		
 		$currentYear = date('Y');
 		$years = array();

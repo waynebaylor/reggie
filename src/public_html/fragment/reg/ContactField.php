@@ -92,7 +92,7 @@ class fragment_reg_ContactField extends template_Template
 		$config = array(
 			'name' => model_ContentType::$CONTACT_FIELD.'_'.$this->field['id']
 		);
-		$config['value'] = model_RegSession::getContactField($config['name']);
+		$config['value'] = model_reg_Session::getContactField($config['name']);
 
 		return $config;
 	}

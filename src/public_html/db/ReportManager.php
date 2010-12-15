@@ -2,6 +2,14 @@
 
 class db_ReportManager extends db_Manager
 {
+	//
+	// dbColumn = the Registration table column name.
+	// dbValueColumn = the field name from the sql select. 
+	// displayName = the column text on the report page.
+	//
+	// some of the payment fields don't have a dbValueColumn because
+	// they must be computed outside of a sql query.
+	//
 	public static $SPECIAL_FIELDS = array(
 		'date_registered' => array(
 			'dbColumn' => 'showDateRegistered',
@@ -20,6 +28,7 @@ class db_ReportManager extends db_Manager
 		),
 		'payment_type' => array(
 			'dbColumn' => 'showPaymentType',
+			'dbValueColumn' => 'paymentTypeName',
 			'displayName' => 'Payment Type'
 		),
 		'total_cost' => array(
@@ -218,9 +227,11 @@ class db_ReportManager extends db_Manager
 		$sql = '
 			SELECT
 				Registration.id as registrationId,
+				Registration.regGroupId as groupId,
 				Registration.dateRegistered,
 				Category.displayName as categoryName,
-				RegType.description as regTypeName
+				RegType.description as regTypeName,
+				PaymentType.displayName as paymentTypeName
 			FROM
 				Registration
 			INNER JOIN
@@ -235,6 +246,14 @@ class db_ReportManager extends db_Manager
 				Report
 			ON
 				Report.eventId = Registration.eventId
+			INNER JOIN
+				Payment
+			ON
+				Registration.regGroupId = Payment.regGroupId
+			INNER JOIN
+				PaymentType
+			ON
+				Payment.paymentTypeId = PaymentType.id
 			WHERE
 				Report.id = :reportId
 			ORDER BY
@@ -248,23 +267,29 @@ class db_ReportManager extends db_Manager
 		
 		$results = $this->rawQuery($sql, $params, 'Find report results.');
 		
-		foreach($results as &$result) {
-			$fieldValues = $this->getReportFieldValues($result['registrationId']);
-				
-			// add in any general fields.
-			foreach(array('registration_type', 'category', 'date_registered') as $specialFieldId) {
-				$column = self::$SPECIAL_FIELDS[$specialFieldId]['dbColumn'];
-				$valueColumn = self::$SPECIAL_FIELDS[$specialFieldId]['dbValueColumn'];
-				
-				if($report[$column] === 'true') {
-					$fieldValues[$specialFieldId] = $result[$valueColumn];
-				}
+		//
+		// put the fields to gether into something the report can use.
+		//
+		
+		$fieldResults = array();
+		
+		$processedGroupIds = array(); // only display payment info for one registrant per group.
+		foreach($results as $result) {
+			$fieldValues = $this->getReportFieldValues($result);
+
+			// can't use array_merge because $fieldValues have integer keys which will be
+			// renumbered after the merge.
+			$specialFieldValues = $this->getSpecialFieldValues($report, $result, $processedGroupIds);
+			foreach($specialFieldValues as $key => $value) {
+				$fieldValues[$key] = $value;
 			}
 			
-			$result['fieldValues'] = $fieldValues;
+			$fieldResults[] = array('fieldValues' => $fieldValues);
+		
+			$processedGroupIds[] = $result['groupId'];
 		}
 
-		return $results;
+		return $fieldResults;
 	}
 	
 	public function getReportFieldNames($report) {
@@ -324,7 +349,7 @@ class db_ReportManager extends db_Manager
 		return $results;
 	}
 	
-	private function getReportFieldValues($registrationId) {
+	private function getReportFieldValues($registration) {
 		// single input fields (text, textarea).
 		$sql = '
 			SELECT 
@@ -337,15 +362,11 @@ class db_ReportManager extends db_Manager
 			ON
 				Registration_Information.contactFieldId = ContactField.id
 			INNER JOIN
-				Registration
-			ON
-				Registration_Information.registrationId = Registration.id
-			INNER JOIN
 				Report_ContactField
 			ON
 				Report_ContactField.contactFieldId = ContactField.id
 			WHERE
-				Registration.id = :registrationId
+				Registration_Information.registrationId = :registrationId
 			AND
 				ContactField.formInputId 
 			IN
@@ -353,7 +374,7 @@ class db_ReportManager extends db_Manager
 		';
 		
 		$params = array(
-			'registrationId' => $registrationId
+			'registrationId' => $registration['registrationId']
 		);
 		
 		$results = $this->rawQuery($sql, $params, 'Find report field values.');
@@ -403,10 +424,43 @@ class db_ReportManager extends db_Manager
 			
 			$values[$result['id']][] = $result['value'];
 		}
-		
-		
-		
+
 		return $values;
+	}
+	
+	private function getSpecialFieldValues($report, $result, $processedGroupIds) {
+		$fieldValues = array();
+		
+		foreach(array('registration_type', 'category', 'date_registered', 'payment_type') as $specialFieldId) {
+			$column = self::$SPECIAL_FIELDS[$specialFieldId]['dbColumn'];
+			$valueColumn = self::$SPECIAL_FIELDS[$specialFieldId]['dbValueColumn'];
+
+			if($report[$column] === 'true') {
+				$fieldValues[$specialFieldId] = $result[$valueColumn];
+			}
+		}
+			
+		// add special payment fields. this info should only be shown once per group. additional
+		// group members will have these cells blank.
+		$groupId = $result['groupId'];
+		if(!in_array($groupId, $processedGroupIds)) {
+			if($report[self::$SPECIAL_FIELDS['total_cost']['dbColumn']] === 'true') {
+				$cost = db_reg_GroupManager::getInstance()->findTotalCost($groupId);
+				$fieldValues['total_cost'] = '$'.number_format($cost, 2);
+			}
+			if($report[self::$SPECIAL_FIELDS['total_paid']['dbColumn']] === 'true') {
+				$paid = db_reg_GroupManager::getInstance()->findTotalPaid($groupId);
+				$fieldValues['total_paid'] = '$'.number_format($paid, 2);
+			}
+			if($report[self::$SPECIAL_FIELDS['remaining_balance']['dbColumn']] === 'true') {
+				$cost = db_reg_GroupManager::getInstance()->findTotalCost($groupId);
+				$paid = db_reg_GroupManager::getInstance()->findTotalPaid($groupId);
+				$remaining = $cost - $paid;
+				$fieldValues['remaining_balance'] = '$'.number_format($remaining, 2);
+			}
+		}
+		
+		return $fieldValues;
 	}
 }
 

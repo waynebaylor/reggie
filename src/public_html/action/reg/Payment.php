@@ -15,7 +15,7 @@ class action_reg_Payment extends action_ValidatorAction
 		return new template_reg_BasePage(array(
 			'event' => $this->event,
 			'title' => 'Payment Information',
-			'id' => model_RegistrationPage::$PAYMENT_PAGE_ID,
+			'id' => model_reg_RegistrationPage::$PAYMENT_PAGE_ID,
 			'page' => $payment
 		));
 	}
@@ -37,15 +37,15 @@ class action_reg_Payment extends action_ValidatorAction
 			return new template_reg_BasePage(array(
 				'event' => $this->event,
 				'title' => 'Payment Information',
-				'id' => model_RegistrationPage::$PAYMENT_PAGE_ID,
+				'id' => model_reg_RegistrationPage::$PAYMENT_PAGE_ID,
 				'page' => $page,
 				'errors' => $errors
 			));
 		}
 		
-		model_RegSession::addCompletedPage(model_RegistrationPage::$PAYMENT_PAGE_ID);
+		model_reg_Session::addCompletedPage(model_reg_RegistrationPage::$PAYMENT_PAGE_ID);
 		
-		model_Registration::removeIncompleteRegistrationsFromSession($this->event);
+		model_reg_Registration::removeIncompleteRegistrationsFromSession($this->event);
 		
 		// go to the next page.
 		$a = new action_reg_Summary($this->event);
@@ -53,7 +53,7 @@ class action_reg_Payment extends action_ValidatorAction
 	}
 
 	public function Previous() {
-		$category = model_RegSession::getCategory();
+		$category = model_reg_Session::getCategory();
 		$pages = model_EventPage::getVisiblePages($this->event, $category);
 
 		$cat = model_Category::code($category);
@@ -62,9 +62,9 @@ class action_reg_Payment extends action_ValidatorAction
 	}
 	
 	public function addPerson() {
-		model_RegSession::addPerson($this->event);
+		model_reg_Session::addPerson($this->event);
 		
-		$category = model_RegSession::getCategory();
+		$category = model_reg_Session::getCategory();
 		$cat = model_Category::code($category);
 		
 		return new template_Redirect("/event/{$this->event['code']}/{$cat}");
@@ -108,7 +108,7 @@ class action_reg_Payment extends action_ValidatorAction
 				break;
 		}
 		
-		model_RegSession::setPaymentInfo($payment);
+		model_reg_Session::setPaymentInfo($payment);
 	}
 }
 

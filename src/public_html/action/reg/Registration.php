@@ -12,8 +12,8 @@ class action_reg_Registration extends action_ValidatorAction
 		$this->pageId = $pageId;
 		
 		// default to the event's first page.
-		if(!model_RegistrationPage::isViewable($this->event, $this->pageId)) {
-			$firstPage = model_RegistrationPage::getFirstPage($this->event);
+		if(!model_reg_RegistrationPage::isViewable($this->event, $this->pageId)) {
+			$firstPage = model_reg_RegistrationPage::getFirstPage($this->event);
 			$this->pageId = $firstPage['id'];
 		}
 	}
@@ -53,9 +53,9 @@ class action_reg_Registration extends action_ValidatorAction
 
 		// no validation errors, so go to the next page.
 		
-		model_RegSession::addCompletedPage($this->pageId);
+		model_reg_Session::addCompletedPage($this->pageId);
 		
-		if(model_RegistrationPage::isLastRegistrationPage($this->event, $this->pageId)) {
+		if(model_reg_RegistrationPage::isLastRegistrationPage($this->event, $this->pageId)) {
 			// if the event doesn't have any payment types enabled,
 			// then skip payment info page and go to summary payge. 
 			if(!empty($this->event['paymentTypes'])) {
@@ -68,7 +68,7 @@ class action_reg_Registration extends action_ValidatorAction
 			}
 		}
 		else {
-			$nextPage = model_RegistrationPage::getNextPage($this->event, $this->pageId);
+			$nextPage = model_reg_RegistrationPage::getNextPage($this->event, $this->pageId);
 			$pageFragment = new fragment_reg_Page($nextPage);
 			return new template_reg_BasePage(array(
 				'event' => $this->event,
@@ -80,7 +80,7 @@ class action_reg_Registration extends action_ValidatorAction
 	}
 
 	public function Previous() {
-		$prevPage = model_RegistrationPage::getPrevPage($this->event, $this->pageId);
+		$prevPage = model_reg_RegistrationPage::getPrevPage($this->event, $this->pageId);
 		$pageFragment = new fragment_reg_Page($prevPage);
 		return new template_reg_BasePage(array(
 			'event' => $this->event,
@@ -112,7 +112,7 @@ class action_reg_Registration extends action_ValidatorAction
 		foreach($_REQUEST as $key => $value) {
 			$startsWith = strpos($key, model_ContentType::$REG_TYPE.'_');
 			if($startsWith === 0) {
-				model_RegSession::setRegType($value);
+				model_reg_Session::setRegType($value);
 			}
 		}
 	}
@@ -121,7 +121,7 @@ class action_reg_Registration extends action_ValidatorAction
 		foreach($_REQUEST as $key => $value) {
 			$startsWith = strpos($key, model_ContentType::$CONTACT_FIELD.'_');
 			if($startsWith === 0) {
-				model_RegSession::setContactField($key, $value);				
+				model_reg_Session::setContactField($key, $value);				
 			}
 		}
 	}
@@ -148,7 +148,7 @@ class action_reg_Registration extends action_ValidatorAction
 				// the reg options are named by group, but the input value is 
 				// the reg option id. if the input is a checkbox, then the value 
 				// will be an array.
-				model_RegSession::setRegOption($key, $value);
+				model_reg_Session::setRegOption($key, $value);
 			}
 		}
 	}
@@ -157,7 +157,7 @@ class action_reg_Registration extends action_ValidatorAction
 		foreach($_REQUEST as $key => $value) {
 			$startsWith = strpos($key, model_ContentType::$VAR_QUANTITY_OPTION.'_');
 			if($startsWith === 0) {
-				model_RegSession::setVariableQuantityOption($key, $value);
+				model_reg_Session::setVariableQuantityOption($key, $value);
 			}
 		}
 	}
@@ -165,7 +165,7 @@ class action_reg_Registration extends action_ValidatorAction
 	private function clearRegOptionGroupSessionValue($group) {
 		$name = model_ContentType::$REG_OPTION.'_'.$group['id'];
 		
-		model_RegSession::setRegOption($name, NULL);
+		model_reg_Session::setRegOption($name, NULL);
 		
 		// recursively clear any values nested in the given group.
 		foreach($group['options'] as $option) {

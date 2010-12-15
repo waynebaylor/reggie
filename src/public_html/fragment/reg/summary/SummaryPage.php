@@ -13,7 +13,7 @@ class fragment_reg_summary_SummaryPage extends template_Template
 	public function html() {
 		$allSummaries = '';
 		
-		$registrations = model_RegSession::getRegistrations();
+		$registrations = model_reg_Session::getRegistrations();
 		foreach($registrations as $index => $reg) {
 			$allSummaries .= $this->getIndividualSummary($index);	
 		}
@@ -62,7 +62,7 @@ _;
 		$rows = join($this->getDivider(), $rows);
 		
 		// don't display a number if there is only one registrant.
-		$num = count(model_RegSession::getRegistrations()) > 1? $index + 1 : '';
+		$num = count(model_reg_Session::getRegistrations()) > 1? $index + 1 : '';
 		
 		return <<<_
 			<div style="background-color:#ccc; padding:5px; margin-bottom:10px; font-size:1.2em;">
@@ -94,7 +94,7 @@ _;
 	}
 	
 	private function getIndividualTotal($index) {
-		$cost = model_Registration::getTotalPersonCost($this->event, $index);
+		$cost = model_reg_Registration::getTotalPersonCost($this->event, $index);
 		
 		$costDisplay = number_format($cost, 2);
 		
@@ -113,7 +113,7 @@ _;
 	}
 	
 	private function getGrandTotal() {
-		$cost = model_Registration::getTotalCost($this->event);
+		$cost = model_reg_Registration::getTotalCost($this->event);
 		$costDisplay = number_format($cost, 2);
 		
 		return <<<_

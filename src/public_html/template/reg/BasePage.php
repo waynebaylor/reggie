@@ -75,7 +75,7 @@ _;
 	
 	protected function body() {
 		// category code for the form's post action.
-		$category = model_RegSession::getCategory();
+		$category = model_reg_Session::getCategory();
 		$cat = model_Category::code($category);
 		
 		if($this->showMenu) {
@@ -153,7 +153,7 @@ _;
 	}
 	
 	private function getPreviousButton() {
-		$category = model_RegSession::getCategory();
+		$category = model_reg_Session::getCategory();
 		$visiblePages = model_EventPage::getVisiblePages($this->event, $category);
 
 		$disabled = empty($visiblePages) || $visiblePages[0]['id'] === $this->id;
@@ -166,7 +166,7 @@ _;
 	}
 	
 	private function getNextButton() {
-		if($this->id === model_RegistrationPage::$SUMMARY_PAGE_ID) {
+		if($this->id === model_reg_RegistrationPage::$SUMMARY_PAGE_ID) {
 			return '<input type="submit" id="next-button" class="button" name="a" value="Submit"/>';
 		}
 		else {

@@ -53,13 +53,15 @@ class db_reg_PaymentManager extends db_Manager
 					paymentTypeId,
 					regGroupId,
 					transactionDate,
-					checkNumber
+					checkNumber,
+					amount
 				)
 			VALUES(
 				:paymentTypeId,
 				:regGroupId,
 				:transactionDate,
-				:checkNumber
+				:checkNumber,
+				:amount
 			)
 		';
 		
@@ -69,7 +71,8 @@ class db_reg_PaymentManager extends db_Manager
 			'paymentTypeId' => model_PaymentType::$CHECK,
 			'regGroupId' => $groupId,
 			'transactionDate' => date_format($today,'Y-m-d H:i'),
-			'checkNumber' => $check['checkNumber']
+			'checkNumber' => $check['checkNumber'],
+			'amount' => 0.00
 		);
 		
 		$this->execute($sql, $params, 'Create registration check payment.');
@@ -82,13 +85,15 @@ class db_reg_PaymentManager extends db_Manager
 					paymentTypeId,
 					regGroupId,
 					transactionDate,
-					purchaseOrderNumber
+					purchaseOrderNumber,
+					amount
 				)
 			VALUES(
 				:paymentTypeId,
 				:regGroupId,
 				:transactionDate,
-				:purchaseOrderNumber
+				:purchaseOrderNumber,
+				:amount
 			)
 		';
 		
@@ -98,7 +103,8 @@ class db_reg_PaymentManager extends db_Manager
 			'paymentTypeId' => model_PaymentType::$PO,
 			'regGroupId' => $groupId,
 			'transactionDate' => date_format($today,'Y-m-d H:i'),
-			'purchaseOrderNumber' => $po['purchaseOrderNumber']
+			'purchaseOrderNumber' => $po['purchaseOrderNumber'],
+			'amount' => 0.00
 		);
 		
 		$this->execute($sql, $params, 'Create registration PO payment.');

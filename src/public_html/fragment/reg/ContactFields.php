@@ -11,7 +11,7 @@ class fragment_reg_ContactFields extends template_Template
 	}
 	
 	public function html() {
-		$regType = model_RegSession::getRegType();
+		$regType = model_reg_Session::getRegType();
 		
 		if($this->section['numbered'] === 'true') {
 			return $this->orderedFields($regType, $this->section['content']);

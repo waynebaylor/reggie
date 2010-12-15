@@ -24,7 +24,7 @@ _;
 	}
 	
 	private function links() {
-		$category = model_RegSession::getCategory();
+		$category = model_reg_Session::getCategory();
 		$visiblePages = model_EventPage::getVisiblePages($this->event, $category);
 
 		$displayAsLink = true;
@@ -65,11 +65,11 @@ _;
 	}
 
 	private function getLink($page) {
-		$currentReg = model_RegSession::getCurrent();
-		$completedPages = model_RegSession::getCompletedPages();
+		$currentReg = model_reg_Session::getCurrent();
+		$completedPages = model_reg_Session::getCompletedPages();
 		
 		if(in_array($page['id'], $completedPages)) {
-			$category = model_RegSession::getCategory();
+			$category = model_reg_Session::getCategory();
 			$cat = model_Category::code($category);
 			
 			return $this->HTML->link(array(

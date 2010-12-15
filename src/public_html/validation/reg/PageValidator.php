@@ -52,7 +52,7 @@ class validation_reg_PageValidator
 	private function validateContactFields($section) {
 		$errors = array();
 
-		$regType = model_Event::getRegTypeById($this->event, model_RegSession::getRegType());
+		$regType = model_Event::getRegTypeById($this->event, model_reg_Session::getRegType());
 			
 		foreach($section['content'] as $field) {
 			// only validate fields that are visible to the selected reg type.
@@ -67,7 +67,7 @@ class validation_reg_PageValidator
 	private function validateRegOptions($section) {
 		$errors = array();
 		
-		$regType = model_Event::getRegTypeById($this->event, model_RegSession::getRegType());
+		$regType = model_Event::getRegTypeById($this->event, model_reg_Session::getRegType());
 			
 		foreach($section['content'] as $regOptionGroup) {
 			$errors = array_merge($errors, $this->validateRegOptionGroup($regOptionGroup));

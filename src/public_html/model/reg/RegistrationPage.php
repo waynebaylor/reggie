@@ -1,6 +1,6 @@
 <?php
 
-class model_RegistrationPage
+class model_reg_RegistrationPage
 {
 	public static $PAYMENT_PAGE_ID = 'payment';
 	
@@ -9,12 +9,12 @@ class model_RegistrationPage
 	public static $CONFIRMATION_PAGE_ID = 'confirmation';
 	
 	public static function isViewable($event, $pageId) {
-		$category = model_RegSession::getCategory();
+		$category = model_reg_Session::getCategory();
 		$pages = model_EventPage::getVisiblePages($event, $category);
 		
 		// you have to complete the last reg page before getting to the payment page.
 		if(self::$PAYMENT_PAGE_ID === $pageId) {
-			return in_array($pages[count($pages)-1]['id'], model_RegSession::getCompletedPages());
+			return in_array($pages[count($pages)-1]['id'], model_reg_Session::getCompletedPages());
 		}
 		// you must complete the payment page (if any) before getting to the summary page.
 		else if(self::$SUMMARY_PAGE_ID === $pageId) {
@@ -24,19 +24,19 @@ class model_RegistrationPage
 				return self::isViewable($event, self::$PAYMENT_PAGE_ID);	
 			}
 			else {
-				return in_array(self::$PAYMENT_PAGE_ID, model_RegSession::getCompletedPages());
+				return in_array(self::$PAYMENT_PAGE_ID, model_reg_Session::getCompletedPages());
 			}
 		} 
 		// you must complete the summary page before getting to the confirmation page.
 		else if(self::$CONFIRMATION_PAGE_ID === $pageId) {
-			return in_array(self::$SUMMARY_PAGE_ID, model_RegSession::getCompletedPages());
+			return in_array(self::$SUMMARY_PAGE_ID, model_reg_Session::getCompletedPages());
 		}
 		// the reg pages must be completed in order.
 		else {
 			foreach($pages as $index => $page) {  
 				if(intval($pageId, 10) === intval($page['id'], 10)) {
 					// you can view it if it's the first page or you've finished the previous page.
-					return $index === 0 || in_array($pages[$index-1]['id'], model_RegSession::getCompletedPages());
+					return $index === 0 || in_array($pages[$index-1]['id'], model_reg_Session::getCompletedPages());
 				}
 			}
 			
@@ -45,7 +45,7 @@ class model_RegistrationPage
 	}
 	
 	public static function getFirstPage($event) {
-		$category = model_RegSession::getCategory();
+		$category = model_reg_Session::getCategory();
 
 		$pages = model_EventPage::getVisiblePages($event, $category);
 
@@ -57,7 +57,7 @@ class model_RegistrationPage
 	}
 	
 	public static function isLastRegistrationPage($event, $pageId) {
-		$category = model_RegSession::getCategory();
+		$category = model_reg_Session::getCategory();
 		$pages = model_EventPage::getVisiblePages($event, $category);
 		$count = count($pages);
 		
@@ -65,7 +65,7 @@ class model_RegistrationPage
 	}
 	
 	public static function getPrevPage($event, $pageId) {
-		$category = model_RegSession::getCategory();
+		$category = model_reg_Session::getCategory();
 		$pages = model_EventPage::getVisiblePages($event, $category);
 
 		foreach($pages as $index => $p) {
@@ -79,7 +79,7 @@ class model_RegistrationPage
 	}
 	
 	public static function getNextPage($event, $pageId) {
-		$category = model_RegSession::getCategory();
+		$category = model_reg_Session::getCategory();
 		$pages = model_EventPage::getVisiblePages($event, $category);
 		$count = count($pages);
 		

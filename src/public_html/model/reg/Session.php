@@ -1,8 +1,8 @@
 <?php
 
-class model_RegSession
+class model_reg_Session
 {
-	public static function reset($category, $event) {
+public static function reset($category, $event) {
 		$_SESSION['reg'] = array(
 			'category' => $category,
 			'event' => $event['id'],

@@ -16,7 +16,7 @@ class action_reg_Summary extends action_ValidatorAction
 		return new template_reg_BasePage(array(
 			'event' => $this->event,
 			'title' => 'Review &amp; Confirm',
-			'id' => model_RegistrationPage::$SUMMARY_PAGE_ID,
+			'id' => model_reg_RegistrationPage::$SUMMARY_PAGE_ID,
 			'page' => $summary
 		));	
 	}
@@ -37,13 +37,13 @@ class action_reg_Summary extends action_ValidatorAction
 			return new template_reg_BasePage(array(
 				'event' => $this->event,
 				'title' => 'Review &amp; Confirm',
-				'id' => model_RegistrationPage::$SUMMARY_PAGE_ID,
+				'id' => model_reg_RegistrationPage::$SUMMARY_PAGE_ID,
 				'page' => $summary,
 				'errors' => $errors
 			));
 		}
 		
-		model_RegSession::addCompletedPage(model_RegistrationPage::$SUMMARY_PAGE_ID);
+		model_reg_Session::addCompletedPage(model_reg_RegistrationPage::$SUMMARY_PAGE_ID);
 		
 		$this->completeRegistration($this->payment);
 		
@@ -90,7 +90,7 @@ class action_reg_Summary extends action_ValidatorAction
 	 * save stuff to the database, send any emails, etc.
 	 */
 	private function completeRegistration($payment) {
-		$registrations = model_Registration::getConvertedRegistrationsFromSession($this->event);
+		$registrations = model_reg_Registration::getConvertedRegistrationsFromSession($this->event);
 		
 		$newRegIds = db_reg_RegistrationManager::getInstance()->createRegistrations($registrations, $payment);
 
@@ -103,7 +103,7 @@ class action_reg_Summary extends action_ValidatorAction
 	}
 	
 	private function performPayment() {
-		$info = model_RegSession::getPaymentInfo();
+		$info = model_reg_Session::getPaymentInfo();
 		
 		switch($info['paymentType']) {
 			case model_PaymentType::$CHECK:
@@ -119,7 +119,7 @@ class action_reg_Summary extends action_ValidatorAction
 					'amount_tendered' => 0.00
 				);;
 			case model_PaymentType::$AUTHORIZE_NET:
-				$cost = model_Registration::getTotalCost($this->event);
+				$cost = model_reg_Registration::getTotalCost($this->event);
 				
 				$authorizeNet = new payment_AuthorizeNET($this->event, $info, $cost);
 				$result = $authorizeNet->makePayment();

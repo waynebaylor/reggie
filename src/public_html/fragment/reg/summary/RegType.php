@@ -13,7 +13,7 @@ class fragment_reg_summary_RegType extends template_Template
 	}
 	
 	public function html() {
-		$regTypeId = model_RegSession::getRegType($this->index);
+		$regTypeId = model_reg_Session::getRegType($this->index);
 		
 		// if the event doesn't have a reg type section, then don't 
 		// show anything for reg type.

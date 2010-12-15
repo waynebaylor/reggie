@@ -49,8 +49,8 @@ _;
 	private function getRegOption($option) {
 		$html = '';
 		
-		if(model_Registration::isRegOptionSelected($option, $this->index)) {
-			$regType = model_RegSession::getRegType($this->index);
+		if(model_reg_Registration::isRegOptionSelected($option, $this->index)) {
+			$regType = model_reg_Session::getRegType($this->index);
 			$price = model_RegOption::getPrice($regType, $option);
 			$priceDisplayed = ($option['showPrice'] === 'true')? '$'.number_format($price['price'], 2) : '';
 			$html .= <<<_

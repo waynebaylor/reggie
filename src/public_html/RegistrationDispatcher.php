@@ -51,9 +51,9 @@ class RegistrationDispatcher
 		}
 
 		// event is open, so find the right page.
-		if(model_RegistrationPage::isViewable($this->event, $this->pageId)) {
+		if(model_reg_RegistrationPage::isViewable($this->event, $this->pageId)) {
 			switch($this->pageId) {
-				case model_RegistrationPage::$PAYMENT_PAGE_ID: 
+				case model_reg_RegistrationPage::$PAYMENT_PAGE_ID: 
 					// rename the action if we're adding another person.
 					if($_REQUEST['action'] === fragment_reg_PaymentPage::$ADD_PERSON_ACTION) {
 						$_REQUEST['action'] = 'addPerson';
@@ -61,10 +61,10 @@ class RegistrationDispatcher
 					
 					return new action_reg_Payment($this->event);
 					
-				case model_RegistrationPage::$SUMMARY_PAGE_ID:
+				case model_reg_RegistrationPage::$SUMMARY_PAGE_ID:
 					return new action_reg_Summary($this->event);
 					
-				case model_RegistrationPage::$CONFIRMATION_PAGE_ID:
+				case model_reg_RegistrationPage::$CONFIRMATION_PAGE_ID:
 					return new action_reg_Confirmation($this->event);
 			}
 		}
@@ -79,15 +79,15 @@ class RegistrationDispatcher
 	private function setupSession() {
 		$resetSession = true;
 		if(isset($_SESSION['reg'])) {
-			$sessionEventId = model_RegSession::getEventId();
-			$sessionCategory = model_RegSession::getCategory();
+			$sessionEventId = model_reg_Session::getEventId();
+			$sessionCategory = model_reg_Session::getCategory();
 			
 			$resetSession = $this->event['id'] !== $sessionEventId ||
 							$this->category['id'] !== $sessionCategory['id']; 
 		}
 
 		if($resetSession) {
-			model_RegSession::reset($this->category, $this->event);
+			model_reg_Session::reset($this->category, $this->event);
 		}
 	}		
 	

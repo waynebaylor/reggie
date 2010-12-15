@@ -31,6 +31,56 @@ class db_reg_GroupManager extends db_Manager
 		
 		return $this->lastInsertId();
 	}
+	
+	public function findTotalCost($id) {
+		$sql = '
+			SELECT 
+ 				sum(RegOptionPrice.price) as total_cost
+			FROM 
+ 				Registration
+			INNER JOIN
+ 				RegistrationGroup
+			ON
+ 				Registration.regGroupId = RegistrationGroup.id 
+			INNER JOIN
+ 				Registration_RegOption
+			ON
+ 				Registration.id = Registration_RegOption.registrationId
+			INNER JOIN 
+ 				RegOptionPrice
+			ON
+ 				Registration_RegOption.priceId = RegOptionPrice.id
+			WHERE
+ 				RegistrationGroup.id = :id
+		';
+		
+		$params = array(
+			'id' => $id
+		);
+		
+		$result = $this->rawQueryUnique($sql, $params, 'Find total cost for registration group.');
+		
+		return $result['total_cost'];
+	}
+	
+	public function findTotalPaid($id) {
+		$sql = '
+			SELECT
+				sum(amount) as total_paid
+			FROM
+				Payment
+			WHERE
+				regGroupId = :id
+		';
+		
+		$params = array(
+			'id' => $id
+		);
+		
+		$result = $this->rawQueryUnique($sql, $params, 'Find total paid by registration group.');
+		
+		return $result['total_paid'];
+	}
 }
 
 ?>

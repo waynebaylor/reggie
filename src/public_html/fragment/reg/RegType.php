@@ -1,11 +1,5 @@
 <?php
 
-require_once 'HTML.php';
-require_once 'template/Template.php';
-require_once 'model/RegType.php';
-require_once 'model/RegSession.php';
-require_once 'model/ContentType.php';
-
 class fragment_reg_RegType extends template_Template
 {
 	private $regType;
@@ -18,7 +12,7 @@ class fragment_reg_RegType extends template_Template
 	
 	public function html() {
 		if($this->isVisible()) {
-			$checked = model_RegSession::getRegType() === $this->regType['id'];
+			$checked = model_reg_Session::getRegType() === $this->regType['id'];
 			
 			return <<<_
 				<div class="reg-type-option">
@@ -37,7 +31,7 @@ _;
 	}
 	
 	private function isVisible() {
-		$category = model_RegSession::getCategory();
+		$category = model_reg_Session::getCategory();
 		return model_RegType::isVisibleTo($this->regType, $category);
 	}
 }

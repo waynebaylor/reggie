@@ -1,11 +1,11 @@
 <?php
 
-class model_Registration
+class model_reg_Registration
 {
 	public static function getTotalCost($event) {
 		$total = 0.0;
 		
-		foreach(model_RegSession::getRegistrations() as $index => $reg) {
+		foreach(model_reg_Session::getRegistrations() as $index => $reg) {
 			$cost = self::getTotalPersonCost($event, $index); 
 			$total += $cost;
 		}
@@ -23,11 +23,11 @@ class model_Registration
 		}
 		
 		// add up the variable quantity options.
-		$regType = model_RegSession::getRegType($index);
+		$regType = model_reg_Session::getRegType($index);
 		$variableQuantityOptions = model_Event::getVariableQuantityOptions($event);
 		foreach($variableQuantityOptions as $option) {
 			$name = model_ContentType::$VAR_QUANTITY_OPTION.'_'.$option['id'];
-			$quantity = model_RegSession::getVariableQuantityOption($name, $index);
+			$quantity = model_reg_Session::getVariableQuantityOption($name, $index);
 			$price = model_RegOption::getPrice($regType, $option);
 			
 			$total += $quantity*$price['price'];
@@ -39,7 +39,7 @@ class model_Registration
 	public static function getConvertedRegistrationsFromSession($event) {
 		$regs = array();
 		
-		foreach(model_RegSession::getRegistrations() as $index => $reg) {
+		foreach(model_reg_Session::getRegistrations() as $index => $reg) {
 			$regs[] = self::convertFromSession($index);
 		}
 		
@@ -51,18 +51,18 @@ class model_Registration
 	 * filled out, but does not require the payment or summary page.
 	 */
 	private static function isComplete($event, $index) {
-		$count = count(model_RegSession::getRegistrations());
+		$count = count(model_reg_Session::getRegistrations());
 		
 		// put together the list of page IDs that must be completed.
 		$pageIds = array();
-		$category = model_RegSession::getCategory();
+		$category = model_reg_Session::getCategory();
 		$pages = model_EventPage::getVisiblePages($event, $category);
 		foreach($pages as $p) {
 			$pageIds[] = $p['id'];
 		}
 		
 		// if they've completed all the reg pages, then we consider it complete.
-		$completed = model_RegSession::getCompletedPages($index);
+		$completed = model_reg_Session::getCompletedPages($index);
 		$diff = array_diff($pageIds, $completed);
 		
 		return empty($diff);
@@ -74,19 +74,19 @@ class model_Registration
 	 * @param $index
 	 */
 	private static function convertFromSession($index) {
-		$category = model_RegSession::getCategory();
+		$category = model_reg_Session::getCategory();
 		
 		$registration = array(
 			'categoryId' => $category['id'],
-			'eventId' => model_RegSession::getEventId(),
-			'regTypeId' => model_RegSession::getRegType($index),
+			'eventId' => model_reg_Session::getEventId(),
+			'regTypeId' => model_reg_Session::getRegType($index),
 			'information' => array(),
 			'regOptionIds' => array(),
 			'variableQuantity' => array(),
-			'paymentInfo' => model_RegSession::getPaymentInfo()
+			'paymentInfo' => model_reg_Session::getPaymentInfo()
 		);
 
-		foreach(model_RegSession::getContactFields($index) as $key => $value) {
+		foreach(model_reg_Session::getContactFields($index) as $key => $value) {
 			if(!empty($value)) {
 				$registration['information'][] = array(
 					'id' => str_replace(model_ContentType::$CONTACT_FIELD.'_', '', $key),
@@ -97,7 +97,7 @@ class model_Registration
 	
 		// $value can be an id or an array of ids depending on whether
 		// it was a radio or checkbox. 
-		foreach(model_RegSession::getRegOptions($index) as $key => $value) {
+		foreach(model_reg_Session::getRegOptions($index) as $key => $value) {
 			if(!empty($key) && !empty($value)) {
 				if(is_array($value)) {
 					foreach($value as $id) {
@@ -112,7 +112,7 @@ class model_Registration
 			}
 		}
 		
-		foreach(model_RegSession::getVariableQuantityOptions($index) as $key => $value) {
+		foreach(model_reg_Session::getVariableQuantityOptions($index) as $key => $value) {
 			if(!empty($value)) {
 				$registration['variableQuantity'][] = array(
 					'id' => str_replace(model_ContentType::$VAR_QUANTITY_OPTION.'_', '', $key),
@@ -126,7 +126,7 @@ class model_Registration
 	
 	private static function getTotalOptionGroupCost($group, $index) {
 		$total = 0.0;
-		$regType = model_RegSession::getRegType($index);
+		$regType = model_reg_Session::getRegType($index);
 		
 		foreach($group['options'] as $option) {
 			if(self::isRegOptionSelected($option, $index)) {
@@ -151,7 +151,7 @@ class model_Registration
 		// put together the session name of the reg option from it's group id.
 		$name = model_ContentType::$REG_OPTION.'_'.$option['parentGroupId'];
 		
-		$value = model_RegSession::getRegOption($name, $index);
+		$value = model_reg_Session::getRegOption($name, $index);
 		
 		// check if the session value matches--it could be a radio or checkbox.
 		$optionSelected = ($option['id'] === $value) || (is_array($value) && in_array($option['id'], $value));
@@ -162,14 +162,14 @@ class model_Registration
 	public static function removeIncompleteRegistrationsFromSession($event) {
 		$incompleteIndexes = array();
 		
-		foreach(model_RegSession::getRegistrations() as $index => $reg) {
+		foreach(model_reg_Session::getRegistrations() as $index => $reg) {
 			if(!self::isComplete($event, $index)) {
 				$incomplete[] = $index;
 			}
 		}
 		
 		foreach($incompleteIndexes as $index) {
-			model_RegSession::removeRegistration($index);
+			model_reg_Session::removeRegistration($index);
 		}
 	}
 }

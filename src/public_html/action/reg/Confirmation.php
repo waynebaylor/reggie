@@ -19,7 +19,7 @@ class action_reg_Confirmation extends action_BaseAction
 		return new template_reg_BasePage(array(
 			'event' => $this->event,
 			'title' => 'Confirmation',
-			'id' => model_RegistrationPage::$CONFIRMATION_PAGE_ID,
+			'id' => model_reg_RegistrationPage::$CONFIRMATION_PAGE_ID,
 			'page' => $confirmation,
 			'showMenu' => false,
 			'showControls' => false
