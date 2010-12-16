@@ -54,7 +54,11 @@ _;
 			'value' => $option['id'],
 			'checked' => $this->isOptionChecked($name, $option)
 		);
-
+		
+		if($this->optionAtCapacity($option)) {
+			$config['disabled'] = 'disabled';
+		}
+		
 		if('true' === $this->group['multiple']) {
 			// add the brackets so we can handle multiple checks if necessary.
 			$config['name'] .= '[]';
