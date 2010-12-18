@@ -102,31 +102,53 @@ class action_reg_Registration extends action_ValidatorAction
 	}
 	
 	private function handleFormValues() {
-		$this->handleRegTypeValues();
-		$this->handleContactFieldValues();
-		$this->handleRegOptionValues();
-		$this->handleVariableQuantityValues();
-	}
-	
-	private function handleRegTypeValues() {
 		foreach($_REQUEST as $key => $value) {
-			$startsWith = strpos($key, model_ContentType::$REG_TYPE.'_');
-			if($startsWith === 0) {
-				model_reg_Session::setRegType($value);
+			if(strpos($key, model_ContentType::$REG_TYPE.'_') === 0) {
+				$this->setRegTypeValue($value);
+			}
+			else if(strpos($key, model_ContentType::$CONTACT_FIELD.'_') === 0) {
+				$this->setContactFieldValue($key, $value);
+			}
+			else if(strpos($key, model_ContentType::$REG_OPTION.'_') === 0) {
+				$this->setRegOptionValue($key, $value);
+			}
+			else if(strpos($key, model_ContentType::$VAR_QUANTITY_OPTION.'_') === 0) {
+				$this->setVariableQuantityValue($key, $value);
 			}
 		}
 	}
 	
-	private function handleContactFieldValues() {
-		foreach($_REQUEST as $key => $value) {
-			$startsWith = strpos($key, model_ContentType::$CONTACT_FIELD.'_');
-			if($startsWith === 0) {
-				model_reg_Session::setContactField($key, $value);				
+	private function setRegTypeValue($value) {
+		// if user changes reg type, then remove any fields, options, etc
+		// not applicable to the new reg type.
+		$currentRegType = model_reg_Session::getRegType();
+
+		if($currentRegType !== $value) { 
+			$this->filterOutInvalidContactFields($value);
+			
+			// clear out any selected reg options since they may not be valid with
+			// the new reg type.
+			foreach(model_reg_Session::getRegOptions() as $key => $value) {
+				model_reg_Session::setRegOption($key, null);
 			}
+			
+			// clear out any variable quantity options since they may not be valid
+			// with the new reg type.
+			foreach(model_reg_Session::getVariableQuantityOptions() as $key => $value) {
+				model_reg_Session::setVariableQuantityOption($key, null);
+			}
+			
+			model_reg_Session::resetCompletedPages($this->pageId);
 		}
+
+		model_reg_Session::setRegType($value);
 	}
 	
-	private function handleRegOptionValues() {
+	private function setContactFieldValue($key, $value) {
+		model_reg_Session::setContactField($key, $value);
+	}
+	
+	private function setRegOptionValue($key, $value) {
 		// get all reg option groups displayed on page and clear their values
 		// before saving the current values. this is needed because not checking
 		// a previously selected option may mean it is not included in the submitted
@@ -142,24 +164,16 @@ class action_reg_Registration extends action_ValidatorAction
 		
 		// reg option values are from checkboxes/radio buttons, so they
 		// may come in as arrays.
-		foreach($_REQUEST as $key => $value) {
-			$startsWith = strpos($key, model_ContentType::$REG_OPTION.'_');
-			if($startsWith === 0) {
-				// the reg options are named by group, but the input value is 
-				// the reg option id. if the input is a checkbox, then the value 
-				// will be an array.
-				model_reg_Session::setRegOption($key, $value);
-			}
-		}
+		//
+		// the reg options are named by group, but the input value is
+		// the reg option id. 
+		//
+		// if the input is a checkbox, then the value will be an array.
+		model_reg_Session::setRegOption($key, $value);
 	}
 	
-	private function handleVariableQuantityValues() {
-		foreach($_REQUEST as $key => $value) {
-			$startsWith = strpos($key, model_ContentType::$VAR_QUANTITY_OPTION.'_');
-			if($startsWith === 0) {
-				model_reg_Session::setVariableQuantityOption($key, $value);
-			}
-		}
+	private function setVariableQuantityValue($key, $value) {
+		model_reg_Session::setVariableQuantityOption($key, $value);
 	}
 	
 	private function clearRegOptionGroupSessionValue($group) {
@@ -171,6 +185,26 @@ class action_reg_Registration extends action_ValidatorAction
 		foreach($group['options'] as $option) {
 			foreach($option['groups'] as $g) {
 				$this->clearRegOptionGroupSessionValue($g);
+			}
+		}
+	}
+	
+	private function filterOutInvalidContactFields($regTypeId) {
+		$regType = model_Event::getRegTypeById($this->event, $regTypeId);
+		
+		// get a list of all valid field ids.
+		$eventFields = model_Event::getInformationFields($this->event);
+		$validFields = array();
+		foreach($eventFields as $field) {
+			$validFields[$field['id']] = $field;
+		}
+		
+		// remove invalid field ids from the session.
+		$currentFields = model_reg_Session::getContactFields();
+		foreach($currentFields as $key => $f) {
+			$id = str_replace(model_ContentType::$CONTACT_FIELD.'_', '', $key);
+			if(!array_key_exists($id, $validFields) || !model_ContactField::isVisibleTo($validFields[$id], $regType)) {
+				model_reg_Session::setContactField($key, null);
 			}
 		}
 	}

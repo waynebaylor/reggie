@@ -104,6 +104,25 @@ public static function reset($category, $event) {
 	}
 	
 	/**
+	 * removes any pages after the given page id, thus requiring the user
+	 * to click through them.
+	 */
+	public static function resetCompletedPages($pageId) {
+		$completed = array();
+		foreach(self::getCompletedPages() as $p) {
+			$completed[] = $p;
+	
+			// don't add any pages after the given id.
+			if($p === $pageId) {
+				break;
+			}
+		}
+		
+		$index = self::getCurrent();
+		$_SESSION['reg']['registrations'][$index]['completedPages'] = $completed;
+	}
+	
+	/**
 	 * Read only.
 	 */
 	public static function getRegistrations() {
