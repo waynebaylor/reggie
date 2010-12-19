@@ -26,21 +26,23 @@ class action_reg_Payment extends action_ValidatorAction
 		// page (if there are errors).
 		$this->handlePaymentInformation();
 				
-		// do the payment stuff and save whatever's needed
-		// to the sesstion.
-		$errors = $this->validate();
-		
-		// if there are validation errors, then re-display the page
-		// with the necessary error messages.
-		if(!empty($errors)) {
-			$page = new fragment_reg_PaymentPage($this->event);
-			return new template_reg_BasePage(array(
-				'event' => $this->event,
-				'title' => 'Payment Information',
-				'id' => model_reg_RegistrationPage::$PAYMENT_PAGE_ID,
-				'page' => $page,
-				'errors' => $errors
-			));
+		// payment is not required if no total due, so no point in validating.
+		$totalDue = model_reg_Registration::getTotalCost($this->event);
+		if($totalDue > 0) {
+			$errors = $this->validate();
+			
+			// if there are validation errors, then re-display the page
+			// with the necessary error messages.
+			if(!empty($errors)) {
+				$page = new fragment_reg_PaymentPage($this->event);
+				return new template_reg_BasePage(array(
+					'event' => $this->event,
+					'title' => 'Payment Information',
+					'id' => model_reg_RegistrationPage::$PAYMENT_PAGE_ID,
+					'page' => $page,
+					'errors' => $errors
+				));
+			}
 		}
 		
 		model_reg_Session::addCompletedPage(model_reg_RegistrationPage::$PAYMENT_PAGE_ID);

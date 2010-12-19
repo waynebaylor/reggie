@@ -30,17 +30,21 @@ class action_reg_Summary extends action_ValidatorAction
 	}
 	
 	public function Next() {
-		$errors = $this->validate();
-		
-		if(!empty($errors)) {
-			$summary = new fragment_reg_summary_SummaryPage($this->event);
-			return new template_reg_BasePage(array(
-				'event' => $this->event,
-				'title' => 'Review &amp; Confirm',
-				'id' => model_reg_RegistrationPage::$SUMMARY_PAGE_ID,
-				'page' => $summary,
-				'errors' => $errors
-			));
+		// payment is not required if no total due, so no point in validating.
+		$totalDue = model_reg_Registration::getTotalCost($this->event);
+		if($totalDue > 0) {
+			$errors = $this->validate();
+			
+			if(!empty($errors)) {
+				$summary = new fragment_reg_summary_SummaryPage($this->event);
+				return new template_reg_BasePage(array(
+					'event' => $this->event,
+					'title' => 'Review &amp; Confirm',
+					'id' => model_reg_RegistrationPage::$SUMMARY_PAGE_ID,
+					'page' => $summary,
+					'errors' => $errors
+				));
+			}
 		}
 		
 		model_reg_Session::addCompletedPage(model_reg_RegistrationPage::$SUMMARY_PAGE_ID);

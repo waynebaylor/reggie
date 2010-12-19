@@ -95,7 +95,8 @@ class validation_reg_PageValidator
 						}
 						break;
 					case model_Validation::$MIN_LENGTH:
-						if(strlen($fieldValue) < $rule['value']) {
+						// min length restriction is only checked if value is non-empty.
+						if(strlen($fieldValue) > 0 && strlen($fieldValue) < $rule['value']) {
 							$errors[$fieldName] = "{$field['displayName']} minimum length is {$rule['value']}.";
 						}
 						break;

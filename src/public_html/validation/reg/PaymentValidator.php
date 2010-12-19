@@ -9,7 +9,7 @@ class validation_reg_PaymentValidator
 	}
 	
 	public function validate() {
-		$paymentTypeId = RequestUtil::getValue('paymentType', model_PaymentType::$AUTHORIZE_NET);
+		$paymentTypeId = RequestUtil::getValue('paymentType', null);
 		
 		if(!model_Event::isPaymentTypeEnabled($this->event, array('id' => $paymentTypeId))) {
 			throw new Exception("Payment type ID: {$paymentTypeId} not enabled for event ID {$this->event['id']}.");	

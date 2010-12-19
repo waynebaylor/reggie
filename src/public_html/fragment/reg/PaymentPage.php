@@ -26,15 +26,30 @@ class fragment_reg_PaymentPage extends template_Template
 				Total Due: {$this->getTotalDue()}
 			</div>
 
-			<table class="payment-types">
-				<tr>
-					<td class="tab-cell">{$this->getPaymentTypeTabs()}</td>
-					<td class="form-cell">{$this->getPaymentTypeForms()}</td>
-				</tr>
-			</table>
+			{$this->getPaymentTypes()}
 			
 			<div class="section-divider"></div>
 _;
+	}
+	
+	private function getPaymentTypes() {
+		$total = model_reg_Registration::getTotalCost($this->event);
+		
+		if($total > 0) {
+			return <<<_
+				<table class="payment-types">
+					<tr>
+						<td class="tab-cell">{$this->getPaymentTypeTabs()}</td>
+						<td class="form-cell">{$this->getPaymentTypeForms()}</td>
+					</tr>
+				</table>
+_;
+		}
+		else {
+			return <<<_
+				<div>No payment due.</div>		
+_;
+		}
 	}
 	
 	private function getGroupRegistration() {
@@ -58,14 +73,12 @@ _;
 	private function getPaymentTypeTabs() {
 		$html = '<table class="payment-type-tabs">';
 		
-		$paymentInfo = model_reg_Session::getPaymentInfo();
-		$paymentTypeFromSession = $paymentInfo['paymentType']; 
-		$selectedTypeId = empty($paymentTypeFromSession)? model_PaymentType::$AUTHORIZE_NET : intval($paymentTypeFromSession, 10);
+		$selectedTypeId = $this->getSelectedPaymentTypeId();
 		
 		foreach($this->event['paymentTypes'] as $type) {
 			$typeId = intval($type['paymentTypeId'], 10);
 			
-			$selected = $selectedTypeId === $typeId;
+			$selected = ($selectedTypeId === $typeId);
 			
 			if(model_PaymentType::$AUTHORIZE_NET === $typeId) {
 				$type['displayName'] = 'Credit Card'; // We don't want attendees to see 'Authorize.NET'.
@@ -131,7 +144,7 @@ _;
 		$info = model_reg_Session::getPaymentInfo();
 		
 		$showForm = 'hide';
-		if(isset($info['paymentType']) && (model_PaymentType::$CHECK === intval($info['paymentType'], 10))) {
+		if(model_PaymentType::$CHECK === $this->getSelectedPaymentTypeId()) {
 			$showForm = '';
 		}
 		
@@ -157,7 +170,7 @@ _;
 		$info = model_reg_Session::getPaymentInfo();
 		
 		$showForm = 'hide';
-		if(isset($info['paymentType']) && (model_PaymentType::$PO === intval($info['paymentType'], 10))) {
+		if(model_PaymentType::$PO === $this->getSelectedPaymentTypeId()) {
 			$showForm = '';
 		}
 		
@@ -183,7 +196,7 @@ _;
 		$info = model_reg_Session::getPaymentInfo();
 		
 		$showForm = 'hide';
-		if(empty($info['paymentType']) || (model_PaymentType::$AUTHORIZE_NET === intval($info['paymentType'], 10))) {
+		if(model_PaymentType::$AUTHORIZE_NET === $this->getSelectedPaymentTypeId()) {
 			$showForm = '';
 		}
 		
@@ -339,6 +352,19 @@ _;
 			'value' => isset($info['year'])? $this->escapeHtml($info['year']) : $currentYear,
 			'items' => $years
 		));
+	}
+	
+	private function getSelectedPaymentTypeId() {
+		$paymentInfo = model_reg_Session::getPaymentInfo();
+		$paymentTypeFromSession = $paymentInfo['paymentType']; 
+		
+		$firstPaymentType = current($this->event['paymentTypes']);
+		$firstPaymentType = $firstPaymentType['paymentTypeId'];
+
+		// if no payment type has been selected, then default to the first one.
+		$id = empty($paymentTypeFromSession)? $firstPaymentType : $paymentTypeFromSession;
+		
+		return intval($id, 10);
 	}
 }
 

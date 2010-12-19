@@ -1,3 +1,4 @@
+dojo.require("hhreg.util");
 
 (function() {
 	var _validation = dojo.provide("hhreg.validation");
@@ -49,6 +50,14 @@
 		}
 		else if(node.type && (node.type === "radio" || node.type === "checkbox")) {
 			// put the message above the input options.
+			//
+			// this assumes the checkbox/radio input is in a table with CSS class
+			// "checkbox-label" or "radio-label".
+			
+			// if the checkbox/radio is in a table, then put the message above the table. 
+			// otherwise put it above the input.
+			node = hhreg.util.parentNode(node, ["checkbox-label", "radio-label"]) || node;
+			
 			dojo.style(div, {
 				position: "static",
 				padding: "0px"
@@ -114,14 +123,14 @@
 		
 		var node;
 		var field;
-		for(fieldName in messages) {
+		for(fieldName in messages) {	
 			if(fieldName === 'general') {
 				node = dojo.byId("general-errors");
 			}
 			else if(form) {
-				for(var i=0; i<form.elements.length; ++i) {
+				for(var i=0; i<form.elements.length; ++i) {	
 					// the form input name may have a '[]' appended to the end.
-					if(form.elements[i].name.replace(/\[\]$/, "") === fieldName) {
+					if(form.elements[i].name === fieldName) {
 						node = form.elements[i];
 						break; // put the message on the first input with that name
 					}
