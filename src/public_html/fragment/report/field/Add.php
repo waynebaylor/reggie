@@ -99,10 +99,6 @@ _;
 			'label' => 'Payment Information',
 			'value' => array(
 				array(
-					'label' => 'Payment Type',
-					'value' => 'payment_type'
-				),
-				array(
 					'label' => 'Total Cost',
 					'value' => 'total_cost'
 				),

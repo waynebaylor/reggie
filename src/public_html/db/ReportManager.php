@@ -26,11 +26,6 @@ class db_ReportManager extends db_Manager
 			'dbValueColumn' => 'regTypeName',
 			'displayName' => 'Registration Type'
 		),
-		'payment_type' => array(
-			'dbColumn' => 'showPaymentType',
-			'dbValueColumn' => 'paymentTypeName',
-			'displayName' => 'Payment Type'
-		),
 		'total_cost' => array(
 			'dbColumn' => 'showTotalCost',
 			'displayName' => 'Total Cost'
@@ -80,7 +75,6 @@ class db_ReportManager extends db_Manager
 				showDateRegistered,
 				showCategory,
 				showRegType,
-				showPaymentType,
 				showTotalCost,
 				showTotalPaid,
 				showRemainingBalance
@@ -106,7 +100,6 @@ class db_ReportManager extends db_Manager
 				showDateRegistered,
 				showCategory,
 				showRegType,
-				showPaymentType,
 				showTotalCost,
 				showTotalPaid,
 				showRemainingBalance
@@ -223,6 +216,7 @@ class db_ReportManager extends db_Manager
 	// methods for running reports.
 	//////////////////////////////////////////////////////////////
 	
+	// FIXME: what about multiple payments? should remove payment type field.
 	public function generateReport($report) {
 		$sql = '
 			SELECT
@@ -230,8 +224,7 @@ class db_ReportManager extends db_Manager
 				Registration.regGroupId as groupId,
 				Registration.dateRegistered,
 				Category.displayName as categoryName,
-				RegType.description as regTypeName,
-				PaymentType.displayName as paymentTypeName
+				RegType.description as regTypeName
 			FROM
 				Registration
 			INNER JOIN
@@ -246,14 +239,6 @@ class db_ReportManager extends db_Manager
 				Report
 			ON
 				Report.eventId = Registration.eventId
-			INNER JOIN
-				Payment
-			ON
-				Registration.regGroupId = Payment.regGroupId
-			INNER JOIN
-				PaymentType
-			ON
-				Payment.paymentTypeId = PaymentType.id
 			WHERE
 				Report.id = :reportId
 			ORDER BY
@@ -334,7 +319,7 @@ class db_ReportManager extends db_Manager
 		//
 		// append the payment fields, if any. 
 		//
-		foreach(array('payment_type', 'total_cost', 'total_paid', 'remaining_balance') as $specialFieldId) {
+		foreach(array('total_cost', 'total_paid', 'remaining_balance') as $specialFieldId) {
 			$column = self::$SPECIAL_FIELDS[$specialFieldId]['dbColumn'];
 			if($report[$column] === 'true') {
 				$field = array(
@@ -431,7 +416,7 @@ class db_ReportManager extends db_Manager
 	private function getSpecialFieldValues($report, $result, $processedGroupIds) {
 		$fieldValues = array();
 		
-		foreach(array('registration_type', 'category', 'date_registered', 'payment_type') as $specialFieldId) {
+		foreach(array('registration_type', 'category', 'date_registered') as $specialFieldId) {
 			$column = self::$SPECIAL_FIELDS[$specialFieldId]['dbColumn'];
 			$valueColumn = self::$SPECIAL_FIELDS[$specialFieldId]['dbValueColumn'];
 

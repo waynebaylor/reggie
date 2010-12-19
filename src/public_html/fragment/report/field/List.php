@@ -135,27 +135,6 @@ _;
 _;
 		}
 		
-		if($this->report['showPaymentType'] === 'true') {
-			$html .= <<<_
-				<tr>
-					<td></td>
-					<td>PaymentType</td>
-					<td>
-						{$this->HTML->link(array(
-							'label' => 'Remove',
-							'href' => '/admin/report/ReportField',
-							'parameters' => array(
-								'a' => 'removeField',
-								'id' => 'payment_type',
-								'reportId' => $this->report['id']
-							),
-							'class' => 'remove'
-						))}
-					</td>
-				</tr>
-_;
-		}
-		
 		if($this->report['showTotalCost'] === 'true') {
 			$html .= <<<_
 				<tr>

@@ -13,7 +13,6 @@ class action_admin_report_ReportField extends action_BaseAction
 			'date_registered',
 			'category',
 			'registration_type',
-			'payment_type',
 			'total_cost',
 			'total_paid',
 			'remaining_balance'
@@ -39,7 +38,6 @@ class action_admin_report_ReportField extends action_BaseAction
 			'date_registered',
 			'category',
 			'registration_type',
-			'payment_type',
 			'total_cost',
 			'total_paid',
 			'remaining_balance'

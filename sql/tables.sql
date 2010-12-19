@@ -1274,7 +1274,6 @@ create table if not exists `Report` (
 	`showDateRegistered`	varchar(255)	not null default 'false',
 	`showCategory`		varchar(255)	not null default 'false',
 	`showRegType`		varchar(255)	not null default 'false',
-	`showPaymentType`	varchar(255)	not null default 'false',
 	`showTotalCost`		varchar(255)	not null default 'false',
 	`showTotalPaid`		varchar(255)	not null default 'false',
 	`showRemainingBalance`	varchar(255)	not null default 'false',
