@@ -39,7 +39,20 @@ class db_reg_InformationManager extends db_Manager
 		
 		$results = $this->query($sql, $params, 'Find registration information.');
 		
-		// TODO: convert multiple value fields to arrays.
+		// convert field values to an array. if a field allows multiple 
+		// values (checkbox) they will be all be put in the array.
+		$infos = array();
+		foreach($results as $result) {
+			$fieldId = $result['contactFieldId'];
+			$value = $result['value'];
+			
+			if(empty($infos[$fieldId])) {
+				$infos[$fieldId] = $result;
+				$infos[$fieldId]['value'] = array();
+			}
+			
+			$infos[$fieldId]['value'][] = $value;
+		}
 		
 		return $infos;
 	}

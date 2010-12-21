@@ -12,12 +12,38 @@ class db_reg_GroupManager extends db_Manager
 		return 'RegistrationGroup';
 	}
 	
+	protected function populate(&$obj, $arr) {
+		parent::populate($obj, $arr);
+		
+		$obj['registrations'] = db_reg_RegistrationManager::getInstance()->findByRegistrationGroup($obj);
+		$obj['payments'] = db_reg_PaymentManager::getInstance()->findByRegistrationGroup($obj);
+		
+		return $obj;
+	}
+	
 	public static function getInstance() {
 		if(empty(self::$instance)) {
 			self::$instance = new db_reg_GroupManager();
 		}
 		
 		return self::$instance;
+	}
+	
+	public function find($id) {
+		$sql = '
+			SELECT 
+				id
+			FROM
+				RegistrationGroup
+			WHERE
+				id = :id
+		';
+
+		$params = array(
+			'id' => $id
+		);
+		
+		return $this->queryUnique($sql, $params, 'Find registration group.');
 	}
 	
 	public function createGroup() {

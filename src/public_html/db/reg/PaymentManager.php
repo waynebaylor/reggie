@@ -26,8 +26,36 @@ class db_reg_PaymentManager extends db_Manager
 		return self::$instance;
 	}
 	
-	public function findByRegistration($reg) {
+	public function findByRegistrationGroup($group) {
+		$sql = '
+			SELECT
+				id,
+				paymentTypeId,
+				regGroupId,
+				transactionDate,
+				checkNumber,
+				purchaseOrderNumber,
+				cardSuffix,
+				authorizationCode,
+				transactionId,
+				name,
+				address,
+				city,
+				state,
+				zip,
+				country,
+				amount
+			FROM
+				Payment
+			WHERE
+				regGroupId = :regGroupId
+		';
 		
+		$params = array(
+			'regGroupId' => $group['id']
+		);
+		
+		return $this->query($sql, $params, 'Find payments by registration group.');
 	}
 	
 	public function createPayment($groupId, $info) {

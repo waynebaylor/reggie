@@ -18,7 +18,6 @@ class db_reg_RegistrationManager extends db_Manager
 		$obj['information'] = db_reg_InformationManager::getInstance()->findByRegistration($obj);
 		$obj['regOptions'] = db_reg_RegOptionManager::getInstance()->findByRegistration($obj);
 		$obj['variableQuantity'] = db_reg_VariableQuantityManager::getInstance()->findByregistration($obj);
-		$obj['payment'] = db_reg_PaymentManager::getInstance()->findByRegistration($obj);
 		
 		return $obj;
 	}
@@ -198,6 +197,30 @@ class db_reg_RegistrationManager extends db_Manager
 		$result = $this->rawQueryUnique($sql, $params, 'Find number registered for reg option.');
 		
 		return $result['regOptionCount'];
+	}
+	
+	public function findByRegistrationGroup($group) {
+		$sql = '
+			SELECT
+				id,
+				dateRegistered,
+				comments,
+				dateCancelled,
+				regGroupId,
+				categoryId,
+				eventId,
+				regTypeId
+			FROM
+				Registration
+			WHERE
+				regGroupId = :regGroupId
+		';
+		
+		$params = array(
+			'regGroupId' => $group['id']
+		);
+		
+		return $this->query($sql, $params, 'Find registrations by group.');
 	}
 }
 

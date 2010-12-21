@@ -45,7 +45,6 @@ _;
 							'label' => $report['name'],
 							'href' => '/admin/report/RunReport',
 							'title' => 'Generate Report',
-							'target' => '_blank',
 							'parameters' => array(
 								'action' => 'view',
 								'id' => $report['id']

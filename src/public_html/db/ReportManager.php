@@ -216,7 +216,6 @@ class db_ReportManager extends db_Manager
 	// methods for running reports.
 	//////////////////////////////////////////////////////////////
 	
-	// FIXME: what about multiple payments? should remove payment type field.
 	public function generateReport($report) {
 		$sql = '
 			SELECT
@@ -269,6 +268,9 @@ class db_ReportManager extends db_Manager
 				$fieldValues[$key] = $value;
 			}
 			
+			// this is used for the 'details' link.
+			$fieldValues['details'] = $result['groupId'];
+						
 			$fieldResults[] = array('fieldValues' => $fieldValues);
 		
 			$processedGroupIds[] = $result['groupId'];
@@ -330,6 +332,9 @@ class db_ReportManager extends db_Manager
 				array_push($results, $field);
 			}
 		}
+		
+		// the details column doesn't have a heading title.
+		array_push($results, array('id' => 'details', 'displayName' => ''));
 		
 		return $results;
 	}

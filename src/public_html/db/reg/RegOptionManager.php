@@ -31,6 +31,8 @@ class db_reg_RegOptionManager extends db_Manager
 			SELECT
 				id,
 				registrationId,
+				regOptionId,
+				priceId,
 				comments,
 				dateCancelled
 			FROM

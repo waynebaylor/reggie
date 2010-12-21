@@ -7,11 +7,7 @@ class template_admin_ReportResults extends template_AdminPage
 	private $results;
 	
 	function __construct($report, $fieldHeadings, $results) {
-		parent::__construct(array(
-			'title' => 'Report Results',
-			'showLogoutLink' => false,
-			'bannerLinkActive' => false
-		));
+		parent::__construct('Report Results');
 		
 		$this->report = $report;
 		$this->fieldHeadings = $fieldHeadings;
@@ -70,6 +66,15 @@ _;
 			}
 			else if(is_array($result['fieldValues'][$heading['id']])) {
 				$value = implode(', ', $result['fieldValues'][$heading['id']]);
+			}
+			else if($heading['id'] === 'details') {
+				$value = $this->HTML->link(array(
+					'label' => 'Details',
+					'href' => '/admin/registration/Registration',
+					'parameters' => array(
+						'groupId' => $result['fieldValues'][$heading['id']]
+					)
+				));
 			}
 			else {
 				$value = $result['fieldValues'][$heading['id']];

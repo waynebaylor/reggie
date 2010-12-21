@@ -27,7 +27,26 @@ class db_reg_VariableQuantityManager extends db_Manager
 	}
 	
 	public function findByRegistration($reg) {
+		$sql = '
+			SELECT
+				id,
+				registrationId,
+				variableQuantityId,
+				priceId,
+				quantity,
+				comments,
+				dateCancelled
+			FROM
+				Registration_VariableQuantityOption
+			WHERE
+				registrationId = :registrationId
+		';
 		
+		$params = array(
+			'registrationId' => $reg['id']
+		);
+		
+		return $this->query($sql, $params, 'Find variable quantity options by registration.');
 	}
 	
 	public function createOptions($regTypeId, $registrationId, $options) {
