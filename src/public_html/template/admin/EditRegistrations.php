@@ -65,7 +65,22 @@ _;
 				$form = new fragment_XhrTableForm(
 					'/admin/registration/Registration', 
 					'save', 
-					"<tr><td></td><td>{$html}</td></tr>"
+					"<tr>
+						<td></td>
+						<td>
+						{$this->HTML->hidden(array(
+							'name' => 'registrationId',
+							'value' => $registration['id']
+						))}
+						
+						{$this->HTML->hidden(array(
+							'name' => 'sectionId',
+							'value' => $section['id']
+						))}
+						
+						{$html}
+						</td>
+					</tr>"
 				);
 				
 				$html = $form->html();
