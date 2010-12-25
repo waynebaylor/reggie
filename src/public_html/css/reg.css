@@ -139,23 +139,6 @@ table.reg-content td {
 }
 	
 /******************************************
- * CSS for contact fields.
- ******************************************/
-
-table.contact-fields {
-	border-collapse: separate;
-	border-spacing: 5px;
-}
-
-td.contact-field-label {
-	text-align: right;
-	vertical-align: top;
-}
-
-ol.contact-fields li {
-	padding: 10px 0;
-}
-/******************************************
  * CSS for reg options.
  ******************************************/
 
@@ -294,7 +277,6 @@ td > ul.reg-option-group {
 /******************************************
  * Validation Icons and Messages
  ******************************************/
- 
  
 .error-text {
 	color: red;

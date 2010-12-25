@@ -3,11 +3,13 @@
 class fragment_reg_ContactField extends template_Template
 {
 	private $field;
+	private $value;
 	
-	function __construct($field) {
+	function __construct($field, $value) {
 		parent::__construct();
 
 		$this->field = $field;
+		$this->value = $value;
 	}
 	
 	public function html() {
@@ -90,9 +92,9 @@ class fragment_reg_ContactField extends template_Template
 	
 	private function getBaseConfig() {
 		$config = array(
-			'name' => model_ContentType::$CONTACT_FIELD.'_'.$this->field['id']
+			'name' => model_ContentType::$CONTACT_FIELD.'_'.$this->field['id'],
+			'value' => empty($this->value)? '' : $this->value
 		);
-		$config['value'] = model_reg_Session::getContactField($config['name']);
 
 		return $config;
 	}

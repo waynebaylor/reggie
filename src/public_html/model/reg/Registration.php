@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * This class deals with the registration as the user is filling out the form. It 
+ * interacts with the Session not the database.
+ */
 class model_reg_Registration
 {
 	public static function getTotalCost($event) {

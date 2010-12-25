@@ -130,7 +130,7 @@ public static function reset($category, $event) {
 	}
 	
 	/**
-	 * Read only.
+	 * Read only. The reg type id.
 	 */
 	public static function getRegType($index = -1) {
 		if($index < 0) {

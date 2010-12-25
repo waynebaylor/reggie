@@ -34,7 +34,15 @@ _;
 			return $regTypes->html();
 		}
 		else if(model_Section::containsContactFields($this->section)) {
-			$fields = new fragment_reg_ContactFields($this->section);
+			$regTypeId = model_reg_Session::getRegType();
+			
+			// populate with values from the session. 
+			$values = array();
+			foreach($this->section['content'] as $field) {
+				$values[$field['id']] = model_reg_Session::getContactField(model_ContentType::$CONTACT_FIELD.'_'.$field['id']); 
+			}
+			
+			$fields = new fragment_reg_ContactFields($this->section, $regTypeId, $values);
 			return $fields->html();	
 		}
 		else if(model_Section::containsRegOptions($this->section)) {

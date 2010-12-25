@@ -13,6 +13,11 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		
 		return new template_admin_EditRegistrations($event, $group);	
 	}
+	
+	public function save() {
+		
+		return new fragment_Success();
+	}
 }
 
 ?>

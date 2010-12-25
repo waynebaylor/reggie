@@ -3,21 +3,23 @@
 class fragment_reg_ContactFields extends template_Template
 {
 	private $section;
+	private $regTypeId;
+	private $fieldValues; // field id -> value
 	
-	function __construct($section) {
+	function __construct($section, $regTypeId, $fieldValues) {
 		parent::__construct();
 
 		$this->section = $section;
+		$this->regTypeId = $regTypeId;
+		$this->fieldValues = $fieldValues;
 	}
 	
 	public function html() {
-		$regType = model_reg_Session::getRegType();
-		
 		if($this->section['numbered'] === 'true') {
-			return $this->orderedFields($regType, $this->section['content']);
+			return $this->orderedFields($this->regTypeId, $this->section['content']);
 		}
 		else {
-			return $this->unorderedFields($regType, $this->section['content']);
+			return $this->unorderedFields($this->regTypeId, $this->section['content']);
 		}
 	}
 	
@@ -26,8 +28,10 @@ class fragment_reg_ContactFields extends template_Template
 		
 		foreach($fields as $field) {
 			if(model_ContactField::isVisibleTo($field, $regType)) {
+				$value = $this->getFieldValue($field);
+				$f = new fragment_reg_ContactField($field, $value);
+				
 				$required = model_ContactField::isRequired($field)? 'required' : '';
-				$f = new fragment_reg_ContactField($field);
 				
 				$html .= <<<_
 					<li>
@@ -52,8 +56,10 @@ _;
 
 		foreach($fields as $field) {
 			if(model_ContactField::isVisibleTo($field, $regType)) {
+				$value = $this->getFieldValue($field);
+				$f = new fragment_reg_ContactField($field, $value);
+				
 				$required = model_ContactField::isRequired($field)? 'required' : '';
-				$f = new fragment_reg_ContactField($field);
 				
 				$html .= <<<_
 					<tr>
@@ -71,6 +77,11 @@ _;
 		return <<<_
 			<table class="contact-fields">{$html}</table>
 _;
+	}
+	
+	private function getFieldValue($field) {
+		$id = $field['id'];
+		return isset($this->fieldValues[$id])? $this->fieldValues[$id] : '';
 	}
 }
 
