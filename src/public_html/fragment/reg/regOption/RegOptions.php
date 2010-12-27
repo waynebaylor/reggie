@@ -3,11 +3,15 @@
 class fragment_reg_regOption_RegOptions extends template_Template
 {
 	private $group;
+	private $regTypeId;
+	private $selectedOptions;
 	
-	function __construct($group) {
+	function __construct($group, $regTypeId, $selectedOpts) {
 		parent::__construct();
 		
 		$this->group = $group;
+		$this->regTypeId = $regTypeId;
+		$this->selectedOptions = $selectedOpts;
 	}	
 	
 	public function html() {
@@ -25,7 +29,7 @@ _;
 			$price = $this->getPrice($option);
 			
 			if(!empty($price)) {
-				$groupsTemplate = new fragment_reg_regOptionGroup_RegOptionGroups($option['groups']);
+				$groupsTemplate = new fragment_reg_regOptionGroup_RegOptionGroups($option['groups'], $this->regTypeId, $this->selectedOptions);
 				$optionGroupsHtml = $groupsTemplate->html();
 				
 				$html .= <<<_
@@ -79,8 +83,9 @@ _;
 			return 'Sold out.';
 		}
 		else {
-			$regType = model_reg_Session::getRegType();
+			$regType = array('id' => $this->regTypeId);
 			$price = model_RegOption::getPrice($regType, $option);
+			
 			return '$'.number_format($price['price'], 2);
 		}
 	}
@@ -91,16 +96,20 @@ _;
 	 * @param $option
 	 */
 	private function isOptionChecked($name, $option) {
-		$value = model_reg_Session::getRegOption($name);
+		if(array_key_exists($name, $this->selectedOptions)) {
+			$value = $this->selectedOptions[$name];
+			
+			// checkboxes could have multiple checked, hence the value array.
+			if(is_array($value)) {
+				return in_array($option['id'], $value);
+			}
+			// radio can only have one value.
+			else {
+				return $option['id'] === $value;
+			}
+		}
 		
-		// checkboxes could have multiple checked, hence the value array.
-		if(is_array($value)) {
-			return in_array($option['id'], $value);
-		}
-		// radio can only have one value.
-		else {
-			return $option['id'] === $value;
-		}
+		return false;
 	}
 	
 	private function optionAtCapacity($option) { 

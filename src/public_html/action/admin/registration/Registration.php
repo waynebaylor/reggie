@@ -25,6 +25,15 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		
 		return new fragment_Success();
 	}
+	
+	public function cancelRegOption() {
+		$id = RequestUtil::getValue('id', 0); // the Registration_RegOption id.
+		$groupId = RequestUtil::getValue('groupId', 0);
+		
+		// FIXME do the delete!!!!
+		
+		return new template_Redirect('/admin/registration/Registration?a=view&groupId='.$groupId);
+	}
 
 	private function saveRegType($registrationId, $sectionId) {
 		foreach($_REQUEST as $key => $value) {
@@ -51,14 +60,6 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		}
 	}
 	
-	private function saveRegOptions($registrationId, $sectionId) {
-		foreach($_REQUEST as $key => $value) {
-			if(strpos($key, model_ContentType::$REG_OPTION.'_') === 0) {
-				//
-			}
-		}
-	}
-
 	private function saveVariableQuantity($registrationId, $sectionId) {
 		foreach($_REQUEST as $key => $value) {
 			if(strpos($key, model_ContentType::$VAR_QUANTITY_OPTION.'_') === 0) {

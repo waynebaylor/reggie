@@ -29,13 +29,13 @@ _;
 	}
 	
 	private function getSectionContent() {
+		$regTypeId = model_reg_Session::getRegType();
+		
 		if(model_Section::containsRegTypes($this->section)) {
 			$regTypes = new fragment_reg_RegTypes($this->section['content']);
 			return $regTypes->html();
 		}
 		else if(model_Section::containsContactFields($this->section)) {
-			$regTypeId = model_reg_Session::getRegType();
-			
 			// populate with values from the session. 
 			$values = array();
 			foreach($this->section['content'] as $field) {
@@ -46,7 +46,9 @@ _;
 			return $fields->html();	
 		}
 		else if(model_Section::containsRegOptions($this->section)) {
-			$groups = new fragment_reg_regOptionGroup_RegOptionGroups($this->section['content']);
+			$selectedOpts = model_reg_Session::getRegOptions();
+
+			$groups = new fragment_reg_regOptionGroup_RegOptionGroups($this->section['content'], $regTypeId, $selectedOpts);
 			return $groups->html();
 		}
 		else if(model_Section::containsVariableQuantityOptions($this->section)) {
