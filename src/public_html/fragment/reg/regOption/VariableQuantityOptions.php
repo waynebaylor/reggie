@@ -40,10 +40,6 @@ _;
 	}
 	
 	private function getPrice($option) {
-		if($option['showPrice'] !== 'true') {
-			return '&nbsp;';
-		}
-		
 		if($this->optionAtCapacity($option)) {
 			return 'Sold out.';
 		}

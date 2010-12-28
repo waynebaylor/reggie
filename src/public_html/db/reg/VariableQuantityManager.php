@@ -34,8 +34,7 @@ class db_reg_VariableQuantityManager extends db_Manager
 				variableQuantityId,
 				priceId,
 				quantity,
-				comments,
-				dateCancelled
+				comments
 			FROM
 				Registration_VariableQuantityOption
 			WHERE

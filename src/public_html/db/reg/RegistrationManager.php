@@ -185,8 +185,6 @@ class db_reg_RegistrationManager extends db_Manager
 			WHERE
 				Registration.dateCancelled is NULL
 			AND
-				Registration_VariableQuantityOption.dateCancelled is NULL
-			AND
 				variableQuantityId = :variableQuantityId
 		';
 		

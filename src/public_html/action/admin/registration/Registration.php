@@ -28,10 +28,11 @@ class action_admin_registration_Registration extends action_ValidatorAction
 	
 	public function cancelRegOption() {
 		$id = RequestUtil::getValue('id', 0); // the Registration_RegOption id.
+		$comments = RequestUtil::getValue('comments', '');
 		$groupId = RequestUtil::getValue('groupId', 0);
 		
-		// FIXME do the delete!!!!
-		
+		db_reg_RegOptionManager::getInstance()->cancel($id, $comments);
+				
 		return new template_Redirect('/admin/registration/Registration?a=view&groupId='.$groupId);
 	}
 

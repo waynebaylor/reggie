@@ -86,6 +86,26 @@ class db_reg_RegOptionManager extends db_Manager
 			$this->execute($sql, $params, 'Create registration option.');
 		}
 	}
+	
+	public function cancel($id, $comments) {
+		$sql = '
+			UPDATE
+				Registration_RegOption
+			SET
+				dateCancelled = :dateCancelled,
+				comments = :comments
+			WHERE
+				id = :id
+		';
+		
+		$params = array(
+			'id' => $id,
+			'dateCancelled' => date(db_Manager::$DATE_FORMAT),
+			'comments' => $comments
+		);
+		
+		$this->execute($sql, $params, 'Cancel registration option.');
+	}
 }
 
 ?>
