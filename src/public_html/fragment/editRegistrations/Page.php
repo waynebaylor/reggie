@@ -61,39 +61,84 @@ _;
 			$html .= $this->getVarQuantityRow($option, $registration);
 		}
 		
-		return <<<_
-			<table style="border-collapse:separate; border-spacing:20px 10px;">{$html}</table>
+		$html = <<<_
+			<table style="border-collapse:separate; border-spacing:20px 10px;">
+				{$html}
+			</table>
 _;
+
+		$form = new fragment_XhrTableForm(
+			'/admin/registration/Registration', 
+			'save', 
+			"<tr>
+				<td></td>
+				<td>
+					{$this->HTML->hidden(array(
+						'name' => 'registrationId',
+						'value' => $registration['id']
+					))}
+					
+					{$this->HTML->hidden(array(
+						'name' => 'sectionId',
+						'value' => $section['id']
+					))}
+					
+					{$html}
+				</td>
+			</tr>"
+		);
+		
+		return $form->html();
 	}
 	
 	private function getVarQuantityRow($option, $registration) {
-		$html = '';
+		$value = 0;
+		$comments = '';
+		$priceId = 0;
 		
 		foreach($registration['variableQuantity'] as $varQuantity) {
 			if($option['id'] == $varQuantity['variableQuantityId']) {
-				$price = db_RegOptionPriceManager::getInstance()->find($varQuantity['priceId']);
-				//display like: @ $45.95
-				$priceDisplay = ' &#64; $'.number_format($price['price'], 2);
-				
-				$html .= <<<_
-					<tr>
-						<td style="vertical-align:top;">{$option['description']}</td>
-						<td style="vertical-align:top; text-align:right;">
-							{$this->HTML->text(array(
-								'name' => model_ContentType::$VAR_QUANTITY_OPTION.'_'.$option['id'],
-								'value' => $varQuantity['quantity'],
-								'size' => 2
-							))}
-						</td>
-						<td style="vertical-align:top;">
-							{$this->escapeHtml($varQuantity['comments'])}
-						</td>
-					</tr>
-_;
+				$value = $varQuantity['quantity'];
+				$comments = $this->escapeHtml($varQuantity['comments']);
+				$priceId = $varQuantity['priceId'];
 			}
 		}
 		
-		return $html;
+		return <<<_
+			<tr>
+				<td style="vertical-align:top;">{$option['description']}</td>
+				<td style="vertical-align:top; text-align:right;">
+					{$this->HTML->text(array(
+						'name' => model_ContentType::$VAR_QUANTITY_OPTION.'_'.$option['id'],
+						'value' => $value,
+						'size' => 2
+					))}
+					&nbsp;&#64;
+					{$this->getVarQuantityPrice($option, $priceId)}
+				</td>
+				<td style="vertical-align:top;">
+					{$comments}
+				</td>
+			</tr>
+_;
+	}
+	
+	private function getVarQuantityPrice($option, $priceId) {
+		$prices = db_RegOptionPriceManager::getInstance()->findByVariableQuantityOption(array('id' => $option['id']));
+		
+		$dropDownOpts = array();
+		foreach($prices as $price) {
+			$dropDownOpts[] = array(
+				'label' => '$'.number_format($price['price'], 2).' ('.$price['description'].')',
+				'value' => $price['id']
+			);
+		}
+		
+		return $this->HTML->select(array(
+			'name' => 'priceId_'.$option['id'],
+			'value' => $priceId,
+			'items' => $dropDownOpts
+		));
 	}
 }
 

@@ -35,11 +35,41 @@ _;
 		
 		foreach($this->group['registrations'] as $index => $r) {
 			$num = $index+1;
+
+			$comments = new fragment_XhrTableForm(
+				'/admin/registration/Registration', 
+				'saveGeneralInfo', 
+				"
+					<tr>
+					<td class=\"label\">Comments</td>
+					<td>
+						{$this->HTML->hidden(array(
+							'name' => 'id',
+							'value' => $r['id']
+						))}
+						
+						{$this->HTML->textarea(array(
+							'name' => 'comments',
+							'value' => $this->escapeHtml($r['comments']),
+							'rows' => 5,
+							'cols' => 50
+						))}
+					</td>
+				"
+			);
 			
 			$html .= <<<_
 				<div style="background-color:#ccc; padding:5px; margin-bottom:10px; font-size:1.2em;">
 					Registrant {$num}
-				</div>			
+				</div>	
+
+				<div class="fragment-edit">
+					<h3>General Registrant Information</h3>
+					
+					{$comments->html()}
+				</div>
+				
+				<div class="sub-divider"></div>
 _;
 
 			$fragment = new fragment_editRegistrations_Registration($this->event, $this->group, $r);

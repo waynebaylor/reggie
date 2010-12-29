@@ -14,6 +14,15 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		return new template_admin_EditRegistrations($event, $group);	
 	}
 	
+	public function saveGeneralInfo() {
+		$r = $this->strictFindById(db_reg_RegistrationManager::getInstance(), RequestUtil::getValue('id', 0));
+		$r['comments'] = RequestUtil::getValue('comments', '');
+		
+		db_reg_RegistrationManager::getInstance()->save($r);
+		
+		return new fragment_Success();
+	}
+	
 	public function save() {
 		$registrationId = RequestUtil::getValue('registrationId', 0);
 		$sectionId = RequestUtil::getValue('sectionId', 0);
@@ -24,6 +33,10 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		$this->saveVariableQuantity($registrationId, $sectionId);
 		
 		return new fragment_Success();
+	}
+	
+	public function saveRegOptions($registrationId, $sectionId) {
+		
 	}
 	
 	public function cancelRegOption() {
@@ -62,11 +75,48 @@ class action_admin_registration_Registration extends action_ValidatorAction
 	}
 	
 	private function saveVariableQuantity($registrationId, $sectionId) {
+		$currentOpts = db_reg_VariableQuantityManager::getInstance()->findByRegistration(array('id' => $registrationId));
+		
 		foreach($_REQUEST as $key => $value) {
 			if(strpos($key, model_ContentType::$VAR_QUANTITY_OPTION.'_') === 0) {
-				//
+				$optId = str_replace(model_ContentType::$VAR_QUANTITY_OPTION.'_', '', $key);
+				$priceId = RequestUtil::getValue('priceId_'.$optId, 0);
+				$comments = RequestUtil::getValue('comments', '');
+				
+				$this->saveVariableQuantityOption($currentOpts, $registrationId, $optId, $priceId, $value, $comments);
 			}
 		}
+	}
+	
+	private function saveVariableQuantityOption($currentOpts, $registrationId, $optId, $priceId, $value, $comments) {
+		if(!is_numeric($value) || intval($value, 10) === 0) {
+			// delete option
+			db_reg_VariableQuantityManager::getInstance()->delete($registrationId, $optId);
+			return;
+		}
+
+		foreach($currentOpts as $currentOpt) {
+			if($currentOpt['variableQuantityId'] == $optId) {
+				// update option
+				db_reg_VariableQuantityManager::getInstance()->save(array(
+					'id' => $currentOpt['id'], 
+					'priceId' => $priceId,
+					'quantity' => $value,
+					'comments' => $comments
+				));
+				
+				return;
+			}
+		}
+
+		// insert new option
+		db_reg_VariableQuantityManager::getInstance()->createOption(array(
+			'registrationId' => $registrationId, 
+			'variableQuantityId' => $optId, 
+			'priceId' => $priceId, 
+			'quantity' => $value, 
+			'comments' => $comments
+		));
 	}
 }
 

@@ -220,6 +220,24 @@ class db_reg_RegistrationManager extends db_Manager
 		
 		return $this->query($sql, $params, 'Find registrations by group.');
 	}
+	
+	public function save($registration) {
+		$sql = '
+			UPDATE
+				Registration
+			SET
+				comments = :comments
+			WHERE
+				id = :id
+		';
+		
+		$params = array(
+			'id' => $registration['id'],
+			'comments' => $registration['comments']
+		);
+		
+		$this->execute($sql, $params, 'Save registration.');
+	}
 }
 
 ?>
