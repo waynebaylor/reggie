@@ -1,10 +1,5 @@
 <?php
 
-require_once 'template/Template.php';
-require_once 'HTML.php';
-require_once 'fragment/Arrows.php';
-
-
 class fragment_contactFieldOption_List extends template_Template
 {
 	private $field;

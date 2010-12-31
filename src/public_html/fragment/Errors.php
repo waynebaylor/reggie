@@ -1,7 +1,5 @@
 <?php 
 
-require_once 'template/Template.php';
-
 class template_Errors extends template_Template
 {
 	private $msgs;
@@ -11,14 +9,13 @@ class template_Errors extends template_Template
 	}
 	
 	public function html() {
-		$html = '<ul class="error-messages">';
+		$html = '';
 		
 		foreach ($this->msgs as $msg) {
 			$html .= '<li>'.$msg.'</li>';
 		}
 		
-		$html .= '</ul>';
-		return $html;
+		return '<ul class="error-messages">'.$html.'</ul>';
 	}
 }
 

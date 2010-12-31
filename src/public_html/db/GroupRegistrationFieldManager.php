@@ -8,10 +8,6 @@ class db_GroupRegistrationFieldManager extends db_Manager
 		parent::__construct();
 	}
 	
-	protected function getTableName() {
-		return 'GroupRegistration_ContactField';
-	}
-	
 	public static function getInstance() {
 		if(empty(self::$instance)) {
 			self::$instance = new db_GroupRegistrationFieldManager();

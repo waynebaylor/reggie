@@ -8,10 +8,6 @@ class db_EventManager extends db_Manager
 		parent::__construct();
 	}
 	
-	protected function getTableName() {
-		return 'Event';
-	}
-	
 	protected function populate(&$obj, $arr) {
 		parent::populate($obj, $arr);
 		

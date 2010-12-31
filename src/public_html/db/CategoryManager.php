@@ -8,10 +8,6 @@ class db_CategoryManager extends db_Manager
 		parent::__construct();
 	}
 	
-	protected function getTableName() {
-		return 'Category';
-	}
-	
 	public static function getInstance() {
 		if(empty(self::$instance)) {
 			self::$instance = new db_CategoryManager();

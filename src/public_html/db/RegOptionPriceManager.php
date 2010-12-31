@@ -8,10 +8,6 @@ class db_RegOptionPriceManager extends db_Manager
 		parent::__construct();
 	}	
 	
-	protected function getTableName() {
-		return 'RegOptionPrice';
-	}
-	
 	protected function populate(&$obj, $arr) {
 		parent::populate($obj, $arr);
 

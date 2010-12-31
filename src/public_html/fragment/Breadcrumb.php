@@ -33,6 +33,11 @@ class fragment_Breadcrumb extends template_Template
 		$html = '';
 		
 		switch($this->config['location']) {
+			case 'ReportResults':
+				$html = $this->reportResults();
+				$html .= $this->SEPARATOR;
+				$html .= "Report Results ({$this->config['reportName']})";
+				break;
 			case 'GroupRegistration':
 				$html = $this->groupReg();
 				$html .= $this->SEPARATOR;
@@ -402,6 +407,21 @@ _;
 				'href' => '/admin/event/EditEvent',
 				'parameters' => array(
 					'a' => 'view',
+					'id' => $this->config['eventId']
+				)
+			))}	
+_;
+	}
+	
+	private function reportResults() {
+		return <<<_
+			{$this->reports()}
+			{$this->SEPARATOR}
+			{$this->HTML->link(array(
+				'label' => "Reports ({$this->config['eventCode']})",
+				'href' => '/admin/report/Report',
+				'parameters' => array(
+					'a' => 'eventReports',
 					'id' => $this->config['eventId']
 				)
 			))}	

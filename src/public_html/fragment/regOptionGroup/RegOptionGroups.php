@@ -1,9 +1,5 @@
 <?php
 
-require_once 'template/Template.php';
-require_once 'fragment/regOptionGroup/List.php';
-require_once 'fragment/regOptionGroup/Add.php';
-
 class fragment_regOptionGroup_RegOptionGroups extends template_Template
 {
 	private $option;

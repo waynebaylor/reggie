@@ -8,10 +8,6 @@ class db_payment_AuthorizeNetDirectionsManager extends db_Manager
 		parent::__construct();
 	}
 	
-	protected function getTableName() {
-		return 'AuthorizeNetDirections';
-	}
-	
 	public static function getInstance() {
 		if(empty(self::$instance)) {
 			self::$instance = new db_payment_AuthorizeNetDirectionsManager();

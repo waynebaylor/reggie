@@ -1,12 +1,12 @@
 <?php
 
-require_once 'db/Manager.php';
-
 abstract class db_OrderableManager extends db_Manager
 {
 	protected function __construct() {
 		parent::__construct();
 	}
+	
+	protected abstract function getTableName();
 	
 	public function getNextOrder() {
 		$sql = "

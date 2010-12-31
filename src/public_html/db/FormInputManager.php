@@ -1,9 +1,5 @@
 <?php
 
-require_once 'db/Manager.php';
-require_once 'db/AttributeManager.php';
-require_once 'db/ValidationManager.php';
-
 class db_FormInputManager extends db_Manager
 {
 	private static $instance;

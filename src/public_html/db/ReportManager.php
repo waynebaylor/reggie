@@ -46,10 +46,6 @@ class db_ReportManager extends db_Manager
 		parent::__construct();
 	}
 	
-	protected function getTableName() {
-		return 'Report';
-	}
-	
 	protected function populate(&$obj, $arr) {
 		parent::populate($obj, $arr);
 		

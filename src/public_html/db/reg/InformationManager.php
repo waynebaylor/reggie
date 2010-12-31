@@ -8,10 +8,6 @@ class db_reg_InformationManager extends db_Manager
 		parent::__construct();
 	}
 	
-	protected function getTableName() {
-		'Registration_Information';
-	}
-	
 	public static function getInstance() {
 		if(empty(self::$instance)) {
 			self::$instance = new db_reg_InformationManager();

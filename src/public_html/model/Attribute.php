@@ -1,7 +1,5 @@
 <?php
 
-require_once 'db/AttributeManager.php';
-
 class model_Attribute
 {
 	public static $SIZE = 1;

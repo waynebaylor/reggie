@@ -8,10 +8,6 @@ class db_payment_PaymentTypeManager extends db_Manager
 		parent::__construct();
 	}
 	
-	protected function getTableName() {
-		return 'PaymentType';
-	}
-	
 	public static function getInstance() {
 		if(empty(self::$instance)) {
 			self::$instance = new db_payment_PaymentTypeManager();

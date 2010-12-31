@@ -33,8 +33,9 @@ _;
 	private function getRegistrants() {
 		$html = '';
 		
-		foreach($this->group['registrations'] as $index => $r) {
-			$num = $index+1;
+		$registrations = $this->group['registrations'];
+		foreach($registrations as $index => $r) {
+			$num = (count($registrations) > 1)? $index+1 : '';
 
 			$comments = new fragment_XhrTableForm(
 				'/admin/registration/Registration', 

@@ -8,10 +8,6 @@ class db_BreadcrumbManager extends db_Manager
 		parent::__construct();
 	}
 	
-	protected function getTableName() {
-		return '';
-	}
-	
 	public static function getInstance() {
 		if(empty(self::$instance)) {
 			self::$instance = new db_BreadcrumbManager();

@@ -36,7 +36,7 @@ class action_admin_email_EmailTemplate extends action_BaseAction
 		if(!empty($to)) {
 			$template = $this->strictFindById(db_EmailTemplateManager::getInstance(), RequestUtil::getValue('id', 0));
 
-			$text = $template['header'].' [Registration Summary] '.$template['footer'];
+			$text = $template['header'].'<div>[Registration Summary]</div>'.$template['footer'];
 
 			EmailUtil::send(array(
 				'to' => $to,

@@ -8,10 +8,6 @@ class db_ContentTypeManager extends db_Manager
 		parent::__construct();
 	}
 	
-	protected function getTableName() {
-		return 'ContentType';
-	}
-	
 	public static function getInstance() {
 		if(empty(self::$instance)) {
 			self::$instance = new db_ContentTypeManager();

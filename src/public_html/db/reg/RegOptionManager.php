@@ -8,10 +8,6 @@ class db_reg_RegOptionManager extends db_Manager
 		parent::__construct();
 	}
 	
-	protected function getTableName() {
-		'Registration_RegOption';
-	}
-	
 	protected function populate(&$obj, $arr) {
 		parent::populate($obj, $arr);
 		

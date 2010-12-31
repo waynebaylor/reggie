@@ -2,20 +2,27 @@
 
 class template_admin_ReportResults extends template_AdminPage
 {
+	private $event;
 	private $report;
 	private $fieldHeadings;
 	private $results;
 	
-	function __construct($report, $fieldHeadings, $results) {
-		parent::__construct('Report Results');
+	function __construct($event, $report, $fieldHeadings, $results) {
+		parent::__construct($report['name'].' Report Results');
 		
+		$this->event = $event;
 		$this->report = $report;
 		$this->fieldHeadings = $fieldHeadings;
 		$this->results = $results;
 	}
 	
 	protected function getBreadcrumbs() {
-		return new fragment_Empty();
+		return new fragment_Breadcrumb(array(
+			'location' => 'ReportResults',
+			'eventCode' => $this->event['code'],
+			'eventId' => $this->event['id'],
+			'reportName' => $this->report['name']
+		));
 	}
 	
 	protected function getContent() {

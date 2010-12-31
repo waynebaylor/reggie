@@ -8,10 +8,6 @@ class db_reg_GroupManager extends db_Manager
 		parent::__construct();
 	}
 	
-	protected function getTableName() {
-		return 'RegistrationGroup';
-	}
-	
 	protected function populate(&$obj, $arr) {
 		parent::populate($obj, $arr);
 		

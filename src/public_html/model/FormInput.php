@@ -1,7 +1,5 @@
 <?php
 
-require_once 'db/FormInputManager.php';
-
 class model_FormInput
 {
 	public static $TEXT = 1;

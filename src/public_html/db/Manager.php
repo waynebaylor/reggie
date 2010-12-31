@@ -147,8 +147,6 @@ abstract class db_Manager
 		return ObjectUtils::populate($obj, $arr);
 	}
 	
-	protected abstract function getTableName();
-	
 	public function beginTransaction() {
 		self::$conn->beginTransaction();
 	}

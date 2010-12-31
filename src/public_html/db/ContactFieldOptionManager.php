@@ -1,7 +1,5 @@
 <?php
 
-require_once 'db/OrderableManager.php';
-
 class db_ContactFieldOptionManager extends db_OrderableManager
 {
 	private static $instance;

@@ -8,10 +8,6 @@ class db_reg_VariableQuantityManager extends db_Manager
 		parent::__construct();
 	}
 	
-	protected function getTableName() {
-		return 'Registration_VariableQuantityOption';
-	}
-	
 	protected function populate(&$obj, $arr) {
 		parent::populate($obj, $arr);
 		
