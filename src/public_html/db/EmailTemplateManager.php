@@ -25,6 +25,7 @@ class db_EmailTemplateManager extends db_Manager
 			SELECT
 				id,
 				eventId,
+				contactFieldId,
 				enabled,
 				fromAddress,
 				bcc,
@@ -49,6 +50,7 @@ class db_EmailTemplateManager extends db_Manager
 			SELECT
 				id,
 				eventId,
+				contactFieldId,
 				enabled,
 				fromAddress,
 				bcc,
@@ -94,12 +96,13 @@ class db_EmailTemplateManager extends db_Manager
 			UPDATE
 				EmailTemplate
 			SET
-				enabled=:enabled,
-				fromAddress=:fromAddress,
-				bcc=:bcc,
-				subject=:subject,
-				header=:header,
-				footer=:footer
+				enabled = :enabled,
+				contactFieldId = :contactFieldId,
+				fromAddress = :fromAddress,
+				bcc = :bcc,
+				subject = :subject,
+				header = :header,
+				footer = :footer
 			WHERE
 				id=:id
 		';

@@ -93,6 +93,16 @@ _;
 				</td>
 			</tr>
 			<tr class="template-info {$infoClass}">
+				<td class="label">Email Field</td>
+				<td>
+					{$this->HTML->select(array(
+						'name' => 'contactFieldId',
+						'value' => $template['contactFieldId'],
+						'items' => $this->getContactFieldOptions()
+					))}
+				</td>
+			</tr>
+			<tr class="template-info {$infoClass}">
 				<td class="label">From Address</td>
 				<td>
 					{$this->HTML->text(array(
@@ -146,6 +156,21 @@ _;
 				</td>
 			</tr>
 _;
+	}
+	
+	private function getContactFieldOptions() {
+		$opts = array();
+		
+		$fields = model_Event::getInformationFields($this->event);
+		foreach($fields as $field) {
+			$label = $field['displayName'];
+			$opts[] = array(
+				'label' => (strlen($label) > 50)? substr($label, 0, 50).'...' : $label,
+				'value' => $field['id']
+			);
+		}
+		
+		return $opts;
 	}
 }
 

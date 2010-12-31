@@ -15,6 +15,15 @@ abstract class template_Page extends template_Template
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
+	<style type="text/css">
+		noscript p {
+			color: black;
+			font-size: 2em;
+			font-weight: bold;
+			text-align: center;
+		}
+	</style>
+	
 	{$this->head()}
 </head>
 <body class="tundra">
@@ -24,7 +33,19 @@ abstract class template_Page extends template_Template
 		'value' => $this->contextUrl('/')
 	))}
 	
-	{$this->body()}
+	<noscript>
+		<p>
+			This site requires JavaScript. Please enable JavaScript in your browser.
+		</p>
+	</noscript>
+	
+	<div id="script-enabled-content" style="display:none;">
+		<script type="text/javascript">
+			document.getElementById("script-enabled-content").style.display = "";
+		</script>
+		
+		{$this->body()}
+	</div>
 </body>
 </html>
 _;

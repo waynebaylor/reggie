@@ -898,6 +898,7 @@ unique
 create table if not exists `EmailTemplate` (
 	`id`			integer 	not null auto_increment,
 	`eventId`		integer		not null,
+	`contactFieldId`	integer,
 	`enabled`		varchar(255)	not null,
 	`fromAddress`		varchar(255),
 	`bcc`			varchar(255),
@@ -916,6 +917,15 @@ foreign key
 references
 	Event(id)
 on delete cascade;
+
+alter table
+	EmailTemplate
+add constraint
+	emailTemplate_contactFieldId_fk
+foreign key
+	(contactFieldId)
+references
+	ContactField(id);
 
 alter table
 	EmailTemplate

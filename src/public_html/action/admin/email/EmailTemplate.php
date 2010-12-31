@@ -8,11 +8,7 @@ class action_admin_email_EmailTemplate extends action_BaseAction
 	
 	public function view() {
 		$eventId = RequestUtil::getValue("id", 0);		
-		$event = db_EventManager::getInstance()->find($eventId);
-		
-		if(empty($event)) {
-			return new template_ErrorPage();
-		}
+		$event = $this->strictFindById(db_EventManager::getInstance(), $eventId);
 		
 		return new template_admin_EmailTemplate($event);
 	}
@@ -20,6 +16,7 @@ class action_admin_email_EmailTemplate extends action_BaseAction
 	public function saveTemplate() {
 		$template = RequestUtil::getParameters(array(
 			'id', 
+			'contactFieldId',
 			'enabled',
 			'fromAddress',
 			'bcc',
@@ -39,7 +36,7 @@ class action_admin_email_EmailTemplate extends action_BaseAction
 		if(!empty($to)) {
 			$template = $this->strictFindById(db_EmailTemplateManager::getInstance(), RequestUtil::getValue('id', 0));
 
-			$text = $template['header'].$template['footer'];
+			$text = $template['header'].' [Registration Summary] '.$template['footer'];
 
 			EmailUtil::send(array(
 				'to' => $to,

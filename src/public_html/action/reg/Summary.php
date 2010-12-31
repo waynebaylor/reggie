@@ -100,7 +100,7 @@ class action_reg_Summary extends action_ValidatorAction
 
 		$completedRegs = array();
 		foreach($newRegIds as $id) {
-			//$completedRegs[] = db_reg_RegistrationManager::getInstance()->find($id);
+			$completedRegs[] = db_reg_RegistrationManager::getInstance()->find($id);
 		}
 		
 		$this->sendConfirmationEmail($completedRegs);
@@ -136,7 +136,26 @@ class action_reg_Summary extends action_ValidatorAction
 	}
 	
 	private function sendConfirmationEmail($registrations) {
-		//TODO
+		$emailTemplate = $this->event['emailTemplate'];
+		
+		foreach($registrations as $reg) {
+			// get the registrant's email address.
+			$toAddress = '';
+			foreach($reg['information'] as $info) {
+				if($info['contactFieldId'] == $emailTemplate['contactFieldId']) {
+					$toAddress = $info['value'];
+				}	
+			}
+			
+			// send the email.
+			EmailUtil::send(array(
+				'to' => $toAddress,
+				'from' => $emailTemplate['fromAddress'],
+				'bcc' => $emailTemplate['bccAddress'],
+				'subject' => $emailTemplate['subject'],
+				'text' => '' // TODO	
+			));
+		}
 	}
 }
 
