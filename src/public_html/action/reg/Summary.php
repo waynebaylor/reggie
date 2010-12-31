@@ -146,14 +146,16 @@ class action_reg_Summary extends action_ValidatorAction
 					$toAddress = $info['value'];
 				}	
 			}
-			
+
 			// send the email.
+			$fragment = new fragment_reg_summary_SummaryPage($this->event);
+			
 			EmailUtil::send(array(
 				'to' => $toAddress,
 				'from' => $emailTemplate['fromAddress'],
 				'bcc' => $emailTemplate['bccAddress'],
 				'subject' => $emailTemplate['subject'],
-				'text' => '' // TODO	
+				'text' => $fragment->html()	
 			));
 		}
 	}
