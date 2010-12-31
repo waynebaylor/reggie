@@ -79,7 +79,8 @@ _;
 					'label' => 'Details',
 					'href' => '/admin/registration/Registration',
 					'parameters' => array(
-						'groupId' => $result['fieldValues'][$heading['id']]
+						'groupId' => $result['fieldValues'][$heading['id']],
+						'reportId' => $this->report['id']
 					)
 				));
 			}

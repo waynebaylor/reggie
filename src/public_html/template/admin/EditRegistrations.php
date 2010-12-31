@@ -3,17 +3,25 @@
 class template_admin_EditRegistrations extends template_AdminPage
 {
 	private $event;
+	private $report;
 	private $group;
 	
-	function __construct($event, $group) {
+	function __construct($event, $report, $group) {
 		parent::__construct('Edit Registrations');
 		
 		$this->event = $event;
+		$this->report = $report;
 		$this->group = $group;
 	}
 	
 	protected function getBreadcrumbs() {
-		return new fragment_Empty();
+		return new fragment_Breadcrumb(array(
+			'location' => 'EditRegistrations',
+			'eventId' => $this->event['id'],
+			'eventCode' => $this->event['code'],
+			'reportName' => $this->report['name'],
+			'reportId' => $this->report['id']
+		));
 	}
 	
 	protected function getContent() {
