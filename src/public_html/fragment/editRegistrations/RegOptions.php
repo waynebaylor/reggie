@@ -26,16 +26,23 @@ class fragment_editRegistrations_RegOptions extends template_Template
 			$rows['cancelled'] .= $r['cancelled'];
 		}
 		
+		$cancelledRows = '';
+		if(!empty($rows['cancelled'])) {
+			$cancelledRows = <<<_
+				<div class="divider"></div>
+				
+				<table style="color:#555; border-collapse:separate; border-spacing:20px 10px;">
+					{$rows['cancelled']}
+				</table>
+_;
+		}
+
 		return <<<_
 			<table style="border-collapse:separate; border-spacing:20px 10px;">
 				{$rows['selected']}
 			</table>
 			
-			<div class="divider"></div>
-			
-			<table style="color:#555; border-collapse:separate; border-spacing:20px 10px;">
-				{$rows['cancelled']}
-			</table>
+			{$cancelledRows}
 _;
 	}
 	

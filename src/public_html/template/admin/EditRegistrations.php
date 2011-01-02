@@ -66,9 +66,13 @@ _;
 					</td>
 				"
 			);
+
+			if($index > 0) {
+				$html .= '<div class="divider"></div>';	
+			}
 			
 			$html .= <<<_
-				<div style="background-color:#ccc; padding:5px; margin-bottom:10px; font-size:1.2em;">
+				<div class="registrant-heading">
 					Registrant {$num}
 				</div>	
 

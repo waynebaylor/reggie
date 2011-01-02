@@ -32,9 +32,11 @@ class template_reg_BasePage extends template_Page
 				'rel' => 'stylesheet/less',
 				'href' => '/css/informationField.less'))
 			}
+			{$this->HTML->css(array(
+				'rel' => 'stylesheet/less',
+				'href' => '/css/reg.less'))
+			}
 			
-			{$this->HTML->css(array('href' => '/css/reg.css'))}
-		
 			{$this->HTML->script(array('src' => '/js/less.js'))}
 			{$this->HTML->script(array('src' => '/js/dojo/dojo.js'))}
 			

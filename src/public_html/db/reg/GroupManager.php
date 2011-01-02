@@ -55,6 +55,10 @@ class db_reg_GroupManager extends db_Manager
 	}
 	
 	public function findTotalCost($id) {
+		return $this->findRegOptionCost($id) + $this->findVariableQuantityCost($id);
+	}
+	
+	private function findRegOptionCost($groupId) {
 		$sql = '
 			SELECT 
  				sum(RegOptionPrice.price) as total_cost
@@ -74,13 +78,46 @@ class db_reg_GroupManager extends db_Manager
  				Registration_RegOption.priceId = RegOptionPrice.id
 			WHERE
  				RegistrationGroup.id = :id
+ 			AND
+ 				Registration_RegOption.dateCancelled IS NULL
 		';
 		
 		$params = array(
-			'id' => $id
+			'id' => $groupId
 		);
 		
-		$result = $this->rawQueryUnique($sql, $params, 'Find total cost for registration group.');
+		$result = $this->rawQueryUnique($sql, $params, 'Find reg option cost for registration group.');
+		
+		return $result['total_cost'];
+	}
+	
+	private function findVariableQuantityCost($groupId) {
+		$sql = '
+			SELECT 
+ 				sum(RegOptionPrice.price*Registration_VariableQuantityOption.quantity) as total_cost
+			FROM 
+ 				Registration
+			INNER JOIN
+ 				RegistrationGroup
+			ON
+ 				Registration.regGroupId = RegistrationGroup.id 
+			INNER JOIN
+ 				Registration_VariableQuantityOption
+			ON
+ 				Registration.id = Registration_VariableQuantityOption.registrationId
+			INNER JOIN 
+ 				RegOptionPrice
+			ON
+ 				Registration_VariableQuantityOption.priceId = RegOptionPrice.id
+			WHERE
+ 				RegistrationGroup.id = :id
+		';
+		
+		$params = array(
+			'id' => $groupId
+		);
+		
+		$result = $this->rawQueryUnique($sql, $params, 'Find variable quantity cost for registration group.');
 		
 		return $result['total_cost'];
 	}

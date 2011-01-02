@@ -10,7 +10,7 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		$group = $this->strictFindById(db_reg_GroupManager::getInstance(), $groupId);
 		
 		$regs = $group['registrations'];
-		$firstReg = current($regs);
+		$firstReg = reset($regs);
 		$event = $this->strictFindById(db_EventManager::getInstance(), $firstReg['eventId']);
 		
 		return new template_admin_EditRegistrations($event, $report, $group);	

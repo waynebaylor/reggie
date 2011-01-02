@@ -358,12 +358,12 @@ _;
 		$paymentInfo = model_reg_Session::getPaymentInfo();
 		$paymentTypeFromSession = $paymentInfo['paymentType']; 
 		
-		$firstPaymentType = current($this->event['paymentTypes']);
+		$firstPaymentType = reset($this->event['paymentTypes']);
 		$firstPaymentType = $firstPaymentType['paymentTypeId'];
 
 		// if no payment type has been selected, then default to the first one.
 		$id = empty($paymentTypeFromSession)? $firstPaymentType : $paymentTypeFromSession;
-		
+	
 		return intval($id, 10);
 	}
 }

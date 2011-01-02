@@ -24,6 +24,9 @@ class template_admin_EmailTemplate extends template_AdminPage
 			'saveTemplate',
 			$this->getFormRows());
 		
+			$template = $this->event['emailTemplate'];
+			$infoClass = $template['enabled'] === 'true'? '' : 'hide';
+		
 		return <<<_
 			<script type="text/javascript">
 				dojo.require("hhreg.xhrEditForm");
@@ -39,7 +42,7 @@ class template_admin_EmailTemplate extends template_AdminPage
 
 				<div class="divider"></div>
 				
-				<div id="email-test">
+				<div id="email-test" class="{$infoClass}">
 					<form method="post" action="{$this->contextUrl('/admin/email/EmailTemplate')}">
 						{$this->HTML->hidden(array(
 							'name' => 'id',

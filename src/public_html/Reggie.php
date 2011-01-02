@@ -68,6 +68,13 @@ class Reggie
 		self::setupTimezone();
 		self::setupErrorHandling();
 		self::setupApplicationPaths();
+		self::setupSessionTimeout();
+	}
+	
+	private static function setupSessionTimeout() {
+		ini_set('session.gc_maxlifetime', Config::$SETTINGS['SESSION_TIMEOUT']);
+		ini_set('session.gc_probability', 1);
+		ini_set('session.gc_divisor', 1);	
 	}
 	
 	private static function setupTimezone() {

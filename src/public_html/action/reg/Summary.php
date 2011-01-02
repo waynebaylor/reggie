@@ -98,12 +98,14 @@ class action_reg_Summary extends action_ValidatorAction
 		
 		$newRegIds = db_reg_RegistrationManager::getInstance()->createRegistrations($registrations, $payment);
 
-		$completedRegs = array();
-		foreach($newRegIds as $id) {
-			$completedRegs[] = db_reg_RegistrationManager::getInstance()->find($id);
-		}
+		if($this->event['emailTemplate']['enabled'] === 'true') {
+			$completedRegs = array();
+			foreach($newRegIds as $id) {
+				$completedRegs[] = db_reg_RegistrationManager::getInstance()->find($id);
+			}
 		
-		$this->sendConfirmationEmail($completedRegs);
+			$this->sendConfirmationEmail($completedRegs);
+		}
 	}
 	
 	private function performPayment() {

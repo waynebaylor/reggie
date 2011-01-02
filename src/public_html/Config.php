@@ -15,6 +15,11 @@ class Config
 		'MODE' => array('development'),
 
 		//
+		// user session timeout. 15 mins.
+		//
+		'SESSION_TIMEOUT' => 900,
+		
+		//
 		// timezone setting for date/time functions.
 		//
 		'TIMEZONE' => 'America/New_York',

@@ -16,7 +16,7 @@ class fragment_groupRegistration_field_List extends template_Template
 				dojo.require("hhreg.list");
 			</script>
 
-			<h3>Information Fields</h3>
+			<h3>Default Information Fields</h3>
 			
 			<div class="fragment-list">
 				<table class="admin">

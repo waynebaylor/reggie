@@ -40,7 +40,7 @@ class fragment_reg_summary_Registrant extends template_Template
 		$num = count(model_reg_Session::getRegistrations()) > 1? $index + 1 : '';
 		
 		return <<<_
-			<div style="background-color:#ccc; padding:5px; margin-bottom:10px; font-size:1.2em;">
+			<div class="registrant-heading">
 				Registrant {$num}
 			</div>
 			
