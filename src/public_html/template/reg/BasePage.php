@@ -54,28 +54,28 @@ class template_reg_BasePage extends template_Page
 			
 			<style type="text/css">
 				body {
-					background-color: #{$this->escapeHtml($this->event['appearance']['backgroundColor'])}
+					background-color: #{$this->escapeHtml($this->event['appearance']['backgroundColor'])};
 				}
 				
 				#header {
-					background-color: #{$this->escapeHtml($this->event['appearance']['headerColor'])}
+					background-color: #{$this->escapeHtml($this->event['appearance']['headerColor'])};
 				}
 				
 				#footer {
-					background-color: #{$this->escapeHtml($this->event['appearance']['footerColor'])}
+					background-color: #{$this->escapeHtml($this->event['appearance']['footerColor'])};
 				}
 				
 				.menu {
-					background-color: #{$this->escapeHtml($this->event['appearance']['menuColor'])}
+					background-color: #{$this->escapeHtml($this->event['appearance']['menuColor'])};
 				}
 				
 				.reg-form-content {
-					background-color: #{$this->escapeHtml($this->event['appearance']['formColor'])}
+					background-color: #{$this->escapeHtml($this->event['appearance']['formColor'])};
 				}
 				
 				.button {
-					color: #{$this->escapeHtml($this->event['appearance']['buttonTextColor'])}
-					background-color: #{$this->escapeHtml($this->event['appearance']['buttonColor'])}
+					color: #{$this->escapeHtml($this->event['appearance']['buttonTextColor'])};
+					background-color: #{$this->escapeHtml($this->event['appearance']['buttonColor'])};
 				}
 			</style>	
 _;

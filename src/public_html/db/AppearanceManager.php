@@ -92,21 +92,21 @@ class db_AppearanceManager extends db_Manager
 				:eventId,
 				:headerContent,
 				"",
-				"ffffff",
-				"ffffff",
-				"ffffff",
+				"e5e19c",
+				"414c4c",
+				"e5e19c",
 				:menuTitle,
-				"000000",
 				"ffffff",
-				"000000",
-				"ffffff"
+				"ffffff",
+				"ffffff",
+				"26211e"
 			)
 		';
 
 		$params = array(
 			'eventId' => $eventId,
 			'headerContent' => '<span style="font-size:2em;">New Event</span>',
-			'menuTitle' => '<div style="background-color:#aff; border-bottom:1px solid black; padding:5px;">Registration Menu</div>'
+			'menuTitle' => '<div style="background-color:#88bbcc; border-bottom:1px solid black; padding:5px;">Registration Menu</div>'
 		);
 		
 		$this->execute($sql, $params, 'Create event appearance.');
