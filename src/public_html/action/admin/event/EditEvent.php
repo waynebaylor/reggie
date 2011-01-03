@@ -123,7 +123,7 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 					array(
 						'name' => 'pattern',
 						'regex' => '/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2})?$/',
-						'text' => 'Enter date as \'yyyy-MM-dd\' or \'yyyy-MM-dd HH:mm\'.'
+						'text' => 'Enter date as "yyyy-MM-dd" or "yyyy-MM-dd HH:mm".'
 					)
 				)
 			),
@@ -138,7 +138,7 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 					array(
 						'name' => 'pattern',
 						'regex' => '/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2})?$/',
-						'text' => 'Enter date as \'yyyy-MM-dd\' or \'yyyy-MM-dd HH:mm\'.'
+						'text' => 'Enter date as "yyyy-MM-dd" or "yyyy-MM-dd HH:mm".'
 					)
 				)
 			)

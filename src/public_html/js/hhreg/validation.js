@@ -15,6 +15,58 @@ dojo.require("hhreg.util");
 		return null;
 	};
 	
+	var placeGeneralError = function(/*DOM Node[div.error-message]*/ div) {
+		dojo.style(div, "position", "static");
+		node.appendChild(div);
+	};
+	
+	var placeCheckboxOrRadioError = function(/*DOM Node[div.error-message]*/ div, /*DOM Node*/ node) {
+		// put the message above the input options.
+		//
+		// this assumes the checkbox/radio input is in a table with CSS class
+		// "checkbox-label" or "radio-label".
+		
+		var parent = hhreg.util.parentNode(node, ["checkbox-label", "radio-label"]);
+		
+		dojo.style(div, {
+			position: "static",
+			padding: "0px"
+		});
+		dojo.place(div, parent, "before");
+	};
+	
+	var placeCalendarError = function(/*DOM Node[div.error-message]*/ div, /*DOM Node*/ node) {
+		// display calendar messages to the right of the calendar img.
+		
+		placeError(div, hhreg.util.parentNode(node, ["hhreg-calendar"]));
+	};
+	
+	var placeError = function(/*DOM Node[div.error-message]*/ div, /*DOM Node*/ node) {
+		// if the form input has a label associated with it, then 
+		// show the message next to the label (this assumes that 
+		// the label to the right of the input). 
+		
+		node = getInputLabel(node) || node;
+		
+		position = dojo.position(node, true);
+		dojo.style(div, {
+			top: position.y+"px",
+			left: (position.x+position.w)+"px"
+		});
+		
+		// if the node is a form element, then
+		// place the message in the form. this
+		// makes it possible to remove all the 
+		// messages associated with a form.
+		if(node.form) {
+			node.form.appendChild(div);
+		}
+		// otherwise put it in the body.
+		else {
+			dojo.body().appendChild(div);
+		}
+	};
+	
 	var createErrorMessage = function(/*DOM Node[div|input|select|textarea]*/ node, /*String|array*/ text) {
 		//
 		// summary:
@@ -44,49 +96,19 @@ dojo.require("hhreg.util");
 		span.appendChild(document.createTextNode(" "+text));
 		div.appendChild(span);
 	
+		var position;
+		
 		if(node.id === "general-errors") {
-			dojo.style(div, "position", "static");
-			node.appendChild(div);
+			placeGeneralError(div);
 		}
-		else if(node.type && (node.type === "radio" || node.type === "checkbox")) {
-			// put the message above the input options.
-			//
-			// this assumes the checkbox/radio input is in a table with CSS class
-			// "checkbox-label" or "radio-label".
-			
-			// if the checkbox/radio is in a table, then put the message above the table. 
-			// otherwise put it above the input.
-			node = hhreg.util.parentNode(node, ["checkbox-label", "radio-label"]) || node;
-			
-			dojo.style(div, {
-				position: "static",
-				padding: "0px"
-			});
-			dojo.place(div, node, "before");
+		else if(hhreg.util.parentNode(node, ["hhreg-calendar"])) {
+			placeCalendarError(div, node);
+		}
+		else if(hhreg.util.parentNode(node, ["checkbox-label", "radio-label"])) {
+			placeCheckboxOrRadioError(div, node);
 		}
 		else {
-			// if the form input has a label associated with it, then 
-			// show the message next to the label (this assumes that 
-			// the label to the right of the input). 
-			node = getInputLabel(node) || node;
-			
-			var position = dojo.position(node, true);
-			dojo.style(div, {
-				top: position.y+"px",
-				left: (position.x+position.w)+"px"
-			});
-			
-			// if the node is a form element, then
-			// place the message in the form. this
-			// makes it possible to remove all the 
-			// messages associated with a form.
-			if(node.form) {
-				node.form.appendChild(div);
-			}
-			// otherwise put it in the body.
-			else {
-				dojo.body().appendChild(div);
-			}
+			placeError(div, node);
 		}
 	};
 	

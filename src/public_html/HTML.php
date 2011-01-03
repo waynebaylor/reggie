@@ -305,6 +305,18 @@ _;
 			<img {$attrs} src="{$src}"/>	
 _;
 	}
+	
+	public function calendar($config) {
+		return <<<_
+			<span class="hhreg-calendar">
+				{$this->text($config)}
+				{$this->img(array(
+					'src' => '/images/calendar.gif',
+					'alt' => 'Calendar'
+				))}
+			</span>
+_;
+	}
 }
 
 ?>

@@ -11,8 +11,9 @@ class fragment_validation_ValidationErrors extends template_Template
 	}
 	
 	public function html() { 
-		return $this->HTML->hidden(array(
+		return $this->HTML->textarea(array(
 			'id' => 'xhr-response',
+			'class' => 'hide',
 			'name' => 'validationError',
 			'value' => $this->getErrors()
 		));

@@ -25,6 +25,7 @@ class template_admin_EditEvent extends template_AdminPage
 			<script type="text/javascript">
 				dojo.require("hhreg.xhrEditForm");
 				dojo.require("hhreg.admin.eventPages");
+				dojo.require("hhreg.calendar");
 			</script>
 			
 			<div id="content">

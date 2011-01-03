@@ -26,7 +26,7 @@ abstract class template_Page extends template_Template
 	
 	{$this->head()}
 </head>
-<body class="tundra">
+<body class="claro">
 	{$this->HTML->hidden(array(
 		'id' => 'reggie.contextPath',
 		'name' => 'reggie.contextPath',

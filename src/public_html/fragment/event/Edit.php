@@ -101,7 +101,7 @@ _;
 			<tr>
 				<td class="required label">Reg Open</td>
 				<td>
-					{$this->HTML->text(array(
+					{$this->HTML->calendar(array(
 						'name' => 'regOpen',
 						'value' => $this->escapeHtml($this->event['regOpen']),
 						'size' => '16',
@@ -112,7 +112,7 @@ _;
 			<tr>
 				<td class="required label">Reg Closed</td>
 				<td>
-					{$this->HTML->text(array(
+					{$this->HTML->calendar(array(
 						'name' => 'regClosed',
 						'value' => $this->escapeHtml($this->event['regClosed']),
 						'size' => '16',

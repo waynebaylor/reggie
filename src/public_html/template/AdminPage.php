@@ -28,7 +28,7 @@ abstract class template_AdminPage extends template_Page
 	
 			{$this->HTML->css(array('href' => '/js/dojo/resources/dojo.css'))}
 			{$this->HTML->css(array('href' => '/js/dijit/themes/dijit.css'))}
-			{$this->HTML->css(array('href' => '/js/dijit/themes/tundra/tundra.css'))}
+			{$this->HTML->css(array('href' => '/js/dijit/themes/claro/claro.css'))}
 			
 			{$this->HTML->css(array(
 				'rel' => 'stylesheet/less',

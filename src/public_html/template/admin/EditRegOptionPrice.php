@@ -26,6 +26,7 @@ class template_admin_EditRegOptionPrice extends template_AdminPage
 		return <<<_
 			<script type="text/javascript">
 				dojo.require("hhreg.editRegOptionPrice");
+				dojo.require("hhreg.calendar");
 			</script>
 			
 			<div id="content">

@@ -91,7 +91,12 @@ class validation_reg_PageValidator
 				switch($rule['id']) {
 					case model_Validation::$REQUIRED:
 						if(empty($fieldValue)) {
-							$errors[$fieldName] = "{$field['displayName']} is required.";
+							if(in_array($field['formInput']['id'], array(model_FormInput::$CHECKBOX, model_FormInput::$RADIO))) {
+								$errors[$fieldName] = 'Please choose an option.';
+							}
+							else {
+								$errors[$fieldName] = "{$field['displayName']} is required.";
+							}
 						}
 						break;
 					case model_Validation::$MIN_LENGTH:
