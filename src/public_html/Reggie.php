@@ -24,7 +24,14 @@ class Reggie
 	// passed to spl_autoload_register(). replaces underscore 
 	// with slash to convert a class name to a file path.
 	public static function autoload($c) { 
-		require_once str_replace('_', '/', $c).'.php';
+		$file = str_replace('_', '/', $c).'.php';
+		
+		if(file_exists($file)) {
+			require_once $file;
+		}
+		else {
+			throw new Exception("Error loading class: '{$c}'. File not found: '{$file}'.");
+		}
 	}
 	
 	/**
@@ -65,8 +72,8 @@ class Reggie
 		self::setupIncludePath();
 		self::setupClassLoading();
 		
-		self::setupTimezone();
 		self::setupErrorHandling();
+		self::setupTimezone();
 		self::setupApplicationPaths();
 		self::setupSessionTimeout();
 	}

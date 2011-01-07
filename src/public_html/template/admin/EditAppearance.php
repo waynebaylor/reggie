@@ -65,8 +65,8 @@ _;
 					{$this->HTML->textarea(array(
 						'name' => 'headerContent',
 						'value' => $this->escapeHtml($appearance['headerContent']),
-						'rows' => 5,
-						'cols' => 50
+						'rows' => 10,
+						'cols' => 75
 					))}
 				</td>
 			</tr>
@@ -76,8 +76,8 @@ _;
 					{$this->HTML->textarea(array(
 						'name' => 'footerContent',
 						'value' => $this->escapeHtml($appearance['footerContent']),
-						'rows' => 5,
-						'cols' => 50
+						'rows' => 10,
+						'cols' => 75
 					))}
 				</td>
 			</tr>
@@ -87,8 +87,8 @@ _;
 					{$this->HTML->textarea(array(
 						'name' => 'menuTitle',
 						'value' => $this->escapeHtml($appearance['menuTitle']),
-						'rows' => 5,
-						'cols' => 50
+						'rows' => 10,
+						'cols' => 75
 					))}
 				</td>
 			</tr>

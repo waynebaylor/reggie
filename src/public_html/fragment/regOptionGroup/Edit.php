@@ -30,8 +30,16 @@ _;
 			<tr>
 				<td class="label">Description</td>
 				<td>
-					<input type="hidden" name="id" value="{$this->group['id']}"/>
-					<textarea rows="5" cols="50" name="description">{$this->escapeHtml($this->group['description'])}</textarea>
+					{$this->HTML->hidden(array(
+						'name' => 'id',
+						'value' => $this->group['id']
+					))}
+					{$this->HTML->textarea(array(
+						'name' => 'description',
+						'value' => $this->escapeHtml($this->group['description']),
+						'rows' => 10,
+						'cols' => 75
+					))}
 				</td>
 			</tr>
 			<tr>

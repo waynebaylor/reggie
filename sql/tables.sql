@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS `Event` (
 	`capacity`		integer		not null,
 	`cancellationPolicy` 	text 		not null,
 	`regClosedText` 	text 		not null,
+	`paymentInstructions`	text		not null,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
@@ -1243,7 +1244,8 @@ create table if not exists `Payment` (
 
 	`purchaseOrderNumber`	varchar(100),   -- PO fields
 
-	`cardSuffix`		varchar(16),    -- auth.NET fields
+	`cardType`		integer(1),     -- auth.NET fields
+	`cardSuffix`		integer(4),
 	`authorizationCode`	varchar(255),
 	`transactionId`		varchar(255),
 	`name`			varchar(255),

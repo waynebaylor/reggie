@@ -47,7 +47,8 @@ class db_EventManager extends db_Manager
 				Event.regClosed,
 				Event.capacity,
 				Event.cancellationPolicy,
-				Event.regClosedText
+				Event.regClosedText,
+				Event.paymentInstructions
 			FROM
 				Event
 			INNER JOIN
@@ -81,7 +82,8 @@ class db_EventManager extends db_Manager
 				Event.regClosed,
 				Event.capacity,
 				Event.cancellationPolicy,
-				Event.regClosedText
+				Event.regClosedText,
+				Event.paymentInstructions
 			FROM
 				Event
 			INNER JOIN
@@ -112,7 +114,8 @@ class db_EventManager extends db_Manager
 				Event.regClosed,
 				Event.capacity,
 				Event.cancellationPolicy,
-				Event.regClosedText
+				Event.regClosedText,
+				Event.paymentInstructions
 			FROM
 				Event
 			INNER JOIN
@@ -143,7 +146,8 @@ class db_EventManager extends db_Manager
 				regClosed,
 				capacity,
 				cancellationPolicy,
-				regClosedText
+				regClosedText,
+				Event.paymentInstructions
 			FROM
 				Event
 			WHERE
@@ -170,7 +174,8 @@ class db_EventManager extends db_Manager
 				regClosed,
 				capacity,
 				cancellationPolicy,
-				regClosedText
+				regClosedText,
+				Event.paymentInstructions
 			FROM
 				Event
 			WHERE
@@ -194,7 +199,8 @@ class db_EventManager extends db_Manager
 				regClosed,
 				capacity,
 				cancellationPolicy,
-				regClosedText
+				regClosedText,
+				Event.paymentInstructions
 			FROM
 				Event
 			WHERE
@@ -218,7 +224,8 @@ class db_EventManager extends db_Manager
 					regClosed,
 					capacity,
 					cancellationPolicy,
-					regClosedText
+					regClosedText,
+					paymentInstructions
 				)
 			VALUES(
 				:code,
@@ -227,7 +234,8 @@ class db_EventManager extends db_Manager
 				:regClosed,
 				:capacity,
 				:cancellationPolicy,
-				:regClosedText
+				:regClosedText,
+				:paymentInstructions
 			)
 		';
 
@@ -238,7 +246,8 @@ class db_EventManager extends db_Manager
 			'regClosed' => $event['regClosed'],
 			'capacity' => 0,
 			'cancellationPolicy' => '',
-			'regClosedText' => ''
+			'regClosedText' => '',
+			'paymentInstructions' => ''
 		);
 		
 		$this->execute($sql, $params, 'Create event.');
@@ -262,13 +271,14 @@ class db_EventManager extends db_Manager
 			UPDATE
 				Event
 			SET
-				code=:code,
-				displayName=:displayName,
-				regOpen=:regOpen,
-				regClosed=:regClosed,
-				capacity=:capacity,
-				cancellationPolicy=:cancellationPolicy,
-				regClosedText=:regClosedText
+				code = :code,
+				displayName = :displayName,
+				regOpen = :regOpen,
+				regClosed = :regClosed,
+				capacity = :capacity,
+				cancellationPolicy = :cancellationPolicy,
+				regClosedText = :regClosedText,
+				paymentInstructions = :paymentInstructions
 			WHERE
 				id=:id
 		';
@@ -281,7 +291,8 @@ class db_EventManager extends db_Manager
 			'capacity' => $event['capacity'],
 			'cancellationPolicy' => $event['cancellationPolicy'],
 			'regClosedText' => $event['regClosedText'],
-			'id' => $event['id']
+			'id' => $event['id'],
+			'paymentInstructions' => $event['paymentInstructions']
 		);
 		
 		$this->execute($sql, $params, 'Save event.');
@@ -297,7 +308,8 @@ class db_EventManager extends db_Manager
 				regClosed,
 				capacity,
 				cancellationPolicy,
-				regClosedText
+				regClosedText,
+				paymentInstructions
 			FROM
 				Event
 			WHERE
@@ -321,7 +333,8 @@ class db_EventManager extends db_Manager
 				regClosed,
 				capacity,
 				cancellationPolicy,
-				regClosedText
+				regClosedText,
+				paymentInstructions
 			FROM
 				Event
 			WHERE

@@ -52,7 +52,7 @@ _;
 						'name' => 'description',
 						'value' => '',
 						'rows' => 5,
-						'cols' => 50
+						'cols' => 75
 					))}
 				</td>
 			</tr>

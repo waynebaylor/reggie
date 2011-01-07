@@ -67,22 +67,18 @@ dojo.require("hhreg.validation");
 		dojo.body().appendChild(div);
 		
 		// if there was an error or a problem validating, then 
-		// the response will be packed in a hidden input with 
+		// the response will be packed in a hidden textarea with 
 		// the id 'xhr-response'. if there was no problem, then 
 		// a normal response is sent and there will not be a 
 		// node with id 'xhr-response'.
 		var xhrResponse = dojo.byId("xhr-response");
 		
-		if(xhrResponse && xhrResponse.name === "error") {
-			showErrorIcon(form);
-			status = false;
-		}
-		else if(xhrResponse && xhrResponse.name === "validationError") {
+		if(xhrResponse && xhrResponse.name === "validationError") {
 			showValidationErrorIcon(form);
 			hhreg.validation.showMessages(dojo.fromJson(xhrResponse.value), form);
 			status = false;
 		}
-		else {
+		else if(xhrResponse && xhrResponse.name === 'success') {
 			showSuccessIcon(form);
 			
 			setTimeout(function() {
@@ -90,6 +86,10 @@ dojo.require("hhreg.validation");
 			}, 5000);
 			
 			status = true;
+		}
+		else {
+			showErrorIcon(form);
+			status = false;
 		}
 		
 		div.parentNode.removeChild(div);

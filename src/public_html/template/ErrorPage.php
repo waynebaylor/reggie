@@ -43,7 +43,7 @@ _;
 	protected function body() {
 		return <<<_
 			<div class="error">
-				<input id="xhr-response" type="hidden" name="error" value="true"/>
+				<textarea id="xhr-response" class="hide" name="error">true</textarea>
 				
 				<div class="mark">
 					<span>&nbsp;!&nbsp;</span>	

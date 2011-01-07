@@ -54,8 +54,8 @@ _;
 					{$this->HTML->textarea(array(
 						'name' => 'text',
 						'value' => $this->escapeHtml($this->section['text']),
-						'rows' => 5,
-						'cols' =>50
+						'rows' => 10,
+						'cols' => 75
 					))}
 				</td>
 			</tr>

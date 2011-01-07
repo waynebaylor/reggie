@@ -61,7 +61,7 @@ _;
 							'name' => 'comments',
 							'value' => $this->escapeHtml($r['comments']),
 							'rows' => 5,
-							'cols' => 50
+							'cols' => 75
 						))}
 					</td>
 				"

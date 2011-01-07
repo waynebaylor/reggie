@@ -28,32 +28,20 @@ _;
 	}
 	
 	private function getErrorFields() {
-		$jsonFragment = '';
+		$properties = array();
 		
 		if(!empty($this->errors['general'])) {
-			$generalMessages = '';
-			foreach($this->errors['general'] as $msg) {
-				$generalMessages .= "'{$msg}',";
-			}
+			$properties[] = '"general":'.json_encode($this->errors['general']);
 			
-			rtrim($generalMessages, ',');
-			
-			$jsonFragment .= <<<_
-				'general': [{$generalMessages}],			
-_;
 			unset($this->errors['general']);
 		}
 		
 		foreach($this->errors as $name => $text) {
-			// single quotes for json since it's used as the 
-			// value of a hidden input and double quotes would
-			// interfere with the input value quotes.
-			$jsonFragment .= <<<_
-				'{$name}': '{$text}',
-_;
+			$encodedText = json_encode($text);	
+			$properties[] = "'{$name}': '{$encodedText}'";
 		}
 		
-		return rtrim($jsonFragment, ',');
+		return implode(',', $properties);
 	}
 }
 

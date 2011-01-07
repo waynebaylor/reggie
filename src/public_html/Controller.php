@@ -36,34 +36,29 @@ class Controller
 		catch(Exception $ex) {
 			db_EventManager::getInstance()->rollbackTransaction();			
 			
-			$this->logger->log($ex, 'Error. Transaction rolled back.');
+			$this->logger->log($ex, 'Error executing action.');
+			
+			$page = new template_ErrorPage();
+			echo $page->html();
 		}
 		
 	}
 
 	private function invokeAction() {
-		try {
-			session_start();
-			
-			$_REQUEST['action'] = $this->getAction();
-			
-			// requests starting with '/event' are handled 
-			// by the registration dispatcher.
-			if($this->isRegRequest()) {
-				$this->invokeRegistration();
-			}
-			else if($this->isAdminRequest()) {
-				$this->invokeAdmin();
-			}
-			else {
-				throw new Exception('Invalid action: '.$this->url);
-			}
+		session_start();
+		
+		$_REQUEST['action'] = $this->getAction();
+		
+		// requests starting with '/event' are handled 
+		// by the registration dispatcher.
+		if($this->isRegRequest()) {
+			$this->invokeRegistration();
 		}
-		catch(Exception $ex) {
-			$this->logger->log($ex, 'Could not execute action.');
-
-			$page = new template_ErrorPage();
-			echo $page->html();
+		else if($this->isAdminRequest()) {
+			$this->invokeAdmin();
+		}
+		else {
+			throw new Exception('Invalid action: '.$this->url);
 		}
 	}
 	

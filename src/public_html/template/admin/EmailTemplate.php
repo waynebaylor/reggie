@@ -138,8 +138,8 @@ _;
 					{$this->HTML->textarea(array(
 						'name' => 'header',
 						'value' => $this->escapeHtml($template['header']),
-						'rows' => 5,
-						'cols' => 50
+						'rows' => 10,
+						'cols' => 75
 					))}
 				</td>
 			</tr>
@@ -153,8 +153,8 @@ _;
 					{$this->HTML->textarea(array(
 						'name' => 'footer',
 						'value' => $this->escapeHtml($template['footer']),
-						'rows' => 5,
-						'cols' => 50
+						'rows' => 10,
+						'cols' => 75
 					))}
 				</td>
 			</tr>

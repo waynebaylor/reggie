@@ -15,7 +15,7 @@ dojo.require("hhreg.util");
 		return null;
 	};
 	
-	var placeGeneralError = function(/*DOM Node[div.error-message]*/ div) {
+	var placeGeneralError = function(/*DOM Node[div.error-message]*/ div, /*DOM Node[div.general-errors]*/ node) {
 		dojo.style(div, "position", "static");
 		node.appendChild(div);
 	};
@@ -99,7 +99,7 @@ dojo.require("hhreg.util");
 		var position;
 		
 		if(node.id === "general-errors") {
-			placeGeneralError(div);
+			placeGeneralError(div, node);
 		}
 		else if(hhreg.util.parentNode(node, ["hhreg-calendar"])) {
 			placeCalendarError(div, node);

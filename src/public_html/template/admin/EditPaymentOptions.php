@@ -42,10 +42,18 @@ _;
 	private function getFormRows() {
 		$html = <<<_
 			<tr>
-				<td colspan="2">
+				<td class="label">General Instructions</td>
+				<td>
 					{$this->HTML->hidden(array(
 						'name' => 'eventId',
 						'value' => $this->event['id']
+					))}
+					
+					{$this->HTML->textarea(array(
+						'name' => 'paymentInstructions',
+						'value' => $this->event['paymentInstructions'],
+						'rows' => 10,
+						'cols' => 75
 					))}
 				</td>
 			</tr>
@@ -104,8 +112,8 @@ _;
 							{$this->HTML->textarea(array(
 								'name' => "paymentTypes_{$type['id']}_instructions",
 								'value' => $enabled? $this->escapeHtml($details['instructions']) : '',
-								'rows' => '5',
-								'cols' => '50'
+								'rows' => 10,
+								'cols' => 75
 							))}
 						</td>
 					</tr>
@@ -138,8 +146,8 @@ _;
 							{$this->HTML->textarea(array(
 								'name' => "paymentTypes_{$type['id']}_instructions",
 								'value' => $enabled? $this->escapeHtml($details['instructions']) : '',
-								'rows' => '5',
-								'cols' => '50'
+								'rows' => 10,
+								'cols' => 75
 							))}
 						</td>
 					</tr>
@@ -172,8 +180,8 @@ _;
 							{$this->HTML->textarea(array(
 								'name' => "paymentTypes_{$type['id']}_instructions",
 								'value' => $enabled? $this->escapeHtml($details['instructions']) : '',
-								'rows' => '5',
-								'cols' => '50'
+								'rows' => 10,
+								'cols' => 75
 							))}
 						</td>
 					</tr>

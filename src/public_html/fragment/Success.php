@@ -7,8 +7,9 @@ class fragment_Success extends template_Template
 	}
 	
 	public function html() {
-		return $this->HTML->hidden(array(
+		return $this->HTML->textarea(array(
 			'id' => 'xhr-response',
+			'class' => 'hide',
 			'name' => 'success',
 			'value' => 'true'
 		));

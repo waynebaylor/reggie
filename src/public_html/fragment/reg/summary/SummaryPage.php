@@ -29,6 +29,12 @@ class fragment_reg_summary_SummaryPage extends template_Template
 				<table class="summary">
 				{$this->getGrandTotal()}
 				
+				<tr>
+					<td colspan="2">
+						<div id="general-errors"></div>
+					</td>
+				</tr>
+				
 				{$this->getPaymentInfo()}
 				</table>
 			

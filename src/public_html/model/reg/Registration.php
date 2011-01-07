@@ -40,7 +40,7 @@ class model_reg_Registration
 		return $total;
 	}
 	
-	public static function getConvertedRegistrationsFromSession($event) {
+	public static function getConvertedRegistrationsFromSession() {
 		$regs = array();
 		
 		foreach(model_reg_Session::getRegistrations() as $index => $reg) {
@@ -81,13 +81,12 @@ class model_reg_Registration
 		$category = model_reg_Session::getCategory();
 		
 		$registration = array(
-			'categoryId' => $category['id'],
 			'eventId' => model_reg_Session::getEventId(),
+			'categoryId' => $category['id'],
 			'regTypeId' => model_reg_Session::getRegType($index),
 			'information' => array(),
 			'regOptionIds' => array(),
-			'variableQuantity' => array(),
-			'paymentInfo' => model_reg_Session::getPaymentInfo()
+			'variableQuantity' => array()
 		);
 
 		foreach(model_reg_Session::getContactFields($index) as $key => $value) {

@@ -18,6 +18,9 @@ class action_admin_event_EditPaymentOptions extends action_BaseAction
 		$r = array();
 		ObjectUtils::populate($r, $_REQUEST);
 
+		$event['paymentInstructions'] = RequestUtil::getValue('paymentInstructions', '');
+		db_EventManager::getInstance()->save($event);
+		
 		$this->saveCheckDirections($event, $r['paymentTypes'][model_PaymentType::$CHECK]);
 		$this->savePoDirections($event, $r['paymentTypes'][model_PaymentType::$PO]);
 		$this->saveAuthNetDirections($event, $r['paymentTypes'][model_PaymentType::$AUTHORIZE_NET]);

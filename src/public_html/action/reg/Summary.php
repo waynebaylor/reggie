@@ -30,9 +30,9 @@ class action_reg_Summary extends action_ValidatorAction
 	}
 	
 	public function Next() {
-		// payment is not required if no total due, so no point in validating.
+		// payment is only required if non-zero total due and event has at least one payment type enabled.
 		$totalDue = model_reg_Registration::getTotalCost($this->event);
-		if($totalDue > 0) {
+		if($totalDue > 0 && !empty($this->event['paymentTypes'])) {
 			$errors = $this->validate();
 			
 			if(!empty($errors)) {
@@ -94,7 +94,7 @@ class action_reg_Summary extends action_ValidatorAction
 	 * save stuff to the database, send any emails, etc.
 	 */
 	private function completeRegistration($payment) {
-		$registrations = model_reg_Registration::getConvertedRegistrationsFromSession($this->event);
+		$registrations = model_reg_Registration::getConvertedRegistrationsFromSession();
 		
 		$newRegIds = db_reg_RegistrationManager::getInstance()->createRegistrations($registrations, $payment);
 
@@ -115,12 +115,14 @@ class action_reg_Summary extends action_ValidatorAction
 			case model_PaymentType::$CHECK:
 				return array(
 					'success' => true,
+					'paymentType' => model_PaymentType::$CHECK,
 					'checkNumber' => $info['checkNumber'],
 					'amount_tendered' => 0.00
 				);
 			case model_PaymentType::$PO:
 				return array(
 					'success' => true,
+					'paymentType' => model_PaymentType::$PO,
 					'purchaseOrderNumber' => $info['purchaseOrderNumber'],
 					'amount_tendered' => 0.00
 				);;
@@ -130,11 +132,24 @@ class action_reg_Summary extends action_ValidatorAction
 				$authorizeNet = new payment_AuthorizeNET($this->event, $info, $cost);
 				$result = $authorizeNet->makePayment();
 				
-				$result['success'] = intval($result[0], 10) === 1; // AIM response code 1 means approved.
+				$result['paymentType'] = model_PaymentType::$AUTHORIZE_NET;
 				$result['amount_tendered'] = $cost;
+				$result['amount'] = $cost;
+				$result['cardType'] = substr($info['cardNumber'], 0, 1);
+				$result['cardSuffix'] = substr($info['cardNumber'], -4);
+				$result['name'] = $info['firstName'].' '.$info['lastName'];
+				$result = array_merge(
+					$result, 
+					ArrayUtil::keyIntersect($info, array('address', 'city', 'state', 'zip', 'country', 'amount'))
+				);
 				
 				return $result;
 		}
+		
+		// default is failure.
+		return array(
+			'success' => false
+		);
 	}
 	
 	private function sendConfirmationEmail($registrations) {

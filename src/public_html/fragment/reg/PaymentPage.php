@@ -22,6 +22,10 @@ class fragment_reg_PaymentPage extends template_Template
 
 			{$this->getGroupRegistration()}
 			
+			<div class="general-payment-instructions">
+				{$this->event['paymentInstructions']}
+			</div>
+			
 			<div class="amount-due">
 				Total Due: {$this->getTotalDue()}
 			</div>

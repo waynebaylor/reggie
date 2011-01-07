@@ -80,7 +80,7 @@ _;
 			$html .= <<<_
 				<tr>
 					<td></td>
-					<td>Reg Type</td>
+					<td>Registration Type</td>
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Remove',

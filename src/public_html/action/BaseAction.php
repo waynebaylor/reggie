@@ -38,15 +38,9 @@ class action_BaseAction implements action_Action
 	 */
 	private function performAction($action) {
 		if(!empty($action) && method_exists($this, $action)) {
-			try {
-				$page = call_user_func(array($this, $action));
-				if(!($page instanceof template_Template)) {
-					throw new Exception(get_class($page).' not of type Template.');
-				}
-			}
-			catch(Exception $ex) {
-				$this->logger->log($ex,'Error invoking action: '.$action);
-				$page = new template_ErrorPage();
+			$page = call_user_func(array($this, $action));
+			if(!($page instanceof template_Template)) {
+				throw new Exception(get_class($page).' not of type Template.');
 			}
 		}
 		else {

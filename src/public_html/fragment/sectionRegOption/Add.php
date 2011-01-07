@@ -51,8 +51,8 @@ _;
 					{$this->HTML->textarea(array(
 						'name' => 'description',
 						'value' => '',
-						'rows' => '5',
-						'cols' => '50'
+						'rows' => 5,
+						'cols' => 75
 					))}
 				</td>
 			</tr>

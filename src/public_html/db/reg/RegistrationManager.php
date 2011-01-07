@@ -98,20 +98,20 @@ class db_reg_RegistrationManager extends db_Manager
 		
 		db_reg_VariableQuantityManager::getInstance()->createOptions($r['regTypeId'], $regId, $r['variableQuantity']);
 		
-		// a registration will not have a payment if the event doesn't have one set up.
-		if(!empty($r['paymentInfo']) && !empty($r['paymentInfo']['paymentType'])) {
-			db_reg_PaymentManager::getInstance()->createPayment($regGroupId, $r['paymentInfo']);
-		}
-		
 		return $regId;
 	}
 	
-	public function createRegistrations($regs) {
+	public function createRegistrations($regs, $payment) {
 		$ids = array();
 		
 		if(!empty($regs)) {
 			$regGroupId = db_reg_GroupManager::getInstance()->createGroup();
-			
+				
+			// may not have a payment if zero due or event doesn't have any payment types enabled.
+			if(!empty($payment)) {
+				db_reg_PaymentManager::getInstance()->createPayment($regGroupId, $payment);
+			}
+
 			foreach($regs as $r) {
 				$ids[] = $this->createRegistration($regGroupId, $r);
 			}

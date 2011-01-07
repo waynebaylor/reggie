@@ -53,11 +53,12 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 			'regClosed',
 			'capacity',
 			'regClosedText',
-			'cancellationPolicy'
+			'cancellationPolicy',
+			'paymentInstructions'
 		));
 		
-		$oldEvent = db_EventManager::getInstance()->find($event['id']);
-		
+		$oldEvent = $this->strictFindById(db_EventManager::getInstance(), $event['id']);
+	
 		db_EventManager::getInstance()->save($event);
 		
 		FileUtil::renameEventDir($oldEvent, $event);

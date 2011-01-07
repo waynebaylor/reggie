@@ -28,7 +28,7 @@ class payment_AuthorizeNET
 		$this->logger->logPayment($this->event['code'].' Authorize.NET payment: '.$response);
 
 		return array(
-			'success' => (intval($response[0], 10) === 1),
+			'success' => (intval($response[0], 10) === 1), // AIM response code 1 means approved.
 			'responseText' => $response[3],
 			'authorizationCode' => $response[4],
 			'transactionId' => $response[6]
