@@ -111,30 +111,28 @@ class action_reg_Summary extends action_ValidatorAction
 	private function performPayment() {
 		$info = model_reg_Session::getPaymentInfo();
 		
+		$cost = model_reg_Registration::getTotalCost($this->event);
+		
 		switch($info['paymentType']) {
 			case model_PaymentType::$CHECK:
 				return array(
 					'success' => true,
 					'paymentType' => model_PaymentType::$CHECK,
 					'checkNumber' => $info['checkNumber'],
-					'amount_tendered' => 0.00
+					'amount' => $cost
 				);
 			case model_PaymentType::$PO:
 				return array(
 					'success' => true,
 					'paymentType' => model_PaymentType::$PO,
 					'purchaseOrderNumber' => $info['purchaseOrderNumber'],
-					'amount_tendered' => 0.00
+					'amount' => $cost
 				);;
 			case model_PaymentType::$AUTHORIZE_NET:
-				$cost = model_reg_Registration::getTotalCost($this->event);
-				
 				$authorizeNet = new payment_AuthorizeNET($this->event, $info, $cost);
 				$result = $authorizeNet->makePayment();
 				
 				$result['paymentType'] = model_PaymentType::$AUTHORIZE_NET;
-				$result['amount_tendered'] = $cost;
-				$result['amount'] = $cost;
 				$result['cardType'] = substr($info['cardNumber'], 0, 1);
 				$result['cardSuffix'] = substr($info['cardNumber'], -4);
 				$result['name'] = $info['firstName'].' '.$info['lastName'];

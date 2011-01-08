@@ -1239,6 +1239,7 @@ create table if not exists `Payment` (
 	`paymentTypeId`		integer		not null,
 	`regGroupId`		integer		not null,
 	`transactionDate`	datetime	not null,
+	`paymentReceived`	varchar(255)	not null default 'false',
 
 	`checkNumber`		varchar(100),   -- check fields
 

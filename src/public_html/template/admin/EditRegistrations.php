@@ -89,7 +89,13 @@ _;
 			$html .= $fragment->html();
 		}
 		
-		return $html;
+		$payments = new fragment_editRegistrations_Payments($this->event, $this->group);
+		
+		return <<<_
+			{$html}
+			
+			{$payments}
+_;
 	}
 }
 

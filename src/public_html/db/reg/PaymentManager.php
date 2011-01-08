@@ -29,6 +29,7 @@ class db_reg_PaymentManager extends db_Manager
 				paymentTypeId,
 				regGroupId,
 				transactionDate,
+				paymentReceived,
 				checkNumber,
 				purchaseOrderNumber,
 				cardType,
@@ -46,6 +47,9 @@ class db_reg_PaymentManager extends db_Manager
 				Payment
 			WHERE
 				regGroupId = :regGroupId
+			ORDER BY
+				transactionDate
+			DESC
 		';
 		
 		$params = array(
@@ -97,7 +101,7 @@ class db_reg_PaymentManager extends db_Manager
 			'regGroupId' => $groupId,
 			'transactionDate' => date_format($today,'Y-m-d H:i'),
 			'checkNumber' => $check['checkNumber'],
-			'amount' => 0.00
+			'amount' => $check['amount']
 		);
 		
 		$this->execute($sql, $params, 'Create registration check payment.');
@@ -129,7 +133,7 @@ class db_reg_PaymentManager extends db_Manager
 			'regGroupId' => $groupId,
 			'transactionDate' => date_format($today,'Y-m-d H:i'),
 			'purchaseOrderNumber' => $po['purchaseOrderNumber'],
-			'amount' => 0.00
+			'amount' => $po['amount']
 		);
 		
 		$this->execute($sql, $params, 'Create registration PO payment.');
@@ -142,6 +146,7 @@ class db_reg_PaymentManager extends db_Manager
 					paymentTypeId,
 					regGroupId,
 					transactionDate,
+					paymentReceived,
 					cardType,
 					cardSuffix,
 					authorizationCode,
@@ -158,6 +163,7 @@ class db_reg_PaymentManager extends db_Manager
 				:paymentTypeId,
 				:regGroupId,
 				:transactionDate,
+				:paymentReceived,
 				:cardType,
 				:cardSuffix,
 				:authorizationCode,
@@ -178,6 +184,7 @@ class db_reg_PaymentManager extends db_Manager
 			'paymentTypeId' => model_PaymentType::$AUTHORIZE_NET,
 			'regGroupId' => $groupId,
 			'transactionDate' => date_format($today,'Y-m-d H:i'),
+			'paymentReceived' => 'true',
 			'cardType' => $authNet['cardType'],
 			'cardSuffix' => $authNet['cardSuffix'],
 			'authorizationCode' => $authNet['authorizationCode'],
