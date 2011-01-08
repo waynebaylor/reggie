@@ -24,7 +24,7 @@ class action_admin_Login extends action_ValidatorAction
 			return new fragment_validation_ValidationErrors($errors);
 		}
 		
-		return new template_Redirect('/admin/MainMenu?a=view');
+		return new fragment_Success();
 	}
 	
 	public function logout() {
