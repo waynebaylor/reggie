@@ -120,6 +120,24 @@ class action_admin_registration_Registration extends action_ValidatorAction
 			'comments' => $comments
 		));
 	}
+	
+	public function savePaymentReceived() {
+		$groupId = RequestUtil::getValue('regGroupId', 0);
+		
+		$paymentIds = array();
+		
+		$payments = ArrayUtil::keyMatches($_REQUEST, '/paymentReceived_(\d+)/');   
+		foreach(array_keys($payments) as $p) {
+			$match = preg_match('/paymentReceived_(\d+)/', $p, $paymentId);
+			if($match === 1) {
+				$paymentIds[] = $paymentId[1];
+			}
+		}
+		
+		db_reg_PaymentManager::getInstance()->savePaymentReceived($groupId, $paymentIds);
+		
+		return new fragment_Success();
+	}
 }
 
 ?>

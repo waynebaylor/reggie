@@ -48,23 +48,7 @@ _;
 			$comments = new fragment_XhrTableForm(
 				'/admin/registration/Registration', 
 				'saveGeneralInfo', 
-				"
-					<tr>
-					<td class=\"label\">Comments</td>
-					<td>
-						{$this->HTML->hidden(array(
-							'name' => 'id',
-							'value' => $r['id']
-						))}
-						
-						{$this->HTML->textarea(array(
-							'name' => 'comments',
-							'value' => $this->escapeHtml($r['comments']),
-							'rows' => 5,
-							'cols' => 75
-						))}
-					</td>
-				"
+				$this->getRegistrantRow($r)
 			);
 
 			if($index > 0) {
@@ -89,12 +73,33 @@ _;
 			$html .= $fragment->html();
 		}
 		
-		$payments = new fragment_editRegistrations_Payments($this->event, $this->group);
+		$payments = new fragment_editRegistrations_payment_Payments($this->event, $this->group);
 		
 		return <<<_
 			{$html}
 			
-			{$payments}
+			{$payments->html()}
+_;
+	}
+	
+	private function getRegistrantRow($r) {
+		return <<<_
+			<tr>
+				<td class="label">Comments</td>
+				<td>
+					{$this->HTML->hidden(array(
+						'name' => 'id',
+						'value' => $r['id']
+					))}
+					
+					{$this->HTML->textarea(array(
+						'name' => 'comments',
+						'value' => $this->escapeHtml($r['comments']),
+						'rows' => 5,
+						'cols' => 75
+					))}
+				</td>
+			</tr>
 _;
 	}
 }

@@ -200,6 +200,51 @@ class db_reg_PaymentManager extends db_Manager
 		
 		$this->execute($sql, $params, 'Create registration Authorize.NET payment.');
 	}
+	
+	public function savePaymentReceived($groupId, $paymentIds) {
+		// set all payments check and PO payment received values to false.
+		$sql = '
+			UPDATE
+				Payment
+			SET
+				paymentReceived = :paymentReceived
+			WHERE
+				regGroupId = :groupId
+			AND
+				paymentTypeId IN (:checkTypeId, :poTypeId)
+		';
+		
+		$params = array(
+			'paymentReceived' => 'false',
+			'groupId' => $groupId,
+			'checkTypeId' => model_PaymentType::$CHECK,
+			'poTypeId' => model_PaymentType::$PO
+		);
+		
+		$this->execute($sql, $params, 'Set all group payments to not received.');
+		
+		// set the given payment's received values to true.
+		$sql = '
+			UPDATE 
+				Payment
+			SET
+				paymentReceived = :paymentReceived
+			WHERE
+				regGroupId = :groupId
+			AND
+				id = :id
+		';
+		
+		foreach($paymentIds as $id) {
+			$params = array(
+				'groupId' => $groupId,
+				'id' => $id,
+				'paymentReceived' => 'true'
+			);
+		
+			$this->execute($sql, $params, 'Set payment received.');
+		}
+	}
 }
 
 ?>

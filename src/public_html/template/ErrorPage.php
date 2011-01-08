@@ -8,7 +8,7 @@ class template_ErrorPage extends template_Page
 	
 	public function html() {
 		$html = parent::html();
-		return str_replace('body class="tundra"', 'body class="error"', $html);
+		return str_replace('body class="claro"', 'body class="error"', $html);
 	}
 	
 	protected function head() {
@@ -16,6 +16,10 @@ class template_ErrorPage extends template_Page
 			<title>Error</title>	
 
 			<style type="text/css">
+				.hide {
+					display: none;
+				}
+					
 				.error {
 					background-color: #fe8;
 				}

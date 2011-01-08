@@ -1,0 +1,132 @@
+<?php
+
+class fragment_editRegistrations_payment_List extends template_Template
+{
+	private $event;
+	private $group;
+	
+	function __construct($event, $group) {
+		parent::__construct();
+		
+		$this->event = $event;
+		$this->group = $group;
+	}
+	
+	public function html() {
+		return <<<_
+			<script type="text/javascript">
+				dojo.require("hhreg.list");
+			</script>
+			
+			<div class="fragment-list">
+				<table class="admin">
+					<tr>
+						<th>Date</th>
+						<th>Payment Information</th>
+						<th>Amount</th>
+						<th></th>
+					</tr>
+					{$this->getPayments()}
+				</table>
+			</div>
+_;
+	}
+	
+	private function getPayments() {
+		$html = '';
+		
+		$payments = db_reg_PaymentManager::getInstance()->findByRegistrationGroup($this->group);
+		foreach($payments as $payment) {
+			$html .= $this->getPaymentRow($payment);
+		}
+		
+		return $html;
+	}
+	
+	public function getPaymentRow($payment) {
+		$date = substr($payment['transactionDate'], 0, 10);
+		
+		$amount = '$'.number_format($payment['amount'], 2);
+		
+		$checkbox = '';
+		if(in_array($payment['paymentTypeId'], array(model_PaymentType::$CHECK, model_PaymentType::$PO))) {
+			$checkbox = $this->HTML->checkbox(array(
+				'label' => 'Payment Received',
+				'name' => 'paymentReceived_'.$payment['id'],
+				'value' => 'true',
+				'checked' => $payment['paymentReceived'] === 'true'
+			));
+		}
+							
+		return <<<_
+			<tr>
+				<td class="label">
+					{$date}
+				</td>
+				<td class="label">
+					{$this->getPaymentInfo($payment)}
+				</td>
+				<td class="label">
+					{$amount}
+				</td>
+				<td class="label">
+					{$checkbox}
+				</td>
+			</tr>
+_;
+	}
+	
+	private function getPaymentInfo($payment) {
+		switch($payment['paymentTypeId']) {
+			case model_PaymentType::$CHECK:
+				return $this->getCheckInfo($payment);
+				
+			case model_PaymentType::$PO:
+				return $this->getPoInfo($payment);
+			
+			case model_PaymentType::$AUTHORIZE_NET:
+				return $this->getAuthorizeNetInfo($payment);
+			
+			default:
+				return '';
+		}
+	}
+	
+	private function getCheckInfo($payment) {
+		return "Check Number: {$payment['checkNumber']}";
+	}
+	
+	private function getPoInfo($payment) {
+		return "Purchase Order Number: {$payment['purchaseOrderNumber']}";
+	}
+	
+	private function getAuthorizeNetInfo($payment) {
+		return <<<_
+			<table style="background-color:inherit;">
+				<tr>
+					<td>Card Type:</td>
+					<td>{$payment['cardType']}</td>
+				</tr>
+				<tr>
+					<td>Last 4 Digits:</td>
+					<td>{$payment['cardSuffix']}</td>
+				</tr>
+				<tr>
+					<td>Name:</td>
+					<td>{$payment['name']}</td>
+				</tr>
+				<tr>
+					<td>Address:</td>
+					<td>
+						{$payment['address']}
+						<br/>
+						{$payment['city']}, {$payment['state']} {$payment['zip']}
+						<br/>
+						{$payment['country']}
+					</td>
+				</tr>
+			</table>
+_;
+	}
+}
+?>

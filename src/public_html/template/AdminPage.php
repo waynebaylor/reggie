@@ -32,13 +32,18 @@ abstract class template_AdminPage extends template_Page
 			
 			{$this->HTML->css(array(
 				'rel' => 'stylesheet/less',
-				'href' => '/css/admin.less'))
-			}
+				'href' => '/css/admin.less'
+			))}
 			
 			{$this->HTML->css(array(
 				'rel' => 'stylesheet/less',
-				'href' => '/css/informationField.less'))
-			}
+				'href' => '/css/informationField.less'
+			))}
+			
+			{$this->HTML->css(array(
+				'rel' => 'stylesheet/less',
+				'href' => '/css/html.less'
+			))}
 		
 			{$this->HTML->script(array('src' => '/js/less.js'))}
 			{$this->HTML->script(array('src' => '/js/dojo/dojo.js'))}
