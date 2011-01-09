@@ -22,6 +22,40 @@ class db_reg_PaymentManager extends db_Manager
 		return self::$instance;
 	}
 	
+	public function find($id) {
+		$sql = '
+			SELECT
+				id,
+				paymentTypeId,
+				regGroupId,
+				transactionDate,
+				paymentReceived,
+				checkNumber,
+				purchaseOrderNumber,
+				cardType,
+				cardSuffix,
+				authorizationCode,
+				transactionId,
+				name,
+				address,
+				city,
+				state,
+				zip,
+				country,
+				amount
+			FROM
+				Payment
+			WHERE
+				id = :id
+		';
+		
+		$params = array(
+			'id' => $id
+		);
+		
+		return $this->queryUnique($sql, $params, 'Find payment.');
+	}
+	
 	public function findByRegistrationGroup($group) {
 		$sql = '
 			SELECT
@@ -201,49 +235,53 @@ class db_reg_PaymentManager extends db_Manager
 		$this->execute($sql, $params, 'Create registration Authorize.NET payment.');
 	}
 	
-	public function savePaymentReceived($groupId, $paymentIds) {
-		// set all payments check and PO payment received values to false.
+	public function save($paymentInfo) {
+		if($paymentInfo['paymentTypeId'] == model_PaymentType::$CHECK) {
+			$this->saveCheck($paymentInfo);
+		}
+		else if($paymentInfo['paymentTypeId'] == model_PaymentType::$PO) {
+			$this->savePurchaseOrder($paymentInfo);
+		}
+	}
+	
+	public function saveCheck($check) {
 		$sql = '
 			UPDATE
 				Payment
 			SET
+				checkNumber = :checkNumber,
 				paymentReceived = :paymentReceived
 			WHERE
-				regGroupId = :groupId
-			AND
-				paymentTypeId IN (:checkTypeId, :poTypeId)
-		';
-		
-		$params = array(
-			'paymentReceived' => 'false',
-			'groupId' => $groupId,
-			'checkTypeId' => model_PaymentType::$CHECK,
-			'poTypeId' => model_PaymentType::$PO
-		);
-		
-		$this->execute($sql, $params, 'Set all group payments to not received.');
-		
-		// set the given payment's received values to true.
-		$sql = '
-			UPDATE 
-				Payment
-			SET
-				paymentReceived = :paymentReceived
-			WHERE
-				regGroupId = :groupId
-			AND
 				id = :id
 		';
 		
-		foreach($paymentIds as $id) {
-			$params = array(
-				'groupId' => $groupId,
-				'id' => $id,
-				'paymentReceived' => 'true'
-			);
+		$params = array(
+			'id' => $check['id'],
+			'checkNumber' => $check['checkNumber'],
+			'paymentReceived' => $check['paymentReceived']
+		);
 		
-			$this->execute($sql, $params, 'Set payment received.');
-		}
+		$this->execute($sql, $params, 'Save check payment.');
+	}
+	
+	public function savePurchaseOrder($po) {
+		$sql = '
+			UPDATE
+				Payment
+			SET
+				purchaseOrderNumber = :purchaseOrderNumber,
+				paymentReceived = :paymentReceived
+			WHERE
+				id = :id
+		';
+		
+		$params = array(
+			'id' => $po['id'],
+			'purchaseOrderNumber' => $po['purchaseOrderNumber'],
+			'paymentReceived' => $po['paymentReceived']
+		);
+		
+		$this->execute($sql, $params, 'Save purchase order payment.');
 	}
 }
 

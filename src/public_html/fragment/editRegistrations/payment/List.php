@@ -51,6 +51,18 @@ _;
 		
 		$received = ($payment['paymentReceived'] === 'true')? 'Received' : '';
 							
+		$editLink = '';
+		if(in_array($payment['paymentTypeId'], array(model_PaymentType::$CHECK, model_PaymentType::$PO))) {
+			$editLink = $this->HTML->link(array(
+				'label' => 'Edit',
+				'href' => '/admin/registration/Payment',
+				'parameters' => array(
+					'a' => 'view',
+					'id' => $payment['id']
+				)
+			));
+		}
+		
 		return <<<_
 			<tr>
 				<td class="label">
@@ -66,10 +78,7 @@ _;
 					{$received}
 				</td>
 				<td>
-					{$this->HTML->link(array(
-						'label' => 'Edit',
-						'href' => ''
-					))}
+					{$editLink}
 				</td>
 			</tr>
 _;

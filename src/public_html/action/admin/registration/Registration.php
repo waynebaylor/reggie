@@ -138,12 +138,6 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		
 		return new fragment_Success();
 	}
-	
-	public function addPayment() {
-		error_log(print_r($_REQUEST, true));
-		
-		return new fragment_Success();
-	}
 }
 
 ?>
