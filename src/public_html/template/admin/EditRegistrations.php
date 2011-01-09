@@ -28,12 +28,15 @@ class template_admin_EditRegistrations extends template_AdminPage
 		return <<<_
 			<script type="text/javascript">
 				dojo.require("hhreg.xhrEditForm");
+				dojo.require("hhreg.admin.editRegistrations");
 			</script>
 			
 			<div id="content">
 				<h3>Edit Registrations</h3>
 				
 				{$this->getRegistrants()}
+				
+				<div class="divider"></div>
 			</div>
 _;
 	}

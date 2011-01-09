@@ -33,6 +33,19 @@ class ArrayUtil
 		
 		return $params;
 	}
+	
+	/**
+	 * Retruns the value associated with the
+	 * given key name. if there is no key with 
+	 * the given name, then the given default value is returned.
+	 * 
+	 * @param $arr the array
+	 * @param $name the key name
+	 * @param $default the default value
+	 */
+	public static function getValue($arr, $name, $default) {
+		return isset($arr[$name])? $arr[$name] : $default;
+	}
 }
 
 ?>

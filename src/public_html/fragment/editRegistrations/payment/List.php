@@ -24,7 +24,8 @@ class fragment_editRegistrations_payment_List extends template_Template
 						<th>Date</th>
 						<th>Payment Information</th>
 						<th>Amount</th>
-						<th></th>
+						<th>Payment Received</th>
+						<th>Options</th>
 					</tr>
 					{$this->getPayments()}
 				</table>
@@ -48,15 +49,7 @@ _;
 		
 		$amount = '$'.number_format($payment['amount'], 2);
 		
-		$checkbox = '';
-		if(in_array($payment['paymentTypeId'], array(model_PaymentType::$CHECK, model_PaymentType::$PO))) {
-			$checkbox = $this->HTML->checkbox(array(
-				'label' => 'Payment Received',
-				'name' => 'paymentReceived_'.$payment['id'],
-				'value' => 'true',
-				'checked' => $payment['paymentReceived'] === 'true'
-			));
-		}
+		$received = ($payment['paymentReceived'] === 'true')? 'Received' : '';
 							
 		return <<<_
 			<tr>
@@ -70,7 +63,13 @@ _;
 					{$amount}
 				</td>
 				<td class="label">
-					{$checkbox}
+					{$received}
+				</td>
+				<td>
+					{$this->HTML->link(array(
+						'label' => 'Edit',
+						'href' => ''
+					))}
 				</td>
 			</tr>
 _;

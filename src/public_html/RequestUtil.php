@@ -12,12 +12,8 @@ class RequestUtil
 	 * @param $default the default value
 	 */
 	public static function getValue($name, $default) {
-		if(isset($_REQUEST[$name])) {
-			$value = $_REQUEST[$name];
-			return is_array($value)? $value[0] : $value;		
-		}
-		
-		return $default;
+		$value = ArrayUtil::getValue($_REQUEST, $name, $default);
+		return is_array($value)? $value[0] : $value;		
 	}
 	
 	/**
