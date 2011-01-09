@@ -15,7 +15,7 @@ class fragment_editRegistrations_Page extends template_Template
 	}
 	
 	public function html() {
-		$html = "<h3>{$this->page['title']}</h3>";
+		$html = '';
 			
 		$sections = $this->page['sections'];
 		foreach($sections as $section) {
@@ -36,7 +36,11 @@ class fragment_editRegistrations_Page extends template_Template
 		}
 			
 		return <<<_
-			<div class="fragment-edit">{$html}</div>
+			<div class="fragment-edit">
+				<h3>{$this->page['title']}</h3>
+				
+				{$html}
+			</div>
 _;
 	}
 

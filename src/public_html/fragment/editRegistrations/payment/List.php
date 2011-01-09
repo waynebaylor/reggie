@@ -14,10 +14,6 @@ class fragment_editRegistrations_payment_List extends template_Template
 	
 	public function html() {
 		return <<<_
-			<script type="text/javascript">
-				dojo.require("hhreg.list");
-			</script>
-			
 			<div class="fragment-list">
 				<table class="admin">
 					<tr>

@@ -133,8 +133,6 @@ class action_reg_Summary extends action_ValidatorAction
 				$result = $authorizeNet->makePayment();
 				
 				$result['paymentType'] = model_PaymentType::$AUTHORIZE_NET;
-				$result['cardType'] = substr($info['cardNumber'], 0, 1);
-				$result['cardSuffix'] = substr($info['cardNumber'], -4);
 				$result['name'] = $info['firstName'].' '.$info['lastName'];
 				$result = array_merge(
 					$result, 

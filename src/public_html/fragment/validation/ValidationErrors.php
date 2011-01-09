@@ -10,7 +10,7 @@ class fragment_validation_ValidationErrors extends template_Template
 		$this->errors = $errors;
 	}
 	
-	public function html() { 
+	public function html() {  
 		return $this->HTML->textarea(array(
 			'id' => 'xhr-response',
 			'class' => 'hide',
@@ -38,7 +38,7 @@ _;
 		
 		foreach($this->errors as $name => $text) {
 			$encodedText = json_encode($text);	
-			$properties[] = "'{$name}': '{$encodedText}'";
+			$properties[] = "'{$name}': {$encodedText}";
 		}
 		
 		return implode(',', $properties);

@@ -1245,8 +1245,8 @@ create table if not exists `Payment` (
 
 	`purchaseOrderNumber`	varchar(100),   -- PO fields
 
-	`cardType`		integer(1),     -- auth.NET fields
-	`cardSuffix`		integer(4),
+	`cardType`		varchar(255),     -- auth.NET fields
+	`cardSuffix`		varchar(4),
 	`authorizationCode`	varchar(255),
 	`transactionId`		varchar(255),
 	`name`			varchar(255),

@@ -27,11 +27,16 @@ class payment_AuthorizeNET
 
 		$this->logger->logPayment($this->event['code'].' Authorize.NET payment: '.$response);
 
+		// break the response up into an array.
+		$response = explode('|', $response);
+		
 		return array(
 			'success' => (intval($response[0], 10) === 1), // AIM response code 1 means approved.
 			'responseText' => $response[3],
 			'authorizationCode' => $response[4],
-			'transactionId' => $response[6]
+			'transactionId' => $response[6],
+			'cardSuffix' => substr($response[50], -4),
+			'cardType' => $response[51]
 		);
 	}
 	
@@ -62,7 +67,7 @@ class payment_AuthorizeNET
 			'x_city' => $this->info['city'],
 			'x_state' => $this->info['state'],
 			'x_zip' => $this->info['zip'],
-			'x_country' => empty($this->info['country'])? 'US' : $this->info['country']
+			'x_country' => ArrayUtil::getValue($this->info, 'country', 'US')
 		);
 		
 		return $fields;

@@ -17,7 +17,7 @@
 	var handleChange = function() {
 		// remove any validation errors if they change payment type.
 		hhreg.validation.removeMessages();
-		dojo.query(".validation-icon").style("display", "none");
+		dojo.query(".validation-icon").addClass("hide");
 		
 		dojo.query(".payment-type-tab").forEach(function(tab) {
 			dojo.query("input[name=paymentType]", tab).forEach(function(radio) {

@@ -83,7 +83,7 @@ class db_reg_PaymentManager extends db_Manager
 				regGroupId = :regGroupId
 			ORDER BY
 				transactionDate
-			DESC
+			ASC
 		';
 		
 		$params = array(

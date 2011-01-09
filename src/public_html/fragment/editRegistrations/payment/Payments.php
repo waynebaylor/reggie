@@ -23,7 +23,7 @@ class fragment_editRegistrations_payment_Payments extends template_Template
 				Payments
 			</div>
 			
-			<div class="fragment-edit">
+			<div class="registrant-details-section">
 				<h3>All Payments For Group</h3>
 				
 				<div class="fragment-payments">

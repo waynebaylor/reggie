@@ -51,7 +51,7 @@ class Logger
 	}
 	
 	public function logPayment($info) {
-		error_log('['.date('j M Y, H:i:s').'] '.$info.'\n', 3, Config::$SETTINGS['PAYMENT_LOG']);
+		error_log('['.date('j M Y, H:i:s').'] '.$info.PHP_EOL, 3, Config::$SETTINGS['PAYMENT_LOG']);
 	}
 }
 

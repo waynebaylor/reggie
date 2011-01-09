@@ -32,7 +32,7 @@ class Config
 		//
 		// payment information is written to this file.
 		//
-		'PAYMENT_LOG' => '/var/www/reggie/payment.log',
+		'PAYMENT_LOG' => '/var/www/reggie/hhreg.error',
 	
 		//
 		// database properties
