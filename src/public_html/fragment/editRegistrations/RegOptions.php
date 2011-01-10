@@ -3,13 +3,15 @@
 class fragment_editRegistrations_RegOptions extends template_Template
 {
 	private $section;
+	private $report;
 	private $regGroup;
 	private $registration;
 	
-	function __construct($section, $regGroup, $registration) {
+	function __construct($section, $report, $regGroup, $registration) {
 		parent::__construct();
 		
 		$this->section = $section;
+		$this->report = $report;
 		$this->regGroup = $regGroup;
 		$this->registration = $registration;
 	}
@@ -89,11 +91,12 @@ _;
 							<td style="vertical-align:top;">
 								{$this->HTML->link(array(
 									'label' => 'Cancel',
-									'href' => '/admin/registration/Registration',
+									'href' => '/admin/registration/RegOption',
 									'parameters' => array(
 										'a' => 'cancelRegOption',
 										'id' => $o['id'],
-										'groupId' => $this->regGroup['id']
+										'groupId' => $this->regGroup['id'],
+										'reportId' => $this->report['id']
 									)
 								))}
 							</td>

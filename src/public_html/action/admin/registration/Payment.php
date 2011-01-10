@@ -4,8 +4,11 @@ class action_admin_registration_Payment extends action_ValidatorAction
 {
 	public function view() {
 		$payment = $this->strictFindById(db_reg_PaymentManager::getInstance(), RequestUtil::getValue('id', 0));
+		$report = $this->strictFindById(db_ReportManager::getInstance(), RequestUtil::getValue('reportId', 0));
+		$event = $this->strictFindById(db_EventManager::getInstance(), $report['eventId']);
+		$group = $this->strictFindById(db_reg_GroupManager::getInstance(), RequestUtil::getValue('groupId', 0));
 		
-		return new template_admin_EditPayment($payment);
+		return new template_admin_EditPayment($event, $report, $group, $payment);
 	}
 	
 	public function savePayment() {

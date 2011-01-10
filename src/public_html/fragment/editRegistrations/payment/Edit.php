@@ -36,6 +36,10 @@ _;
 							'name' => 'id',
 							'value' => $this->payment['id']
 						))}
+						{$this->HTML->hidden(array(
+							'name' => 'amount',
+							'value' => $this->payment['amount']
+						))}
 						
 						{$this->HTML->text(array(
 							'name' => 'checkNumber',
@@ -64,6 +68,10 @@ _;
 						{$this->HTML->hidden(array(
 							'name' => 'id',
 							'value' => $this->payment['id']
+						))}
+						{$this->HTML->hidden(array(
+							'name' => 'amount',
+							'value' => $this->payment['amount']
 						))}
 						
 						{$this->HTML->text(array(

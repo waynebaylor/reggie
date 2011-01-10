@@ -3,12 +3,14 @@
 class fragment_editRegistrations_payment_List extends template_Template
 {
 	private $event;
+	private $report;
 	private $group;
 	
-	function __construct($event, $group) {
+	function __construct($event, $report, $group) {
 		parent::__construct();
 		
 		$this->event = $event;
+		$this->report = $report;
 		$this->group = $group;
 	}
 	
@@ -54,7 +56,9 @@ _;
 				'href' => '/admin/registration/Payment',
 				'parameters' => array(
 					'a' => 'view',
-					'id' => $payment['id']
+					'id' => $payment['id'],
+					'groupId' => $this->group['id'],
+					'reportId' => $this->report['id']
 				)
 			));
 		}

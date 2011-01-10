@@ -33,6 +33,16 @@ class fragment_Breadcrumb extends template_Template
 		$html = '';
 		
 		switch($this->config['location']) {
+			case 'GroupSummary':
+				$html = $this->groupSummary();
+				$html .= $this->SEPARATOR;
+				$html .= 'Group Summary';
+				break;
+			case 'EditPayment':
+				$html = $this->editPayment();
+				$html .= $this->SEPARATOR;
+				$html .= 'Edit Payment';
+				break;
 			case 'EditRegistrations':
 				$html = $this->editRegistrations();
 				$html .= $this->SEPARATOR;
@@ -445,6 +455,36 @@ _;
 					'id' => $this->config['reportId']
 				)
 			))}	
+_;
+	}
+	
+	private function editPayment() {
+		return <<<_
+			{$this->editRegistrations()}
+			{$this->SEPARATOR}
+			{$this->HTML->link(array(
+				'label' => 'Edit Registrations',
+				'href' => '/admin/registration/Registration',
+				'parameters' => array(
+					'a' => 'view',
+					'groupId' => $this->config['groupId'],
+					'reportId' => $this->config['reportId']
+				)
+			))}	
+_;
+	}
+	
+	private function groupSummary() {
+		return <<<_
+			{$this->reportResults()}
+			{$this->SEPARATOR}
+			{$this->HTML->link(array(
+				'label' => "Report Results ({$this->config['reportName']})",
+				'href' => '/admin/report/RunReport',
+				'parameters' => array(
+					'id' => $this->config['reportId']
+				)
+			))}
 _;
 	}
 }

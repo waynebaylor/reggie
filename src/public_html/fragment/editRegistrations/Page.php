@@ -3,13 +3,15 @@
 class fragment_editRegistrations_Page extends template_Template
 {
 	private $page;
+	private $report;
 	private $group;
 	private $registration;
 	
-	function __construct($page, $group, $registration) {
+	function __construct($page, $report, $group, $registration) {
 		parent::__construct();
 		
 		$this->page = $page;
+		$this->report = $report;
 		$this->group = $group;
 		$this->registration = $registration;
 	}
@@ -27,7 +29,7 @@ class fragment_editRegistrations_Page extends template_Template
 				$html .= $fragment->html();
 			}
 			else if(model_Section::containsRegOptions($section)) {
-				$fragment = new fragment_editRegistrations_RegOptions($section, $this->group, $this->registration);
+				$fragment = new fragment_editRegistrations_RegOptions($section, $this->report, $this->group, $this->registration);
 				$html .= $fragment->html();
 			}
 			else if(model_Section::containsVariableQuantityOptions($section)) {

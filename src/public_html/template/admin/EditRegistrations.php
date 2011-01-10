@@ -72,11 +72,11 @@ _;
 				<div class="sub-divider"></div>
 _;
 
-			$fragment = new fragment_editRegistrations_Registration($this->event, $this->group, $r);
+			$fragment = new fragment_editRegistrations_Registration($this->event, $this->report, $this->group, $r);
 			$html .= $fragment->html();
 		}
 		
-		$payments = new fragment_editRegistrations_payment_Payments($this->event, $this->group);
+		$payments = new fragment_editRegistrations_payment_Payments($this->event, $this->report, $this->group);
 		
 		return <<<_
 			{$html}

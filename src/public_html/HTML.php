@@ -282,7 +282,7 @@ _;
 		$url = Reggie::contextUrl($config['href']);
 		
 		return <<<_
-			<link rel="{$rel}" type="text/css" href="{$url}"/>	
+			<link media="all" rel="{$rel}" type="text/css" href="{$url}"/>	
 _;
 	}
 	

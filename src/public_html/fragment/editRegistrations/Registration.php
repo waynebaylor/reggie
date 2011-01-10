@@ -3,13 +3,15 @@
 class fragment_editRegistrations_Registration extends template_Template
 {
 	private $event;
+	private $report;
 	private $group;
 	private $registration;
 	
-	function __construct($event, $group, $registration) {
+	function __construct($event, $report, $group, $registration) {
 		parent::__construct();
 		
 		$this->event = $event;
+		$this->report = $report;
 		$this->group = $group;
 		$this->registration = $registration;
 	}
@@ -19,7 +21,7 @@ class fragment_editRegistrations_Registration extends template_Template
 		
 		$pages = $this->event['pages'];
 		foreach($pages as $page) {
-			$fragment = new fragment_editRegistrations_Page($page, $this->group, $this->registration);
+			$fragment = new fragment_editRegistrations_Page($page, $this->report, $this->group, $this->registration);
 			
 			$html .= $fragment->html();
 			$html .= '<div class="sub-divider"></div>';

@@ -89,7 +89,8 @@ _;
 						'label' => 'Summary',
 						'href' => '/admin/registration/Summary',
 						'parameters' => array(
-							'regGroupId' => $result['fieldValues'][$heading['id']]
+							'regGroupId' => $result['fieldValues'][$heading['id']],
+							'reportId' => $this->report['id']
 						)
 					))}
 _;
