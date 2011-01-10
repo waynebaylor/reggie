@@ -75,14 +75,24 @@ _;
 				$value = implode(', ', $result['fieldValues'][$heading['id']]);
 			}
 			else if($heading['id'] === 'details') {
-				$value = $this->HTML->link(array(
-					'label' => 'Details',
-					'href' => '/admin/registration/Registration',
-					'parameters' => array(
-						'groupId' => $result['fieldValues'][$heading['id']],
-						'reportId' => $this->report['id']
-					)
-				));
+				$value = <<<_
+					{$this->HTML->link(array(
+						'label' => 'Details',
+						'href' => '/admin/registration/Registration',
+						'parameters' => array(
+							'groupId' => $result['fieldValues'][$heading['id']],
+							'reportId' => $this->report['id']
+						)
+					))}
+					
+					{$this->HTML->link(array(
+						'label' => 'Summary',
+						'href' => '/admin/registration/Summary',
+						'parameters' => array(
+							'regGroupId' => $result['fieldValues'][$heading['id']]
+						)
+					))}
+_;
 			}
 			else {
 				$value = $result['fieldValues'][$heading['id']];

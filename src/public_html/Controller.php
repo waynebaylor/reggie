@@ -2,12 +2,9 @@
 
 class Controller
 {
-	private $logger;
 	private $url;
 
 	function __construct($uri) {
-		$this->logger = new Logger();
-
 		// strip any parameters.
 		$url = explode('?', $uri); 
 		$url = '/'.trim($url[0], '/');
@@ -36,7 +33,7 @@ class Controller
 		catch(Exception $ex) {
 			db_EventManager::getInstance()->rollbackTransaction();			
 			
-			$this->logger->log($ex, 'Error executing action.');
+			Logger::log($ex, 'Error executing action.');
 			
 			$page = new template_ErrorPage();
 			echo $page->html();

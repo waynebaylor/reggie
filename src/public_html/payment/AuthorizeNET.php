@@ -11,8 +11,6 @@ class payment_AuthorizeNET
 	private $url;
 	
 	function __construct($event, $info, $amount) {
-		$this->logger = new Logger();
-		
 		$this->url = in_array(Config::$MODE_DEVELOPMENT, Config::$SETTINGS['MODE'])? 
 							  Config::$SETTINGS['AUTH_NET_TEST_URL'] : Config::$SETTINGS['AUTH_NET_URL'];
 						
@@ -25,7 +23,7 @@ class payment_AuthorizeNET
 		$fields = $this->paymentFields();
 		$response = $this->submitTransaction($fields);
 
-		$this->logger->logPayment($this->event['code'].' Authorize.NET payment: '.$response);
+		Logger::logPayment($this->event['code'].' Authorize.NET payment: '.$response);
 
 		// break the response up into an array.
 		$response = explode('|', $response);

@@ -5,12 +5,9 @@ abstract class db_Manager
 	// format for dates stored in the database.
 	public static $DATE_FORMAT = 'Y-m-d H:i';
 	
-	private $logger;
-	
 	protected static $conn;
 
 	protected function __construct() {
-		$this->logger = new Logger();
 		if(empty(self::$conn)) {
 			self::$conn = new db_Connection();
 		}
@@ -36,7 +33,7 @@ abstract class db_Manager
 
 		$success = $ps->execute($params);
 
-		$this->logger->logSql($ps->queryString, $params, $desc, $success);
+		Logger::logSql($ps->queryString, $params, $desc, $success);
 
 		if($success) {
 			return $ps->fetchAll();
@@ -123,7 +120,7 @@ abstract class db_Manager
 
 		$success = $ps->execute($params);
 
-		$this->logger->logSql($ps->queryString, $params, $desc, $success);
+		Logger::logSql($ps->queryString, $params, $desc, $success);
 		
 		if(!$success) {
 			throw new Exception('Error executing SQL: '.$ps->queryString);

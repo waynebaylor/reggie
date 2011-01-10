@@ -2,12 +2,8 @@
 
 class action_BaseAction implements action_Action
 {
-	private $logger;
-
-	function __construct() {
-		$this->logger = new Logger();
-	}
-
+	function __construct() {}
+	
 	public function execute() {
 		$action = $_REQUEST['action'];
 		
@@ -44,7 +40,7 @@ class action_BaseAction implements action_Action
 			}
 		}
 		else {
-			$this->logger->log('Action not found: '.$action);
+			Logger::log('Action not found: '.$action);
 			$page = new template_ErrorPage();
 		}
 
