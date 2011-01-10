@@ -4,6 +4,10 @@
 # usage: $> make_release.sh <release-name>
 #
 
+# create the tag for the release.
+#svn copy svn://dino/baylorsc/reggie/trunk svn://dino/baylorsc/reggie/tags/$1 -m "making another release"
+
+# check out the new tag.
 svn checkout svn://dino/baylorsc/reggie/tags/$1 $1-tmp
 
 mv $1-tmp/src/public_html $1
