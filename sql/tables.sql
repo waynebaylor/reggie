@@ -21,7 +21,7 @@ drop table if exists VariableQuantityOption_RegOptionPrice;
 drop table if exists VariableQuantityOption;
 drop table if exists RegType_RegOptionPrice;
 drop table if exists ContactFieldOption;
-drop table if exists CategoryPage;
+drop table if exists Category_Page;
 drop table if exists FormInputAttribute;
 drop table if exists FormInputValidation;
 drop table if exists ContactFieldValidation;
@@ -689,7 +689,7 @@ unique
 	
 -- --------------------------------------------------
 
-create table if not exists `CategoryPage` (
+create table if not exists `Category_Page` (
 	`id` 		integer 	not null auto_increment,
 	`categoryId` 	integer 	not null,
 	`pageId` 	integer 	not null,
@@ -697,7 +697,7 @@ create table if not exists `CategoryPage` (
 ) ENGINE=InnoDB default CHARSET=utf8;
 
 alter table
-	CategoryPage
+	Category_Page
 add constraint
 	categoryPage_categoryId_fk
 foreign key
@@ -707,7 +707,7 @@ references
 on delete cascade;
 	
 alter table
-	CategoryPage
+	Category_Page
 add constraint
 	categoryPage_pageId_fk
 foreign key
@@ -717,7 +717,7 @@ references
 on delete cascade;
 
 alter table
-	CategoryPage
+	Category_Page
 add constraint
 	categoryPage_categoryId_pageId_uni
 unique

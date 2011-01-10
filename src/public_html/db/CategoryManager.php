@@ -54,11 +54,11 @@ class db_CategoryManager extends db_Manager
 			FROM
 				Category
 			INNER JOIN
-				CategoryPage
+				Category_Page
 			ON
-				CategoryPage.categoryId=Category.id
+				Category_Page.categoryId=Category.id
 			WHERE
-				CategoryPage.pageId=:pageId
+				Category_Page.pageId=:pageId
 		';
 		
 		$params = array(

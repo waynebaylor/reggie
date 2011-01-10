@@ -149,7 +149,7 @@ class db_PageManager extends db_OrderableManager
 		// remove existing mappings.
 		$sql = '
 			DELETE FROM
-				CategoryPage
+				Category_Page
 			WHERE
 				pageId=:pageId
 		';
@@ -163,7 +163,7 @@ class db_PageManager extends db_OrderableManager
 		// add new mappings.
 		$sql = '
 			INSERT INTO
-				CategoryPage(
+				Category_Page(
 					categoryId,
 					pageId	
 				) 
