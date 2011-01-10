@@ -74,20 +74,26 @@ _;
 	}
 	
 	private function getPrice($option) {
-		// use a space if the price won't be displayed.
-		if($option['showPrice'] !== 'true') {
-			return '&nbsp;';
-		}
+		$regType = array('id' => $this->regTypeId);
+		$price = model_RegOption::getPrice($regType, $option);
 
-		if($this->optionAtCapacity($option)) {
-			return 'Sold out.';
+		if(!empty($price)) {
+			// check option capacity first.
+			if($this->optionAtCapacity($option)) {
+				return 'Sold out.';
+			}
+			else {
+				if($option['showPrice'] !== 'true') {
+					// use a space if the price won't be displayed.
+					return '&nbsp;';
+				}
+				else {
+					return '$'.number_format($price['price'], 2);
+				}
+			}
 		}
-		else {
-			$regType = array('id' => $this->regTypeId);
-			$price = model_RegOption::getPrice($regType, $option);
-			
-			return '$'.number_format($price['price'], 2);
-		}
+		
+		return null;
 	}
 	
 	/**

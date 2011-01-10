@@ -102,6 +102,19 @@ class action_reg_Registration extends action_ValidatorAction
 	}
 	
 	private function handleFormValues() {
+		// get all reg option groups displayed on page and clear their values
+		// before saving the current values. this is needed because not checking
+		// a previously selected option may mean it is not included in the submitted
+		// form values.
+		$page = model_Event::getPageById($this->event, $this->pageId);
+		foreach($page['sections'] as $section) {
+			if(model_Section::containsRegOptions($section)) {
+				foreach($section['content'] as $group) {
+					$this->clearRegOptionGroupSessionValue($group);
+				}
+			}
+		}
+
 		foreach($_REQUEST as $key => $value) {
 			if(strpos($key, model_ContentType::$REG_TYPE.'_') === 0) {
 				$this->setRegTypeValue($value);
@@ -118,13 +131,13 @@ class action_reg_Registration extends action_ValidatorAction
 		}
 	}
 	
-	private function setRegTypeValue($value) {
+	private function setRegTypeValue($regTypeValue) {
 		// if user changes reg type, then remove any fields, options, etc
 		// not applicable to the new reg type.
 		$currentRegType = model_reg_Session::getRegType();
 
-		if($currentRegType !== $value) { 
-			$this->filterOutInvalidContactFields($value);
+		if($currentRegType !== $regTypeValue) { 
+			$this->filterOutInvalidContactFields($regTypeValue);
 			
 			// clear out any selected reg options since they may not be valid with
 			// the new reg type.
@@ -141,7 +154,7 @@ class action_reg_Registration extends action_ValidatorAction
 			model_reg_Session::resetCompletedPages($this->pageId);
 		}
 
-		model_reg_Session::setRegType($value);
+		model_reg_Session::setRegType($regTypeValue);
 	}
 	
 	private function setContactFieldValue($key, $value) {
@@ -149,19 +162,6 @@ class action_reg_Registration extends action_ValidatorAction
 	}
 	
 	private function setRegOptionValue($key, $value) {
-		// get all reg option groups displayed on page and clear their values
-		// before saving the current values. this is needed because not checking
-		// a previously selected option may mean it is not included in the submitted
-		// form values.
-		$page = model_Event::getPageById($this->event, $this->pageId);
-		foreach($page['sections'] as $section) {
-			if(model_Section::containsRegOptions($section)) {
-				foreach($section['content'] as $group) {
-					$this->clearRegOptionGroupSessionValue($group);
-				}
-			}
-		}
-		
 		// reg option values are from checkboxes/radio buttons, so they
 		// may come in as arrays.
 		//

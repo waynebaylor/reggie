@@ -53,7 +53,7 @@ _;
 			<tr>
 				<td class="required label">Start Date/Time</td>
 				<td>
-					{$this->HTML->text(array(
+					{$this->HTML->calendar(array(
 						'name' => 'startDate',
 						'value' => '',
 						'size' => '16',
@@ -64,7 +64,7 @@ _;
 			<tr>
 				<td class="required label">End Date/Time</td>
 				<td>
-					{$this->HTML->text(array(
+					{$this->HTML->calendar(array(
 						'name' => 'endDate',
 						'value' => '',
 						'size' => '16',

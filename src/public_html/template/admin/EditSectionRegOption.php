@@ -30,6 +30,7 @@ class template_admin_EditSectionRegOption extends template_AdminPage
 				dojo.require("hhreg.xhrEditForm");
 				dojo.require("hhreg.admin.regOptionPrices");
 				dojo.require("hhreg.admin.regOptionGroups");
+				dojo.require("hhreg.calendar");
 			</script>
 			
 			<div id="content">

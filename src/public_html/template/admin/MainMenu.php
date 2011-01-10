@@ -20,6 +20,7 @@ class template_admin_MainMenu extends template_AdminPage
 		return <<<_
 			<script type="text/javascript">
 				dojo.require("hhreg.admin.mainMenu");
+				dojo.require("hhreg.calendar");
 			</script>
 			
 			<div id="content">

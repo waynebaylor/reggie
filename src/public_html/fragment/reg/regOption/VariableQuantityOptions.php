@@ -40,23 +40,28 @@ _;
 	}
 	
 	private function getPrice($option) {
-		if($this->optionAtCapacity($option)) {
-			return 'Sold out.';
-		}
-		else {
-			$name = model_ContentType::$VAR_QUANTITY_OPTION.'_'.$option['id'];
-			$value = model_reg_Session::getVariableQuantityOption($name);
-			
-			$regType = model_reg_Session::getRegType();
-			$price = model_RegOption::getPrice($regType, $option);
-			
-			//display like: @ $45.95
-			$priceDisplay = ' &#64; $'.number_format($price['price'], 2);
-			
-			return <<<_
+		$regType = model_reg_Session::getRegType();
+		$price = model_RegOption::getPrice($regType, $option);
+
+		if(!empty($price)) {
+			// check option capacity first.
+			if($this->optionAtCapacity($option)) {
+				return 'Sold out.';
+			}
+			else {
+				$name = model_ContentType::$VAR_QUANTITY_OPTION.'_'.$option['id'];
+				$value = model_reg_Session::getVariableQuantityOption($name);
+					
+				//display like: @ $45.95
+				$priceDisplay = ' &#64; $'.number_format($price['price'], 2);
+					
+				return <<<_
 				<input type="text" name="{$name}" value="{$value}" size="2"/>{$priceDisplay}		
 _;
+			}
 		}
+		
+		return null;
 	}
 	
 	private function optionAtCapacity($option) {

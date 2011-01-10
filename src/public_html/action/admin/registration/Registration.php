@@ -29,20 +29,10 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		$registrationId = RequestUtil::getValue('registrationId', 0);
 		$sectionId = RequestUtil::getValue('sectionId', 0);
 		
-		$this->saveRegType($registrationId, $sectionId);
 		$this->saveInformationFields($registrationId, $sectionId);
-		$this->saveRegOptions($registrationId, $sectionId);
 		$this->saveVariableQuantity($registrationId, $sectionId);
 		
 		return new fragment_Success();
-	}
-	
-	private function saveRegType($registrationId, $sectionId) {
-		foreach($_REQUEST as $key => $value) {
-			if(strpos($key, model_ContentType::$REG_TYPE.'_') === 0) {
-				//
-			}
-		}
 	}
 	
 	private function saveInformationFields($registrationId, $sectionId) {

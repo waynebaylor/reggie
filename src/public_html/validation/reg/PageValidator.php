@@ -137,13 +137,14 @@ class validation_reg_PageValidator
 			$min = intval($group['minimum'], 10);
 			$max = intval($group['maximum'], 10);
 
-			if($min === $max && count($values) !== $min) {
+			// only apply if min/max are greater than 0.
+			if($min > 0 && $min === $max && count($values) !== $min) {
 				$errors[$name.'[]'] = "Please choose {$min} option(s).";
 			}
-			else if(count($values) < $min) {
+			else if($min > 0 && count($values) < $min) {
 				$errors[$name.'[]'] = "Please choose at least {$min} option(s).";
 			}
-			else if($max < count($values)) {
+			else if($max > 0 && $max < count($values)) {
 				$errors[$name.'[]'] = "You may choose up to {$max} option(s).";
 			}
 		}

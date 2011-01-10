@@ -28,6 +28,7 @@ class template_admin_EditVariableQuantity extends template_AdminPage
 			<script type="text/javascript">
 				dojo.require("hhreg.xhrEditForm");
 				dojo.require("hhreg.admin.regOptionPrices");
+				dojo.require("hhreg.calendar");
 			</script>
 			
 			<div id="content">

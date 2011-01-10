@@ -134,9 +134,10 @@ class action_reg_Summary extends action_ValidatorAction
 				
 				$result['paymentType'] = model_PaymentType::$AUTHORIZE_NET;
 				$result['name'] = $info['firstName'].' '.$info['lastName'];
+				$result['amount'] = $cost;
 				$result = array_merge(
 					$result, 
-					ArrayUtil::keyIntersect($info, array('address', 'city', 'state', 'zip', 'country', 'amount'))
+					ArrayUtil::keyIntersect($info, array('address', 'city', 'state', 'zip', 'country'))
 				);
 				
 				return $result;
