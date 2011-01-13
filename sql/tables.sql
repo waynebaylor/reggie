@@ -107,6 +107,7 @@ unique
 	
 create table if not exists `Section` (
 	`id` 		integer 	not null auto_increment,
+	`eventId`	integer		not null,
 	`pageId` 	integer 	not null,
 	`name`	 	varchar(255)	not null,
 	`text`		text,
@@ -115,6 +116,14 @@ create table if not exists `Section` (
 	`displayOrder` 	integer 	not null,
 	primary key (`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
+
+alter table 
+	Section
+add constraint
+	section_eventId_fk
+foreign key
+	(eventId)
+references Event(id);
 
 alter table
 	Section

@@ -40,9 +40,7 @@ _;
 		foreach($sections as $section) {
 			$arrows = new fragment_Arrows(array(
 				'href' => '/admin/section/Section',
-				'parameters' => array(
-					'eventId' => $this->page['eventId']
-				),
+				'parameters' => array(),
 				'up' => array(
 					'action' => 'moveSectionUp',
 					'id' => $section['id']
@@ -73,8 +71,7 @@ _;
 							'href' => '/admin/section/Section',
 							'parameters' => array(
 								'action' => 'view',
-								'id' => $section['id'],
-								'eventId' => $this->page['eventId']
+								'id' => $section['id']
 							)
 						))}
 						

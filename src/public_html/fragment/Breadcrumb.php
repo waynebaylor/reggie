@@ -202,8 +202,7 @@ _;
 				'href' => '/admin/section/Section',
 				'parameters' => array(
 					'a' => 'view',
-					'id' => $this->config['sectionId'],
-					'eventId' => $this->config['eventId']
+					'id' => $this->config['sectionId']
 				)
 			))}		
 _;
@@ -218,8 +217,7 @@ _;
 				'href' => '/admin/section/Section',
 				'parameters' => array(
 					'a' => 'view',
-					'id' => $this->config['sectionId'],
-					'eventId' => $this->config['eventId']
+					'id' => $this->config['sectionId']
 				)
 			))}	
 _;
@@ -239,8 +237,7 @@ _;
 					'href' => '/admin/section/Section',
 					'parameters' => array(
 						'a' => 'view',
-						'id' => $this->config['sectionId'],
-						'eventId' => $this->config['eventId']
+						'id' => $this->config['sectionId']
 					)
 				))}
 _;
@@ -338,8 +335,7 @@ _;
 				'href' => '/admin/section/Section',
 				'parameters' => array(
 					'a' => 'view',
-					'id' => $this->config['sectionId'],
-					'eventId' => $this->config['eventId']
+					'id' => $this->config['sectionId']
 				)
 			))}		
 _;

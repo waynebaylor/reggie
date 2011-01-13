@@ -2,19 +2,13 @@
 
 class action_admin_section_Section extends action_ValidatorAction
 {
-	private $pageManager;
-	private $sectionManager;
-
 	function __construct() {
 		parent::__construct();
-
-		$this->pageManager = db_PageManager::getInstance();
-		$this->sectionManager = db_PageSectionManager::getInstance();
 	}
 	
 	public function view() {
 		$section = $this->strictFindById(db_PageSectionManager::getInstance(), $_REQUEST['id']);
-		$event = $this->strictFindById(db_EventManager::getInstance(), $_REQUEST['eventId']);
+		$event = $this->strictFindById(db_EventManager::getInstance(), $section['eventId']);
 		
 		return new template_admin_EditSection($event, $section);
 	}
@@ -49,7 +43,7 @@ class action_admin_section_Section extends action_ValidatorAction
 		$name = RequestUtil::getValue('name', '');
 		$contentTypeId = $_REQUEST['contentTypeId'];
 
-		$this->sectionManager->createSection($page, $name, $contentTypeId);
+		db_PageSectionManager::getInstance()->createSection($page['eventId'], $page, $name, $contentTypeId);
 	
 		$page = db_PageManager::getInstance()->find($page['id']);
 		
@@ -59,9 +53,9 @@ class action_admin_section_Section extends action_ValidatorAction
 	public function removeSection() {
 		$section = $this->strictFindById(db_PageSectionManager::getInstance(), $_REQUEST['id']);
 
-		$this->sectionManager->delete($section);
+		db_PageSectionManager::getInstance()->delete($section);
 
-		$page = $this->pageManager->find($section['pageId']);
+		$page = db_PageManager::getInstance()->find($section['pageId']);
 
 		return new fragment_section_List($page);
 	}
@@ -69,9 +63,9 @@ class action_admin_section_Section extends action_ValidatorAction
 	public function moveSectionUp() {
 		$section = $this->strictFindById(db_PageSectionManager::getInstance(), $_REQUEST['id']);
 
-		$this->sectionManager->moveSectionUp($section);
+		db_PageSectionManager::getInstance()->moveSectionUp($section);
 
-		$page = $this->pageManager->find($section['pageId']);
+		$page = db_PageManager::getInstance()->find($section['pageId']);
 
 		return new fragment_section_List($page);
 	}
@@ -79,9 +73,9 @@ class action_admin_section_Section extends action_ValidatorAction
 	public function moveSectionDown() {
 		$section = $this->strictFindById(db_PageSectionManager::getInstance(), $_REQUEST['id']);
 
-		$this->sectionManager->moveSectionDown($section);
+		db_PageSectionManager::getInstance()->moveSectionDown($section);
 
-		$page = $this->pageManager->find($section['pageId']);
+		$page = db_PageManager::getInstance()->find($section['pageId']);
 
 		return new fragment_section_List($page);
 	}

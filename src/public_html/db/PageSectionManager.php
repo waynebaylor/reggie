@@ -44,6 +44,7 @@ class db_PageSectionManager extends db_OrderableManager
 		$sql = '
 			SELECT
 				Section.id,
+				Section.eventId,
 				Section.pageId,
 				Section.name,
 				Section.text,
@@ -72,6 +73,7 @@ class db_PageSectionManager extends db_OrderableManager
 		$sql = '
 			SELECT
 				Section.id,
+				Section.eventId,
 				Section.pageId,
 				Section.name,
 				Section.text,
@@ -102,12 +104,14 @@ class db_PageSectionManager extends db_OrderableManager
 		$sql = '
 			INSERT INTO
 				Section(
+					eventId,
 					pageId,
 					name,
 					contentTypeId,
 					displayOrder
 				)
 			VALUES(
+				:eventId,
 				:pageId,
 				:name,
 				:contentTypeId,
@@ -116,6 +120,7 @@ class db_PageSectionManager extends db_OrderableManager
 		';	
 		
 		$params = array(
+			'eventId' => $eventId,
 			'pageId' => $page['id'],
 			'name' => $name,
 			'contentTypeId' => $contentTypeId,
