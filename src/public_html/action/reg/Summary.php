@@ -167,7 +167,7 @@ class action_reg_Summary extends action_ValidatorAction
 			EmailUtil::send(array(
 				'to' => $toAddress,
 				'from' => $emailTemplate['fromAddress'],
-				'bcc' => $emailTemplate['bccAddress'],
+				'bcc' => $emailTemplate['bcc'],
 				'subject' => $emailTemplate['subject'],
 				'text' => $fragment->html()	
 			));
