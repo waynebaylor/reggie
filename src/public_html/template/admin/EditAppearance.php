@@ -93,9 +93,9 @@ _;
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Header Color</td>
+				<td class="label">Header Background Color</td>
 				<td>
-					{$this->getColorInputs('headerColor')}
+					{$this->getColorInputs('headerBackgroundColor')}
 				</td>
 			</tr>
 			<tr>
@@ -105,33 +105,51 @@ _;
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Footer Color</td>
+				<td class="label">Page Background Color</td>
 				<td>
-					{$this->getColorInputs('footerColor')}
+					{$this->getColorInputs('pageBackgroundColor')}
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Menu Color</td>
+				<td class="label">Menu Title Background Color</td>
 				<td>
-					{$this->getColorInputs('menuColor')}
+					{$this->getColorInputs('menuTitleBackgroundColor')}
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Form Color</td>
+				<td class="label">Menu Background Color</td>
 				<td>
-					{$this->getColorInputs('formColor')}
+					{$this->getColorInputs('menuBackgroundColor')}
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Button Text</td>
+				<td class="label">Menu Highlight Color</td>
+				<td>
+					{$this->getColorInputs('menuHighlightColor')}
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Form Background Color</td>
+				<td>
+					{$this->getColorInputs('formBackgroundColor')}
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Footer Background Color</td>
+				<td>
+					{$this->getColorInputs('footerBackgroundColor')}
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Button Text Color</td>
 				<td>
 					{$this->getColorInputs('buttonTextColor')}
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Button Color</td>
+				<td class="label">Button Background Color</td>
 				<td>
-					{$this->getColorInputs('buttonColor')}
+					{$this->getColorInputs('buttonBackgroundColor')}
 				</td>
 			</tr>
 		

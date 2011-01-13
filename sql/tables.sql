@@ -862,18 +862,21 @@ unique
 -- --------------------------------------------------
 
 create table if not exists `Appearance` (
-	`id`			integer 	not null auto_increment,
-	`eventId`		integer		not null,
-	`headerContent` 	text 		not null,
-	`footerContent` 	text 		not null,
-	`headerColor`		varchar(6)	not null,
-	`footerColor`		varchar(6)	not null,
-	`menuTitle`		text		not null,
-	`menuColor`		varchar(6)	not null,
-	`backgroundColor`	varchar(6)	not null,
-	`formColor`		varchar(6)	not null,
-	`buttonTextColor`	varchar(6)	not null,
-	`buttonColor`		varchar(6)	not null,
+	`id`				integer 	not null auto_increment,
+	`eventId`			integer		not null,	
+	`headerContent` 		text 		not null,
+	`footerContent` 		text 		not null,
+	`menuTitle`			text		not null,
+	`headerBackgroundColor`		varchar(6)	not null,
+	`backgroundColor`		varchar(6)	not null,
+	`pageBackgroundColor`		varchar(6)	not null,
+	`menuTitleBackgroundColor`	varchar(6)	not null,
+	`menuBackgroundColor`		varchar(6)	not null,
+	`menuHilightColor`		varchar(6)	not null,
+	`formBackgroundColor`		varchar(6)	not null,
+	`footerBackgroundColor`		varchar(6)	not null,
+	`buttonTextColor`		varchar(6)	not null,
+	`buttonBackgroundColor`		varchar(6)	not null,
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 

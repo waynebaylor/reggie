@@ -55,24 +55,36 @@ class template_reg_BasePage extends template_Page
 				}
 				
 				#header {
-					background-color: #{$this->escapeHtml($this->event['appearance']['headerColor'])};
+					background-color: #{$this->escapeHtml($this->event['appearance']['headerBackgroundColor'])};
 				}
 				
 				#footer {
-					background-color: #{$this->escapeHtml($this->event['appearance']['footerColor'])};
+					background-color: #{$this->escapeHtml($this->event['appearance']['footerBackgroundColor'])};
 				}
 				
 				.menu {
-					background-color: #{$this->escapeHtml($this->event['appearance']['menuColor'])};
+					background-color: #{$this->escapeHtml($this->event['appearance']['menuBackgroundColor'])};
+				}
+				
+				.menu .current {
+					background-color: #{$this->escapeHtml($this->event['appearance']['menuHighlightColor'])};
+				}
+				
+				.menu-title {
+					background-color: #{$this->escapeHtml($this->event['appearance']['menuTitleBackgroundColor'])};
+				}
+				
+				td.reg-form {
+					background-color: #{$this->escapeHtml($this->event['appearance']['pageBackgroundColor'])};
 				}
 				
 				.reg-form-content {
-					background-color: #{$this->escapeHtml($this->event['appearance']['formColor'])};
+					background-color: #{$this->escapeHtml($this->event['appearance']['formBackgroundColor'])};
 				}
 				
 				.button {
 					color: #{$this->escapeHtml($this->event['appearance']['buttonTextColor'])};
-					background-color: #{$this->escapeHtml($this->event['appearance']['buttonColor'])};
+					background-color: #{$this->escapeHtml($this->event['appearance']['buttonBackgroundColor'])};
 				}
 			</style>	
 _;
@@ -112,18 +124,22 @@ _;
 				<form method="post" action="{$this->contextUrl("/event/{$this->event['code']}/{$cat}")}">
 					<input type="hidden" name="pageId" value="{$this->id}"/>
 					
-					<table class="reg-content"><tr>
-						<td>
-							{$menu->html()}
-						</td>
-						<td class="reg-form-content">
-							<div class="reg-form-title">{$this->title}</div>
-							
-							{$this->page->html()}
-							
-							{$this->getFormControls()}
-						</td>
-					</tr></table>
+					<table><tr><td class="reg-form">
+						<table class="reg-content"><tr>
+							<td>
+								{$menu->html()}
+							</td>
+							<td class="reg-form-content">
+								<div class="reg-form-title">{$this->title}</div>
+								
+								{$this->page->html()}
+								
+								<div class="divider"></div>
+								
+								{$this->getFormControls()}
+							</td>
+						</tr></table>
+					</td></tr></table>
 					
 					{$errorMessages->html()}
 				</form>

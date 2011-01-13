@@ -23,14 +23,17 @@ class db_AppearanceManager extends db_Manager
 				eventId,
 				headerContent,
 				footerContent,
-				headerColor,
-				footerColor,
+				headerBackgroundColor,
+				footerBackgroundColor,
 				menuTitle,
-				menuColor,
+				menuBackgroundColor,
 				backgroundColor,
-				formColor,
+				formBackgroundColor,
 				buttonTextColor,
-				buttonColor
+				buttonBackgroundColor,
+				pageBackgroundColor,
+				menuTitleBackgroundColor,
+				menuHighlightColor
 			FROM
 				Appearance
 			WHERE
@@ -51,14 +54,17 @@ class db_AppearanceManager extends db_Manager
 				eventId,
 				headerContent,
 				footerContent,
-				headerColor,
-				footerColor,
+				headerBackgroundColor,
+				footerBackgroundColor,
 				menuTitle,
-				menuColor,
+				menuBackgroundColor,
 				backgroundColor,
-				formColor,
+				formBackgroundColor,
 				buttonTextColor,
-				buttonColor
+				buttonBackgroundColor,
+				pageBackgroundColor,
+				menuTitleBackgroundColor,
+				menuHighlightColor
 			FROM
 				Appearance
 			WHERE
@@ -79,14 +85,17 @@ class db_AppearanceManager extends db_Manager
 					eventId,
 					headerContent,
 					footerContent,
-					headerColor,
+					headerBackgroundColor,
 					backgroundColor,
-					footerColor,
+					footerBackgroundColor,
 					menuTitle,
-					menuColor,
-					formColor,
+					menuBackgroundColor,
+					formBackgroundColor,
 					buttonTextColor,
-					buttonColor
+					buttonBackgroundColor,
+					pageBackgroundColor,
+					menuTitleBackgroundColor,
+					menuHighlightColor
 				)
 			VALUES(
 				:eventId,
@@ -99,14 +108,17 @@ class db_AppearanceManager extends db_Manager
 				"ffffff",
 				"ffffff",
 				"ffffff",
-				"26211e"
+				"26211e",
+				"ffffff",
+				"88bbcc",
+				"ffff00"
 			)
 		';
 
 		$params = array(
 			'eventId' => $eventId,
 			'headerContent' => '<span style="font-size:2em;">New Event</span>',
-			'menuTitle' => '<div style="background-color:#88bbcc; border-bottom:1px solid black; padding:5px;">Registration Menu</div>'
+			'menuTitle' => '<div>Registration Menu</div>'
 		);
 		
 		$this->execute($sql, $params, 'Create event appearance.');
@@ -119,14 +131,17 @@ class db_AppearanceManager extends db_Manager
 			SET
 				headerContent = :headerContent,
 				footerContent = :footerContent,
-				headerColor = :headerColor,
-				footerColor = :footerColor,
+				headerBackgroundColor = :headerBackgroundColor,
+				footerBackgroundColor = :footerBackgroundColor,
 				menuTitle = :menuTitle,
-				menuColor = :menuColor,
+				menuBackgroundColor = :menuBackgroundColor,
 				backgroundColor = :backgroundColor,
-				formColor = :formColor,
+				formBackgroundColor = :formBackgroundColor,
 				buttonTextColor = :buttonTextColor,
-				buttonColor = :buttonColor
+				buttonBackgroundColor = :buttonBackgroundColor,
+				pageBackgroundColor = :pageBackgroundColor,
+				menuTitleBackgroundColor = :menuTitleBackgroundColor,
+				menuHighlightColor = :menuHighlightColor
 			WHERE
 				id = :id
 		';
@@ -135,14 +150,17 @@ class db_AppearanceManager extends db_Manager
 			'id',
 			'headerContent',
 			'footerContent',
-			'headerColor',
-			'footerColor',
+			'headerBackgroundColor',
+			'footerBackgroundColor',
 			'menuTitle',
-			'menuColor',
+			'menuBackgroundColor',
 			'backgroundColor',
-			'formColor',
+			'formBackgroundColor',
 			'buttonTextColor',
-			'buttonColor'
+			'buttonBackgroundColor',
+			'pageBackgroundColor',
+			'menuTitleBackgroundColor',
+			'menuHighlightColor'
 		));
 		
 		$this->execute($sql, $params, 'Save event appearance.');
