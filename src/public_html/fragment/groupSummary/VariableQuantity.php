@@ -29,7 +29,7 @@ class fragment_groupSummary_VariableQuantity extends template_Template
 							$html .= <<<_
 								<tr>
 									<td>{$option['description']}</td>
-									<td class="details">
+									<td class="details" style="white-space:nowrap;">
 										\${$total} ({$this->escapeHtml($quantity)} @ \${$priceDisplay})
 									</td>
 									<td></td>
@@ -40,13 +40,8 @@ _;
 				}
 			}
 		}
-		
-		if(empty($html)) {
-			return '';
-		}
-		else {
-			return $html;
-		}
+	error_log('ooooo');	
+		return $html;
 	}
 }
 
