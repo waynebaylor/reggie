@@ -58,6 +58,9 @@ _;
 				$html .= '<div class="divider"></div>';	
 			}
 			
+			$regFragment = new fragment_editRegistrations_Registration($this->event, $this->report, $this->group, $r);
+			$options = new fragment_editRegistrations_RegOptions($this->event, $this->report, $this->group, $r);
+			
 			$html .= <<<_
 				<div class="registrant-heading">
 					Registrant {$num}
@@ -70,10 +73,11 @@ _;
 				</div>
 				
 				<div class="sub-divider"></div>
+					
+				{$regFragment->html()}
+				
+				{$options->html()}
 _;
-
-			$fragment = new fragment_editRegistrations_Registration($this->event, $this->report, $this->group, $r);
-			$html .= $fragment->html();
 		}
 		
 		$payments = new fragment_editRegistrations_payment_Payments($this->event, $this->report, $this->group);

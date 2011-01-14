@@ -24,7 +24,6 @@ class fragment_editRegistrations_Registration extends template_Template
 			$fragment = new fragment_editRegistrations_Page($page, $this->report, $this->group, $this->registration);
 			
 			$html .= $fragment->html();
-			$html .= '<div class="sub-divider"></div>';
 		}
 			
 		return $html;

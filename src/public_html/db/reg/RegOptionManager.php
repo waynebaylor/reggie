@@ -29,8 +29,8 @@ class db_reg_RegOptionManager extends db_Manager
 				registrationId,
 				regOptionId,
 				priceId,
-				comments,
-				dateCancelled
+				dateCancelled,
+				dateAdded
 			FROM
 				Registration_RegOption
 			WHERE
@@ -62,13 +62,13 @@ class db_reg_RegOptionManager extends db_Manager
 						registrationId,
 						regOptionId,
 						priceId,
-						comments
+						dateAdded
 					)
 				VALUES(
 					:registrationId,
 					:regOptionId,
 					:priceId,
-					:comments
+					:dateAdded
 				)
 			';
 				
@@ -76,28 +76,26 @@ class db_reg_RegOptionManager extends db_Manager
 				'registrationId' => $regId,
 				'regOptionId' => $optionId,
 				'priceId' => $price['id'],
-				'comments' => ''
+				'dateAdded' => date(db_Manager::$DATE_FORMAT)
 			);
 				
 			$this->execute($sql, $params, 'Create registration option.');
 		}
 	}
 	
-	public function cancel($id, $comments) {
+	public function cancel($id) {
 		$sql = '
 			UPDATE
 				Registration_RegOption
 			SET
-				dateCancelled = :dateCancelled,
-				comments = :comments
+				dateCancelled = :dateCancelled
 			WHERE
 				id = :id
 		';
 		
 		$params = array(
 			'id' => $id,
-			'dateCancelled' => date(db_Manager::$DATE_FORMAT),
-			'comments' => $comments
+			'dateCancelled' => date(db_Manager::$DATE_FORMAT)
 		);
 		
 		$this->execute($sql, $params, 'Cancel registration option.');

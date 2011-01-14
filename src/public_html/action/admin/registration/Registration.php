@@ -59,41 +59,39 @@ class action_admin_registration_Registration extends action_ValidatorAction
 			if(strpos($key, model_ContentType::$VAR_QUANTITY_OPTION.'_') === 0) {
 				$optId = str_replace(model_ContentType::$VAR_QUANTITY_OPTION.'_', '', $key);
 				$priceId = RequestUtil::getValue('priceId_'.$optId, 0);
-				$comments = RequestUtil::getValue('comments', '');
 				
-				$this->saveVariableQuantityOption($currentOpts, $registrationId, $optId, $priceId, $value, $comments);
+				$this->saveVariableQuantityOption($currentOpts, $registrationId, $optId, $priceId, $value);
 			}
 		}
 	}
 	
-	private function saveVariableQuantityOption($currentOpts, $registrationId, $optId, $priceId, $value, $comments) {
+	private function saveVariableQuantityOption($currentOpts, $registrationId, $optId, $priceId, $value) {
 		if(!is_numeric($value) || intval($value, 10) === 0) {
 			// delete option
 			db_reg_VariableQuantityManager::getInstance()->delete($registrationId, $optId);
 			return;
 		}
 
+		// if the option already exists, then update it.
 		foreach($currentOpts as $currentOpt) {
 			if($currentOpt['variableQuantityId'] == $optId) {
 				// update option
 				db_reg_VariableQuantityManager::getInstance()->save(array(
 					'id' => $currentOpt['id'], 
 					'priceId' => $priceId,
-					'quantity' => $value,
-					'comments' => $comments
+					'quantity' => $value
 				));
 				
 				return;
 			}
 		}
 
-		// insert new option
+		// it's a new option.
 		db_reg_VariableQuantityManager::getInstance()->createOption(array(
 			'registrationId' => $registrationId, 
 			'variableQuantityId' => $optId, 
 			'priceId' => $priceId, 
-			'quantity' => $value, 
-			'comments' => $comments
+			'quantity' => $value
 		));
 	}
 }

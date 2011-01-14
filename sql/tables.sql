@@ -1039,8 +1039,8 @@ create table if not exists `Registration_RegOption` (
 	`registrationId`	integer		not null,
 	`regOptionId`		integer		not null,
 	`priceId`		integer,
-	`comments`		text		not null,
 	`dateCancelled`		datetime,
+	`dateAdded`		datetime,
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
@@ -1071,13 +1071,6 @@ foreign key
 references
 	RegOptionPrice(id);
 
-alter table
-	Registration_RegOption
-add constraint
-	reg_regOpt_regRegOpt_uni
-unique
-	(registrationId, regOptionId);
-
 -- --------------------------------------------------
 
 create table if not exists `Registration_VariableQuantityOption` (
@@ -1086,7 +1079,6 @@ create table if not exists `Registration_VariableQuantityOption` (
 	`variableQuantityId`	integer		not null,
 	`priceId`		integer		not null,
 	`quantity`		integer		not null,
-	`comments`		text		not null,
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 

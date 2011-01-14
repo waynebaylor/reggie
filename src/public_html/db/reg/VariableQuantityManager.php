@@ -29,8 +29,7 @@ class db_reg_VariableQuantityManager extends db_Manager
 				registrationId,
 				variableQuantityId,
 				priceId,
-				quantity,
-				comments
+				quantity
 			FROM
 				Registration_VariableQuantityOption
 			WHERE
@@ -53,8 +52,7 @@ class db_reg_VariableQuantityManager extends db_Manager
 				'registrationId' => $registrationId,
 				'variableQuantityId' => $opt['id'],
 				'priceId' => $price['id'],
-				'quantity' => $opt['quantity'],
-				'comments' => ''
+				'quantity' => $opt['quantity']
 			));
 		}
 	}
@@ -83,8 +81,7 @@ class db_reg_VariableQuantityManager extends db_Manager
 				Registration_VariableQuantityOption
 			SET
 				priceId = :priceId,
-				quantity = :quantity,
-				comments = :comments
+				quantity = :quantity
 			WHERE
 				id = :id
 		';
@@ -92,8 +89,7 @@ class db_reg_VariableQuantityManager extends db_Manager
 		$params = array(
 			'id' => $option['id'],
 			'priceId' => $option['priceId'],
-			'quantity' => $option['quantity'],
-			'comments' => $option['comments']
+			'quantity' => $option['quantity']
 		);
 		
 		$this->execute($sql, $params, 'Save variable quantity registration option.');
@@ -106,15 +102,13 @@ class db_reg_VariableQuantityManager extends db_Manager
 					registrationId,
 					variableQuantityId,
 					priceId,
-					quantity,
-					comments
+					quantity
 				)
 			VALUES(
 				:registrationId,
 				:variableQuantityId,
 				:priceId,
-				:quantity,
-				:comments
+				:quantity
 			)
 		';
 			
@@ -122,8 +116,7 @@ class db_reg_VariableQuantityManager extends db_Manager
 			'registrationId' => $option['registrationId'],
 			'variableQuantityId' => $option['variableQuantityId'],
 			'priceId' => $option['priceId'],
-			'quantity' => $option['quantity'],
-			'comments' => $option['comments']
+			'quantity' => $option['quantity']
 		);
 		
 		$this->execute($sql, $params, 'Create variable quantity registration option.');

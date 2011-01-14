@@ -9,5 +9,9 @@ dojo.require("hhreg.xhrAddList");
 		dojo.query(".fragment-payments").forEach(function(item) {
 			hhreg.xhrAddList.bind(item);
 		});
+		
+		dojo.query(".fragment-reg-options").forEach(function(item) {
+			hhreg.xhrAddList.bind(item);
+		});
 	});
 })();
