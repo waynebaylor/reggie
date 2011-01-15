@@ -30,7 +30,6 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		$sectionId = RequestUtil::getValue('sectionId', 0);
 		
 		$this->saveInformationFields($registrationId, $sectionId);
-		$this->saveVariableQuantity($registrationId, $sectionId);
 		
 		return new fragment_Success();
 	}
@@ -50,49 +49,6 @@ class action_admin_registration_Registration extends action_ValidatorAction
 				db_reg_InformationManager::getInstance()->createInformation($registrationId, array($field));
 			}
 		}
-	}
-	
-	private function saveVariableQuantity($registrationId, $sectionId) {
-		$currentOpts = db_reg_VariableQuantityManager::getInstance()->findByRegistration(array('id' => $registrationId));
-		
-		foreach($_REQUEST as $key => $value) {
-			if(strpos($key, model_ContentType::$VAR_QUANTITY_OPTION.'_') === 0) {
-				$optId = str_replace(model_ContentType::$VAR_QUANTITY_OPTION.'_', '', $key);
-				$priceId = RequestUtil::getValue('priceId_'.$optId, 0);
-				
-				$this->saveVariableQuantityOption($currentOpts, $registrationId, $optId, $priceId, $value);
-			}
-		}
-	}
-	
-	private function saveVariableQuantityOption($currentOpts, $registrationId, $optId, $priceId, $value) {
-		if(!is_numeric($value) || intval($value, 10) === 0) {
-			// delete option
-			db_reg_VariableQuantityManager::getInstance()->delete($registrationId, $optId);
-			return;
-		}
-
-		// if the option already exists, then update it.
-		foreach($currentOpts as $currentOpt) {
-			if($currentOpt['variableQuantityId'] == $optId) {
-				// update option
-				db_reg_VariableQuantityManager::getInstance()->save(array(
-					'id' => $currentOpt['id'], 
-					'priceId' => $priceId,
-					'quantity' => $value
-				));
-				
-				return;
-			}
-		}
-
-		// it's a new option.
-		db_reg_VariableQuantityManager::getInstance()->createOption(array(
-			'registrationId' => $registrationId, 
-			'variableQuantityId' => $optId, 
-			'priceId' => $priceId, 
-			'quantity' => $value
-		));
 	}
 }
 

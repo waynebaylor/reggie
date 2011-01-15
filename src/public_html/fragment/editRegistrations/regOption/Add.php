@@ -3,12 +3,14 @@
 class fragment_editRegistrations_regOption_Add extends template_Template
 {
 	private $event;
+	private $report;
 	private $registration;
 	
-	function __construct($event, $registration) {
+	function __construct($event, $report, $registration) {
 		parent::__construct();
 		
 		$this->event = $event;
+		$this->report = $report;
 		$this->registration = $registration;
 	}
 	
@@ -16,7 +18,7 @@ class fragment_editRegistrations_regOption_Add extends template_Template
 		$form = new fragment_XhrAddForm(
 			'Add Registration Option', 
 			'/admin/registration/RegOption', 
-			'addRegOption', 
+			'addRegOptions', 
 			$this->getFormRows()
 		);
 		
@@ -28,20 +30,65 @@ _;
 	}
 	
 	private function getFormRows() {
+		$html = '';
+
+		foreach($this->getOptions() as $opt) {
+			$html .= <<<_
+			<tr>
+				<td>
+					{$this->HTML->checkbox(array(
+						'name' => 'regOpts[]',
+						'value' => $opt['value']
+					))}
+				</td>
+				<td>
+					<label for="regOpts[]_{$opt['value']}">{$opt['label']}</label>
+				</td>
+				<td>
+					{$this->getOptionPrices($opt['value'], $opt['prices'])}
+				</td>
+			</tr>
+_;
+		}
+		
 		return <<<_
 			<tr>
-				<td>Description</td>
+				<td></td>
 				<td>
-					{$this->HTML->select(array(
-						'name' => 'regOptionId',
-						'value' => '',
-						'items' => $this->getOptions()
+					{$this->HTML->hidden(array(
+						'name' => 'registrationId',
+						'value' => $this->registration['id']
 					))}
+					{$this->HTML->hidden(array(
+						'name' => 'reportId',
+						'value' => $this->report['id']
+					))}
+					
+					<table class="admin" style="border:none;">
+						{$html}
+					</table>
 				</td>
 			</tr>
 _;
 	}
 
+	private function getOptionPrices($optId, $prices) {
+		$optPrices = array();
+
+		foreach($prices as $p) {
+			$optPrices[] = array(
+				'label' => '$'.number_format($p['price'], 2)."({$p['description']})",
+				'value' => $p['id'] 
+			);	
+		}
+		
+		return $this->HTML->select(array(
+			'name' => "regOptPrice_{$optId}",
+			'value' => '',
+			'items' => $optPrices
+		));	
+	}
+	
 	private function getOptions() {
 		$opts = array();
 		
@@ -59,7 +106,8 @@ _;
 		foreach($group['options'] as $option) {
 			$opts[] = array(
 				'label' => $option['description'],
-				'value' => $option['id']
+				'value' => $option['id'],
+				'prices' => db_RegOptionPriceManager::getInstance()->findByRegOption($option)
 			);
 			
 			foreach($option['groups'] as $subGroup) {

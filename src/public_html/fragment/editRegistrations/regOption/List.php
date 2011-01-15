@@ -4,20 +4,22 @@ class fragment_editRegistrations_regOption_List extends template_Template
 {
 	private $event;
 	private $report;
-	private $regGroup;
 	private $registration;
 	
-	function __construct($event, $report, $regGroup, $registration) {
+	function __construct($event, $report, $registration) {
 		parent::__construct();
 		
 		$this->event = $event;
 		$this->report = $report;
-		$this->regGroup = $regGroup;
 		$this->registration = $registration;
 	}
 	
 	public function html() {
 		return <<<_
+			<script type="text/javascript">
+				dojo.require("hhreg.list");
+			</script>
+			
 			<div class="fragment-list">
 				<table class="admin">
 					<tr>
@@ -38,7 +40,7 @@ _;
 		
 		$regOptGroups = model_Event::getRegOptionGroups($this->event);
 		
-		foreach($regOptGroups as $group) {
+		foreach($regOptGroups as $group) { 
 			$html .= $this->getRegOptionGroupHtml($group, $this->registration);
 		}
 		
@@ -59,9 +61,6 @@ _;
 		return $html;
 	}
 
-	/**
-	 * if the registration selected the given option AND the selection has not been cancelled, then a row is returned.
-	 */
 	private function getRegOptionRow($registration, $regOption) {
 		$html = '';
 		
@@ -81,7 +80,7 @@ _;
 						'parameters' => array(
 							'a' => 'cancelRegOption',
 							'id' => $o['id'],
-							'groupId' => $this->regGroup['id'],
+							'groupId' => $this->registration['regGroupId'],
 							'reportId' => $this->report['id']
 						)
 					));

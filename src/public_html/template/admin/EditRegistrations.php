@@ -59,7 +59,7 @@ _;
 			}
 			
 			$regFragment = new fragment_editRegistrations_Registration($this->event, $this->report, $this->group, $r);
-			$options = new fragment_editRegistrations_RegOptions($this->event, $this->report, $this->group, $r);
+			$options = new fragment_editRegistrations_RegOptions($this->event, $this->report, $r);
 			
 			$html .= <<<_
 				<div class="registrant-heading">

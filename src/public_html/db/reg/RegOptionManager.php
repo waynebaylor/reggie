@@ -56,6 +56,11 @@ class db_reg_RegOptionManager extends db_Manager
 			$option = db_RegOptionManager::getInstance()->find($optionId);
 			$price = model_RegOption::getPrice(array('id' => $regTypeId), $option);
 			
+			$this->createOption($regId, $option['id'], $price['id']);
+		}
+	}
+	
+	public function createOption($registrationId, $optionId, $priceId) {
 			$sql = '
 				INSERT INTO
 					Registration_RegOption(
@@ -73,14 +78,13 @@ class db_reg_RegOptionManager extends db_Manager
 			';
 				
 			$params = array(
-				'registrationId' => $regId,
+				'registrationId' => $registrationId,
 				'regOptionId' => $optionId,
-				'priceId' => $price['id'],
+				'priceId' => $priceId,
 				'dateAdded' => date(db_Manager::$DATE_FORMAT)
 			);
 				
 			$this->execute($sql, $params, 'Create registration option.');
-		}
 	}
 	
 	public function cancel($id) {

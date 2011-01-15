@@ -4,21 +4,19 @@ class fragment_editRegistrations_RegOptions extends template_Template
 {
 	private $event;
 	private $report;
-	private $regGroup;
 	private $registration;
 	
-	function __construct($event, $report, $regGroup, $registration) {
+	function __construct($event, $report, $registration) {
 		parent::__construct();
 		
 		$this->event = $event;
 		$this->report = $report;
-		$this->regGroup = $regGroup;
 		$this->registration = $registration;
 	}
 	
 	public function html() {
-		$list = new fragment_editRegistrations_regOption_List($this->event, $this->report, $this->regGroup, $this->registration);
-		$add = new fragment_editRegistrations_regOption_Add($this->event, $this->registration);
+		$list = new fragment_editRegistrations_regOption_List($this->event, $this->report, $this->registration);
+		$add = new fragment_editRegistrations_regOption_Add($this->event, $this->report, $this->registration);
 		
 		return <<<_
 			<div class="registrant-details-section">
@@ -50,14 +48,14 @@ _;
 		}
 		
 		$html = <<<_
-			<table style="border-collapse:separate; border-spacing:20px 10px;">
+			<table class="edit-var-reg-options">
 				{$html}
 			</table>
 _;
 
 		$form = new fragment_XhrTableForm(
-			'/admin/registration/Registration', 
-			'save', 
+			'/admin/registration/RegOption', 
+			'saveVariableQuantity', 
 			"<tr>
 				<td></td>
 				<td>
@@ -88,14 +86,16 @@ _;
 		
 		return <<<_
 			<tr>
-				<td style="vertical-align:top;">{$option['description']}</td>
-				<td style="vertical-align:top; text-align:right;">
+				<td class="label">{$option['description']}</td>
+				<td class="quantity">
 					{$this->HTML->text(array(
 						'name' => model_ContentType::$VAR_QUANTITY_OPTION.'_'.$option['id'],
 						'value' => $value,
 						'size' => 2
 					))}
 					&nbsp;&#64;
+				</td>
+				<td class="price">
 					{$this->getVarQuantityPrice($option, $priceId)}
 				</td>
 			</tr>

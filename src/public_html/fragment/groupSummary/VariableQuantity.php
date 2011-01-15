@@ -40,7 +40,7 @@ _;
 				}
 			}
 		}
-	error_log('ooooo');	
+
 		return $html;
 	}
 }
