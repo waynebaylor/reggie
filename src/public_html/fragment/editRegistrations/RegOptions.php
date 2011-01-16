@@ -34,7 +34,9 @@ class fragment_editRegistrations_RegOptions extends template_Template
 				
 				<div class="divider"></div>
 				
-				{$this->getVariableOptions()}
+				<div class="fragment-edit">
+					{$this->getVariableOptions()}
+				</div>
 			</div>
 _;
 	}

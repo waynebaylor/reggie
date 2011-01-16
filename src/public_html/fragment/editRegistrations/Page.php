@@ -32,7 +32,7 @@ class fragment_editRegistrations_Page extends template_Template
 			
 		if(!empty($html)) {
 			return <<<_
-				<div class="registrant-details-section">
+				<div class="fragment-edit">
 					<h3>{$this->page['title']}</h3>
 					
 					{$html}
