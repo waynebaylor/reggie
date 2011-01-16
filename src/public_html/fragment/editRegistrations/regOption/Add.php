@@ -77,7 +77,7 @@ _;
 
 		foreach($prices as $p) {
 			$optPrices[] = array(
-				'label' => '$'.number_format($p['price'], 2)."({$p['description']})",
+				'label' => '$'.number_format($p['price'], 2)." ({$p['description']})",
 				'value' => $p['id'] 
 			);	
 		}

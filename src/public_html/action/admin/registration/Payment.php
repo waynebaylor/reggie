@@ -38,6 +38,7 @@ class action_admin_registration_Payment extends action_ValidatorAction
 			return new fragment_validation_ValidationErrors($errors);
 		}
 		
+		$report = $this->strictFindById(db_ReportManager::getInstance(), RequestUtil::getValue('reportId', 0));
 		$group = $this->strictFindById(db_reg_GroupManager::getInstance(), RequestUtil::getValue('regGroupId', 0));
 
 		$r = reset($group['registrations']);
@@ -76,7 +77,7 @@ class action_admin_registration_Payment extends action_ValidatorAction
 				
 		db_reg_PaymentManager::getInstance()->createPayment($group['id'], $payment);
 		
-		return new fragment_editRegistrations_payment_List($event, $group);
+		return new fragment_editRegistrations_payment_List($event, $report, $group);
 	}
 	
 	protected function getValidationConfig() {

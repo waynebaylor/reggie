@@ -16,7 +16,7 @@ class fragment_editRegistrations_payment_Payments extends template_Template
 	
 	public function html() {
 		$list = new fragment_editRegistrations_payment_List($this->event, $this->report, $this->group);
-		$add = new fragment_editRegistrations_payment_Add($this->event, $this->group);
+		$add = new fragment_editRegistrations_payment_Add($this->event, $this->report, $this->group);
 		
 		return <<<_
 			<div class="divider"></div>

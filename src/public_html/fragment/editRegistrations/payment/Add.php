@@ -3,12 +3,14 @@
 class fragment_editRegistrations_payment_Add extends template_Template
 {
 	private $event;
+	private $report;
 	private $group;
 	
-	function __construct($event, $group) {
+	function __construct($event, $report, $group) {
 		parent::__construct();
 		
 		$this->event = $event;
+		$this->report = $report;
 		$this->group = $group;
 	}
 	
@@ -36,6 +38,10 @@ _;
 					{$this->HTML->hidden(array(
 						'name' => 'regGroupId',
 						'value' => $this->group['id']
+					))}
+					{$this->HTML->hidden(array(
+						'name' => 'reportId',
+						'value' => $this->report['id']
 					))}
 					
 					Amount 
