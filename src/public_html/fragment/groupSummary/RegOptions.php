@@ -47,25 +47,24 @@ _;
 	private function getRegOption($option) {
 		$html = '';
 		
-		$regTypeId = $this->registration['regTypeId'];
-		$selectedOptions = model_Registrant::getRegOptionIds($this->registration);
-		if(in_array($option['id'], $selectedOptions)) {
-			$priceId = model_Registrant::getPriceId($this->registration, $option['id']);
-			$price = db_RegOptionPriceManager::getInstance()->find($priceId);
-			$priceDisplayed = ($option['showPrice'] === 'true')? '$'.number_format($price['price'], 2) : '';
-			$cancelled = model_Registrant::isOptionCancelled($this->registration, $option['id'])? 'Cancelled' : '';
-			
-			$html .= <<<_
-				<tr>
-					<td>{$option['description']}</td>
-					<td>{$priceDisplayed}</td>
-					<td>{$cancelled}</td>
-				</tr>
+		foreach($this->registration['regOptions'] as $regOption) {
+			if($option['id'] == $regOption['regOptionId']) {
+				$price = db_RegOptionPriceManager::getInstance()->find($regOption['priceId']);
+				$priceDisplayed = ($option['showPrice'] === 'true')? '$'.number_format($price['price'], 2) : '';
+				$cancelled = empty($regOption['dateCancelled'])? '' : 'Cancelled';
+				
+				$html .= <<<_
+					<tr>
+						<td>{$option['description']}</td>
+						<td>{$priceDisplayed}</td>
+						<td>{$cancelled}</td>
+					</tr>
 _;
-
-			foreach($option['groups'] as $group) {
-				$html .= $this->getRegOptionGroup($group);
 			}
+		}
+
+		foreach($option['groups'] as $group) {
+			$html .= $this->getRegOptionGroup($group);
 		}
 		
 		return $html;
