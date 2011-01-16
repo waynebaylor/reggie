@@ -46,6 +46,7 @@ class db_ContactFieldManager extends db_OrderableManager
 		$sql = '
 			SELECT
 				ContactField.id,
+				ContactField.eventId,
 				ContactField.sectionId,
 				ContactField.code,
 				ContactField.displayName,
@@ -76,6 +77,7 @@ class db_ContactFieldManager extends db_OrderableManager
 		$sql = '
 			SELECT
 				ContactField.id,
+				ContactField.eventId,
 				ContactField.sectionId,
 				ContactField.code,
 				ContactField.displayName,
@@ -104,6 +106,7 @@ class db_ContactFieldManager extends db_OrderableManager
 		$sql = '
 			INSERT INTO
 				ContactField(
+					eventId,
 					sectionId,
 					code,
 					displayName,
@@ -111,6 +114,7 @@ class db_ContactFieldManager extends db_OrderableManager
 					formInputId	
 				)
 			VALUES(
+				:eventId,
 				:sectionId,
 				:code,
 				:displayName,
@@ -120,6 +124,7 @@ class db_ContactFieldManager extends db_OrderableManager
 		';
 		
 		$params = array(
+			'eventId' => $properties['eventId'],
 			'sectionId' => $properties['sectionId'],
 			'code' => $properties['code'],
 			'displayName' => $properties['displayName'],

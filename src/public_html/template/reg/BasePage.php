@@ -97,9 +97,10 @@ _;
 		
 		if($this->showMenu) {
 			$menu = new fragment_reg_Menu($this->event, $this->id);
+			$menu = "<td>{$menu->html()}</td>";
 		}
 		else {
-			$menu = new fragment_Empty();
+			$menu = '';
 		}
 		
 		$errorMessages = new fragment_validation_ValidationErrors($this->errors);
@@ -126,9 +127,8 @@ _;
 					
 					<table><tr><td class="reg-form">
 						<table class="reg-content"><tr>
-							<td>
-								{$menu->html()}
-							</td>
+							{$menu}
+							
 							<td class="reg-form-content">
 								<div class="reg-form-title">{$this->title}</div>
 								

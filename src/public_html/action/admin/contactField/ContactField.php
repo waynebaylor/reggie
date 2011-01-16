@@ -8,7 +8,7 @@ class action_admin_contactField_ContactField extends action_ValidatorAction
 
 	public function view() {
 		$field = $this->strictFindById(db_ContactFieldManager::getInstance(), $_REQUEST['id']);
-		$event = $this->strictFindById(db_EventManager::getInstance(), $_REQUEST['eventId']);
+		$event = $this->strictFindById(db_EventManager::getInstance(), $field['eventId']);
 		
 		return new template_admin_EditContactField($event, $field);
 	}
@@ -24,9 +24,12 @@ class action_admin_contactField_ContactField extends action_ValidatorAction
 
 		$field = array();
 		ObjectUtils::populate($field, $_REQUEST); 
+		$field['eventId'] = $section['eventId'];
+		
 		db_ContactFieldManager::getInstance()->createContactField($field);
+		
 
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
+		$event = db_EventManager::getInstance()->find($section['eventId']);
 		$section = db_PageSectionManager::getInstance()->find($section['id']);
 		
 		return new fragment_contactField_List($event, $section);
@@ -39,7 +42,7 @@ class action_admin_contactField_ContactField extends action_ValidatorAction
 		
 		db_ContactFieldManager::getInstance()->delete($field);
 		
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
+		$event = db_EventManager::getInstance()->find($field['eventId']);
 		$section = db_PageSectionManager::getInstance()->find($sectionId);
 		
 		return new fragment_contactField_List($event, $section);
@@ -50,7 +53,7 @@ class action_admin_contactField_ContactField extends action_ValidatorAction
 		
 		db_ContactFieldManager::getInstance()->moveFieldUp($field);
 		
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
+		$event = db_EventManager::getInstance()->find($field['eventId']);
 		$section = db_PageSectionManager::getInstance()->find($field['sectionId']);
 		
 		return new fragment_contactField_List($event, $section);
@@ -61,7 +64,7 @@ class action_admin_contactField_ContactField extends action_ValidatorAction
 		
 		db_ContactFieldManager::getInstance()->moveFieldDown($field);
 		
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
+		$event = db_EventManager::getInstance()->find($field['eventId']);
 		$section = db_PageSectionManager::getInstance()->find($field['sectionId']);
 		
 		return new fragment_contactField_List($event, $section);

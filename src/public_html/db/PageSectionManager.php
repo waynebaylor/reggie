@@ -100,7 +100,7 @@ class db_PageSectionManager extends db_OrderableManager
 		return $this->query($sql, $params, 'Find page sections.');
 	}	
 	
-	public function createSection($page, $name, $contentTypeId) {
+	public function createSection($eventId, $page, $name, $contentTypeId) {
 		$sql = '
 			INSERT INTO
 				Section(

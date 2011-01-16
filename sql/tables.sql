@@ -403,12 +403,23 @@ unique
 create table if not exists `ContactField` (
 	`id` 		integer 	not null auto_increment,
 	`code` 		varchar(255) 	not null,
+	`eventId`	integer		not null,
 	`sectionId` 	integer 	not null,
 	`formInputId` 	integer 	not null,
 	`displayName` 	varchar(255) 	not null,
 	`displayOrder` 	integer 	not null,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
+
+alter table
+	ContactField
+add constraint
+	contactField_eventId_fk
+foreign key
+	(eventId)
+references
+	Event(id)
+on delete cascade;
 
 alter table
 	ContactField
@@ -881,7 +892,7 @@ create table if not exists `Appearance` (
 	`pageBackgroundColor`		varchar(6)	not null,
 	`menuTitleBackgroundColor`	varchar(6)	not null,
 	`menuBackgroundColor`		varchar(6)	not null,
-	`menuHilightColor`		varchar(6)	not null,
+	`menuHighlightColor`		varchar(6)	not null,
 	`formBackgroundColor`		varchar(6)	not null,
 	`footerBackgroundColor`		varchar(6)	not null,
 	`buttonTextColor`		varchar(6)	not null,
