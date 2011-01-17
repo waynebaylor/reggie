@@ -34,6 +34,16 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		return new fragment_Success();
 	}
 	
+	public function cancelRegistration() {
+		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), RequestUtil::getValue('registrationId', 0));
+		$reportId = RequestUtil::getValue('reportId', 0);
+		
+		db_reg_RegistrationManager::getInstance()->cancelRegistration($registration);
+		
+		return new template_Redirect("/admin/registration/Registration?groupId={$registration['regGroupId']}&reportId={$reportId}");
+	}
+	
+	
 	private function saveInformationFields($registrationId, $sectionId) {
 		// remove all values in given section. this is necessary because
 		// checkboxes/radio buttons may not return a value if not selected.

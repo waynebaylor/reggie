@@ -61,22 +61,46 @@ _;
 			$regFragment = new fragment_editRegistrations_Registration($this->event, $this->report, $this->group, $r);
 			$options = new fragment_editRegistrations_RegOptions($this->event, $this->report, $r);
 			
+			if(empty($r['dateCancelled'])) {
+				$cancelLink = $this->HTML->link(array(
+					'label' => 'Cancel',
+					'class'	=> 'cancel-registrant',
+					'href'	=> '/admin/registration/Registration',
+					'parameters' => array(
+						'a' => 'cancelRegistration',
+						'registrationId' => $r['id'],
+						'reportId' => $this->report['id']
+						
+					)
+				));
+				$cancelLink = "({$cancelLink})";
+				
+				$cancelCss = '';
+			}
+			else {
+				$cancelLink = '( Cancelled '.substr($r['dateCancelled'], 0, 10).' )';
+					
+				$cancelCss = 'cancelled';
+			}	
+					
 			$html .= <<<_
-				<div class="registrant-heading">
-					Registrant {$num}
-				</div>	
-
-				<div class="fragment-edit">
-					<h3>General Registrant Information</h3>
+				<div class="registrant {$cancelCss}">
+					<div class="registrant-heading">
+						Registrant {$num} {$cancelLink}
+					</div>	
+	
+					<div class="fragment-edit">
+						<h3>General Registrant Information</h3>
+						
+						{$comments->html()}
+					</div>
 					
-					{$comments->html()}
+					<div class="sub-divider"></div>
+						
+					{$regFragment->html()}
+					
+					{$options->html()}
 				</div>
-				
-				<div class="sub-divider"></div>
-					
-				{$regFragment->html()}
-				
-				{$options->html()}
 _;
 		}
 		

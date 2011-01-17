@@ -234,6 +234,36 @@ class db_reg_RegistrationManager extends db_Manager
 		
 		$this->execute($sql, $params, 'Save registration.');
 	}
+	
+	public function cancelRegistration($registration) {
+		// 1. mark reg as cancelled
+		$sql = '
+			UPDATE
+				Registration
+			SET
+				dateCancelled = :dateCancelled
+			WHERE
+				id = :id
+				
+		';
+		
+		$params = array(
+			'id' => $registration['id'],
+			'dateCancelled' => date(db_Manager::$DATE_FORMAT)
+		);
+		
+		$this->execute($sql, $params, 'Cancel registration.');
+		
+		// 2. mark all reg options as cancelled
+		foreach($registration['regOptions'] as $opt) {
+			db_reg_RegOptionManager::getInstance()->cancel($opt['id']);	
+		}
+		
+		// 3. remove var quantity amounts
+		foreach($registration['variableQuantity'] as $varQuantity) {
+			db_reg_VariableQuantityManager::getInstance()->delete($varQuantity['registrationId'], $varQuantity['variableQuantityId']);
+		}
+	}
 }
 
 ?>
