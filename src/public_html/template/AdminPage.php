@@ -96,7 +96,10 @@ _;
 					{$logoutLink}
 				</td>
 				</tr></table>
+				
 				{$this->getContent()}
+				
+				<div class="divider"></div>
 			</div>
 _;
 	}
