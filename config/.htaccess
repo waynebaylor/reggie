@@ -8,7 +8,7 @@ RewriteEngine on
 # run everything through Controller.php
 #
 
-RewriteRule ^/?$ http://%{SERVER_NAME}%{REQUEST_URI}admin [R,L]
+RewriteRule ^/?$ http://%{SERVER_NAME}%{REQUEST_URI}admin/Login [R,L]
 
 RewriteCond $1 !^\/?(favicon\.ico|js|css|images|pdf|files)
 RewriteRule ^(.*)$ index.php [L]
