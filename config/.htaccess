@@ -21,7 +21,7 @@ RewriteRule ^(.*)$ index.php [L]
 # redirect to same URL but with https.
 #RewriteCond $1 !^\/?(favicon\.ico|js|css|images|pdf|files)
 #RewriteCond %{HTTPS} !=on
-#RewriteRule .* https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
+#RewriteRule ^(.*)$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
 
 # if it's an SSL request, then rewrite to index.php.
 #RewriteCond %{HTTPS} =on
