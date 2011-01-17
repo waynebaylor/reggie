@@ -8,10 +8,25 @@ RewriteEngine on
 # run everything through Controller.php
 #
 
-RewriteRule ^/?$ index.php
+RewriteRule ^/?$ http://%{SERVER_NAME}%{REQUEST_URI}admin [R,L]
 
 RewriteCond $1 !^\/?(favicon\.ico|js|css|images|pdf|files)
 RewriteRule ^(.*)$ index.php [L]
+
+########################################
+# force SSL--still needs testing
+########################################
+
+# if it's a non-SSL request AND not one of the following resources, then
+# redirect to same URL but with https.
+#RewriteCond $1 !^\/?(favicon\.ico|js|css|images|pdf|files)
+#RewriteCond %{HTTPS} !=on
+#RewriteRule .* https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
+
+# if it's an SSL request, then rewrite to index.php.
+#RewriteCond %{HTTPS} =on
+#RewriteRule .* index.php [L]
+########################################
 
 #
 # php settings must be set by adhost in their environment. the following
