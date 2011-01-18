@@ -73,7 +73,6 @@ _;
 						
 					)
 				));
-				$cancelLink = "({$cancelLink})";
 				
 				$cancelCss = '';
 			}
@@ -82,11 +81,16 @@ _;
 					
 				$cancelCss = 'cancelled';
 			}	
+			
+			$sendEmailLink = $this->HTML->link(array(
+				'label' => 'Send Confirmation',
+				'href' => ''
+			));
 					
 			$html .= <<<_
 				<div class="registrant {$cancelCss}">
 					<div class="registrant-heading">
-						Registrant {$num} {$cancelLink}
+						Registrant {$num} ({$cancelLink} {$sendEmailLink})
 					</div>	
 	
 					<div class="fragment-edit">

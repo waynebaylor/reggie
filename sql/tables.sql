@@ -1049,7 +1049,7 @@ create table if not exists `Registration_RegOption` (
 	`id`			integer		not null auto_increment,
 	`registrationId`	integer		not null,
 	`regOptionId`		integer		not null,
-	`priceId`		integer,
+	`priceId`		integer		not null,
 	`dateCancelled`		datetime,
 	`dateAdded`		datetime,
 	primary key(`id`)

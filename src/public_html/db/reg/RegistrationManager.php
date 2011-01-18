@@ -264,6 +264,13 @@ class db_reg_RegistrationManager extends db_Manager
 			db_reg_VariableQuantityManager::getInstance()->delete($varQuantity['registrationId'], $varQuantity['variableQuantityId']);
 		}
 	}
+	
+	public function changeRegType($registration, $newRegTypeId) {
+		// 1. set new reg type.
+		// 2. remove irrelevant information fields.
+		// 3. cancel all reg options.
+		// 4. remove all variable quantity options.
+	}
 }
 
 ?>

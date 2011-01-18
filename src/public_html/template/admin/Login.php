@@ -46,14 +46,15 @@ _;
 				<td>
 					{$this->HTML->text(array(
 						'name' => 'email',
-						'value' => ''
+						'value' => '',
+						'size' => 30
 					))}
 				</td>
 			</tr>
 			<tr>
 				<td class="required label">Password</td>
 				<td>
-					<input type="password" name="password" value=""/>
+					<input type="password" name="password" value="" size="30"/>
 				</td>
 			</tr>
 _;

@@ -34,17 +34,20 @@ class fragment_editRegistrations_RegOptions extends template_Template
 				
 				<div class="divider"></div>
 				
-				<div class="fragment-edit">
-					{$this->getVariableOptions()}
-				</div>
+				{$this->getVariableOptions()}
 			</div>
 _;
 	}
 	
 	private function getVariableOptions() {
-		$html = '';
-
+		// don't show an empty form if there are no var options.
 		$varOpts = model_Event::getVariableQuantityOptions($this->event);
+		if(empty($varOpts)) {
+			return '';	
+		}
+		
+		$html = '';
+		
 		foreach($varOpts as $option) {
 			$html .= $this->getVarQuantityRow($option, $this->registration);
 		}
@@ -71,7 +74,11 @@ _;
 			</tr>"
 		);
 		
-		return $form->html();
+		return <<<_
+			<div class="fragment-edit">
+				{$form->html()}
+			</div>
+_;
 	}
 	
 	private function getVarQuantityRow($option, $registration) {

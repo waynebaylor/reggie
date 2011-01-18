@@ -43,6 +43,15 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		return new template_Redirect("/admin/registration/Registration?groupId={$registration['regGroupId']}&reportId={$reportId}");
 	}
 	
+	public function changeRegType() {
+		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), RequestUtil::getValue('registrationId', 0));
+		$reportId = RequestUtil::getValue('reportId', 0);
+		$regTypeId = RequestUtil::getValue('regTypeId', 0);
+		
+		db_reg_RegistrationManager::getInstance()->changeRegType($registration, $regTypeId);
+		
+		return new template_Redirect("/admin/registration/Registration?groupId={$registration['regGroupId']}&reportId={$reportId}");
+	}
 	
 	private function saveInformationFields($registrationId, $sectionId) {
 		// remove all values in given section. this is necessary because

@@ -57,7 +57,9 @@ _;
 			}
 		}
 		
-		return $html;
+		return <<<_
+			{$html} ( <span class="change-reg-type-link link">Change</span> )
+_;
 	}
 }
 

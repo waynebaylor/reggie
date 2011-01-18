@@ -2,8 +2,14 @@
 
 class Config
 {
+	// uses test authorize.net url
 	public static $MODE_DEVELOPMENT = 'development';
+
+	// logs sql.
 	public static $MODE_SHOW_SQL = 'show-sql';
+
+	// use https instead of http where applicable. for full SSL enforcement the .htaccess file must be configured too.
+	public static $MODE_SSL = 'ssl'; 
 	
 	public static $SETTINGS = array(
 		
