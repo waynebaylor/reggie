@@ -112,4 +112,8 @@ dojo.require("hhreg.validation");
 		});
 	};
 	
+	xhrTableForm.hideIcons = function(node) {
+		hideIcons(node);
+	};
+	
 })();

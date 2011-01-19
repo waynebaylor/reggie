@@ -45,12 +45,21 @@ class action_admin_registration_Registration extends action_ValidatorAction
 	
 	public function changeRegType() {
 		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), RequestUtil::getValue('registrationId', 0));
-		$reportId = RequestUtil::getValue('reportId', 0);
 		$regTypeId = RequestUtil::getValue('regTypeId', 0);
 		
-		db_reg_RegistrationManager::getInstance()->changeRegType($registration, $regTypeId);
+		// only change if a different reg type is selected.
+		if($registration['regTypeId'] != $regTypeId) {
+			db_reg_RegistrationManager::getInstance()->changeRegType($registration, $regTypeId);
+		}
 		
-		return new template_Redirect("/admin/registration/Registration?groupId={$registration['regGroupId']}&reportId={$reportId}");
+		return new fragment_Success();
+	}
+
+	public function sendConfirmation() {
+		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), RequestUtil::getValue('registrationId', 0));	
+		$event = $this->strictFindById(db_EventManager::getInstance(), $registration['eventId']);
+		
+		// TODO need to generate email confirmation from database values. currently email confirmation is sent from session values.
 	}
 	
 	private function saveInformationFields($registrationId, $sectionId) {

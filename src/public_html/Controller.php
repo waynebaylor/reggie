@@ -33,7 +33,7 @@ class Controller
 		catch(Exception $ex) {
 			db_EventManager::getInstance()->rollbackTransaction();			
 			
-			Logger::log($ex, 'Error executing action.');
+			Logger::log($ex, 'Error executing action: '.$this->getAction());
 			
 			$page = new template_ErrorPage();
 			echo $page->html();

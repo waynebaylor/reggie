@@ -21,7 +21,7 @@ class fragment_editRegistrations_Registration extends template_Template
 		
 		$pages = model_EventPage::getVisiblePages($this->event, array('id' => $this->registration['categoryId']));
 		foreach($pages as $page) {
-			$fragment = new fragment_editRegistrations_Page($page, $this->report, $this->group, $this->registration);
+			$fragment = new fragment_editRegistrations_Page($this->event, $page, $this->report, $this->group, $this->registration);
 			
 			$html .= $fragment->html();
 		}

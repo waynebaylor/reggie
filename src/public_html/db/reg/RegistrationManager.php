@@ -244,6 +244,8 @@ class db_reg_RegistrationManager extends db_Manager
 				dateCancelled = :dateCancelled
 			WHERE
 				id = :id
+			AND
+				dateCancelled IS NULL
 				
 		';
 		
@@ -267,9 +269,34 @@ class db_reg_RegistrationManager extends db_Manager
 	
 	public function changeRegType($registration, $newRegTypeId) {
 		// 1. set new reg type.
+		$sql = '
+			UPDATE
+				Registration
+			SET
+				regTypeId = :regTypeId
+			WHERE
+				id = :id
+		';
+		
+		$params = array(
+			'id' => $registration['id'],
+			'regTypeId' => $newRegTypeId
+		);
+		
+		$this->execute($sql, $params, 'Change reg type.');
+		
 		// 2. remove irrelevant information fields.
+		db_reg_InformationManager::getInstance()->retainFieldsByRegType($registration['id'], $newRegTypeId);
+		
 		// 3. cancel all reg options.
+		foreach($registration['regOptions'] as $opt) {
+			db_reg_RegOptionManager::getInstance()->cancel($opt['id']);	
+		}
+		
 		// 4. remove all variable quantity options.
+		foreach($registration['variableQuantity'] as $varQuantity) {
+			db_reg_VariableQuantityManager::getInstance()->delete($varQuantity['registrationId'], $varQuantity['variableQuantityId']);
+		}
 	}
 }
 

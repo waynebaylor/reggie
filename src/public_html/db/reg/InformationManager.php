@@ -121,6 +121,33 @@ class db_reg_InformationManager extends db_Manager
 			$this->execute($sql, $params, 'Delete registration information by section.');
 		}
 	}
+	
+	public function retainFieldsByRegType($registrationId, $regTypeId) {
+		$sql = '
+			DELETE FROM
+				Registration_Information
+			WHERE
+				Registration_Information.registrationId = :registrationId
+			AND
+				Registration_Information.contactFieldId NOT IN (
+					SELECT 
+						RegTypeContactField.contactFieldId
+					FROM
+						RegTypeContactField
+					WHERE
+						RegTypeContactField.regTypeId = :regTypeId
+					OR
+						RegTypeContactField.regTypeId IS NULL
+				)
+		';
+		
+		$params = array(
+			'registrationId' => $registrationId,
+			'regTypeId' => $regTypeId
+		);
+		
+		$this->execute($sql, $params, 'Retain information fields by reg type.');
+	}
 }
 
 ?>

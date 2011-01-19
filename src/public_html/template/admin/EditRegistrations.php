@@ -65,6 +65,7 @@ _;
 				$cancelLink = $this->HTML->link(array(
 					'label' => 'Cancel',
 					'class'	=> 'cancel-registrant',
+					'title' => 'Cancel registrant',
 					'href'	=> '/admin/registration/Registration',
 					'parameters' => array(
 						'a' => 'cancelRegistration',
@@ -73,26 +74,36 @@ _;
 						
 					)
 				));
-				
+				$cancelDate = '';
 				$cancelCss = '';
 			}
 			else {
-				$cancelLink = '( Cancelled '.substr($r['dateCancelled'], 0, 10).' )';
-					
+				$cancelLink = '';
+				$cancelDate = '(Cancelled '.substr($r['dateCancelled'], 0, 10).')';
 				$cancelCss = 'cancelled';
 			}	
 			
 			$sendEmailLink = $this->HTML->link(array(
 				'label' => 'Send Confirmation',
-				'href' => ''
+				'title' => 'Send email confirmation',
+				'href' => '/admin/registration/Registration',
+				'parameters' => array(
+					'a' => 'sendConfirmation',
+					'registrationId' => $r['id']
+				)
 			));
 					
 			$html .= <<<_
 				<div class="registrant {$cancelCss}">
 					<div class="registrant-heading">
-						Registrant {$num} ({$cancelLink} {$sendEmailLink})
+						Registrant {$num} {$cancelDate}
 					</div>	
-	
+					<div>
+						{$cancelLink} &nbsp; {$sendEmailLink}
+					</div>
+					
+					<div class="sub-divider"></div>
+					
 					<div class="fragment-edit">
 						<h3>General Registrant Information</h3>
 						

@@ -5,7 +5,7 @@ class action_admin_registration_RegOption extends action_ValidatorAction
 	public function addRegOptions() {
 		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), RequestUtil::getValue('registrationId', 0));
 		
-		$optionIds = RequestUtil::getValueAsArray('regOpts', array()); error_log(print_r($optionIds, true));
+		$optionIds = RequestUtil::getValueAsArray('regOpts', array()); 
 		foreach($optionIds as $optionId) { 
 			$priceId = RequestUtil::getValue('regOptPrice_'.$optionId, 0);
 			db_reg_RegOptionManager::getInstance()->createOption($registration['id'], $optionId, $priceId);

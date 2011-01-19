@@ -2,14 +2,16 @@
 
 class fragment_editRegistrations_Page extends template_Template
 {
+	private $event;
 	private $page;
 	private $report;
 	private $group;
 	private $registration;
 	
-	function __construct($page, $report, $group, $registration) {
+	function __construct($event, $page, $report, $group, $registration) {
 		parent::__construct();
 		
+		$this->event = $event;
 		$this->page = $page;
 		$this->report = $report;
 		$this->group = $group;
@@ -58,7 +60,65 @@ _;
 		}
 		
 		return <<<_
-			{$html} ( <span class="change-reg-type-link link">Change</span> )
+			{$html} ( <span id="change-reg-type-link" class="link">Change</span> )
+			
+			<div id="change-reg-type-content" class="hide">
+				{$this->getChangeRegTypeForm($registration)}
+			</div>
+_;
+	}
+	
+	private function getChangeRegTypeForm($registration) {
+		$items = array();
+		foreach($this->event['regTypes'] as $regType) {
+			if(model_RegType::isVisibleTo($regType, array('id' => $registration['categoryId']))) {
+				$items[] = array(
+					'label' => $regType['description'],
+					'value' => $regType['id']
+				);
+			}
+		}
+		
+		$rows = <<<_
+			<tr>
+				<td colspan="2">
+					<span style="font-weight:bold;">WARNING:</span> Changing the registration type will cancel all registraion options.
+					<div class="sub-divider"></div>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Registration Type</td>
+				<td>
+					{$this->HTML->hidden(array(
+						'id' => 'change-reg-type-redirect',
+						'value' => "/admin/registration/Registration?groupId={$registration['regGroupId']}&reportId={$this->report['id']}"
+					))}
+					
+					{$this->HTML->hidden(array(
+						'name' => 'registrationId',
+						'value' => $registration['id']
+					))}
+					
+					{$this->HTML->select(array(
+						'name' => 'regTypeId',
+						'value' => $registration['regTypeId'],
+						'items' => $items
+					))}
+				</td>
+			</tr>	
+_;
+
+		$form = new fragment_XhrTableForm(
+			'/admin/registration/Registration', 
+			'changeRegType', 
+			$rows,
+			'Continue'
+		);
+		
+		return <<<_
+			<div class="registrant-details-section">
+				{$form->html()}
+			</div>
 _;
 	}
 }

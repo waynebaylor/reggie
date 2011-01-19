@@ -95,6 +95,8 @@ class db_reg_RegOptionManager extends db_Manager
 				dateCancelled = :dateCancelled
 			WHERE
 				id = :id
+			AND
+				dateCancelled IS NULL
 		';
 		
 		$params = array(

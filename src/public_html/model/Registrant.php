@@ -63,6 +63,15 @@ class model_Registrant
 		// if the registrant hasn't selected the given option.
 		return true; 
 	}
+	
+	public static function getEmailField($event, $registrant) {
+		if($event['emailTemplate']['enabled'] === 'true') {
+			$fieldId = $event['emailTemplate']['contactFieldId'];
+			return self::getInformationValue($registrant, array('id' => $fieldId));
+		}
+		
+		return null;
+	}
 }
 
 ?>
