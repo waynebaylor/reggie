@@ -185,7 +185,7 @@ _;
 		$onclick = $disabled? '' : "document.location=hhreg.contextUrl('/event/{$this->event['code']}/{$cat}?a=Previous&pageId={$this->id}');";
 		
 		return <<<_
-			<input type="button" id="prev-button" class="button" style="{$disabledStyle}" 
+			<input type="button" id="prev-button" class="button" style="{$disabledStyle}" value="Previous"
 			       {$disabledAttr} onclick="{$onclick}" />
 _;
 	}
