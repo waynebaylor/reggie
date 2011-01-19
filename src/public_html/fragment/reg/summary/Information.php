@@ -19,7 +19,7 @@ class fragment_reg_summary_Information extends template_Template
 		
 		$eventFields = model_Event::getInformationFields($this->event);
 		foreach($eventFields as $field) {
-			if(model_ContactField::isVisibleTo($field, $regType) && model_ContactField::isRequired($field)) {
+			if(model_ContactField::isVisibleTo($field, $regType)) {
 				$name = model_ContentType::$CONTACT_FIELD.'_'.$field['id'];
 				$value = model_reg_Session::getContactField($name, $this->index);			
 						
@@ -34,7 +34,7 @@ class fragment_reg_summary_Information extends template_Template
 						}
 						$value = $optionNames;	
 					}
-					else {
+					else if(!empty($value)) {
 						$option = db_ContactFieldOptionManager::getInstance()->find($value);
 						$value = $option['displayName'];
 					}
