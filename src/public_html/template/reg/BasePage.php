@@ -175,14 +175,18 @@ _;
 	
 	private function getPreviousButton() {
 		$category = model_reg_Session::getCategory();
+		$cat = model_Category::code($category);
+		
 		$visiblePages = model_EventPage::getVisiblePages($this->event, $category);
 
 		$disabled = empty($visiblePages) || $visiblePages[0]['id'] === $this->id;
 		$disabledAttr = $disabled? 'disabled="disabled"' : '';
-		$disabledClass = $disabled? 'disabled-button' : '';
+		$disabledStyle = $disabled? 'color:lightgray;' : '';
+		$onclick = $disabled? '' : "document.location=hhreg.contextUrl('/event/{$this->event['code']}/{$cat}?a=Previous&pageId={$this->id}');";
 		
 		return <<<_
-			<input type="submit" id="prev-button" class="button {$disabledClass}" name="a" value="Previous" {$disabledAttr}/>
+			<input type="button" id="prev-button" class="button" style="{$disabledStyle}" 
+			       {$disabledAttr} onclick="{$onclick}" />
 _;
 	}
 	
