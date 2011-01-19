@@ -164,12 +164,14 @@ class action_reg_Summary extends action_ValidatorAction
 			// send the email.
 			$fragment = new fragment_reg_summary_SummaryPage($this->event);
 			
+			$text = $emailTemplate['header']."<div>{$fragment->html()}</div>".$emailTemplate['footer'];
+			
 			EmailUtil::send(array(
 				'to' => $toAddress,
 				'from' => $emailTemplate['fromAddress'],
 				'bcc' => $emailTemplate['bcc'],
 				'subject' => $emailTemplate['subject'],
-				'text' => $fragment->html()	
+				'text' => $text
 			));
 		}
 	}
