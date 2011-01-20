@@ -159,10 +159,12 @@ public static function reset($category, $event) {
 			
 		$fields = self::getContactFields($index);
 		
-		return isset($fields[$name])? $fields[$name] : '';
+		$value = isset($fields[$name])? $fields[$name] : '';
+	
+		return $value;
 	}
 	
-	public static function setContactField($name, $value, $index = -1) {
+	public static function setContactField($name, $value, $index = -1) { 
 		if($index < 0) {
 			$index = self::getCurrent();
 		}

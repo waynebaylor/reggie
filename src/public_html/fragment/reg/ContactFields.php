@@ -81,7 +81,9 @@ _;
 	
 	private function getFieldValue($field) {
 		$id = $field['id'];
-		return isset($this->fieldValues[$id])? $this->fieldValues[$id] : '';
+		$value = isset($this->fieldValues[$id])? $this->fieldValues[$id] : '';
+		
+		return $value;
 	}
 }
 

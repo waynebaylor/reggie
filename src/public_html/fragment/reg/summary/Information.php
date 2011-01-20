@@ -39,13 +39,16 @@ class fragment_reg_summary_Information extends template_Template
 						$value = $option['displayName'];
 					}
 				}
-					
-				$html .= <<<_
-				<tr>
-					<td class="label">{$field['displayName']}</td>
-					<td class="details">{$value}</td>
-				</tr>
+
+				// only display required and non-empty fields.
+				if(model_ContactField::isRequired($field) || trim($value) !== '') {
+					$html .= <<<_
+						<tr>
+							<td class="label">{$field['displayName']}</td>
+							<td class="details">{$value}</td>
+						</tr>
 _;
+				}
 			}
 		}
 		

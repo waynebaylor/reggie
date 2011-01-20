@@ -93,7 +93,7 @@ class fragment_reg_ContactField extends template_Template
 	private function getBaseConfig() {
 		$config = array(
 			'name' => model_ContentType::$CONTACT_FIELD.'_'.$this->field['id'],
-			'value' => empty($this->value)? '' : $this->value
+			'value' => isset($this->value)? $this->value : ''
 		);
 
 		return $config;

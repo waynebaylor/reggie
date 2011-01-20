@@ -90,7 +90,7 @@ class validation_reg_PageValidator
 			
 				switch($rule['id']) {
 					case model_Validation::$REQUIRED:
-						if(empty($fieldValue)) {
+						if(!isset($fieldValue) || trim($fieldValue) === '') {
 							if(in_array($field['formInput']['id'], array(model_FormInput::$CHECKBOX, model_FormInput::$RADIO))) {
 								$errors[$fieldName] = 'Please choose an option.';
 							}
