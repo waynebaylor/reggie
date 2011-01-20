@@ -23,11 +23,11 @@ class fragment_reg_ContactFields extends template_Template
 		}
 	}
 	
-	private function orderedFields($regType, $fields) {
+	private function orderedFields($regTypeId, $fields) {
 		$html = '';
 		
 		foreach($fields as $field) {
-			if(model_ContactField::isVisibleTo($field, $regType)) {
+			if(model_ContactField::isVisibleTo($field, array('id' => $regTypeId))) {
 				$value = $this->getFieldValue($field);
 				$f = new fragment_reg_ContactField($field, $value);
 				
@@ -51,11 +51,11 @@ _;
 _;
 	}
 	
-	private function unorderedFields($regType, $fields) {
+	private function unorderedFields($regTypeId, $fields) {
 		$html = '';
 
-		foreach($fields as $field) {
-			if(model_ContactField::isVisibleTo($field, $regType)) {
+		foreach($fields as $field) {	
+			if(model_ContactField::isVisibleTo($field, array('id' => $regTypeId))) {
 				$value = $this->getFieldValue($field);
 				$f = new fragment_reg_ContactField($field, $value);
 				

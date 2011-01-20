@@ -2,12 +2,12 @@
 
 class model_ContactField
 {
-	public static function isVisibleTo($field, $regType) {
+	public static function isVisibleTo($field, $regType) {	
 		if($field['visibleToAll']) {
 			return true;
 		}
-		
-		foreach($field['visibleTo'] as $fieldType) {
+
+		foreach($field['visibleTo'] as $fieldType) { 
 			if(intval($fieldType['id'], 10) === intval($regType['id'], 10)) {
 				return true;
 			}

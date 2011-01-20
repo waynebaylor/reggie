@@ -15,11 +15,11 @@ class fragment_reg_summary_Information extends template_Template
 	public function html() {
 		$html = '';
 		
-		$regType = model_reg_Session::getRegType($this->index);
+		$regTypeId = model_reg_Session::getRegType($this->index);
 		
 		$eventFields = model_Event::getInformationFields($this->event);
 		foreach($eventFields as $field) {
-			if(model_ContactField::isVisibleTo($field, $regType)) {
+			if(model_ContactField::isVisibleTo($field, array('id' => $regTypeId))) {
 				$name = model_ContentType::$CONTACT_FIELD.'_'.$field['id'];
 				$value = model_reg_Session::getContactField($name, $this->index);			
 						
