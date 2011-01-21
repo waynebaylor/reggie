@@ -14,6 +14,7 @@ abstract class template_Page extends template_Template
 		return <<<_
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
+
 <head>
 	<style type="text/css">
 		noscript p {
@@ -26,6 +27,7 @@ abstract class template_Page extends template_Template
 	
 	{$this->head()}
 </head>
+
 <body class="claro">
 	{$this->HTML->hidden(array(
 		'id' => 'reggie.contextPath',
@@ -40,13 +42,14 @@ abstract class template_Page extends template_Template
 	</noscript>
 	
 	<div id="script-enabled-content" style="display:none;">
-		<script type="text/javascript">
-			document.getElementById("script-enabled-content").style.display = "";
-		</script>
-		
 		{$this->body()}
 	</div>
+	
+	<script type="text/javascript">
+		document.getElementById("script-enabled-content").style.display = "";
+	</script>
 </body>
+
 </html>
 _;
 	}
