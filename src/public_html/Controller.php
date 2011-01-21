@@ -42,16 +42,20 @@ class Controller
 	}
 
 	private function invokeAction() {
-		session_start();
-		
 		$_REQUEST['action'] = $this->getAction();
 		
 		// requests starting with '/event' are handled 
 		// by the registration dispatcher.
 		if($this->isRegRequest()) {
+			session_name('reggieReg');
+			session_start();
+			
 			$this->invokeRegistration();
 		}
 		else if($this->isAdminRequest()) {
+			session_name('reggieAdmin');
+			session_start();
+			
 			$this->invokeAdmin();
 		}
 		else {
