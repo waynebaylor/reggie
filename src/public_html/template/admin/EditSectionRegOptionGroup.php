@@ -17,12 +17,12 @@ class template_admin_EditSectionRegOptionGroup extends template_AdminPage
 			'location' => 'OptionGroup',
 			'id' => $this->group['id'],
 			'eventId' => $this->event['id'],
-			'isSectionGroup' => model_Group::isSectionGroup($this->group)
+			'isSectionGroup' => model_RegOptionGroup::isSectionGroup($this->group)
 		));
 	}
 	
 	protected function getContent() {
-		$action = model_Group::isSectionGroup($this->group)? 
+		$action = model_RegOptionGroup::isSectionGroup($this->group)? 
 			'/admin/regOption/SectionRegOptionGroup' : 
 			'/admin/regOption/RegOptionGroup';
 		

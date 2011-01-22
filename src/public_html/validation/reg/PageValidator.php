@@ -120,32 +120,36 @@ class validation_reg_PageValidator
 	private function validateRegOptionGroup($group) {
 		$errors = array();
 		
-		$name = model_ContentType::$REG_OPTION.'_'.$group['id'];
+		$regTypeId = model_reg_Session::getRegType();
 		
-		if($group['required'] === 'true') {
-			// there may be multiple values if this is a checkbox, but we only 
-			// want to know if there is at least one value.
-			$value = RequestUtil::getValue($name, NULL);
-			if(empty($value)) {
-				$inputName = ($group['multiple'] === 'true')? $name.'[]' : $name;
-				$errors[$inputName] = 'Please choose an option.';
+		if(model_RegOptionGroup::hasOptionsVisible($group, $regTypeId)) {
+			$name = model_ContentType::$REG_OPTION.'_'.$group['id'];
+			
+			if($group['required'] === 'true') {
+				// there may be multiple values if this is a checkbox, but we only 
+				// want to know if there is at least one value.
+				$value = RequestUtil::getValue($name, NULL);
+				if(empty($value)) {
+					$inputName = ($group['multiple'] === 'true')? $name.'[]' : $name;
+					$errors[$inputName] = 'Please choose an option.';
+				}
 			}
-		}
-		
-		if($group['multiple'] === 'true') {
-			$values = RequestUtil::getValueAsArray($name, array());
-			$min = intval($group['minimum'], 10);
-			$max = intval($group['maximum'], 10);
-
-			// only apply if min/max are greater than 0.
-			if($min > 0 && $min === $max && count($values) !== $min) {
-				$errors[$name.'[]'] = "Please choose {$min} option(s).";
-			}
-			else if($min > 0 && count($values) < $min) {
-				$errors[$name.'[]'] = "Please choose at least {$min} option(s).";
-			}
-			else if($max > 0 && $max < count($values)) {
-				$errors[$name.'[]'] = "You may choose up to {$max} option(s).";
+			
+			if($group['multiple'] === 'true') {
+				$values = RequestUtil::getValueAsArray($name, array());
+				$min = intval($group['minimum'], 10);
+				$max = intval($group['maximum'], 10);
+	
+				// only apply if min/max are greater than 0.
+				if($min > 0 && $min === $max && count($values) !== $min) {
+					$errors[$name.'[]'] = "Please choose {$min} option(s).";
+				}
+				else if($min > 0 && count($values) < $min) {
+					$errors[$name.'[]'] = "Please choose at least {$min} option(s).";
+				}
+				else if($max > 0 && $max < count($values)) {
+					$errors[$name.'[]'] = "You may choose up to {$max} option(s).";
+				}
 			}
 		}
 		

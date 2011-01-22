@@ -269,12 +269,12 @@ _;
 			$group = $this->optionGroupManager->find($option['parentGroupId']);
 		}
 		
-		$action = model_Group::isSectionGroup($group)? 
+		$action = model_RegOptionGroup::isSectionGroup($group)? 
 			'/admin/regOption/SectionRegOptionGroup' : 
 			'/admin/regOption/RegOptionGroup';
 	
 		return <<<_
-			{$this->optionGroup($option['parentGroupId'], model_Group::isSectionGroup($group))}
+			{$this->optionGroup($option['parentGroupId'], model_RegOptionGroup::isSectionGroup($group))}
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
 				'label' => 'Option Group',
