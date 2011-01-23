@@ -39,9 +39,37 @@ class fragment_reg_summary_Registrant extends template_Template
 		// don't display a number if there is only one registrant.
 		$num = count(model_reg_Session::getRegistrations()) > 1? $index + 1 : '';
 		
+		$category = model_reg_Session::getCategory();
+		$cat = model_Category::code($category);
+		$pageId = model_reg_RegistrationPage::$SUMMARY_PAGE_ID;
+		
+		$edit = $this->HTML->link(array(
+			'label' => 'Edit',
+			'href' => "/event/{$this->event['code']}/{$cat}/{$pageId}",
+			'parameters' => array(
+				'a' => fragment_reg_summary_SummaryPage::$EDIT_ACTION,
+				'registration' => $index
+			)
+		));
+		
+		if(count(model_reg_Session::getRegistrations()) > 1) {
+			$remove = $this->HTML->link(array(
+				'label' => 'Remove',
+				'class' => 'remove',
+				'href' => "/event/{$this->event['code']}/{$cat}/{$pageId}",
+				'parameters' => array(
+					'a' => fragment_reg_summary_SummaryPage::$REMOVE_ACTION,
+					'registration' => $index
+				)
+			));
+		}
+		else {
+			$remove = '';
+		}
+		
 		return <<<_
 			<div class="registrant-heading">
-				Registrant {$num}
+				Registrant {$num} ({$edit} {$remove})
 			</div>
 			
 			<table class="summary">

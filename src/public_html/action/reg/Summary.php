@@ -68,6 +68,31 @@ class action_reg_Summary extends action_ValidatorAction
 		}
 	}
 	
+	public function remove() {
+		$index = RequestUtil::getValue('registration', -1);
+		
+		// don't let user remove ALL registrations.
+		if($index >= 0 && count(model_reg_Session::getRegistrations()) > 1) {
+			model_reg_Session::removeRegistration($index);
+			model_reg_Session::setCurrent(0);
+		}
+
+		return $this->view();
+	}
+	
+	public function edit() {
+		$index = RequestUtil::getValue('registration', -1);
+
+		if($index >= 0 && $index < count(model_reg_Session::getRegistrations())) {
+			model_reg_Session::setCurrent($index);
+		}
+		
+		$category = model_reg_Session::getCategory();
+		$cat = model_Category::code($category);
+		
+		return new template_Redirect("/event/{$this->event['code']}/{$cat}");
+	}
+	
 	public function validate($fieldNames = array()) {
 		$errors = parent::validate($fieldNames);
 		

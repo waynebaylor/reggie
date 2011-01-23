@@ -2,6 +2,9 @@
 
 class fragment_reg_summary_SummaryPage extends template_Template
 {
+	public static $REMOVE_ACTION = 'remove';
+	public static $EDIT_ACTION = 'edit';
+	
 	private $event;
 	
 	function __construct($event) {

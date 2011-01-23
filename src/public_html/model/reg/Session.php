@@ -258,6 +258,8 @@ public static function reset($category, $event) {
 	
 	public static function removeRegistration($index) {
 		unset($_SESSION['reg']['registrations'][$index]);
+		// re-key the array.
+		$_SESSION['reg']['registrations'] = array_values($_SESSION['reg']['registrations']);
 	}
 }
 
