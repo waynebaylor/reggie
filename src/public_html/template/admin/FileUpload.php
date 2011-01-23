@@ -77,8 +77,9 @@ _;
 			$evenRow = !$evenRow;
 			$rowClass = $evenRow? 'even' : 'odd';
 			
-			$protocol = in_array(Config::$MODE_SSL, Config::$SETTINGS['MODE'])? 'https//' : 'http//';
-			$link = $protocol.$_SERVER['SERVER_NAME'].$this->contextUrl('/files/'.$this->event['code'].'/'.$file);
+			$protocol = in_array(Config::$MODE_SSL, Config::$SETTINGS['MODE'])? 'https://' : 'http://';
+			$url = $this->contextUrl('/files/'.$this->event['code'].'/'.$file);
+			$link = $protocol.$_SERVER['SERVER_NAME'].$url;
 			
 			$html .= <<<_
 				<tr class="{$rowClass}">
@@ -88,7 +89,7 @@ _;
 					<td>
 						{$this->HTML->link(array(
 							'label' => $link,
-							'href' => $link,
+							'href' => $url,
 							'target' => '_blank',
 						))}
 					</td>
