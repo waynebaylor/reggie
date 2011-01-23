@@ -32,17 +32,15 @@ _;
 		
 		return <<<_
 			<tr>
-				<td class="label">Description</td>
+				<td class="label">Name</td>
 				<td>
 					{$this->HTML->hidden(array(
 						'name' => 'id',
 						'value' => $this->group['id']
 					))}
-					{$this->HTML->textarea(array(
+					{$this->HTML->text(array(
 						'name' => 'description',
-						'value' => $this->escapeHtml($this->group['description']),
-						'rows' => 10,
-						'cols' => 75 
+						'value' => $this->escapeHtml($this->group['description'])
 					))}
 				</td>
 			</tr>

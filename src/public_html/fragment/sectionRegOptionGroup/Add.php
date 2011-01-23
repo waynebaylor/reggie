@@ -29,7 +29,7 @@ _;
 	private function getFormRows() {
 		return <<<_
 			<tr>
-				<td class="label">Description</td>
+				<td class="label">Name</td>
 				<td>
 					<input type="hidden" name="eventId" value="{$this->event['id']}"/>
 					<input type="hidden" name="sectionId" value="{$this->section['id']}"/>
