@@ -89,7 +89,8 @@ _;
 				'href' => '/admin/registration/Registration',
 				'parameters' => array(
 					'a' => 'sendConfirmation',
-					'registrationId' => $r['id']
+					'registrationId' => $r['id'],
+					'reportId' => $this->report['id']
 				)
 			));
 					
