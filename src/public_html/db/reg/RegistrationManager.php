@@ -102,22 +102,18 @@ class db_reg_RegistrationManager extends db_Manager
 	}
 	
 	public function createRegistrations($regs, $payment) {
-		$ids = array();
-		
-		if(!empty($regs)) {
-			$regGroupId = db_reg_GroupManager::getInstance()->createGroup();
-				
-			// may not have a payment if zero due or event doesn't have any payment types enabled.
-			if(!empty($payment)) {
-				db_reg_PaymentManager::getInstance()->createPayment($regGroupId, $payment);
-			}
+		$regGroupId = db_reg_GroupManager::getInstance()->createGroup();
+			
+		// may not have a payment if zero due or event doesn't have any payment types enabled.
+		if(!empty($payment)) {
+			db_reg_PaymentManager::getInstance()->createPayment($regGroupId, $payment);
+		}
 
-			foreach($regs as $r) {
-				$ids[] = $this->createRegistration($regGroupId, $r);
-			}
+		foreach($regs as $r) {
+			 $this->createRegistration($regGroupId, $r);
 		}
 		
-		return $ids;
+		return $regGroupId;
 	}
 	
 	public function findEventCount($event) {

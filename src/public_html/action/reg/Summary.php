@@ -49,9 +49,9 @@ class action_reg_Summary extends action_ValidatorAction
 		
 		model_reg_Session::addCompletedPage(model_reg_RegistrationPage::$SUMMARY_PAGE_ID);
 		
-		$this->completeRegistration($this->payment);
+		$regGroup = $this->completeRegistration($this->payment);
 		
-		$a = new action_reg_Confirmation($this->event);
+		$a = new action_reg_Confirmation($this->event, $regGroup);
 		return $a->view();
 	}
 
@@ -96,16 +96,14 @@ class action_reg_Summary extends action_ValidatorAction
 	private function completeRegistration($payment) {
 		$registrations = model_reg_Registration::getConvertedRegistrationsFromSession();
 		
-		$newRegIds = db_reg_RegistrationManager::getInstance()->createRegistrations($registrations, $payment);
-
-		if($this->event['emailTemplate']['enabled'] === 'true') {
-			$completedRegs = array();
-			foreach($newRegIds as $id) {
-				$completedRegs[] = db_reg_RegistrationManager::getInstance()->find($id);
-			}
+		$regGroupId = db_reg_RegistrationManager::getInstance()->createRegistrations($registrations, $payment);
+		$regGroup = db_reg_GroupManager::getInstance()->find($regGroupId);
 		
-			$this->sendConfirmationEmail($completedRegs);
+		if($this->event['emailTemplate']['enabled'] === 'true') {
+			$this->sendConfirmationEmail($regGroup);
 		}
+		
+		return $regGroup;
 	}
 	
 	private function performPayment() {
@@ -149,23 +147,16 @@ class action_reg_Summary extends action_ValidatorAction
 		);
 	}
 	
-	private function sendConfirmationEmail($registrations) {
+	private function sendConfirmationEmail($regGroup) {
 		$emailTemplate = $this->event['emailTemplate'];
 		
-		foreach($registrations as $reg) {
-			// get the registrant's email address.
-			$toAddress = '';
-			foreach($reg['information'] as $info) {
-				if($info['contactFieldId'] == $emailTemplate['contactFieldId']) {
-					$toAddress = $info['value'];
-				}	
-			}
+		$fragment = new fragment_registration_summary_Summary($this->event, $regGroup);
 
-			// send the email.
-			$fragment = new fragment_reg_summary_SummaryPage($this->event);
-			
-			$text = $emailTemplate['header']."<div>{$fragment->html()}</div>".$emailTemplate['footer'];
-			
+		$text = $emailTemplate['header']."<div>{$fragment->html()}</div>".$emailTemplate['footer'];
+		
+		foreach($regGroup['registrations'] as $reg) {
+			$toAddress = model_Registrant::getEmailFieldValue($this->event, $reg);
+
 			EmailUtil::send(array(
 				'to' => $toAddress,
 				'from' => $emailTemplate['fromAddress'],
