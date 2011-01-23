@@ -8,7 +8,7 @@
 	var checkParents = function(/*[.reg-option]*/ option) {
 		var parent = parentNode(option, "reg-option");
 		while(parent) {
-			var input = dojo.query("> input", parent)[0];
+			var input = dojo.query("> .radio-label input", parent)[0];
 			input.checked = true;
 			parent = parentNode(parent, "reg-option");
 		}
