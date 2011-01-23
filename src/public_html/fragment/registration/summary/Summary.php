@@ -15,15 +15,19 @@ class fragment_registration_summary_Summary extends template_Template
 	public function html() {
 		$html = '';
 		
-		foreach($this->group['registrations'] as $registration) {
-			$regFragment = new fragment_registration_summary_Individual($this->event, $registration);
+		foreach($this->group['registrations'] as $index => $registration) {
+			$regFragment = new fragment_registration_summary_Individual($this->event, $registration, $index);
 			$html .= $regFragment->html();
 		}
 		
 		$payments = new fragment_registration_summary_Payments($this->event, $this->group);
 		$html .= $payments->html();
 		
-		return $html;
+		return <<<_
+			 <div class="registrant-details-section">
+				{$html}
+			</div>
+_;
 	}
 }
 

@@ -51,14 +51,14 @@ class db_reg_InformationManager extends db_Manager
 				// put them in an array.
 				$fieldValue = $infos[$fieldId]['value'];
 				if(is_array($fieldValue)) {
-					$fieldValue[] = $value;
+					$infos[$fieldId]['value'][] = $value;
 				}
 				else {
 					$infos[$fieldId]['value'] = array($fieldValue, $value);
 				}
 			}
 		}
-		
+
 		return $infos;
 	}
 	

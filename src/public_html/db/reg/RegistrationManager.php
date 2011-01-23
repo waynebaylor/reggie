@@ -298,6 +298,65 @@ class db_reg_RegistrationManager extends db_Manager
 			db_reg_VariableQuantityManager::getInstance()->delete($varQuantity['registrationId'], $varQuantity['variableQuantityId']);
 		}
 	}
+	
+	public function findRegOptionCost($registration) {
+		$sql = '
+			SELECT
+				sum(RegOptionPrice.price) as total_cost
+			FROM
+				Registration
+			INNER JOIN
+				Registration_RegOption
+			ON
+ 				Registration.id = Registration_RegOption.registrationId
+			INNER JOIN 
+ 				RegOptionPrice
+			ON
+ 				Registration_RegOption.priceId = RegOptionPrice.id
+ 			WHERE
+ 				Registration.id = :id
+ 			AND
+ 				Registration_RegOption.dateCancelled IS NULL
+		';
+		
+		$params = array(
+			'id' => $registration['id']);
+		
+		$result = $this->rawQueryUnique($sql, $params, 'Find registration option cost.');
+		
+		return $result['total_cost'];
+	}
+	
+	public function findVariableOptionCost($registration) {
+		$sql = '
+			SELECT 
+ 				sum(RegOptionPrice.price*Registration_VariableQuantityOption.quantity) as total_cost
+			FROM 
+ 				Registration
+			INNER JOIN
+ 				Registration_VariableQuantityOption
+			ON
+ 				Registration.id = Registration_VariableQuantityOption.registrationId
+			INNER JOIN 
+ 				RegOptionPrice
+			ON
+ 				Registration_VariableQuantityOption.priceId = RegOptionPrice.id
+			WHERE
+ 				Registration.id = :id
+		';
+		
+		$params = array(
+			'id' => $registration['id']
+		);
+		
+		$result = $this->rawQueryUnique($sql, $params, 'Find variable option cost.');
+		
+		return $result['total_cost'];
+	}
+	
+	public function findTotalCost($registration) {
+		return $this->findRegOptionCost($registration) + $this->findVariableOptionCost($registration);
+	}
 }
 
 ?>

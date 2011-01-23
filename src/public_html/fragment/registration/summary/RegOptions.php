@@ -1,6 +1,6 @@
 <?php
 
-class fragment_groupSummary_RegOptions extends template_Template
+class fragment_registration_summary_RegOptions extends template_Template
 {
 	private $event;
 	private $registration;
@@ -15,39 +15,39 @@ class fragment_groupSummary_RegOptions extends template_Template
 	public function html() {
 		return <<<_
 			<tr>
-				<td class="label">Selected Options</td>
-				<td class="details">
-					{$this->getRegOptions()}
-				</td>
+				<td class="label" colspan="3">Selected Options</td>
+			</tr>
+			<tr>
+				{$this->getRegOptions($this->event, $this->registration)}
 			</tr>
 _;
 	}
 	
-	private function getRegOptions() {
+	private function getRegOptions($event, $registration) {
 		$html = '';
 		
-		$eventOptionGroups = model_Event::getRegOptionGroups($this->event);
+		$eventOptionGroups = model_Event::getRegOptionGroups($event);
 		foreach($eventOptionGroups as $group) {
-			$html .= $this->getRegOptionGroup($group);
+			$html .= $this->getRegOptionGroup($registration, $group);
 		}
 		
 		return $html;
 	}
 	
-	private function getRegOptionGroup($group) {
+	private function getRegOptionGroup($registration, $group) {
 		$html = '';
 		
 		foreach($group['options'] as $option) {
-			$html .= $this->getRegOption($option);
+			$html .= $this->getRegOption($registration, $option);
 		}
 		
 		return $html;
 	}
 	
-	private function getRegOption($option) {
+	private function getRegOption($registration, $option) {
 		$html = '';
-		
-		foreach($this->registration['regOptions'] as $regOption) {
+
+		foreach($registration['regOptions'] as $regOption) {
 			if($option['id'] == $regOption['regOptionId']) {
 				$price = db_RegOptionPriceManager::getInstance()->find($regOption['priceId']);
 				$priceDisplayed = ($option['showPrice'] === 'true')? '$'.number_format($price['price'], 2) : '';
