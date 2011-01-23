@@ -4,27 +4,24 @@ class fragment_registration_summary_Individual extends template_Template
 {
 	private $event;
 	private $registration;
-	private $index;
+	private $num;
 	
-	function __construct($event, $registration, $index) {
+	function __construct($event, $registration, $num) {
 		parent::__construct();
 		
 		$this->event = $event;
 		$this->registration = $registration;
-		$this->index = $index;
+		$this->num = $num;
 	}
 	
 	public function html() {
-		// don't display a number if there is only one registrant. index will be < 0 if there is only one.
-		$num =  $this->index > 0? $this->index + 1 : '';
-		
 		$regType = db_RegTypeManager::getInstance()->find($this->registration['regTypeId']);
 		
 		return <<<_
 			<div class="sub-divider"></div>
 			
 			<div class="registrant-heading">
-				Registrant {$num}
+				Registrant {$this->num}
 			</div>
 			
 			<table class="summary">
