@@ -40,8 +40,7 @@ class action_BaseAction implements action_Action
 			}
 		}
 		else {
-			Logger::log('Action not found: '.$action);
-			$page = new template_ErrorPage();
+			throw new Exception('Action "'.$action.'" not found in class "'.get_class($this).'"');
 		}
 
 		echo $page->html();

@@ -64,7 +64,7 @@ _;
 		}
 
 		foreach($option['groups'] as $group) {
-			$html .= $this->getRegOptionGroup($group);
+			$html .= $this->getRegOptionGroup($registration, $group);
 		}
 		
 		return $html;

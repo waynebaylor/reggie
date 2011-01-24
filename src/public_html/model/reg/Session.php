@@ -98,8 +98,23 @@ public static function reset($category, $event) {
 	public static function addCompletedPage($pageId) {
 		$index = self::getCurrent();
 		
-		if(!in_array($pageId, self::getCompletedPages($index))) {
-			$_SESSION['reg']['registrations'][$index]['completedPages'][] = $pageId;
+		// if one registrant finishes the payment page, then we consider all
+		// registrants in the group to have finished it. this is important: if 
+		// the current registrant is removed from the summary page, then in 
+		// order to submit the updated summary we need the remaining registrant(s)
+		// to be treated as if they've completed the payment page too.
+		if($pageId == model_reg_RegistrationPage::$PAYMENT_PAGE_ID) {
+			foreach($_SESSION['reg']['registrations'] as $i => $r) {
+				if(!in_array($pageId, self::getCompletedPages($i))) {
+					$_SESSION['reg']['registrations'][$i]['completedPages'][] = $pageId;
+				}
+			}	
+		}
+		// otherwise just add the completed page to the current registrant.
+		else {
+			if(!in_array($pageId, self::getCompletedPages($index))) {
+				$_SESSION['reg']['registrations'][$index]['completedPages'][] = $pageId;
+			}
 		}
 	}
 	

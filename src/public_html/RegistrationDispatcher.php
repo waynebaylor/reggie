@@ -28,7 +28,7 @@ class RegistrationDispatcher
 	/** 
 	 * called when the user goes to a URL like /event/...
 	 */
-	public function getRegistrationAction() {
+	public function getRegistrationAction() { 
 		$this->setupSession();
 		
 		// default action is 'view'.
