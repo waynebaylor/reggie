@@ -25,18 +25,40 @@ _;
 	}
 	
 	private function getRow($option) {
-		$price = $this->getPrice($option);
+		$regType = model_reg_Session::getRegType();
+		$price = model_RegOption::getPrice($regType, $option);
 
 		if(!empty($price)) {
+			// check option capacity first.
+			if($this->optionAtCapacity($option)) {
+				$price = 'Sold out.';
+			}
+			else {
+				$name = model_ContentType::$VAR_QUANTITY_OPTION.'_'.$option['id'];
+				$value = model_reg_Session::getVariableQuantityOption($name);
+					
+				$price = '$'.number_format($price['price'], 2);
+			}
+
 			return <<<_
 				<tr>
-					<td>{$option['description']}</td>
-					<td class="price">
+					<td class="var-option-description">{$option['description']}</td>
+					<td class="var-option-quantity">
+						{$this->HTML->text(array(
+							'name' => $name,
+							'value' => $value,
+							'size' => 2
+						))}
+						&#64;&nbsp;
+					</td>
+					<td class="var-option-price">
 						{$price}
 					</td>
 				</tr>
 _;
 		}
+		
+		return '';
 	}
 	
 	private function getPrice($option) {
@@ -56,7 +78,7 @@ _;
 				$priceDisplay = ' &#64; $'.number_format($price['price'], 2);
 					
 				return <<<_
-				<input type="text" name="{$name}" value="{$value}" size="2"/>{$priceDisplay}		
+					<input type="text" name="{$name}" value="{$value}" size="2"/>{$priceDisplay}		
 _;
 			}
 		}

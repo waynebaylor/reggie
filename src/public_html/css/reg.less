@@ -157,21 +157,38 @@ table.reg-options {
 	width: 100%;	
 	border-collapse: separate;
 	border-spacing: 0 10px;
+	
+	td {
+		vertical-align: top;
+		text-align: left;
+	}
+	
+	td.price {
+		white-space: nowrap;
+		text-align: right;
+	}
+	
+	table.reg-options {
+		padding-left: 30px;
+	}
+	
+	td.var-option-description {
+		width: 100%; 
+		vertical-align: top;
+	}
+	
+	td.var-option-quantity {
+		white-space: nowrap; 
+		text-align: right; 
+		vertical-align: middle;
+	}
+	
+	td.var-option-price {
+		text-align: left; 
+		vertical-align: middle;
+	}
 }
 
-table.reg-options td {
-	vertical-align: top;
-	text-align: left;
-}
-
-table.reg-options td.price {
-	white-space: nowrap;
-	text-align: right;
-}
-
-table.reg-options table.reg-options {
-	padding-left: 30px;
-}
 
 /******************************************
  * CSS for payment page.
