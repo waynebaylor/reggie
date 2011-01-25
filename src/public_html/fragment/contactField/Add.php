@@ -36,9 +36,11 @@ _;
 						'value'=> $this->section['id']
 					))}
 					
-					{$this->HTML->text(array(
+					{$this->HTML->textarea(array(
 						'name' => 'displayName',
-						'value' => ''
+						'value' => '',
+						'rows' => 5,
+						'cols' => 75
 					))}
 				</td>
 			</tr>

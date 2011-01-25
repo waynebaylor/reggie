@@ -36,10 +36,11 @@ _;
 						'name' => 'id',
 						'value' => $this->field['id']
 					))}
-					{$this->HTML->text(array(
+					{$this->HTML->textarea(array(
 						'name' => 'displayName',
 						'value' => $this->escapeHtml($this->field['displayName']),
-						'size' => '30'
+						'rows' => 5,
+						'cols' => 75
 					))}
 				</td>
 			</tr>
