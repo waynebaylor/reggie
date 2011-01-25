@@ -13,41 +13,60 @@ class fragment_editRegistrations_InformationFields extends template_Template
 	}
 	
 	public function html() {
-		$form = new fragment_XhrTableForm(
-			'/admin/registration/Registration', 
-			'save', 
-			"<tr>
-				<td></td>
-				<td>
-				{$this->HTML->hidden(array(
-					'name' => 'registrationId',
-					'value' => $this->registration['id']
-				))}
-				
-				{$this->HTML->hidden(array(
-					'name' => 'sectionId',
-					'value' => $this->section['id']
-				))}
-				
-				{$this->getInformationHtml($this->section, $this->registration)}
-				</td>
-			</tr>"
-		);
+		$information = $this->getInformationHtml($this->section, $this->registration);
 		
-		return $form->html();
+		if(!empty($information)) {
+			$form = new fragment_XhrTableForm(
+				'/admin/registration/Registration', 
+				'save', 
+				"<tr>
+					<td></td>
+					<td>
+						{$this->HTML->hidden(array(
+							'name' => 'registrationId',
+							'value' => $this->registration['id']
+						))}
+						
+						{$this->HTML->hidden(array(
+							'name' => 'sectionId',
+							'value' => $this->section['id']
+						))}
+						
+						{$information}
+					</td>
+				</tr>"
+			);
+			
+			return $form->html();
+		}
+		
+		return '';
 	}
 	
 	private function getInformationHtml($section, $registration) {
 		$regTypeId = $registration['regTypeId'];
 		
-		$values = array();
-		foreach($registration['information'] as $info) {
-			$values[$info['contactFieldId']] = $info['value'];
+		// see if the section has any fields this reg type can see.
+		$sectionHasVisibleFields = false;
+		foreach($section['content'] as $field) {
+			if(model_ContactField::isVisibleTo($field, array('id' => $regTypeId))) {
+				$sectionHasVisibleFields = true;
+				break;
+			}
 		}
 		
-		$fragment = new fragment_reg_ContactFields($section, $regTypeId, $values);
-
-		return $fragment->html();
+		if($sectionHasVisibleFields) {
+			$values = array();
+			foreach($registration['information'] as $info) {
+				$values[$info['contactFieldId']] = $info['value'];
+			}
+			
+			$fragment = new fragment_reg_ContactFields($section, $regTypeId, $values);
+	
+			return $fragment->html();
+		}
+		
+		return '';
 	}
 }
 
