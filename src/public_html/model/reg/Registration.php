@@ -27,12 +27,12 @@ class model_reg_Registration
 		}
 		
 		// add up the variable quantity options.
-		$regType = model_reg_Session::getRegType($index);
+		$regTypeId = model_reg_Session::getRegType($index);
 		$variableQuantityOptions = model_Event::getVariableQuantityOptions($event);
 		foreach($variableQuantityOptions as $option) {
 			$name = model_ContentType::$VAR_QUANTITY_OPTION.'_'.$option['id'];
 			$quantity = model_reg_Session::getVariableQuantityOption($name, $index);
-			$price = model_RegOption::getPrice($regType, $option);
+			$price = model_RegOption::getPrice(array('id' => $regTypeId), $option);
 			
 			$total += $quantity*$price['price'];
 		}
@@ -129,11 +129,11 @@ class model_reg_Registration
 	
 	private static function getTotalOptionGroupCost($group, $index) {
 		$total = 0.0;
-		$regType = model_reg_Session::getRegType($index);
+		$regTypeId = model_reg_Session::getRegType($index);
 		
 		foreach($group['options'] as $option) {
 			if(self::isRegOptionSelected($option, $index)) {
-				$price = model_RegOption::getPrice($regType, $option);
+				$price = model_RegOption::getPrice(array('id' => $regTypeId), $option);
 				if(!empty($price)) {
 					$total += $price['price'];
 				}

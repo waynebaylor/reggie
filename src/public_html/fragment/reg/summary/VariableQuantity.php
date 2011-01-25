@@ -15,6 +15,8 @@ class fragment_reg_summary_VariableQuantity extends template_Template
 	public function html() {
 		$html = '';
 		
+		$regTypeId = model_reg_Session::getRegType($this->index);
+		
 		foreach($this->event['pages'] as $page) {
 			foreach($page['sections'] as $section) {
 				if(model_Section::containsVariableQuantityOptions($section)) {
@@ -22,7 +24,7 @@ class fragment_reg_summary_VariableQuantity extends template_Template
 						$name = model_ContentType::$VAR_QUANTITY_OPTION.'_'.$option['id'];
 						$quantity = model_reg_Session::getVariableQuantityOption($name, $this->index);
 						if(!empty($quantity) && $quantity > 0) {
-							$price = model_RegOption::getPrice($this->event, $option);
+							$price = model_RegOption::getPrice(array('id' => $regTypeId), $option);
 							$priceDisplay = number_format($price['price'], 2);
 
 							$total = number_format($price['price']*$quantity, 2);

@@ -74,8 +74,7 @@ _;
 	}
 	
 	private function getPrice($option) {
-		$regType = array('id' => $this->regTypeId);
-		$price = model_RegOption::getPrice($regType, $option);
+		$price = model_RegOption::getPrice(array('id' => $this->regTypeId), $option);
 
 		if(!empty($price)) {
 			// check option capacity first.

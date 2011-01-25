@@ -50,8 +50,8 @@ _;
 		$html = '';
 		
 		if(model_reg_Registration::isRegOptionSelected($option, $this->index)) {
-			$regType = model_reg_Session::getRegType($this->index);
-			$price = model_RegOption::getPrice($regType, $option);
+			$regTypeId = model_reg_Session::getRegType($this->index);
+			$price = model_RegOption::getPrice(array('id' => $regTypeId), $option);
 			$priceDisplayed = ($option['showPrice'] === 'true')? '$'.number_format($price['price'], 2) : '';
 			$html .= <<<_
 				<li>

@@ -25,8 +25,8 @@ _;
 	}
 	
 	private function getRow($option) {
-		$regType = model_reg_Session::getRegType();
-		$price = model_RegOption::getPrice($regType, $option);
+		$regTypeId = model_reg_Session::getRegType();
+		$price = model_RegOption::getPrice(array('id' => $regTypeId), $option);
 
 		if(!empty($price)) {
 			// check option capacity first.
@@ -62,8 +62,8 @@ _;
 	}
 	
 	private function getPrice($option) {
-		$regType = model_reg_Session::getRegType();
-		$price = model_RegOption::getPrice($regType, $option);
+		$regTypeId = model_reg_Session::getRegType();
+		$price = model_RegOption::getPrice(array('id' => $regTypeId), $option);
 
 		if(!empty($price)) {
 			// check option capacity first.
