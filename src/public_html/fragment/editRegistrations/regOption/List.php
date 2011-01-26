@@ -76,6 +76,7 @@ _;
 					$dateCancelled = '';
 					$cancelLink = $this->HTML->link(array(
 						'label' => 'Cancel',
+						'class' => 'remove',
 						'href' => '/admin/registration/RegOption',
 						'parameters' => array(
 							'a' => 'cancelRegOption',

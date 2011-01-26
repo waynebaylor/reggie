@@ -16,7 +16,7 @@ class action_BaseAction implements action_Action
 		$obj = $manager->find($id);
 		
 		if(empty($obj)) {
-			throw new Exception('Object does not exist: '.$id);
+			throw new Exception('Error in "'.get_class($this).'". Object does not exist: '.$id);
 		}
 		
 		return $obj;

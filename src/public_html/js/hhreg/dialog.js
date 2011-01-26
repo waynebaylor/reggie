@@ -17,11 +17,14 @@ dojo.require("dijit.Dialog");
 		var d = new dijit.Dialog({
 			title: spec.title,
 			content: spec.content,
-			duration: 250
+			duration: 150
 		});
-		dojo.connect(d, "hide", function() {
-			spec.onClose();
-		});
+		
+		if(spec.onClose) {
+			dojo.connect(d, "hide", function() {
+				spec.onClose();
+			});
+		}
 		
 		// set up the dialog.
 		dojo.body().appendChild(d.domNode);

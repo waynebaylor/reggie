@@ -65,7 +65,9 @@ _;
 		
 		// if the id is not given, then make it.
 		if(empty($config['id'])) {
-			$id = $config['name'].'_'.$config['value'];
+			// the rand is for cases where the same input is displayed for multiple 
+			// registrations, like on the EditRegistrations page.
+			$id = $config['name'].'_'.$config['value'].'_'.mt_rand();
 		}
 		else {
 			$id = $config['id'];
@@ -163,7 +165,9 @@ _;
 		
 		// if the id is given, then use it.
 		if(empty($config['id'])) {
-			$id = $config['name'].'_'.$config['value'];
+			// the rand is for cases where the same input is displayed for multiple 
+			// registrations, like on the EditRegistrations page.
+			$id = $config['name'].'_'.$config['value'].'_'.mt_rand(); 
 		}
 		else {
 			$id = $config['id'];

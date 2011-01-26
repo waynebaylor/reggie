@@ -24,21 +24,26 @@ dojo.require("hhreg.xhrTableForm");
 		});
 		
 		// change reg type.
-		var content = dojo.byId("change-reg-type-content");
-		var form = dojo.query("form", content)[0];
-		var dialog = hhreg.dialog.create({
-			title: "Change Registration Type",
-			trigger: dojo.byId("change-reg-type-link"),
-			content: content,
-			onClose: function() {
-				hhreg.xhrTableForm.hideIcons(form)
-			}
-		});
-		
-		hhreg.xhrTableForm.bind(form, function() {
-			dialog.hide();
-			hhreg.xhrTableForm.hideIcons(form);
-			document.location = hhreg.contextUrl(dojo.byId("change-reg-type-redirect").value);
+		dojo.query(".change-reg-type").forEach(function(item) {
+			var content = dojo.query(".change-reg-type-content", item)[0];
+			var form = dojo.query("form", content)[0];
+			var triggerLink = dojo.query(".change-reg-type-link", item)[0];
+			var redirectUrl = dojo.query(".change-reg-type-redirect", item)[0].value;
+			
+			var dialog = hhreg.dialog.create({
+				title: "Change Registration Type",
+				trigger: triggerLink,
+				content: content,
+				onClose: function() {
+					hhreg.xhrTableForm.hideIcons(form)
+				}
+			});
+			
+			hhreg.xhrTableForm.bind(form, function() { 
+				dialog.hide();
+				hhreg.xhrTableForm.hideIcons(form);
+				document.location = hhreg.contextUrl(redirectUrl);
+			});
 		});
 	});
 })();

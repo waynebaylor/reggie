@@ -2,6 +2,12 @@
 
 class action_admin_registration_Registration extends action_ValidatorAction
 {
+	private $logic;
+	
+	function __construct() {
+		$this->logic = new logic_admin_registration_Registration();
+	}
+	
 	public function view() {
 		$reportId = RequestUtil::getValue('reportId', 0);
 		$groupId = RequestUtil::getValue('groupId', 0);
@@ -92,6 +98,15 @@ class action_admin_registration_Registration extends action_ValidatorAction
 				db_reg_InformationManager::getInstance()->createInformation($registrationId, array($field));
 			}
 		}
+	}
+	
+	public function addRegistrantToGroup() {
+		$reportId = RequestUtil::getValue('reportId', 0);
+		$regGroupId = RequestUtil::getValue('regGroupId', 0);
+		
+		$this->logic->addRegistrantToGroup($regGroupId);
+		
+		return new template_Redirect("/admin/registration/Registration?reportId={$reportId}&groupId={$regGroupId}");
 	}
 }
 

@@ -60,10 +60,12 @@ _;
 		}
 		
 		return <<<_
-			{$html} ( <span id="change-reg-type-link" class="link">Change</span> )
-			
-			<div id="change-reg-type-content" class="hide">
-				{$this->getChangeRegTypeForm($registration)}
+			<div class="change-reg-type">
+				{$html} ( <span class="change-reg-type-link link">Change</span> )
+				
+				<div class="change-reg-type-content hide">
+					{$this->getChangeRegTypeForm($registration)}
+				</div>
 			</div>
 _;
 	}
@@ -90,7 +92,7 @@ _;
 				<td class="label">Registration Type</td>
 				<td>
 					{$this->HTML->hidden(array(
-						'id' => 'change-reg-type-redirect',
+						'class' => 'change-reg-type-redirect',
 						'value' => "/admin/registration/Registration?groupId={$registration['regGroupId']}&reportId={$this->report['id']}"
 					))}
 					

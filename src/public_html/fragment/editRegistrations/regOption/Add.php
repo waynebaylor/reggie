@@ -33,16 +33,19 @@ _;
 		$html = '';
 
 		foreach($this->getOptions() as $opt) {
+			$id = 'regOpts[]_'.$opt['value'].'_'.mt_rand();
+			
 			$html .= <<<_
 			<tr>
 				<td>
 					{$this->HTML->checkbox(array(
 						'name' => 'regOpts[]',
-						'value' => $opt['value']
+						'value' => $opt['value'],
+						'id' => $id
 					))}
 				</td>
 				<td>
-					<label for="regOpts[]_{$opt['value']}">{$opt['label']}</label>
+					<label for="{$id}">{$opt['label']}</label>
 				</td>
 				<td>
 					{$this->getOptionPrices($opt['value'], $opt['prices'])}

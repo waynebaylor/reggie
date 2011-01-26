@@ -34,6 +34,19 @@ class template_admin_EditRegistrations extends template_AdminPage
 			<div id="content">
 				<h3>Edit Registrations</h3>
 				
+				{$this->HTML->link(array(
+					'label' => 'Add Registrant To Group',
+					'title' => 'Add a new registrant to this group',
+					'href' => '/admin/registration/Registration',
+					'parameters' => array(
+						'a' => 'addRegistrantToGroup',
+						'regGroupId' => $this->group['id'],
+						'reportId' => $this->report['id']
+					)
+				))}
+					
+				<div class="sub-divider"></div>
+				
 				{$this->getRegistrants()}
 				
 				<div class="divider"></div>
@@ -65,7 +78,7 @@ _;
 				$cancelLink = $this->HTML->link(array(
 					'label' => 'Cancel',
 					'class'	=> 'cancel-registrant',
-					'title' => 'Cancel registrant',
+					'title' => 'Cancel this registrant',
 					'href'	=> '/admin/registration/Registration',
 					'parameters' => array(
 						'a' => 'cancelRegistration',
@@ -85,7 +98,7 @@ _;
 			
 			$sendEmailLink = $this->HTML->link(array(
 				'label' => 'Send Confirmation',
-				'title' => 'Send email confirmation',
+				'title' => 'Send email confirmation to this registrant',
 				'href' => '/admin/registration/Registration',
 				'parameters' => array(
 					'a' => 'sendConfirmation',
