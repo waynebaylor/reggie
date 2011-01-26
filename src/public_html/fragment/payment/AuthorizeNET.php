@@ -20,9 +20,11 @@ class fragment_payment_AuthorizeNET extends template_Template
 			$showForm = '';
 		}
 		
+		$instructions = ArrayUtil::getValue($this->eventPaymentType, 'instructions', '');
+		
 		return <<<_
 			<div class="authorizeNet-payment-instructions {$showForm}">
-				<div>{$this->eventPaymentType['instructions']}</div>
+				<div>{$instructions}</div>
 				<table class="auth-net-form">
 					<tr>
 						<td colspan="2" class="credit-card-title">

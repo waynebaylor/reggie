@@ -4,12 +4,14 @@ class fragment_payment_PaymentChooser extends template_Template
 {
 	private $event;
 	private $currentValues;
+	private $enableAll;
 	
-	function __construct($event, $currentValues) {
+	function __construct($event, $currentValues = array(), $enableAll = false) {
 		parent::__construct();
 		
 		$this->event = $event;
 		$this->currentValues = $currentValues;
+		$this->enableAll = $enableAll;
 	}
 	
 	public function html() {
@@ -32,7 +34,7 @@ _;
 		
 		$selectedTypeId = $this->getSelectedPaymentTypeId();
 		
-		foreach($this->event['paymentTypes'] as $type) {
+		foreach($this->getDisplayedPaymentTypes() as $type) {
 			$typeId = intval($type['paymentTypeId'], 10);
 			
 			$selected = ($selectedTypeId === $typeId);
@@ -63,7 +65,7 @@ _;
 	private function getPaymentTypeForms() {
 		$html = '';
 		
-		foreach($this->event['paymentTypes'] as $paymentType) {
+		foreach($this->getDisplayedPaymentTypes() as $paymentType) {
 			$html .= $this->getPaymentTypeForm($paymentType);
 		}
 		
@@ -115,13 +117,35 @@ _;
 	private function getSelectedPaymentTypeId() {
 		$paymentTypeFromSession = ArrayUtil::getValue($this->currentValues, 'paymentType', 0);
 		
-		$firstPaymentType = reset($this->event['paymentTypes']);
+		$paymentTypes = $this->getDisplayedPaymentTypes();
+		$firstPaymentType = reset($paymentTypes);
 		$firstPaymentType = $firstPaymentType['paymentTypeId'];
 
 		// if no payment type has been selected, then default to the first one.
 		$id = empty($paymentTypeFromSession)? $firstPaymentType : $paymentTypeFromSession;
 	
 		return intval($id, 10);
+	}
+	
+	private function getDisplayedPaymentTypes() {
+		if($this->enableAll) {
+			$paymentTypes = array();
+			foreach(db_payment_PaymentTypeManager::getInstance()->findAll() as $pt) {
+				// only show authorize.net if the event has it enabled. this is done because specific information 
+				// is needed for it to work.
+				if($pt['id'] != model_PaymentType::$AUTHORIZE_NET || model_Event::isPaymentTypeEnabled($this->event, $pt)) {
+					$paymentTypes[] = array(
+						'paymentTypeId' => $pt['id'],
+						'displayName' => $pt['displayName'],
+					);
+				}
+			}
+		}
+		else {
+			$paymentTypes = $this->event['paymentTypes'];
+		}
+		
+		return $paymentTypes;
 	}
 }
 

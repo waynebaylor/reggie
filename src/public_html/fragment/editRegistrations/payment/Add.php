@@ -30,7 +30,7 @@ _;
 	}
 	
 	private function getFormRows() {
-		$chooser = new fragment_payment_PaymentChooser($this->event, array());
+		$chooser = new fragment_payment_PaymentChooser($this->event, array(), true);
 		return <<<_
 			<tr>
 				<td></td>

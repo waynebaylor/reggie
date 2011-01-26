@@ -20,9 +20,11 @@ class fragment_payment_Check extends template_Template
 			$showForm = '';
 		}
 		
+		$instructions = ArrayUtil::getValue($this->eventPaymentType, 'instructions', '');
+		
 		return  <<<_
 			<div class="check-payment-instructions {$showForm}">
-				<div>{$this->eventPaymentType['instructions']}</div>
+				<div>{$instructions}</div>
 
 				<div class="sub-divider"></div>
 				
