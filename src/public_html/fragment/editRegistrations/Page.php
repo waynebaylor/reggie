@@ -118,9 +118,7 @@ _;
 		);
 		
 		return <<<_
-			<div class="registrant-details-section">
-				{$form->html()}
-			</div>
+			{$form->html()}
 _;
 	}
 }

@@ -108,6 +108,16 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		
 		return new template_Redirect("/admin/registration/Registration?reportId={$reportId}&groupId={$regGroupId}");
 	}
+	
+	public function createNewRegistration() {
+		$eventId = RequestUtil::getValue('eventId', 0);
+		$reportId = RequestUtil::getValue('reportId', 0);
+		$categoryId = RequestUtil::getValue('categoryId', 0);
+		
+		$this->logic->createNewRegistration($eventId, $categoryId);
+		
+		return new fragment_Success();
+	}
 }
 
 ?>

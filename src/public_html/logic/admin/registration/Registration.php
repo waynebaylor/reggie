@@ -26,6 +26,32 @@ class logic_admin_registration_Registration extends logic_Performer
 		// return the updated group.
 		return $this->strictFindById(db_reg_GroupManager::getInstance(), $regGroupId);
 	}
+	
+	public function createNewRegistration($eventId, $categoryId) {
+		$regGroupId = db_reg_GroupManager::getInstance()->createGroup();
+		
+		$regTypeId = 0;
+		
+		$regTypes = db_RegTypeManager::getInstance()->findByEvent(array('id' => $eventId));
+		foreach($regTypes as $regType) {
+			if(model_RegType::isVisibleTo($regType, array('id' => $categoryId))) {
+				$regTypeId = $regType['id'];
+				break;		
+			}
+		}
+
+		$newReg = array(
+			'regGroupId' => $regGroupId,
+			'categoryId' => $categoryId,
+			'regTypeId' => $regTypeId,
+			'eventId' => $eventId,
+			'information' => array(),
+			'regOptionIds' => array(),
+			'variableQuantity' => array()
+		);
+		
+		db_reg_RegistrationManager::getInstance()->createRegistration($regGroupId, $newReg);
+	}
 }
 
 ?>
