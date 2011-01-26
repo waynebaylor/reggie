@@ -35,7 +35,7 @@ class fragment_payment_AuthorizeNET extends template_Template
 							{$this->HTML->text(array(
 								'name' => 'cardNumber',
 								'value' => $this->escapeHtml(ArrayUtil::getValue($this->values, 'cardNumber', '')),
-								'size' => '16',
+								'size' => '20',
 								'maxlength' => '16'
 							))}
 						</td>
