@@ -206,11 +206,9 @@ _;
 		$html = <<<_
 			<select {$attrs}>	
 _;
-		// if no value is specified, then make the first option selected. 
-		// isset() is used instead of empty() because we want 0, '', etc to be
-		// valid values.
+		// if no value is given, then we don't want any options selected. 
 		if(!isset($config['value'])) {
-			$config['value'] = $config['items'][0]['value']; 	
+			$config['value'] = 'a value that does not match anything normal'; 	
 		}
 		
 		foreach($config['items'] as $item) {
