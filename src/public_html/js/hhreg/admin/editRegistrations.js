@@ -23,6 +23,13 @@ dojo.require("hhreg.xhrTableForm");
 			}
 		});
 		
+		// cancel reg option links
+		dojo.query(".cancel-reg-option-link").connect("onclick", function(event) {
+			if(!confirm("Are you sure?")) {
+				dojo.stopEvent(event);
+			}	
+		});
+		
 		// change reg type.
 		dojo.query(".change-reg-type").forEach(function(item) {
 			var content = dojo.query(".change-reg-type-content", item)[0];
