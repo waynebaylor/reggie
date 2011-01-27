@@ -24,6 +24,7 @@ class fragment_registration_summary_Payments extends template_Template
 		$remainingBalance = $cost - $paid;
 		
 		$cost = '$'.number_format($cost, 2);
+		$paid = '$'.number_format($paid, 2);
 		$remainingBalance = '$'.number_format($remainingBalance, 2);
 		
 		foreach($group['payments'] as $payment) {
@@ -59,14 +60,23 @@ _;
 			
 			<div class="registrant-heading">Payments</div>
 			
-			<table class="summary">
-				<tr>
-					<td class="label" colspan="2" style="border-bottom:1px solid black;">Total Cost</td>
-					<td style="border-bottom:1px solid black;">{$cost}</td>
-				</tr>
+			<table style="border-collapse:separate; border-spacing:15px 5px;">
 				{$html}
+			</table>
+			
+			<div class="sub-divider"></div>
+			
+			<table style="border-collapse:collapse;">
 				<tr>
-					<td class="label" colspan="2" style="border-top:1px solid black;">Remaining balance</td>
+					<td class="label" style="padding:0 15px 5px;">Total Cost</td>
+					<td>{$cost}</td>
+				</tr>
+				<tr>
+					<td class="label" style="padding:0 15px 5px;">Amount Tendered</td>
+					<td>{$paid}</td>
+				</tr>
+				<tr>
+					<td class="label" style="font-weight:bold; padding:0 15px 5px; border-top:1px solid black;">Balance Due</td>
 					<td style="border-top:1px solid black;">{$remainingBalance}</td>
 				</tr>
 			</table>
