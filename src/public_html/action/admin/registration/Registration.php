@@ -66,19 +66,8 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		$event = $this->strictFindById(db_EventManager::getInstance(), $registration['eventId']);
 		$regGroup = db_reg_GroupManager::getInstance()->find($registration['regGroupId']);
 		$reportId = RequestUtil::getValue('reportId', 0);
-				
-		$emailTemplate = $emailTemplate = $event['emailTemplate'];
 		
-		$summary = new fragment_registration_summary_Summary($event, $regGroup);
-		$text = $emailTemplate['header']."<div>{$summary->html()}</div>".$emailTemplate['footer'];
-		
-		EmailUtil::send(array(
-			'to' => model_Registrant::getEmailFieldValue($event, $registration),
-			'from' => $emailTemplate['fromAddress'],
-			'bcc' => $emailTemplate['bcc'],
-			'subject' => $emailTemplate['subject'],
-			'text' => $text
-		));
+		$this->logic->sendConfirmation($event, $regGroup, $registration);
 		
 		return new template_Redirect("/admin/registration/Registration?groupId={$regGroup['id']}&reportId={$reportId}");
 	}

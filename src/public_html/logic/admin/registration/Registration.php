@@ -52,6 +52,23 @@ class logic_admin_registration_Registration extends logic_Performer
 		
 		db_reg_RegistrationManager::getInstance()->createRegistration($regGroupId, $newReg);
 	}
+	
+	public function sendConfirmation($event, $regGroup, $registration) {
+		$emailTemplate = $event['emailTemplate'];
+		
+		$summaryText = new fragment_registration_emailConfirmation_Confirmation($event, $regGroup);
+		$text = $emailTemplate['header']."<div>{$summaryText->html()}</div>".$emailTemplate['footer'];
+		
+		$to = model_Registrant::getEmailFieldValue($event, $registration);
+		
+		EmailUtil::send(array(
+			'to' => $to,
+			'from' => $emailTemplate['fromAddress'],
+			'bcc' => $emailTemplate['bcc'],
+			'subject' => $emailTemplate['subject'],
+			'text' => $text
+		));
+	}
 }
 
 ?>
