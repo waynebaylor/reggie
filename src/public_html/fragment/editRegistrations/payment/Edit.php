@@ -30,17 +30,22 @@ _;
 		if($this->payment['paymentTypeId'] == model_PaymentType::$CHECK) {
 			return <<<_
 				<tr>
-					<td class="label required">Check Number</td>
+					<td class="label required">Amount</td>
 					<td>
 						{$this->HTML->hidden(array(
 							'name' => 'id',
 							'value' => $this->payment['id']
 						))}
-						{$this->HTML->hidden(array(
+						
+						{$this->HTML->text(array(
 							'name' => 'amount',
 							'value' => $this->payment['amount']
 						))}
-						
+					</td>
+				</tr>
+				<tr>
+					<td class="label required">Check Number</td>
+					<td>
 						{$this->HTML->text(array(
 							'name' => 'checkNumber',
 							'value' => $this->escapeHtml($this->payment['checkNumber'])
@@ -48,13 +53,21 @@ _;
 					</td>
 				</tr>
 				<tr>
-					<td></td>
+					<td class="label">Payment Status</td>
 					<td>
-						{$this->HTML->checkbox(array(
-							'label' => 'Payment Received',
+						{$this->HTML->radios(array(
 							'name' => 'paymentReceived',
-							'value' => 'true',
-							'checked' => $this->payment['paymentReceived'] === 'true'
+							'value' => $this->payment['paymentReceived'],
+							'items' => array(
+								array(
+									'label' => 'Pending',
+									'value' => 'false'
+								),
+								array(
+									'label' => 'Paid',
+									'value' => 'true'
+								)
+							)
 						))}
 					</td>
 				</tr>
@@ -63,17 +76,22 @@ _;
 		else if($this->payment['paymentTypeId'] == model_PaymentType::$PO) {
 			return <<<_
 				<tr>
-					<td class="label required">Purchase Order Number</td>
+					<td class="label required">Amount</td>
 					<td>
 						{$this->HTML->hidden(array(
 							'name' => 'id',
 							'value' => $this->payment['id']
 						))}
-						{$this->HTML->hidden(array(
+						
+						{$this->HTML->text(array(
 							'name' => 'amount',
 							'value' => $this->payment['amount']
 						))}
-						
+					</td>
+				</tr>
+				<tr>
+					<td class="label required">Purchase Order Number</td>
+					<td>
 						{$this->HTML->text(array(
 							'name' => 'purchaseOrderNumber',
 							'value' => $this->escapeHtml($this->payment['purchaseOrderNumber'])
@@ -81,13 +99,21 @@ _;
 					</td>
 				</tr>
 				<tr>
-					<td></td>
+					<td class="label">Payment Status</td>
 					<td>
-						{$this->HTML->checkbox(array(
-							'label' => 'Payment Received',
+						{$this->HTML->radios(array(
 							'name' => 'paymentReceived',
-							'value' => 'true',
-							'checked' => $this->payment['paymentReceived'] === 'true'
+							'value' => $this->payment['paymentReceived'],
+							'items' => array(
+								array(
+									'label' => 'Pending',
+									'value' => 'false'
+								),
+								array(
+									'label' => 'Paid',
+									'value' => 'true'
+								)
+							)
 						))}
 					</td>
 				</tr>

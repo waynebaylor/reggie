@@ -33,8 +33,8 @@ _;
 		$chooser = new fragment_payment_PaymentChooser($this->event, array(), true);
 		return <<<_
 			<tr>
-				<td></td>
-				<td class="label required">
+				<td class="label required">Amount</td>
+				<td>
 					{$this->HTML->hidden(array(
 						'name' => 'regGroupId',
 						'value' => $this->group['id']
@@ -44,10 +44,9 @@ _;
 						'value' => $this->report['id']
 					))}
 					
-					Amount 
 					{$this->HTML->text(array(
 						'name' => 'amount',
-						'value' => '',
+						'value' => '0.00',
 						'size' => 10
 					))}
 					
@@ -55,8 +54,29 @@ _;
 				</td>
 			</tr>
 			<tr>
+				<td class="label">Payment Status</td>
+				<td>
+					{$this->HTML->radios(array(
+						'name' => 'paymentReceived',
+						'value' => 'false',
+						'items' => array(
+							array(
+								'label' => 'Pending',
+								'value' => 'false'
+							),
+							array(
+								'label' => 'Paid',
+								'value' => 'true'
+							)
+						)
+					))}
+				</td>
+			</tr>
+			<tr>
 				<td></td>
 				<td>
+					<div class="sub-divider"></div>
+					
 					{$chooser->html()}
 				</td>
 			</tr>

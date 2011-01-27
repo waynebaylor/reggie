@@ -117,25 +117,29 @@ class db_reg_PaymentManager extends db_Manager
 					regGroupId,
 					transactionDate,
 					checkNumber,
-					amount
+					amount,
+					paymentReceived
 				)
 			VALUES(
 				:paymentTypeId,
 				:regGroupId,
 				:transactionDate,
 				:checkNumber,
-				:amount
+				:amount,
+				:paymentReceived
 			)
 		';
 		
 		$today = new DateTime();
+		$received = ArrayUtil::getValue($check, 'paymentReceived', 'false');
 		
 		$params = array(
 			'paymentTypeId' => model_PaymentType::$CHECK,
 			'regGroupId' => $groupId,
 			'transactionDate' => date_format($today,'Y-m-d H:i'),
 			'checkNumber' => $check['checkNumber'],
-			'amount' => $check['amount']
+			'amount' => $received === 'true'? $check['amount'] : 0.00,
+			'paymentReceived' => $received
 		);
 		
 		$this->execute($sql, $params, 'Create registration check payment.');
@@ -149,25 +153,29 @@ class db_reg_PaymentManager extends db_Manager
 					regGroupId,
 					transactionDate,
 					purchaseOrderNumber,
-					amount
+					amount,
+					paymentReceived
 				)
 			VALUES(
 				:paymentTypeId,
 				:regGroupId,
 				:transactionDate,
 				:purchaseOrderNumber,
-				:amount
+				:amount,
+				:paymentReceived
 			)
 		';
 		
 		$today = new DateTime();
+		$received = ArrayUtil::getValue($check, 'paymentReceived', 'false');
 		
 		$params = array(
 			'paymentTypeId' => model_PaymentType::$PO,
 			'regGroupId' => $groupId,
 			'transactionDate' => date_format($today,'Y-m-d H:i'),
 			'purchaseOrderNumber' => $po['purchaseOrderNumber'],
-			'amount' => $po['amount']
+			'amount' => $received === 'true'? $po['amount'] : 0.00,
+			'paymentReceived' => ArrayUtil::getValue($po, 'paymentReceived', 'false')
 		);
 		
 		$this->execute($sql, $params, 'Create registration PO payment.');
@@ -250,15 +258,18 @@ class db_reg_PaymentManager extends db_Manager
 				Payment
 			SET
 				checkNumber = :checkNumber,
+				amount = :amount,
 				paymentReceived = :paymentReceived
 			WHERE
 				id = :id
 		';
 		
+		$received = $check['paymentReceived'];
 		$params = array(
 			'id' => $check['id'],
 			'checkNumber' => $check['checkNumber'],
-			'paymentReceived' => $check['paymentReceived']
+			'amount' => $received === 'true'? $check['amount'] : 0.00,
+			'paymentReceived' => $received
 		);
 		
 		$this->execute($sql, $params, 'Save check payment.');
@@ -270,14 +281,17 @@ class db_reg_PaymentManager extends db_Manager
 				Payment
 			SET
 				purchaseOrderNumber = :purchaseOrderNumber,
+				amount = :amount,
 				paymentReceived = :paymentReceived
 			WHERE
 				id = :id
 		';
 		
+		$received = $po['paymentReceived'];
 		$params = array(
 			'id' => $po['id'],
 			'purchaseOrderNumber' => $po['purchaseOrderNumber'],
+			'amount' => $received === 'true'? $po['amount'] : 0.00,
 			'paymentReceived' => $po['paymentReceived']
 		);
 		

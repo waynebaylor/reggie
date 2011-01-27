@@ -24,7 +24,7 @@ class action_admin_registration_Payment extends action_ValidatorAction
 			return new fragment_validation_ValidationErrors($errors);
 		}
 		
-		$p = RequestUtil::getParameters(array('id', 'checkNumber', 'purchaseOrderNumber'));
+		$p = RequestUtil::getParameters(array('id', 'amount', 'checkNumber', 'purchaseOrderNumber'));
 		$p['paymentReceived'] = RequestUtil::getValue('paymentReceived', 'false');
 		$p['paymentTypeId'] = $payment['paymentTypeId'];
 		db_reg_PaymentManager::getInstance()->save($p);
@@ -47,6 +47,7 @@ class action_admin_registration_Payment extends action_ValidatorAction
 		$payment = RequestUtil::getParameters(array(
 			'paymentType',
 			'amount',
+			'paymentReceived',
 			'checkNumber',
 			'purchaseOrderNumber',
 			'cardNumber',

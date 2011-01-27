@@ -22,7 +22,7 @@ class fragment_editRegistrations_payment_List extends template_Template
 						<th>Date</th>
 						<th>Payment Information</th>
 						<th>Amount</th>
-						<th>Payment Received</th>
+						<th>Payment Status</th>
 						<th>Options</th>
 					</tr>
 					{$this->getPayments()}
@@ -47,7 +47,7 @@ _;
 		
 		$amount = '$'.number_format($payment['amount'], 2);
 		
-		$received = ($payment['paymentReceived'] === 'true')? 'Received' : '';
+		$received = ($payment['paymentReceived'] === 'true')? 'Received' : 'Pending';
 							
 		$editLink = '';
 		if(in_array($payment['paymentTypeId'], array(model_PaymentType::$CHECK, model_PaymentType::$PO))) {
