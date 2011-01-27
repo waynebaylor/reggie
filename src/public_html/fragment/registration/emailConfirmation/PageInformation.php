@@ -22,7 +22,6 @@ class fragment_registration_emailConfirmation_PageInformation extends template_T
 					<span style="font-size:20px;">
 						{$this->page['title']}
 					</span>
-					<br/><br/>
 				</td></tr>
 	
 				{$rows}

@@ -16,8 +16,6 @@ class fragment_registration_emailConfirmation_Individual extends template_Templa
 	
 	public function html() {
 		return <<<_
-			<br/>
-			<br/>
 			<div style="font-size:20px; font-weight:bold;">
 				Registrant {$this->num}
 			</div>
@@ -35,6 +33,17 @@ _;
 		
 		$regType = db_RegTypeManager::getInstance()->find($registration['regTypeId']);
 		
+		$dateCancelledRow = '';
+		if(!empty($registration['dateCancelled'])) {
+			$dateCancelled = substr($registration['dateCancelled'], 0, 10);
+			$dateCancelledRow = <<<_
+				<tr>
+					<td style="font-weight:bold;">Date Cancelled</td>
+					<td>{$dateCancelled}</td>
+				</tr>
+_;
+		}
+		
 		return <<<_
 				<tr>
 					<td style="font-weight:bold;">Date Registered</td>
@@ -48,7 +57,8 @@ _;
 						{$regType['description']}
 					</td>
 				</tr>
-				
+				{$dateCancelledRow}
+											
 				{$this->getInformationRows($event, $registration)}
 _;
 	}
@@ -74,7 +84,6 @@ _;
 				<td colspan="2" style="font-size:20px;">
 					<br/>
 					Selected Options
-					<br/><br/>
 				</td>
 			</tr>
 			
