@@ -173,22 +173,10 @@ class action_reg_Summary extends action_ValidatorAction
 	}
 	
 	private function sendConfirmationEmail($regGroup) {
-		$emailTemplate = $this->event['emailTemplate'];
-		
-		$fragment = new fragment_registration_summary_Summary($this->event, $regGroup);
-
-		$text = $emailTemplate['header']."<div>{$fragment->html()}</div>".$emailTemplate['footer'];
+		$logic = new logic_admin_registration_Registration();
 		
 		foreach($regGroup['registrations'] as $reg) {
-			$toAddress = model_Registrant::getEmailFieldValue($this->event, $reg);
-
-			EmailUtil::send(array(
-				'to' => $toAddress,
-				'from' => $emailTemplate['fromAddress'],
-				'bcc' => $emailTemplate['bcc'],
-				'subject' => $emailTemplate['subject'],
-				'text' => $text
-			));
+			$logic->sendConfirmationEmail($this->event, $regGroup, $reg);
 		}
 	}
 }

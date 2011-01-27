@@ -53,14 +53,30 @@ class logic_admin_registration_Registration extends logic_Performer
 		db_reg_RegistrationManager::getInstance()->createRegistration($regGroupId, $newReg);
 	}
 	
-	public function sendConfirmation($event, $regGroup, $registration) {
+	public function sendConfirmation($registrationId) {
+		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $registrationId);	
+		$event = $this->strictFindById(db_EventManager::getInstance(), $registration['eventId']);
+		$regGroup = db_reg_GroupManager::getInstance()->find($registration['regGroupId']);
+		
+		$this->sendConfirmationEmail($event, $regGroup, $registration);
+	}
+	
+	public function sendConfirmationEmail($event, $regGroup, $registration) {
 		$emailTemplate = $event['emailTemplate'];
 		
 		$summaryText = new fragment_registration_emailConfirmation_Confirmation($event, $regGroup);
 		$summaryText = $summaryText->html();
 		$summaryText = preg_replace('/\s\s+/', ' ', $summaryText); // strip extra whitespace.
 		
-		$text = $emailTemplate['header']."<div>{$summaryText}</div>".$emailTemplate['footer'];
+		$text = <<<_
+			<div style="font-family:sans-serif;">
+				{$emailTemplate['header']}
+				
+				<div>{$summaryText}</div>
+				
+				{$emailTemplate['footer']}
+			</div>
+_;
 		
 		$to = model_Registrant::getEmailFieldValue($event, $registration);
 		

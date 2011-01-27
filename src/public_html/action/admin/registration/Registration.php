@@ -62,12 +62,10 @@ class action_admin_registration_Registration extends action_ValidatorAction
 	}
 
 	public function sendConfirmation() {
-		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), RequestUtil::getValue('registrationId', 0));	
-		$event = $this->strictFindById(db_EventManager::getInstance(), $registration['eventId']);
-		$regGroup = db_reg_GroupManager::getInstance()->find($registration['regGroupId']);
+		$registrationId = RequestUtil::getValue('registrationId', 0);
 		$reportId = RequestUtil::getValue('reportId', 0);
 		
-		$this->logic->sendConfirmation($event, $regGroup, $registration);
+		$this->logic->sendConfirmation($registrationId);
 		
 		return new template_Redirect("/admin/registration/Registration?groupId={$regGroup['id']}&reportId={$reportId}");
 	}
