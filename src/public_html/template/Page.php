@@ -16,6 +16,10 @@ abstract class template_Page extends template_Template
 <html>
 
 <head>
+	{$this->HTML->css(array('href' => '/js/dojo/resources/dojo.css'))}
+	{$this->HTML->css(array('href' => '/js/dijit/themes/dijit.css'))}
+	{$this->HTML->css(array('href' => '/js/dijit/themes/claro/claro.css'))}
+			
 	<style type="text/css">
 		noscript p {
 			color: black;
@@ -26,6 +30,24 @@ abstract class template_Page extends template_Template
 	</style>
 	
 	{$this->head()}
+	
+	{$this->HTML->script(array('src' => '/js/less.js'))}
+	{$this->HTML->script(array('src' => '/js/dojo/dojo.js'))}
+			
+	<script type="text/javascript">
+		dojo.registerModulePath("hhreg", "{$this->contextUrl('/js/hhreg')}");
+		dojo.require("hhreg");
+
+		dojo.addOnLoad(function() {
+			dojo.style(dojo.byId("script-enabled-content"), "display", "");
+			
+			var messages = dojo.byId("xhr-response");
+			if(messages) {
+				dojo.require("hhreg.validation");
+				hhreg.validation.showMessages(dojo.fromJson(messages.value), messages.form);
+			}
+		});
+	</script>
 </head>
 
 <body class="claro">
@@ -44,10 +66,6 @@ abstract class template_Page extends template_Template
 	<div id="script-enabled-content" style="display:none;">
 		{$this->body()}
 	</div>
-	
-	<script type="text/javascript">
-		document.getElementById("script-enabled-content").style.display = "";
-	</script>
 </body>
 
 </html>

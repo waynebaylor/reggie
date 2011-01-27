@@ -24,30 +24,11 @@ class template_reg_BasePage extends template_Page
 		return <<<_
 			<title>{$this->event['displayName']} - {$this->title}</title>
 	
-			{$this->HTML->css(array('href' => '/js/dojo/resources/dojo.css'))}
-			{$this->HTML->css(array('href' => '/js/dijit/themes/dijit.css'))}
-			{$this->HTML->css(array('href' => '/js/dijit/themes/claro/claro.css'))}
-			
 			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/reg.less'))}
 			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/summary.less'))}
 			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/informationField.less'))}
 			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/html.less'))}
 			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/paymentChooser.less'))}
-			
-			{$this->HTML->script(array('src' => '/js/less.js'))}
-			{$this->HTML->script(array('src' => '/js/dojo/dojo.js'))}
-			
-			<script type="text/javascript">
-				dojo.registerModulePath("hhreg", "{$this->contextUrl('/js/hhreg')}");
-				dojo.require("hhreg");
-				
-				dojo.addOnLoad(function() {
-					dojo.require("hhreg.validation");
-					
-					var messages = dojo.byId("xhr-response");
-					hhreg.validation.showMessages(dojo.fromJson(messages.value), messages.form);
-				});
-			</script>
 			
 			<style type="text/css">
 				body {
