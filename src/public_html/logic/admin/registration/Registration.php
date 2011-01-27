@@ -57,7 +57,10 @@ class logic_admin_registration_Registration extends logic_Performer
 		$emailTemplate = $event['emailTemplate'];
 		
 		$summaryText = new fragment_registration_emailConfirmation_Confirmation($event, $regGroup);
-		$text = $emailTemplate['header']."<div>{$summaryText->html()}</div>".$emailTemplate['footer'];
+		$summaryText = $summaryText->html();
+		$summaryText = preg_replace('/\s\s+/', ' ', $summaryText); // strip extra whitespace.
+		
+		$text = $emailTemplate['header']."<div>{$summaryText}</div>".$emailTemplate['footer'];
 		
 		$to = model_Registrant::getEmailFieldValue($event, $registration);
 		
