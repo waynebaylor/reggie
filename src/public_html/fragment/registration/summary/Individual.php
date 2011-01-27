@@ -84,7 +84,7 @@ _;
 					</td>
 				</tr>
 				
-				{$dateCancelled}
+				{$dateCancelledRow}
 				
 				{$this->getInformationRows($event, $registration)}
 			</table>	
