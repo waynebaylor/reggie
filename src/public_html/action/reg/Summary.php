@@ -142,14 +142,14 @@ class action_reg_Summary extends action_ValidatorAction
 					'success' => true,
 					'paymentType' => model_PaymentType::$CHECK,
 					'checkNumber' => $info['checkNumber'],
-					'amount' => $cost
+					'amount' => 0.00
 				);
 			case model_PaymentType::$PO:
 				return array(
 					'success' => true,
 					'paymentType' => model_PaymentType::$PO,
 					'purchaseOrderNumber' => $info['purchaseOrderNumber'],
-					'amount' => $cost
+					'amount' => 0.00
 				);;
 			case model_PaymentType::$AUTHORIZE_NET:
 				$authorizeNet = new payment_AuthorizeNET($this->event, $info, $cost);
