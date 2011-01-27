@@ -92,7 +92,8 @@ _;
 			}
 			else {
 				$cancelLink = '';
-				$cancelDate = '(Cancelled '.substr($r['dateCancelled'], 0, 10).')';
+				$cancelDate = '<span style="font-weight:bold; color:red;">(Cancelled '.substr($r['dateCancelled'], 0, 10).')</span>'; 
+
 				$cancelCss = 'cancelled';
 			}	
 			
