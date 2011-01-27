@@ -58,6 +58,17 @@ _;
 		
 		$regType = db_RegTypeManager::getInstance()->find($registration['regTypeId']);
 		
+		$dateCancelledRow = '';
+			if(!empty($registration['dateCancelled'])) {
+				$dateCancelled = substr($registration['dateCancelled'], 0, 10);
+				$dateCancelledRow = <<<_
+					<tr>
+						<td class="label">Date Cancelled</td>
+						<td>{$dateCancelled}</td>
+					</tr>
+_;
+		}
+		
 		return <<<_
 			<table>
 				<tr>
@@ -72,6 +83,8 @@ _;
 						{$regType['description']}
 					</td>
 				</tr>
+				
+				{$dateCancelled}
 				
 				{$this->getInformationRows($event, $registration)}
 			</table>	

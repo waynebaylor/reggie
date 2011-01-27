@@ -57,6 +57,7 @@ _;
 						{$regType['description']}
 					</td>
 				</tr>
+				
 				{$dateCancelledRow}
 											
 				{$this->getInformationRows($event, $registration)}
