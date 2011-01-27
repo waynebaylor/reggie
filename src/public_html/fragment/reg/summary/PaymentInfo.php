@@ -11,20 +11,14 @@ class fragment_reg_summary_PaymentInfo extends template_Template
 	}
 	
 	public function html() {
-		$cost = model_reg_Registration::getTotalCost($this->event);
-		
-		if(!empty($this->event['paymentTypes']) && $cost > 0) {
-			return <<<_
-				<tr>
-					<td class="label">Payment Information</td>
-					<td class="details">
-						{$this->getPaymentInfo()}
-					</td>
-				</tr>
+		return <<<_
+			<tr>
+				<td class="label">Payment Information</td>
+				<td class="details">
+					{$this->getPaymentInfo()}
+				</td>
+			</tr>
 _;
-		}
-		
-		return '';
 	}
 	
 	private function getPaymentInfo() {
@@ -105,6 +99,13 @@ _;
 _;
 				break;
 			default:
+				$rows = <<<_
+					<tr>
+						<td colspan="2" class="infor-field">
+							No payment due.
+						</td>
+					</tr>			
+_;
 				break;
 		}
 		

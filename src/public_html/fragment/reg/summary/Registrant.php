@@ -101,16 +101,15 @@ _;
 		
 		$costDisplay = number_format($cost, 2);
 		
-		if($cost > 0) {
-			return <<<_
-				<tr>
-					<td class="label">Registrant Subtotal</td>
-					<td class="details">
-						<div class="price">\${$costDisplay}</div>
-					</td>
-				</tr>
+		
+		return <<<_
+			<tr>
+				<td class="label">Registrant Subtotal</td>
+				<td class="details">
+					<div class="price">\${$costDisplay}</div>
+				</td>
+			</tr>
 _;
-		}
 		
 		return '';
 	}

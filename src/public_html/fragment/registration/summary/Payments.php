@@ -13,15 +13,7 @@ class fragment_registration_summary_Payments extends template_Template
 	}
 	
 	public function html() {
-		$payments = '';
-		
-		$cost = db_reg_GroupManager::getInstance()->findTotalCost($this->group['id']);
-		
-		if(!empty($this->event['paymentTypes'])) {
-			$payments = $this->getPayments($this->group);
-		}
-		
-		return $payments;
+		return $this->getPayments($this->group);
 	}
 	
 	private function getPayments($group) {

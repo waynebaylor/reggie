@@ -17,9 +17,7 @@ class fragment_registration_summary_RegOptions extends template_Template
 			<tr>
 				<td class="label" colspan="3">Selected Options</td>
 			</tr>
-			<tr>
-				{$this->getRegOptions($this->event, $this->registration)}
-			</tr>
+			{$this->getRegOptions($this->event, $this->registration)}
 _;
 	}
 	
@@ -29,6 +27,10 @@ _;
 		$eventOptionGroups = model_Event::getRegOptionGroups($event);
 		foreach($eventOptionGroups as $group) {
 			$html .= $this->getRegOptionGroup($registration, $group);
+		}
+
+		if(empty($html)) {
+			$html = '<tr><td>No options selected.</td></tr>';	
 		}
 		
 		return $html;
