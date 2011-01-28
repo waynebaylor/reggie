@@ -48,7 +48,7 @@ class fragment_registration_emailConfirmation_RegOptions extends template_Templa
 			if($option['id'] == $regOption['regOptionId']) {
 				$price = db_RegOptionPriceManager::getInstance()->find($regOption['priceId']);
 				$priceDisplayed = ($option['showPrice'] === 'true')? '$'.number_format($price['price'], 2) : '';
-				$cancelled = empty($regOption['dateCancelled'])? '' : 'Cancelled';
+				$cancelled = empty($regOption['dateCancelled'])? '' : '( Cancelled on '.substr($regOption['dateCancelled'], 0, 10).' )';
 				
 				$html .= <<<_
 					<tr>
