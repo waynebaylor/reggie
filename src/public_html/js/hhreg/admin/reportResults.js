@@ -23,7 +23,6 @@ dojo.require("hhreg.xhrTableForm");
 		
 		hhreg.xhrTableForm.bind(form, function() { 
 			dialog.hide();
-			hhreg.xhrTableForm.hideIcons(form);
 			document.location = hhreg.contextUrl(redirectUrl);
 		});
 	});

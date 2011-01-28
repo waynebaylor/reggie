@@ -185,14 +185,16 @@ _;
 		$attrs = self::getAttributeString($config);
 		
 		return <<<_
-			<table class="radio-label"></tr>
-				<td>
-					<input type="radio" id="{$id}" {$attrs} />
-				</td>
-				<td>
-					<label for="{$id}">{$label}</label>
-				</td>
-			</tr></table>
+			<table class="radio-label">
+				<tr>
+					<td>
+						<input type="radio" id="{$id}" {$attrs} />
+					</td>
+					<td>
+						<label for="{$id}">{$label}</label>
+					</td>
+				</tr>
+			</table>
 _;
 	}
 	
