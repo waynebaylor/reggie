@@ -16,6 +16,8 @@ class fragment_registration_emailConfirmation_Individual extends template_Templa
 	
 	public function html() {
 		return <<<_
+			<br/>
+			<br/>
 			<div style="font-size:20px; font-weight:bold;">
 				Registrant {$this->num}
 			</div>
