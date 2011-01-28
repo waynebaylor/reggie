@@ -26,10 +26,12 @@ class fragment_registration_summary_Individual extends template_Template
 			
 			<table class="summary">
 				<tr>
-					<td style="width:50%;">
+					<td>
 						{$this->getInformation($this->event, $this->registration)}
 					</td>
-					<td style="width:50%;">
+				</tr>
+				<tr>
+					<td>
 						{$this->getOptions($this->event, $this->registration)}
 					</td>
 				</tr>
@@ -58,6 +60,8 @@ _;
 		
 		$regType = db_RegTypeManager::getInstance()->find($registration['regTypeId']);
 		
+		$confirmationNumber = model_Registrant::getConfirmationNumber($registration);
+		
 		$dateCancelledRow = '';
 			if(!empty($registration['dateCancelled'])) {
 				$dateCancelled = substr($registration['dateCancelled'], 0, 10);
@@ -81,6 +85,12 @@ _;
 					<td class="label">Registration Type</td>
 					<td>
 						{$regType['description']}
+					</td>
+				</tr>
+				<tr>
+					<td style="font-weight:bold;">Confirmation Number</td>
+					<td>
+						{$confirmationNumber}
 					</td>
 				</tr>
 				

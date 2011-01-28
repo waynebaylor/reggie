@@ -72,6 +72,14 @@ class model_Registrant
 		
 		return null;
 	}
+	
+	public static function getConfirmationNumber($registrant) {
+		$num = $registrant['confirmationNumber'];
+		$length = max(array(8, strlen($num)%4 + strlen($num))); // need this many digits.
+		$num = str_pad($num, $length, '0', STR_PAD_LEFT);
+		
+		return implode('-', str_split($num, 4)); // formatted like 0000-0000
+	}
 }
 
 ?>

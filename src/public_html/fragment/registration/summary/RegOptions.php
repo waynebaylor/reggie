@@ -15,7 +15,9 @@ class fragment_registration_summary_RegOptions extends template_Template
 	public function html() {
 		return <<<_
 			<tr>
-				<td class="label" colspan="3">Selected Options</td>
+				<td colspan="3">
+					<h3>Selected Options</h3>
+				</td>
 			</tr>
 			{$this->getRegOptions($this->event, $this->registration)}
 _;
@@ -53,13 +55,13 @@ _;
 			if($option['id'] == $regOption['regOptionId']) {
 				$price = db_RegOptionPriceManager::getInstance()->find($regOption['priceId']);
 				$priceDisplayed = ($option['showPrice'] === 'true')? '$'.number_format($price['price'], 2) : '';
-				$cancelled = empty($regOption['dateCancelled'])? '' : 'Cancelled';
+				$cancelled = empty($regOption['dateCancelled'])? '' : '( Cancelled on '.substr($regOption['dateCancelled'], 0, 10).' )';
 				
 				$html .= <<<_
 					<tr>
 						<td>{$option['description']}</td>
 						<td>{$priceDisplayed}</td>
-						<td>{$cancelled}</td>
+						<td style="white-space:nowrap;">{$cancelled}</td>
 					</tr>
 _;
 			}

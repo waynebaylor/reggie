@@ -92,7 +92,7 @@ _;
 			}
 			else {
 				$cancelLink = '';
-				$cancelDate = '<span style="font-weight:bold; color:red;">(Cancelled '.substr($r['dateCancelled'], 0, 10).')</span>'; 
+				$cancelDate = '<span style="font-weight:bold; color:red;">( Cancelled )</span>'; 
 
 				$cancelCss = 'cancelled';
 			}	
@@ -144,7 +144,35 @@ _;
 	}
 	
 	private function getRegistrantRow($r) {
+		$registeredDate = substr($r['dateRegistered'], 0, 10);
+		$confirmationNumber = model_Registrant::getConfirmationNumber($r);
+		
+		$cancelledRow = '';
+		if(!empty($r['dateCancelled'])) {
+			$cancelledDate = substr($r['dateCancelled'], 0, 10);
+			$cancelledRow = <<<_
+				<tr>
+					<td class="label">Date Cancelled</td>
+					<td>{$cancelledDate}</td>
+				</tr>
+_;
+		}
+		
 		return <<<_
+			<tr>
+				<td class="label">Date Registered</td>
+				<td>{$registeredDate}</td>
+			</tr>
+			<tr>
+				<td class="label">Confirmation Number&nbsp;</td>
+				<td>{$confirmationNumber}</td>
+			</tr>
+			{$cancelledRow}
+			<tr>
+				<td colspan="2">
+					<div class="sub-divider"></div>
+				</td>
+			</tr>
 			<tr>
 				<td class="label">Comments</td>
 				<td>

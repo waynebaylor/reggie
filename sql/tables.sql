@@ -976,6 +976,7 @@ create table if not exists `Registration` (
 	`categoryId`		integer		not null,
 	`eventId`		integer		not null,
 	`regTypeId`		integer		not null,
+	`confirmationNumber`	varchar(255)	not null,
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
@@ -1014,6 +1015,13 @@ foreign key
 	(regGroupId)
 references
 	RegistrationGroup(id);
+
+alter table 
+	Registration
+add constraint
+	registraion_confNum_uni
+unique
+	(confirmationNumber);
 
 -- --------------------------------------------------
 

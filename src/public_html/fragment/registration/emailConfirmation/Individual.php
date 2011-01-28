@@ -33,6 +33,8 @@ _;
 		
 		$regType = db_RegTypeManager::getInstance()->find($registration['regTypeId']);
 		
+		$confirmationNumber = model_Registrant::getConfirmationNumber($registration);
+		
 		$dateCancelledRow = '';
 		if(!empty($registration['dateCancelled'])) {
 			$dateCancelled = substr($registration['dateCancelled'], 0, 10);
@@ -55,6 +57,12 @@ _;
 					<td style="font-weight:bold;">Registration Type</td>
 					<td>
 						{$regType['description']}
+					</td>
+				</tr>
+				<tr>
+					<td style="font-weight:bold;">Confirmation Number</td>
+					<td>
+						{$confirmationNumber}
 					</td>
 				</tr>
 				

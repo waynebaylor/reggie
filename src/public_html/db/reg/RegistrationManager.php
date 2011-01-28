@@ -36,7 +36,8 @@ class db_reg_RegistrationManager extends db_Manager
 				regGroupId,
 				categoryId,
 				eventId,
-				regTypeId
+				regTypeId,
+				confirmationNumber
 			FROM
 				Registration
 			WHERE
@@ -65,7 +66,8 @@ class db_reg_RegistrationManager extends db_Manager
 					regGroupId,
 					categoryId,
 					eventId,
-					regTypeId	
+					regTypeId,
+					confirmationNumber
 				)
 			VALUES(
 				:dateRegistered,
@@ -73,7 +75,8 @@ class db_reg_RegistrationManager extends db_Manager
 				:regGroupId,
 				:categoryId,
 				:eventId,
-				:regTypeId
+				:regTypeId,
+				:confirmationNumber
 			)
 		';
 		
@@ -85,13 +88,36 @@ class db_reg_RegistrationManager extends db_Manager
 			'regGroupId' => $regGroupId,
 			'categoryId' => $r['categoryId'],
 			'eventId' => $r['eventId'],
-			'regTypeId' => $r['regTypeId']
+			'regTypeId' => $r['regTypeId'],
+			'confirmationNumber' => '00000000'
 		);
 		
 		$this->execute($sql, $params, 'Create registration.');
 		
 		$regId = $this->lastInsertId();
 		
+		//
+		// set the confirmation number based on the DB id.
+		//
+		$sql = '
+			UPDATE
+				Registration
+			SET
+				confirmationNumber = :confirmationNumber
+			WHERE
+				id = :id
+		';
+		
+		$params = array(
+			'id' => $regId,
+			'confirmationNumber' => 1000 + intval($regId, 10)
+		);
+		
+		$this->execute($sql, $params, 'Set registration confirmation number.');
+		
+		//
+		// populate registration associations.
+		//
 		db_reg_InformationManager::getInstance()->createInformation($regId, $r['information']);
 		
 		db_reg_RegOptionManager::getInstance()->createOptions($r['regTypeId'], $regId, $r['regOptionIds']);
@@ -199,7 +225,8 @@ class db_reg_RegistrationManager extends db_Manager
 				regGroupId,
 				categoryId,
 				eventId,
-				regTypeId
+				regTypeId,
+				confirmationNumber
 			FROM
 				Registration
 			WHERE
