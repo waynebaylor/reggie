@@ -65,9 +65,11 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		$registrationId = RequestUtil::getValue('registrationId', 0);
 		$reportId = RequestUtil::getValue('reportId', 0);
 		
+		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $registrationId);	
+		
 		$this->logic->sendConfirmation($registrationId);
 		
-		return new template_Redirect("/admin/registration/Registration?groupId={$regGroup['id']}&reportId={$reportId}");
+		return new template_Redirect("/admin/registration/Registration?groupId={$registration['regGroupId']}&reportId={$reportId}");
 	}
 	
 	private function saveInformationFields($registrationId, $sectionId) {
