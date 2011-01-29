@@ -21,6 +21,10 @@ abstract class template_Page extends template_Template
 	{$this->HTML->css(array('href' => '/js/dijit/themes/claro/claro.css'))}
 			
 	<style type="text/css">
+		#script-enabled-content {
+			visibility: hidden;
+		}
+		
 		noscript p {
 			color: black;
 			font-size: 2em;
@@ -39,14 +43,14 @@ abstract class template_Page extends template_Template
 		dojo.require("hhreg");
 
 		dojo.addOnLoad(function() {
-			dojo.style(dojo.byId("script-enabled-content"), "display", "");
-			
 			var messages = dojo.byId("xhr-response");
 			if(messages) {
 				dojo.require("hhreg.validation");
 				hhreg.validation.showMessages(dojo.fromJson(messages.value), messages.form);
 			}
 		});
+		
+		document.write('<style type="text/css"> #script-enabled-content { visibility: visible; } </style>');
 	</script>
 </head>
 
@@ -63,7 +67,7 @@ abstract class template_Page extends template_Template
 		</p>
 	</noscript>
 	
-	<div id="script-enabled-content" style="display:none;">
+	<div id="script-enabled-content">
 		{$this->body()}
 	</div>
 </body>
