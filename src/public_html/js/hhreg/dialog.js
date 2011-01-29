@@ -27,7 +27,6 @@ dojo.require("dijit.Dialog");
 		}
 		
 		// set up the dialog.
-		dojo.body().appendChild(d.domNode);
 		d.startup();
 		dojo.removeClass(spec.content, "hide");
 		

@@ -55,7 +55,8 @@ dojo.require("dijit._Widget");
 	
 	dojo.addOnLoad(function() {
 		dojo.query(".hhreg-calendar").forEach(function(item) {
-			new hhreg.Calendar({}, item);
+			var c = new hhreg.Calendar({}, item);
+			c.startup();
 		});
 	});
 })();				

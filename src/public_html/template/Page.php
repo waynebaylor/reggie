@@ -55,12 +55,6 @@ abstract class template_Page extends template_Template
 </head>
 
 <body class="claro">
-	{$this->HTML->hidden(array(
-		'id' => 'reggie.contextPath',
-		'name' => 'reggie.contextPath',
-		'value' => $this->contextUrl('/')
-	))}
-	
 	<noscript>
 		<p>
 			This site requires JavaScript. Please enable JavaScript in your browser.
@@ -68,6 +62,12 @@ abstract class template_Page extends template_Template
 	</noscript>
 	
 	<div id="script-enabled-content">
+		{$this->HTML->hidden(array(
+			'id' => 'reggie.contextPath',
+			'name' => 'reggie.contextPath',
+			'value' => $this->contextUrl('/')
+		))}
+	
 		{$this->body()}
 	</div>
 </body>

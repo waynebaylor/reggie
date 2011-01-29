@@ -20,7 +20,7 @@ class HTML
 	public function hidden($config) {
 		$attrs = self::getAttributeString($config);
 		return <<<_
-			<input type="hidden" {$attrs} />	
+			<input type="hidden" {$attrs} >	
 _;
 	}
 	
@@ -32,7 +32,7 @@ _;
 		$attrs = self::getAttributeString($config);
 
 		return <<<_
-			<input type="text" {$attrs} />
+			<input type="text" {$attrs} >
 _;
 	}
 	
@@ -98,7 +98,7 @@ _;
 		return <<<_
 			<table class="checkbox-label"><tr>
 				<td>	
-					<input type="checkbox" id="{$id}" {$attrs} />
+					<input type="checkbox" id="{$id}" {$attrs} >
 				</td>
 				<td> {$label}</td>
 			</tr></table>
@@ -188,7 +188,7 @@ _;
 			<table class="radio-label">
 				<tr>
 					<td>
-						<input type="radio" id="{$id}" {$attrs} />
+						<input type="radio" id="{$id}" {$attrs} >
 					</td>
 					<td>
 						<label for="{$id}">{$label}</label>
@@ -286,7 +286,7 @@ _;
 		$url = Reggie::contextUrl($config['href']);
 		
 		return <<<_
-			<link media="all" rel="{$rel}" type="text/css" href="{$url}"/>	
+			<link media="all" rel="{$rel}" type="text/css" href="{$url}">	
 _;
 	}
 	
