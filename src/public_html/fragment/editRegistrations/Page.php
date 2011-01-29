@@ -25,16 +25,18 @@ class fragment_editRegistrations_Page extends template_Template
 		foreach($sections as $section) {
 			if(model_Section::containsRegTypes($section)) {
 				$html .= $this->getRegTypeHtml($section, $this->registration);
+				$fragmentClass = 'registrant-details-section';
 			}
 			else if(model_Section::containsContactFields($section)) {
 				$fragment = new fragment_editRegistrations_InformationFields($section, $this->registration);
 				$html .= $fragment->html();
+				$fragmentClass = 'fragment-edit';
 			}
 		}
 			
 		if(!empty($html)) {
 			return <<<_
-				<div class="fragment-edit">
+				<div class="{$fragmentClass}">
 					<h3>{$this->page['title']}</h3>
 					
 					{$html}
