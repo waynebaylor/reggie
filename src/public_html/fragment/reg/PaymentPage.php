@@ -27,6 +27,8 @@ class fragment_reg_PaymentPage extends template_Template
 			<div class="amount-due">
 				Total Due: {$this->getTotalDue()}
 			</div>
+			
+			<div id="general-errors"></div>
 
 			{$this->getPaymentTypes()}
 			

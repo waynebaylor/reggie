@@ -32,16 +32,19 @@ class action_reg_Summary extends action_ValidatorAction
 	public function Next() {
 		// payment is only required if non-zero total due and event has at least one payment type enabled.
 		$totalDue = model_reg_Registration::getTotalCost($this->event);
+		
 		if($totalDue > 0 && !empty($this->event['paymentTypes'])) {
 			$errors = $this->validate();
 			
 			if(!empty($errors)) {
-				$summary = new fragment_reg_summary_SummaryPage($this->event);
+				// if there are payment errors, then we should take the user
+				// back to the payment page so they can correct the issue.
+				$payment = new fragment_reg_PaymentPage($this->event);
 				return new template_reg_BasePage(array(
 					'event' => $this->event,
-					'title' => 'Review &amp; Confirm',
-					'id' => model_reg_RegistrationPage::$SUMMARY_PAGE_ID,
-					'page' => $summary,
+					'title' => 'Payment Information',
+					'id' => model_reg_RegistrationPage::$PAYMENT_PAGE_ID,
+					'page' => $payment,
 					'errors' => $errors
 				));
 			}
