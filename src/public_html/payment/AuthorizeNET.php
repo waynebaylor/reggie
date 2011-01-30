@@ -19,8 +19,38 @@ class payment_AuthorizeNET
 		$this->info = $info;
 	}
 	
+	private function avsCheck() {
+		$fields = $this->paymentFields('AUTH_ONLY', 0.00);
+		$response = $this->submitTransaction($fields);
+
+		Logger::logPayment($this->event['code'].' Authorize.NET AVS check: '.$response);
+
+		// break the response up into an array.
+		$response = explode('|', $response);
+		
+		$response = array(
+			// AIM Response Code 1 means approved.
+			// Response Reason Code 289 means $0 authorization not allowed. 
+			// AVS check is considered successful if the response is approved or
+			// if $0 AVS checks are not allowed--in this case we must go ahead with
+			// the full transaction.
+			'success' => (intval($response[0], 10) === 1 || intval($response[2], 10) === 289), 
+			'responseText' => $response[3]
+		);
+		
+		return $response;
+	}
+	
 	public function makePayment() {
-		$fields = $this->paymentFields();
+		// try $0.00 AVS authorization first. this will catch AVS
+		// errors without putting a hold on any funds.
+		$avsCheckResult = $this->avsCheck();
+		if(!$avsCheckResult['success']) {
+			return $avsCheckResult;
+		}
+		
+		// if AVS is okay, then submit the charge.
+		$fields = $this->paymentFields('AUTH_CAPTURE', $this->amount);
 		$response = $this->submitTransaction($fields);
 
 		Logger::logPayment($this->event['code'].' Authorize.NET payment: '.$response);
@@ -38,25 +68,21 @@ class payment_AuthorizeNET
 		);
 	}
 	
-	public function voidPayment() {
-		
-	}
-	
-	private function paymentFields() {
+	private function paymentFields($type, $amount) {
 		$login = $this->event['paymentTypes'][model_PaymentType::$AUTHORIZE_NET]['login'];
 		$transactionKey = $this->event['paymentTypes'][model_PaymentType::$AUTHORIZE_NET]['transactionKey'];
 		
 		$fields = array(
 			'x_relay_response' => 'FALSE', // always FALSE for AIM
 			'x_version' => '3.1',
-			'x_type' => 'AUTH_CAPTURE',
+			'x_type' => $type,
 			'x_method' => 'CC',
 			'x_delim_data' => 'TRUE',
 			'x_delim_char' => '|',
 		
 			'x_login' => $login,
 			'x_tran_key' => $transactionKey,
-			'x_amount' => $this->amount,
+			'x_amount' => $amount,
 			'x_card_num' => $this->info['cardNumber'],
 			'x_exp_date' => $this->info['month'].$this->info['year'],
 			'x_first_name' => $this->info['firstName'],

@@ -105,7 +105,8 @@ class action_reg_Summary extends action_ValidatorAction
 			$this->payment = $payment;
 		}
 		else {
-			$message = 'There was a problem processing your payment.';
+			$message = 'There was a problem processing your payment. ';
+			$message .= $payment['responseText'];
 			
 			if(isset($errors['general'])) {
 				$errors['general'][] = $message;
