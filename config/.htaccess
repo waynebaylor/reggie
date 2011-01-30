@@ -14,7 +14,7 @@ RewriteEngine on
 
 RewriteRule ^/?$ http://%{SERVER_NAME}%{REQUEST_URI}admin/Login [R,L]
 
-RewriteCond $1 !^\/?(favicon\.ico|js|css|images|pdf|files)
+RewriteCond $1 !^\/?(robots\.txt|favicon\.ico|js|css|images|pdf|files)
 RewriteRule ^(.*)$ index.php [L]
 
 
@@ -36,7 +36,7 @@ RewriteRule ^(.*)$ index.php [L]
 
 # if it's an SSL request, then rewrite to index.php.
 #RewriteCond %{HTTPS} =on
-#RewriteCond $1 !^\/?(favicon\.ico|js|css|images|pdf|files)
+#RewriteCond $1 !^\/?(robots\.txt|favicon\.ico|js|css|images|pdf|files)
 #RewriteRule ^(.*)$ index.php [L]
 ########################################
 
