@@ -20,6 +20,8 @@ abstract class template_Page extends template_Template
 	{$this->HTML->css(array('href' => '/js/dijit/themes/dijit.css'))}
 	{$this->HTML->css(array('href' => '/js/dijit/themes/claro/claro.css'))}
 			
+	{$this->HTML->script(array('src' => '/js/dojo/dojo.js'))}
+	
 	<style type="text/css">
 		#script-enabled-content {
 			visibility: hidden;
@@ -32,10 +34,6 @@ abstract class template_Page extends template_Template
 			text-align: center;
 		}
 	</style>
-	
-	{$this->head()}
-	
-	{$this->HTML->script(array('src' => '/js/dojo/dojo.js'))}
 			
 	<script type="text/javascript">
 		dojo.registerModulePath("hhreg", "{$this->contextUrl('/js/hhreg')}");
@@ -50,6 +48,8 @@ abstract class template_Page extends template_Template
 		
 		document.write('<style type="text/css"> #script-enabled-content { visibility: visible; } </style>');
 	</script>
+	
+	{$this->head()}
 </head>
 
 <body class="claro">
