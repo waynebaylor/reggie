@@ -54,7 +54,7 @@ _;
 			<tr>
 				<td class="required label">Password</td>
 				<td>
-					<input type="password" name="password" value="" size="30"/>
+					<input type="password" name="password" value="" size="30">
 				</td>
 			</tr>
 _;

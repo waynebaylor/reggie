@@ -58,7 +58,7 @@ _;
 				<div>
 					You may add another person to your group before entering payment information.
 					<br/><br/>
-					<input type="submit" class="button" name="a" value="{$value}"/>
+					<input type="submit" class="button" name="a" value="{$value}">
 				</div>
 _;
 		}

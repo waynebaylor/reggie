@@ -46,7 +46,7 @@ _;
 			<tr>
 				<td class="label">New Password</td>
 				<td>
-					<input type="password" name="password" value=""/>
+					<input type="password" name="password" value="">
 				</td>
 			</tr>
 			<tr>

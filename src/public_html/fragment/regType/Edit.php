@@ -60,11 +60,15 @@ _;
 
 		$categories = model_Category::values();
 		foreach($categories as $category) {
-			$checked = model_RegType::isVisibleTo($this->regType, $category)? 'checked="checked"' : '';
 			$html .= <<<_
 				<div>
-					<input type="checkbox" id="categoryId_{$category['id']}" name="categoryIds[]" value="{$category['id']}" {$checked}/>
-					<label for="categoryId_{$category['id']}">{$category['displayName']}</label>
+					{$this->HTML->checkbox(array(
+						'label' => $category['displayName'],
+						'id' => "categoryId_{$category['id']}",
+						'name' => 'categoryIds[]',
+						'value' => $category['id'],
+						'checked' =>  model_RegType::isVisibleTo($this->regType, $category)
+					))}
 				</div>
 _;
 		}

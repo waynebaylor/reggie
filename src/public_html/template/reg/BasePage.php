@@ -104,7 +104,10 @@ _;
 			</div>
 			<div id="content">	
 				<form method="post" action="{$this->contextUrl("/event/{$this->event['code']}/{$cat}")}">
-					<input type="hidden" name="pageId" value="{$this->id}"/>
+					{$this->HTML->hidden(array(
+						'name' => 'pageId',
+						'value' => $this->id
+					))}
 					
 					<table><tr><td class="reg-form">
 						<table class="reg-content"><tr>
@@ -163,20 +166,20 @@ _;
 		$disabled = empty($visiblePages) || $visiblePages[0]['id'] === $this->id;
 		$disabledAttr = $disabled? 'disabled="disabled"' : '';
 		$disabledStyle = $disabled? 'color:lightgray;' : '';
-		$onclick = $disabled? '' : "document.location=hhreg.contextUrl('/event/{$this->event['code']}/{$cat}?a=Previous&pageId={$this->id}');";
+		$onclick = $disabled? '' : "document.location=hhreg.util.contextUrl('/event/{$this->event['code']}/{$cat}?a=Previous&pageId={$this->id}');";
 		
 		return <<<_
 			<input type="button" id="prev-button" class="button" style="{$disabledStyle}" value="Previous"
-			       {$disabledAttr} onclick="{$onclick}" />
+			       {$disabledAttr} onclick="{$onclick}" >
 _;
 	}
 	
 	private function getNextButton() {
 		if($this->id === model_reg_RegistrationPage::$SUMMARY_PAGE_ID) {
-			return '<input type="submit" id="next-button" class="button" name="a" value="Submit"/>';
+			return '<input type="submit" id="next-button" class="button" name="a" value="Submit">';
 		}
 		else {
-			return '<input type="submit" id="next-button" class="button" name="a" value="Next"/>';
+			return '<input type="submit" id="next-button" class="button" name="a" value="Next">';
 		}
 	}
 }

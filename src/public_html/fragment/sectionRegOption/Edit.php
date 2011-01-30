@@ -76,7 +76,11 @@ _;
 			<tr>
 				<td class="label">Capacity</td>
 				<td>
-					<input type="text" size="2" name="capacity" value="{$this->escapeHtml($this->option['capacity'])}"/>
+					{$this->HTML->text(array(
+						'name' => 'capacity',
+						'value' => $this->escapeHtml($this->option['capacity']),
+						'size' => 2
+					))}
 				</td>
 			</tr>
 _;

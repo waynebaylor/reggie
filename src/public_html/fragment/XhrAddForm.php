@@ -17,7 +17,7 @@ class fragment_XhrAddForm extends template_Template
 	}
 	
 	public function html() {
-		return <<< TEMPLATE
+		return <<<_
 
 <div class="xhr-add-form">
 	<span class="add-link link">{$this->link}</span>
@@ -29,8 +29,12 @@ class fragment_XhrAddForm extends template_Template
 					<td></td>
 					<td>
 						<div class="sub-divider"></div>
-						<input type="hidden" name="a" value="{$this->action}"/>
-						<input type="button" class="button" value="Continue"/>
+						{$this->HTML->hidden(array(
+							'name' => 'a',
+							'value' => $this->action
+						))}
+
+						<input type="button" class="button" value="Continue">
 						<span class="cancel-link link">Cancel</span>
 						
 						<div class="xhr-save-success hide">
@@ -63,7 +67,7 @@ class fragment_XhrAddForm extends template_Template
 	</div>
 </div>
 		
-TEMPLATE;
+_;
 	}
 }
 

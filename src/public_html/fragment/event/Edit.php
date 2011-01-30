@@ -128,7 +128,11 @@ _;
 			<tr>
 				<td class="label">Capacity</td>
 				<td>
-					<input type="text" size="5" name="capacity" value="{$this->escapeHtml($this->event['capacity'])}"/>
+					{$this->HTML->text(array(
+						'name' => 'capacity',
+						'value' => $this->escapeHtml($this->event['capacity']),
+						'size' => 5
+					))}
 				</td>
 			</tr>
 			<tr>

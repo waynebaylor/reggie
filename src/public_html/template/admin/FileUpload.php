@@ -27,13 +27,16 @@ class template_admin_FileUpload extends template_AdminPage
 					<h3>Upload file for {$this->event['code']}</h3>
 					
 					<form method="post" enctype="multipart/form-data" action="{$this->contextUrl('/admin/fileUpload/FileUpload')}">
-						<input type="hidden" name="id" value="{$this->event['id']}"/>
+						{$this->HTML->hidden(array(
+							'name' => 'id',
+							'value' => $this->event['id']
+						))}
 						
 						<table>
 							<tr>
 								<td class="label">File</td>
 								<td>
-									<input type="file" name="file"/>								
+									<input type="file" name="file">								
 								</td>
 							</tr>
 							<tr>
@@ -41,8 +44,12 @@ class template_admin_FileUpload extends template_AdminPage
 								<td>
 									<div class="sub-divider"></div>
 									
-									<input type="hidden" name="action" value="saveFile"/>
-									<input type="submit" class="button" value="Upload"/>
+									{$this->HTML->hidden(array(
+										'name' => 'a',
+										'value' => 'saveFile'
+									))}
+									
+									<input type="submit" class="button" value="Upload">
 								</td>
 							</tr>
 						</table>

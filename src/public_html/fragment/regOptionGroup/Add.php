@@ -31,9 +31,19 @@ _;
 			<tr>
 				<td class="label">Name</td>
 				<td>
-					<input type="hidden" name="eventId" value="{$this->event['id']}"/>
-					<input type="hidden" name="regOptionId" value="{$this->option['id']}"/>
-					<input type="text" name="description"/>			
+					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $this->event['id']
+					))}
+					{$this->HTML->hidden(array(
+						'name' => 'regOptionId',
+						'value' => $this->option['id']
+					))}
+					
+					{$this->HTML->hidden(array(
+						'name' => 'description',
+						'value' => ''
+					))}
 				</td>
 			</tr>
 			<tr>

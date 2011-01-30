@@ -306,7 +306,7 @@ _;
 		$attrs = $this->getAttributeString($config);
 		
 		return <<<_
-			<img {$attrs} src="{$src}"/>	
+			<img {$attrs} src="{$src}">	
 _;
 	}
 	

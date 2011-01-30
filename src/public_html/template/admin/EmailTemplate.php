@@ -54,8 +54,8 @@ class template_admin_EmailTemplate extends template_AdminPage
 							'value' => 'sendTest'
 						))}
 						
-						Send Test Email <input type="text" name="to"/> 
-						<input type="submit" class="button" value="Send"/>
+						Send Test Email <input type="text" name="to"> 
+						<input type="submit" class="button" value="Send">
 					</form>
 				</div>
 			</div>

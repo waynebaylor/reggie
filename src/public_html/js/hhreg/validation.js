@@ -85,7 +85,7 @@ dojo.require("hhreg.util");
 		
 		var img = dojo.create(
 			"img", {
-				src: hhreg.contextUrl("/images/caution_red.gif"), 
+				src: hhreg.util.contextUrl("/images/caution_red.gif"), 
 				alt: "Validation Error", 
 				title: "Validation Error"
 		});

@@ -32,7 +32,11 @@ class fragment_XhrTableForm extends template_Template
 						<td>
 							<div class="sub-divider"></div>
 							
-							<input type="hidden" name="a" value="{$this->action}"/>
+							{$this->HTML->hidden(array(
+								'name' => 'a',
+								'value' => $this->action
+							))}
+
 							<input type="button" class="button" value="{$this->buttonText}"/>
 							
 							<div class="xhr-save-success hide">

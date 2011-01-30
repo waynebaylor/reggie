@@ -1,6 +1,7 @@
 dojo.require("hhreg.xhrAddList");
 dojo.require("hhreg.dialog");
 dojo.require("hhreg.xhrTableForm");
+dojo.require("hhreg.util");
 
 (function() {
 	dojo.provide("hhreg.admin.editRegistrations");
@@ -48,7 +49,7 @@ dojo.require("hhreg.xhrTableForm");
 			
 			hhreg.xhrTableForm.bind(form, function() { 
 				dialog.hide();
-				document.location = hhreg.contextUrl(redirectUrl);
+				document.location = hhreg.util.contextUrl(redirectUrl);
 			});
 		});
 	});
