@@ -35,12 +35,10 @@ abstract class template_Page extends template_Template
 	
 	{$this->head()}
 	
-	{$this->HTML->script(array('src' => '/js/less.js'))}
 	{$this->HTML->script(array('src' => '/js/dojo/dojo.js'))}
 			
 	<script type="text/javascript">
 		dojo.registerModulePath("hhreg", "{$this->contextUrl('/js/hhreg')}");
-		dojo.require("hhreg");
 
 		dojo.addOnLoad(function() {
 			var messages = dojo.byId("xhr-response");

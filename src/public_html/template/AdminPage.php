@@ -31,6 +31,8 @@ abstract class template_AdminPage extends template_Page
 			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/informationField.less'))}
 			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/html.less'))}
 			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/paymentChooser.less'))}
+			
+			{$this->HTML->script(array('src' => '/js/less.js'))}
 _;
 	}
 	

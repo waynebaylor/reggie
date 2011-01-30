@@ -30,6 +30,8 @@ class template_reg_BasePage extends template_Page
 			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/html.less'))}
 			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/paymentChooser.less'))}
 			
+			{$this->HTML->script(array('src' => '/js/less.js'))}
+			
 			<style type="text/css">
 				body {
 					background-color: #{$this->escapeHtml($this->event['appearance']['backgroundColor'])};
