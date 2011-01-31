@@ -32,6 +32,8 @@ class template_reg_BasePage extends template_Page
 			
 			{$this->HTML->script(array('src' => '/js/less.js'))}
 			
+			{$this->HTML->script(array('src' => '/js/dojo/reggie_reg.js'))}
+			
 			<style type="text/css">
 				body {
 					background-color: #{$this->escapeHtml($this->event['appearance']['backgroundColor'])};

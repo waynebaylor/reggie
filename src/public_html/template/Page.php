@@ -34,10 +34,10 @@ abstract class template_Page extends template_Template
 			text-align: center;
 		}
 	</style>
-			
-	<script type="text/javascript">
-		dojo.registerModulePath("hhreg", "{$this->contextUrl('/js/hhreg')}");
 
+	{$this->head()}
+	
+	<script type="text/javascript">
 		dojo.addOnLoad(function() {
 			var messages = dojo.byId("xhr-response");
 			if(messages) {
@@ -48,8 +48,6 @@ abstract class template_Page extends template_Template
 		
 		document.write('<style type="text/css"> #script-enabled-content { visibility: visible; } </style>');
 	</script>
-	
-	{$this->head()}
 </head>
 
 <body class="claro">

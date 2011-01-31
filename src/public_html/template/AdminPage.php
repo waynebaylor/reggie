@@ -33,6 +33,8 @@ abstract class template_AdminPage extends template_Page
 			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/paymentChooser.less'))}
 			
 			{$this->HTML->script(array('src' => '/js/less.js'))}
+			
+			{$this->HTML->script(array('src' => '/js/dojo/reggie_admin.js'))}
 _;
 	}
 	
