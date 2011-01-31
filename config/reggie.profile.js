@@ -4,6 +4,8 @@
 //
 // prompt$ ./build.sh profile=reggie
 //
+// NOTE: the layer names result in the js files being created next to dojo.js. this is done to avoid a localization
+//       error that happens when they're placed outside the dojo.js dir.
 
 dependencies = {
 	action: "release",
@@ -11,8 +13,7 @@ dependencies = {
 	releaseName: "js",
 	releaseDir: "../../build-output",
 	layers: [{
-			name: "../admin.js",
-			resourceName: "admin",
+			name: "reggie_admin.js",
 			dependencies: [
 				"dijit.Calendar",
 				"dijit._Widget",
@@ -30,8 +31,7 @@ dependencies = {
 			]
 		},
 		{
-			name: "../reg.js",
-			resourceName: "reg",
+			name: "reggie_reg.js",
 			dependencies: [
 				"hhreg.util",
 				"hhreg.validation"
