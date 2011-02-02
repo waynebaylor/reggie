@@ -133,6 +133,10 @@ _;
 						{$payment['country']}
 					</td>
 				</tr>
+				<tr>
+					<td>Transaction ID:</td>
+					<td>{$payment['transactionId']}</td>
+				</tr>
 			</table>
 _;
 	}
