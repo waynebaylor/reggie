@@ -16,6 +16,11 @@ class db_ReportManager extends db_Manager
 			'dbValueColumn' => 'dateRegistered',
 			'displayName' => 'Date Registered'
 		),
+		'date_cancelled' => array(
+			'dbColumn' => 'showDateCancelled',
+			'dbValueColumn' => 'dateCancelled',
+			'displayName' => 'Date Cancelled'
+		),
 		'category' => array(
 			'dbColumn' => 'showCategory',
 			'dbValueColumn' => 'categoryName',
@@ -69,6 +74,7 @@ class db_ReportManager extends db_Manager
 				eventId,
 				name,
 				showDateRegistered,
+				showDateCancelled,
 				showCategory,
 				showRegType,
 				showTotalCost,
@@ -94,6 +100,7 @@ class db_ReportManager extends db_Manager
 				eventId,
 				name,
 				showDateRegistered,
+				showDateCancelled,
 				showCategory,
 				showRegType,
 				showTotalCost,
@@ -218,6 +225,7 @@ class db_ReportManager extends db_Manager
 				Registration.id as registrationId,
 				Registration.regGroupId as groupId,
 				Registration.dateRegistered,
+				Registration.dateCancelled,
 				Category.displayName as categoryName,
 				RegType.description as regTypeName
 			FROM
@@ -302,7 +310,7 @@ class db_ReportManager extends db_Manager
 		// prepend the general fields, if any. the order matters because they are prepended 
 		// to the front of the results array.
 		//
-		foreach(array('registration_type', 'category', 'date_registered') as $specialFieldId) {
+		foreach(array('registration_type', 'category', 'date_cancelled', 'date_registered') as $specialFieldId) {
 			$column = self::$SPECIAL_FIELDS[$specialFieldId]['dbColumn'];
 			if($report[$column] === 'true') {
 				$field = array(
@@ -417,7 +425,7 @@ class db_ReportManager extends db_Manager
 	private function getSpecialFieldValues($report, $result, $processedGroupIds) {
 		$fieldValues = array();
 		
-		foreach(array('registration_type', 'category', 'date_registered') as $specialFieldId) {
+		foreach(array('registration_type', 'category', 'date_cancelled', 'date_registered') as $specialFieldId) {
 			$column = self::$SPECIAL_FIELDS[$specialFieldId]['dbColumn'];
 			$valueColumn = self::$SPECIAL_FIELDS[$specialFieldId]['dbValueColumn'];
 

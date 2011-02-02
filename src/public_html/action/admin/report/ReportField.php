@@ -2,23 +2,26 @@
 
 class action_admin_report_ReportField extends action_BaseAction
 {
+	private $specialFields;
+	
 	function __construct() {
 		parent::__construct();
-	}
-	
-	public function addField() {
-		$field = RequestUtil::getParameters(array('reportId', 'contactFieldId'));
 		
-		$specialFields = array(
+		$this->specialFields = array(
 			'date_registered',
+			'date_cancelled',
 			'category',
 			'registration_type',
 			'total_cost',
 			'total_paid',
 			'remaining_balance'
 		);
+	}
+	
+	public function addField() {
+		$field = RequestUtil::getParameters(array('reportId', 'contactFieldId'));
 		
-		if(in_array($field['contactFieldId'], $specialFields)) {
+		if(in_array($field['contactFieldId'], $this->specialFields)) {
 			$field['name'] = $field['contactFieldId'];
 			db_ReportManager::getInstance()->addSpecialField($field);	
 		}
@@ -34,16 +37,7 @@ class action_admin_report_ReportField extends action_BaseAction
 	public function removeField() {
 		$id = RequestUtil::getValue('id', 0);
 		
-		$specialFields = array(
-			'date_registered',
-			'category',
-			'registration_type',
-			'total_cost',
-			'total_paid',
-			'remaining_balance'
-		);
-		
-		if(in_array($id, $specialFields)) {
+		if(in_array($id, $this->specialFields)) {
 			$field = array(
 				'name' => $id,
 				'reportId' => RequestUtil::getValue('reportId', 0)

@@ -55,6 +55,27 @@ _;
 _;
 		}
 		
+		if($this->report['showDateCancelled'] === 'true') {
+			$html .= <<<_
+				<tr>
+					<td></td>
+					<td>Date Cancelled</td>
+					<td>
+						{$this->HTML->link(array(
+							'label' => 'Remove',
+							'href' => '/admin/report/ReportField',
+							'parameters' => array(
+								'a' => 'removeField',
+								'id' => 'date_cancelled',
+								'reportId' => $this->report['id']
+							),
+							'class' => 'remove'
+						))}
+					</td>
+				</tr>
+_;
+		}
+		
 		if($this->report['showCategory'] === 'true') {
 			$html .= <<<_
 				<tr>

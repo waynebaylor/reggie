@@ -59,6 +59,10 @@ _;
 					'value' => 'date_registered'
 				),
 				array(
+					'label' => 'Date Cancelled',
+					'value' => 'date_cancelled'
+				),
+				array(
 					'label' => 'Category',
 					'value' => 'category'
 				),
