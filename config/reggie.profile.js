@@ -11,7 +11,7 @@ dependencies = {
 	action: "release",
 	version: "1.5.0",
 	releaseName: "js",
-	releaseDir: "../../build-output",
+	releaseDir: "../../../build-output",
 	layers: [{
 			name: "reggie_admin.js",
 			dependencies: [
