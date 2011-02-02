@@ -59,8 +59,8 @@ _;
 				if(model_ContactField::isRequired($field) || !StringUtil::isBlank($value)) {
 					$html .= <<<_
 						<tr>
-							<td style="font-weight:bold;">{$field['displayName']}</td>
-							<td>{$value}</td>
+							<td style="font-weight:bold; vertical-align:top;">{$field['displayName']}</td>
+							<td style="vertical-align:top;">{$value}</td>
 						</tr>
 _;
 				}

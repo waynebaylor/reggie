@@ -42,28 +42,28 @@ _;
 			$dateCancelled = substr($registration['dateCancelled'], 0, 10);
 			$dateCancelledRow = <<<_
 				<tr>
-					<td style="font-weight:bold;">Date Cancelled</td>
-					<td>{$dateCancelled}</td>
+					<td style="font-weight:bold; vertical-align:top;">Date Cancelled</td>
+					<td style="vertical-align:top;">{$dateCancelled}</td>
 				</tr>
 _;
 		}
 		
 		return <<<_
 				<tr>
-					<td style="font-weight:bold;">Date Registered</td>
-					<td>
+					<td style="font-weight:bold; vertical-align:top;">Date Registered</td>
+					<td style="vertical-align:top;">
 						{$date}
 					</td>
 				</tr>
 				<tr>
-					<td style="font-weight:bold;">Registration Type</td>
-					<td>
+					<td style="font-weight:bold; vertical-align:top;">Registration Type</td>
+					<td style="vertical-align:top;">
 						{$regType['description']}
 					</td>
 				</tr>
 				<tr>
-					<td style="font-weight:bold;">Confirmation Number</td>
-					<td>
+					<td style="font-weight:bold; vertical-align:top;">Confirmation Number</td>
+					<td style="vertical-align:top;">
 						{$confirmationNumber}
 					</td>
 				</tr>
@@ -119,8 +119,8 @@ _;
 				</td>
 			</tr>
 			<tr>
-				<td style="font-weight:bold;">Registrant Subtotal</td>
-				<td style="font-weight:bold;">
+				<td style="font-weight:bold; vertical-align:top;">Registrant Subtotal</td>
+				<td style="font-weight:bold; vertical-align:top;">
 					{$costDisplay}
 				</td>
 			</tr>
