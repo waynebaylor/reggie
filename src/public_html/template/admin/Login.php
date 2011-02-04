@@ -24,7 +24,7 @@ class template_admin_Login extends template_AdminPage
 			</script>
 			
 			<div id="content">
-				<div class="fragment-edit">
+				<div class="fragment-login">
 					<h3>Please Log In</h3>
 		
 					{$form->html()}
