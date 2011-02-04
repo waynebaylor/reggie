@@ -75,6 +75,12 @@ _;
 			<tr>
 				<td></td>
 				<td>
+					<div id="general-errors"></div>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
 					<div class="sub-divider"></div>
 					
 					{$chooser->html()}

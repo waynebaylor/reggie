@@ -73,7 +73,22 @@ class action_admin_registration_Payment extends action_ValidatorAction
 				ArrayUtil::keyIntersect($payment, array('address', 'city', 'state', 'zip', 'country', 'amount'))
 			);
 			
-			$payment = $result;
+			if($result['success']) {
+				$payment = $result;
+			}
+			else {
+				$message = 'There was a problem processing your payment. ';
+				$message .= $result['responseText'];
+				
+				if(isset($errors['general'])) {
+					$errors['general'][] = $message;
+				}
+				else {
+					$errors['general'] = array($message);
+				}	
+				
+				return new fragment_validation_ValidationErrors($errors);
+			}
 		}
 				
 		db_reg_PaymentManager::getInstance()->createPayment($group['id'], $payment);

@@ -51,6 +51,7 @@ _;
 				<td>
 					<div>
 						{$this->HTML->checkbox(array(
+							'id' => 'required_true',
 							'label' => 'Required',
 							'name' => 'required',
 							'value' => 'true'

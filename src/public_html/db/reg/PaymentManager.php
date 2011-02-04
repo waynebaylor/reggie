@@ -167,7 +167,7 @@ class db_reg_PaymentManager extends db_Manager
 		';
 		
 		$today = new DateTime();
-		$received = ArrayUtil::getValue($check, 'paymentReceived', 'false');
+		$received = ArrayUtil::getValue($po, 'paymentReceived', 'false');
 		
 		$params = array(
 			'paymentTypeId' => model_PaymentType::$PO,

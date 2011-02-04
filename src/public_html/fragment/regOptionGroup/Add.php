@@ -40,7 +40,7 @@ _;
 						'value' => $this->option['id']
 					))}
 					
-					{$this->HTML->hidden(array(
+					{$this->HTML->text(array(
 						'name' => 'description',
 						'value' => ''
 					))}
@@ -51,6 +51,7 @@ _;
 				<td>
 					<div>
 						{$this->HTML->checkbox(array(
+							'id' => 'required_true',
 							'label' => 'Required',
 							'name' => 'required',
 							'value' => 'true'
@@ -66,6 +67,7 @@ _;
 					</div>
 					<div class="restriction multiple-allowed hide">
 						{$this->HTML->text(array(
+							'id' => 'minimum',
 							'name' => 'minimum',
 							'size' => 2,
 							'value' => 1
@@ -74,6 +76,7 @@ _;
 					</div>
 					<div class="restriction multiple-allowed hide">
 						{$this->HTML->text(array(
+							'id' => 'maximum',
 							'name' => 'maximum',
 							'size' => 2,
 							'value' => 1

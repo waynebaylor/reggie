@@ -97,16 +97,19 @@ _;
 				$cancelCss = 'cancelled';
 			}	
 			
-			$sendEmailLink = $this->HTML->link(array(
-				'label' => 'Send Confirmation',
-				'title' => 'Send email confirmation to this registrant',
-				'href' => '/admin/registration/Registration',
-				'parameters' => array(
-					'a' => 'sendConfirmation',
-					'registrationId' => $r['id'],
-					'reportId' => $this->report['id']
-				)
-			));
+			$sendEmailLink = '';
+			if($this->event['emailTemplate']['enabled'] === 'true') {
+				$sendEmailLink = $this->HTML->link(array(
+					'label' => 'Send Confirmation',
+					'title' => 'Send email confirmation to this registrant',
+					'href' => '/admin/registration/Registration',
+					'parameters' => array(
+						'a' => 'sendConfirmation',
+						'registrationId' => $r['id'],
+						'reportId' => $this->report['id']
+					)
+				));
+			}
 					
 			$html .= <<<_
 				<div class="registrant {$cancelCss}">
