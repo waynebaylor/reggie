@@ -89,7 +89,7 @@ class action_admin_emailTemplate_EmailTemplates extends action_ValidatorAction
 				)
 			),
 			array(
-				'name' => 'regTypeIds',
+				'name' => 'regTypeIds[]',
 				'value' => RequestUtil::getValueAsArray('regTypeIds', array()),
 				'restrictions' => array(
 					array(
