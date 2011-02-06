@@ -922,7 +922,7 @@ unique
 create table if not exists `EmailTemplate` (
 	`id`			integer 	not null auto_increment,
 	`eventId`		integer		not null,
-	`contactFieldId`	integer,
+	`contactFieldId`	integer		not null,
 	`enabled`		varchar(255)	not null,
 	`fromAddress`		varchar(255),
 	`bcc`			varchar(255),
@@ -939,8 +939,7 @@ add constraint
 foreign key
 	(eventId)
 references
-	Event(id)
-on delete cascade;
+	Event(id);
 
 alter table
 	EmailTemplate
@@ -950,13 +949,6 @@ foreign key
 	(contactFieldId)
 references
 	ContactField(id);
-
-alter table
-	EmailTemplate
-add constraint
-	emailTemplate_eventId_uni
-unique
-	(eventId);
 
 -- --------------------------------------------------
 
@@ -1490,9 +1482,39 @@ add constraint
 unique
 	(groupRegistrationId, contactFieldId);
 
+-- --------------------------------------------------
 
+create table if not exists `RegType_EmailTemplate` (
+	`id`			integer 	not null auto_increment,
+	`regTypeId`		integer,
+	`emailTemplateId`	integer		not null,
+	primary key(`id`)
+) ENGINE=InnoDB default CHARSET=utf8;
 
+alter table
+	RegType_EmailTemplate
+add constraint
+	regType_emailTemplate_regTypeId_fk
+foreign key
+	(regTypeId)
+references
+	RegType(id);
 
+alter table
+	RegType_EmailTemplate
+add constraint
+	regType_emailTemplate_emailTempId_fk
+foreign key
+	(emailTemplateId)
+references
+	EmailTemplate(id);
+
+alter table
+	RegType_EmailTemplate
+add constraint
+	regType_emailTemplate_typeTemplate_uni
+unique
+	(regTypeId, emailTemplateId);
 
 
 

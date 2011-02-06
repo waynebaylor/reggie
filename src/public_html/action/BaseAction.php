@@ -22,6 +22,17 @@ class action_BaseAction implements action_Action
 		return $obj;
 	}
 	
+	protected function getFileContents($name) {
+		$file = str_replace('_', '/', $name).'.php';
+		
+		ob_start();
+		require $file;
+		$contents = ob_get_contents();
+		ob_end_clean();
+		
+		return $contents;
+	}
+	
 	/**
 	 * Performs any security related tasks. This method is called before the
 	 * action is performed, and should throw an exception if any security 

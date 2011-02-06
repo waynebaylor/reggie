@@ -48,12 +48,12 @@ _;
 			))}
 			&nbsp;
 			{$this->HTML->link(array(
-				'label' => 'Email Template',
-				'href' => '/admin/email/EmailTemplate',
-				'title' => 'Edit event email template',
+				'label' => 'Email Templates',
+				'href' => '/admin/emailTemplate/EmailTemplates',
+				'title' => 'Event Email Templates',
 				'parameters' => array(
-					'action' => 'view',
-					'id' => $this->event['id']
+					'a' => 'view',
+					'eventId' => $this->event['id']
 				)
 			))}
 			&nbsp;

@@ -108,6 +108,10 @@ class db_RegTypeManager extends db_OrderableManager
 	}
 	
 	public function findByEvent($event) {
+		return $this->findByEventId($event['id']);	
+	}
+	
+	public function findByEventId($eventId) {
 		$sql = '
 			SELECT
 				id,
@@ -119,13 +123,13 @@ class db_RegTypeManager extends db_OrderableManager
 			FROM
 				RegType
 			WHERE
-				eventId=:eventId	
+				eventId = :eventId	
 			ORDER BY
 				displayOrder
 		';
 		
 		$params = array(
-			'eventId' => $event['id']
+			'eventId' => $eventId
 		);
 		
 		return $this->query($sql, $params, 'Find reg type by event.');
@@ -444,6 +448,34 @@ class db_RegTypeManager extends db_OrderableManager
 		$result = $this->rawQueryUnique($sql, $params, 'Get group id for option.');
 		
 		return $result['parentGroupId'];
+	}
+	
+	public function findForEmailTemplate($template) {
+		if($template['availableToAll']) {
+			return $this->findByEventId($template['eventId']);
+		}
+		else {
+			$sql = '
+				SELECT
+					RegType.id,
+					RegType.code,
+					RegType.description
+				FROM
+					RegType
+				INNER JOIN
+					RegType_EmailTemplate
+				ON
+					RegType.id = RegType_EmailTemplate.regTypeId
+				WHERE
+					RegType_EmailTemplate.emailTemplateId = :emailTemplateId
+			';
+			
+			$params = array(
+				'emailTemplateId' => $template['id']
+			);
+			
+			return $this->rawQuery($sql, $params, 'Find reg types for which email template is available.');
+		}
 	}
 }
 

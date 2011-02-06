@@ -19,7 +19,7 @@ class db_EventManager extends db_Manager
 		$obj['regTypes'] = db_RegTypeManager::getInstance()->findByEvent($obj);
 		
 		$obj['appearance'] = db_AppearanceManager::getInstance()->findByEvent($obj);
-		$obj['emailTemplate'] = db_EmailTemplateManager::getInstance()->findByEvent($obj);
+		$obj['emailTemplates'] = db_EmailTemplateManager::getInstance()->findByEvent($obj);
 		$obj['groupRegistration'] = db_GroupRegistrationManager::getInstance()->findByEvent($obj);
 		
 		$obj['reports'] = db_ReportManager::getInstance()->findByEvent($obj);

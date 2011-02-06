@@ -391,6 +391,41 @@ class db_ContactFieldManager extends db_OrderableManager
 	public function moveFieldDown($field) {
 		$this->moveDown($field, 'sectionId', $field['sectionId']);
 	}
+	
+	public function findTextFieldsByEventId($eventId) {
+		$sql = '
+			SELECT
+				ContactField.id,
+				ContactField.eventId,
+				ContactField.sectionId,
+				ContactField.code,
+				ContactField.displayName,
+				ContactField.displayOrder,
+				FormInput.id as formInput_id,
+				FormInput.name as formInput_name,
+				FormInput.displayName as formInput_displayName
+			FROM
+				ContactField
+			INNER JOIN
+				FormInput
+			ON
+				ContactField.formInputId = FormInput.id
+			WHERE
+				ContactField.eventId = :eventId
+			AND
+				ContactField.formInputId = :formInputId
+			ORDER BY
+				ContactField.displayOrder
+				
+		';
+		
+		$params = array(
+			'eventId' => $eventId,
+			'formInputId' => model_FormInput::$TEXT
+		);
+		
+		return $this->query($sql, $params, 'Find text fields by event.');
+	}
 }
 
 ?>
