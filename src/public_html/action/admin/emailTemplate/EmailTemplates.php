@@ -58,6 +58,21 @@ class action_admin_emailTemplate_EmailTemplates extends action_ValidatorAction
 		));
 	}
 	
+	public function validate($fieldNames = array()) {
+		$errors = parent::validate($fieldNames);
+
+		// check if there is overlap between templates.
+		$regTypeIds = RequestUtil::getValueAsArray('regTypeIds', array());
+		$existingTemplates = db_EmailTemplateManager::getInstance()->findByEventId(RequestUtil::getValue('eventId', 0));
+		foreach($existingTemplates as $template) {
+			if(model_EmailTemplate::hasOverlap($template, $regTypeIds)) {
+				$errors['regTypeIds[]'] = 'Registration Types conflict with existing template.'; 
+			}
+		}	
+
+		return $errors;
+	}
+	
 	protected function getValidationConfig() {
 		return array(
 			array(
