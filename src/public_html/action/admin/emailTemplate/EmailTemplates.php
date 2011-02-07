@@ -12,11 +12,12 @@ class action_admin_emailTemplate_EmailTemplates extends action_ValidatorAction
 	public function view() {
 		$eventId = RequestUtil::getValue('eventId', 0);
 		
-		$emailTemplates = $this->logic->view($eventId);
+		$viewInfo = $this->logic->view($eventId);
 		
 		return $this->converter->getView(array(
 			'eventId' => $eventId,
-			'emailTemplates' => page_admin_emailTemplate_Helper::convert($emailTemplates)
+			'eventCode' => $viewInfo['eventCode'],
+			'emailTemplates' => page_admin_emailTemplate_Helper::convert($viewInfo['emailTemplates'])
 		));
 	}	
 	

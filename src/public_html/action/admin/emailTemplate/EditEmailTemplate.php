@@ -45,7 +45,12 @@ class action_admin_emailTemplate_EditEmailTemplate extends action_ValidatorActio
 	}
 	
 	public function sendTestEmail() {
+		$emailTemplateId = RequestUtil::getValue('id', 0);
+		$toAddress = RequestUtil::getValue('toAddress', '');
 		
+		$this->logic->sendTestEmail($emailTemplateId, $toAddress);
+		
+		return $this->view();
 	}
 	
 	protected function getValidationConfig() {
