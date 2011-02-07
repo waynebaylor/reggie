@@ -15,7 +15,19 @@ class logic_admin_emailTemplate_EditEmailTemplate extends logic_Performer
 	}
 	
 	public function sendTestEmail($emailTemplateId, $toAddress) {
-		
+		if(!empty($toAddress)) {
+			$template = $this->strictFindById(db_EmailTemplateManager::getInstance(), $emailTemplateId);
+
+			$text = $template['header'].'<div>[Registration Summary]</div>'.$template['footer'];
+
+			EmailUtil::send(array(
+				'to' => $toAddress,
+				'from' => $template['fromAddress'],
+				'bcc' => $template['bcc'],
+				'subject' => $template['subject'],
+				'text' => $text
+			));
+		}
 	}
 }
 

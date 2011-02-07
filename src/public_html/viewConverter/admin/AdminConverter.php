@@ -3,7 +3,7 @@
 abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConverter
 {
 	/**
-	 * required properties: title, breadcrumbs.
+	 * required properties: title.
 	 * optional properties: showLogoutLink, bannerLinkActive
 	 */
 	function __construct() {
@@ -11,6 +11,10 @@ abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConv
 		
 		$this->showLogoutLink = true;
 		$this->bannerLinkActive = true;
+	}
+	
+	protected function getBreadcrumbs() {
+		return '';	
 	}
 	
 	protected function head() {
@@ -56,7 +60,7 @@ _;
 				<table class="sub-header-links">
 					<tr>
 						<td>
-							{$this->breadcrumbs}
+							{$this->getBreadcrumbs()}
 						</td>
 						<td style="text-align:right; padding:10px 20px 0 0;">
 							{$this->getLogout()}

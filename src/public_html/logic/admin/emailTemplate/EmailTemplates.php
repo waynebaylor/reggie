@@ -7,7 +7,12 @@ class logic_admin_emailTemplate_EmailTemplates extends logic_Performer
 	}
 	
 	public function view($eventId) {
-		return db_EmailTemplateManager::getInstance()->findByEventId($eventId);
+		$event = $this->strictFindById(db_EventManager::getInstance(), $eventId);
+		
+		return array(
+			'emailTemplates' => db_EmailTemplateManager::getInstance()->findByEventId($eventId),
+			'eventCode' => $event['code']
+		);
 	}
 	
 	public function addEmailTemplate($template, $regTypeIds) {

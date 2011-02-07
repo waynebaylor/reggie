@@ -73,10 +73,10 @@ class fragment_Breadcrumb extends template_Template
 				$html .= $this->SEPARATOR;
 				$html .= "Files ({$this->config['eventCode']})";
 				break;
-			case 'EmailTemplate':
+			case 'EmailTemplates':
 				$html = $this->emailTemplate();
 				$html .= $this->SEPARATOR;
-				$html .= 'Email Template';
+				$html .= 'Email Templates';
 				break;
 			case 'PaymentOptions':
 				$html = $this->paymentOptions();

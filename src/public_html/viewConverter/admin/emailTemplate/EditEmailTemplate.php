@@ -36,8 +36,8 @@ class viewConverter_admin_emailTemplate_EditEmailTemplate extends viewConverter_
 		return $body;
 	}
 	
-	private function getBreadcrumbs() {
-		
+	protected function getBreadcrumbs() {
+		return '';
 	}
 }
 

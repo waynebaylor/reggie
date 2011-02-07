@@ -6,7 +6,6 @@ class viewConverter_admin_emailTemplate_EmailTemplates extends viewConverter_adm
 		parent::__construct();
 		
 		$this->title = 'Email Templates';
-		$this->breadcrumbs = $this->getBreadcrumbs();
 	}
 	
 	protected function body() {
@@ -17,8 +16,14 @@ class viewConverter_admin_emailTemplate_EmailTemplates extends viewConverter_adm
 		return $body;
 	}
 	
-	private function getBreadcrumbs() {
-		return ''; //FIXME
+	protected function getBreadcrumbs() {
+		$crumbs = new fragment_Breadcrumb(array(
+			'location' => 'EmailTemplates',
+			'eventId' => $this->eventId,
+			'eventCode' => $this->eventCode
+		));
+		
+		return $crumbs->html();
 	}
 	
 	public function getAddEmailTemplate($properties) {
