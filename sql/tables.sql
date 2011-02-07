@@ -1,4 +1,5 @@
 
+drop table if exists RegType_EmailTemplate;
 drop table if exists GroupRegistration_ContactField;
 drop table if exists GroupRegistration;
 drop table if exists User_Event;
