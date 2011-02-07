@@ -1,26 +1,25 @@
 <?php
 
-class action_admin_emailTemplate_EmailTemplates extends action_ValidatorAction
+class action_admin_emailTemplate_EditEmailTemplate extends action_ValidatorAction
 {
 	function __construct() {
 		parent::__construct();
 		
-		$this->logic = new logic_admin_emailTemplate_EmailTemplates();
-		$this->converter = new viewConverter_admin_emailTemplate_EmailTemplates();
+		$this->logic = new logic_admin_emailTemplate_EditEmailTemplate();
+		$this->converter = new viewConverter_admin_emailTemplate_EditEmailTemplate();
 	}
 	
 	public function view() {
-		$eventId = RequestUtil::getValue('eventId', 0);
+		$id = RequestUtil::getValue('id', 0);
 		
-		$emailTemplates = $this->logic->view($eventId);
+		$template = $this->logic->view($id);
 		
 		return $this->converter->getView(array(
-			'eventId' => $eventId,
-			'emailTemplates' => page_admin_emailTemplate_Helper::convert($emailTemplates)
+			'emailTemplate' => $template
 		));
-	}	
+	}
 	
-	public function addEmailTemplate() {
+	public function saveEmailTemplate() {
 		$errors = $this->validate();
 		
 		if(!empty($errors)) {
@@ -28,7 +27,7 @@ class action_admin_emailTemplate_EmailTemplates extends action_ValidatorAction
 		}
 		
 		$template = RequestUtil::getParameters(array(
-			'eventId',
+			'id',
 			'enabled',
 			'contactFieldId',
 			'fromAddress',
@@ -40,21 +39,13 @@ class action_admin_emailTemplate_EmailTemplates extends action_ValidatorAction
 		
 		$regTypeIds = RequestUtil::getValueAsArray('regTypeIds', array(-1));
 		
-		$updatedTemplates = $this->logic->addEmailTemplate($template, $regTypeIds);
+		$this->logic->saveEmailTemplate($template, $regTypeIds);
 		
-		return $this->converter->getAddEmailTemplate(array(
-			'emailTemplates' => page_admin_emailTemplate_Helper::convert($updatedTemplates)
-		));
+		return new fragment_Success();
 	}
 	
-	public function removeEmailTemplate() {
-		$emailTemplateId = RequestUtil::getValue('id', 0);
+	public function sendTestEmail() {
 		
-		$updatedTemplates = $this->logic->removeEmailTemplate($emailTemplateId);
-		
-		return $this->converter->getAddEmailTemplate(array(
-			'emailTemplates' => page_admin_emailTemplate_Helper::convert($updatedTemplates)
-		));
 	}
 	
 	protected function getValidationConfig() {

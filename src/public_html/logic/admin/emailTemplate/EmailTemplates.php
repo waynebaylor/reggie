@@ -17,7 +17,7 @@ class logic_admin_emailTemplate_EmailTemplates extends logic_Performer
 	}
 	
 	public function removeEmailTemplate($id) {
-		$template = db_EmailTemplateManager::getInstance()->find($id);
+		$template = $this->strictFindById(db_EmailTemplateManager::getInstance(), $id);
 		db_EmailTemplateManager::getInstance()->delete($id);
 		
 		return db_EmailTemplateManager::getInstance()->findByEventId($template['eventId']);

@@ -40,7 +40,7 @@ class db_EmailTemplateManager extends db_Manager
 			FROM
 				EmailTemplate
 			WHERE
-				id=:id
+				id = :id
 		';
 		
 		$params = array(
@@ -65,7 +65,7 @@ class db_EmailTemplateManager extends db_Manager
 			FROM
 				EmailTemplate
 			WHERE
-				eventId=:eventId
+				eventId = :eventId
 		';
 		
 		$params = array(
@@ -98,9 +98,9 @@ class db_EmailTemplateManager extends db_Manager
 				:enabled,
 				:fromAddress,
 				:bcc,
-				"",
-				"",
-				""
+				:subject,
+				:header,
+				:footer
 			)
 		';
 		
@@ -125,7 +125,7 @@ class db_EmailTemplateManager extends db_Manager
 				header = :header,
 				footer = :footer
 			WHERE
-				id=:id
+				id = :id
 		';
 		
 		$this->execute($sql, $params, 'Save email template.');
