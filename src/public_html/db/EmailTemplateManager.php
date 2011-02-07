@@ -79,6 +79,77 @@ class db_EmailTemplateManager extends db_Manager
 		return $this->findByEventId($event['id']);
 	}
 	
+	public function findByRegTypeId($eventId, $regTypeId) {
+		$sql = '
+			SELECT
+				EmailTemplate.id,
+				EmailTemplate.eventId,
+				EmailTemplate.contactFieldId,
+				EmailTemplate.enabled,
+				EmailTemplate.fromAddress,
+				EmailTemplate.bcc,
+				EmailTemplate.subject,
+				EmailTemplate.header,
+				EmailTemplate.footer
+			FROM
+				EmailTemplate
+			INNER JOIN
+				RegType_EmailTemplate
+			ON
+				EmailTemplate.id = RegType_EmailTemplate.emailTemplateId
+			WHERE
+				EmailTemplate.eventId = :eventId
+			AND
+				EmailTemplate.enabled = :enabled
+			AND 
+				RegType_EmailTemplate.regTypeId is NULL
+		';	
+		
+		$params = array(
+			'eventId' => $eventId,
+			'enabled' => 'true'
+		);
+		
+		$template = $this->queryUnique($sql, $params, 'Find email template available to all.');
+		
+		if(empty($template)) {
+			$sql = '
+				SELECT
+					EmailTemplate.id,
+					EmailTemplate.eventId,
+					EmailTemplate.contactFieldId,
+					EmailTemplate.enabled,
+					EmailTemplate.fromAddress,
+					EmailTemplate.bcc,
+					EmailTemplate.subject,
+					EmailTemplate.header,
+					EmailTemplate.footer
+				FROM
+					EmailTemplate
+				INNER JOIN
+					RegType_EmailTemplate
+				ON
+					EmailTemplate.id = RegType_EmailTemplate.emailTemplateId
+				WHERE
+					EmailTemplate.eventId = :eventId
+				AND
+					EmailTemplate.enabled = :enabled
+				AND 
+					RegType_EmailTemplate.regTypeId = :regTypeId
+			';
+			
+			$params = array(
+				'eventId' => $eventId,
+				'enabled' => 'true',
+				'regTypeId' => $regTypeId
+			);
+			
+			$template = $this->queryUnique($sql, $params, 'Find email template by reg type id.');
+		}
+		
+		return $template;
+	}
+	
 	public function createEmailTemplate($params, $regTypeIds) {
 		$sql = '
 			INSERT INTO

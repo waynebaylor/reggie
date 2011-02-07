@@ -128,9 +128,7 @@ class action_reg_Summary extends action_ValidatorAction
 		$regGroupId = db_reg_RegistrationManager::getInstance()->createRegistrations($registrations, $payment);
 		$regGroup = db_reg_GroupManager::getInstance()->find($regGroupId);
 		
-		if($this->event['emailTemplate']['enabled'] === 'true') {
-			$this->sendConfirmationEmail($regGroup);
-		}
+		$this->sendConfirmationEmail($regGroup);
 		
 		return $regGroup;
 	}

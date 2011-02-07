@@ -62,31 +62,38 @@ class logic_admin_registration_Registration extends logic_Performer
 	}
 	
 	public function sendConfirmationEmail($event, $regGroup, $registration) {
-		$emailTemplate = $event['emailTemplate'];
+		$emailTemplate = db_EmailTemplateManager::getInstance()->findByRegTypeId(
+			$registration['eventId'], 
+			$registration['regTypeId']
+		);
 		
-		$summaryText = new fragment_registration_emailConfirmation_Confirmation($event, $regGroup);
-		$summaryText = $summaryText->html();
-		$summaryText = preg_replace('/\s\s+/', ' ', $summaryText); // strip extra whitespace.
-		
-		$text = <<<_
-			<div style="font-family:sans-serif;">
-				{$emailTemplate['header']}
+		if(!empty($emailTemplate)) {
+			$to = model_Registrant::getEmailFieldValue($emailTemplate, $registration);
+			
+			if(!empty($to)) {
+				$summaryText = new fragment_registration_emailConfirmation_Confirmation($event, $regGroup);
+				$summaryText = $summaryText->html();
+				$summaryText = preg_replace('/\s\s+/', ' ', $summaryText); // strip extra whitespace.
 				
-				<div>{$summaryText}</div>
-				
-				{$emailTemplate['footer']}
-			</div>
+				$text = <<<_
+					<div style="font-family:sans-serif;">
+						{$emailTemplate['header']}
+						
+						<div>{$summaryText}</div>
+						
+						{$emailTemplate['footer']}
+					</div>
 _;
-		
-		$to = model_Registrant::getEmailFieldValue($event, $registration);
-		
-		EmailUtil::send(array(
-			'to' => $to,
-			'from' => $emailTemplate['fromAddress'],
-			'bcc' => $emailTemplate['bcc'],
-			'subject' => $emailTemplate['subject'],
-			'text' => $text
-		));
+			
+				EmailUtil::send(array(
+					'to' => $to,
+					'from' => $emailTemplate['fromAddress'],
+					'bcc' => $emailTemplate['bcc'],
+					'subject' => $emailTemplate['subject'],
+					'text' => $text
+				));
+			}
+		}
 	}
 }
 

@@ -98,7 +98,8 @@ _;
 			}	
 			
 			$sendEmailLink = '';
-			if($this->event['emailTemplate']['enabled'] === 'true') {
+			$emailTemplate = db_EmailTemplateManager::getInstance()->findByRegTypeId($this->event['id'], $r['regTypeId']);
+			if(!empty($emailTemplate)) {
 				$sendEmailLink = $this->HTML->link(array(
 					'label' => 'Send Confirmation',
 					'title' => 'Send email confirmation to this registrant',

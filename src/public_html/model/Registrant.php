@@ -64,13 +64,9 @@ class model_Registrant
 		return true; 
 	}
 	
-	public static function getEmailFieldValue($event, $registrant) {
-		if($event['emailTemplate']['enabled'] === 'true') {
-			$fieldId = $event['emailTemplate']['contactFieldId'];
-			return self::getInformationValue($registrant, array('id' => $fieldId));
-		}
-		
-		return null;
+	public static function getEmailFieldValue($emailTemplate, $registrant) {
+		$fieldId = $emailTemplate['contactFieldId'];
+		return self::getInformationValue($registrant, array('id' => $fieldId));
 	}
 	
 	public static function getConfirmationNumber($registrant) {
