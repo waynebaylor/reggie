@@ -31,7 +31,7 @@
 			
 			<p>
 				Send Test Email <?php echo $this->HTML->text(array(
-					'name' => 'to',
+					'name' => 'toAddress',
 					'value' => '',
 					'size' => 30
 				)) ?>
