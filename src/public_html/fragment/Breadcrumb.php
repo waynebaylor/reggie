@@ -33,6 +33,11 @@ class fragment_Breadcrumb extends template_Template
 		$html = '';
 		
 		switch($this->config['location']) {
+			case 'EditEmailTemplate':
+				$html = $this->editEmailTemplate();
+				$html .= $this->SEPARATOR;
+				$html .= 'Edit Email Template';
+				break;
 			case 'GroupSummary':
 				$html = $this->groupSummary();
 				$html .= $this->SEPARATOR;
@@ -481,6 +486,21 @@ _;
 					'id' => $this->config['reportId']
 				)
 			))}
+_;
+	}
+	
+	private function editEmailTemplate() {
+		return <<<_
+			{$this->emailTemplate()}
+			{$this->SEPARATOR}
+			{$this->HTML->link(array(
+				'label' => 'Email Templates',
+				'href' => '/admin/emailTemplate/EmailTemplates',
+				'parameters' => array(
+					'a' => 'view',
+					'eventId' => $this->config['eventId']
+				)
+			))}	
 _;
 	}
 }

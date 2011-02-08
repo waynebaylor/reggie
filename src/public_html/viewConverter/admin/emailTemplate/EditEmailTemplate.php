@@ -6,7 +6,6 @@ class viewConverter_admin_emailTemplate_EditEmailTemplate extends viewConverter_
 		parent::__construct();
 		
 		$this->title = 'Edit Email Template';
-		$this->breadcrumbs = $this->getBreadcrumbs();
 	}
 	
 	public function getView($properties) {
@@ -37,7 +36,15 @@ class viewConverter_admin_emailTemplate_EditEmailTemplate extends viewConverter_
 	}
 	
 	protected function getBreadcrumbs() {
-		return '';
+		$info = db_BreadcrumbManager::getInstance()->findEditEmailTemplateCrumbs($this->emailTemplate['id']);
+		
+		$crumbs = new fragment_Breadcrumb(array(
+			'location' => 'EditEmailTemplate',
+			'eventId' => $this->emailTemplate['eventId'],
+			'eventCode' => $info['code']
+		));
+		
+		return $crumbs->html();
 	}
 }
 

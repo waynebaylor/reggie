@@ -17,10 +17,12 @@ class viewConverter_admin_emailTemplate_EmailTemplates extends viewConverter_adm
 	}
 	
 	protected function getBreadcrumbs() {
+		$info = db_BreadcrumbManager::getInstance()->findEmailTemplatesCrumbs($this->eventId);
+		
 		$crumbs = new fragment_Breadcrumb(array(
 			'location' => 'EmailTemplates',
 			'eventId' => $this->eventId,
-			'eventCode' => $this->eventCode
+			'eventCode' => $info['code']
 		));
 		
 		return $crumbs->html();

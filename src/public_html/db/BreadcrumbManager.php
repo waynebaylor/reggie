@@ -109,6 +109,45 @@ class db_BreadcrumbManager extends db_Manager
 		
 		return $this->rawQueryUnique($sql, $params, 'Find contact field breadcrumbs.');
 	}
+	
+	public function findEmailTemplatesCrumbs($eventId) {
+		$sql = '
+			SELECT
+				code
+			FROM 
+				Event
+			WHERE
+				id = :id
+		';
+		
+		$params = array(
+			'id' => $eventId
+		);
+		
+		return $this->rawQueryUnique($sql, $params, 'Find email templates breadcrumbs.');
+	}
+	
+	public function findEditEmailTemplateCrumbs($emailTemplateId) {
+		$sql = '
+			SELECT
+				EmailTemplate.eventId,
+				Event.code
+			FROM
+				EmailTemplate
+			INNER JOIN
+				Event
+			ON
+				Event.id = EmailTemplate.eventId
+			WHERE
+				EmailTemplate.id = :emailTemplateId
+		';
+		
+		$params = array(
+			'emailTemplateId' => $emailTemplateId
+		);
+		
+		return $this->rawQueryUnique($sql, $params, 'Find edit email template breadcrumbs.');
+	}
 }
 
 ?>
