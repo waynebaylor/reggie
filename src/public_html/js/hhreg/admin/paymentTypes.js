@@ -11,7 +11,7 @@
 	};
 	
 	var handleChange = function(type, radio) {
-		if(radio.value === 'true' && radio.checked) {
+		if(radio.value === "T" && radio.checked) {
 			showPaymentType(type);
 		}
 		else {
