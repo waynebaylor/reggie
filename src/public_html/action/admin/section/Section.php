@@ -24,7 +24,7 @@ class action_admin_section_Section extends action_ValidatorAction
 		$s['id'] = RequestUtil::getValue('id', NULL);
 		$s['name'] = RequestUtil::getValue('name', '');
 		$s['text'] = RequestUtil::getValue('text', NULL);
-		$s['numbered'] = RequestUtil::getValue('numbered', 'false');
+		$s['numbered'] = RequestUtil::getValue('numbered', 'F');
 
 		db_PageSectionManager::getInstance()->save($s);
 		

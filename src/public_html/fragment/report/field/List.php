@@ -34,7 +34,7 @@ _;
 	private function getFields() {
 		$html = '';
 		
-		if($this->report['showDateRegistered'] === 'true') {
+		if($this->report['showDateRegistered'] === 'T') {
 			$html .= <<<_
 				<tr>
 					<td></td>
@@ -55,7 +55,7 @@ _;
 _;
 		}
 		
-		if($this->report['showDateCancelled'] === 'true') {
+		if($this->report['showDateCancelled'] === 'T') {
 			$html .= <<<_
 				<tr>
 					<td></td>
@@ -76,7 +76,7 @@ _;
 _;
 		}
 		
-		if($this->report['showCategory'] === 'true') {
+		if($this->report['showCategory'] === 'T') {
 			$html .= <<<_
 				<tr>
 					<td></td>
@@ -97,7 +97,7 @@ _;
 _;
 		}
 		
-		if($this->report['showRegType'] === 'true') {
+		if($this->report['showRegType'] === 'T') {
 			$html .= <<<_
 				<tr>
 					<td></td>
@@ -156,7 +156,7 @@ _;
 _;
 		}
 		
-		if($this->report['showTotalCost'] === 'true') {
+		if($this->report['showTotalCost'] === 'T') {
 			$html .= <<<_
 				<tr>
 					<td></td>
@@ -177,7 +177,7 @@ _;
 _;
 		}
 		
-		if($this->report['showTotalPaid'] === 'true') {
+		if($this->report['showTotalPaid'] === 'T') {
 			$html .= <<<_
 				<tr>
 					<td></td>
@@ -198,7 +198,7 @@ _;
 _;
 		}
 		
-		if($this->report['showRemainingBalance'] === 'true') {
+		if($this->report['showRemainingBalance'] === 'T') {
 			$html .= <<<_
 				<tr>
 					<td></td>

@@ -51,8 +51,8 @@ _;
 				)
 			));
 			
-			$required = $group['required'] === 'true'? 'Required' : '';
-			$multiple = $group['multiple'] === 'true'? 'Allow Multiple' : '';
+			$required = $group['required'] === 'T'? 'Required' : '';
+			$multiple = $group['multiple'] === 'T'? 'Allow Multiple' : '';
 			
 			$evenRow = !$evenRow;
 			$rowClass = $evenRow? 'even' : 'odd';
@@ -103,7 +103,7 @@ _;
 	}
 	
 	private function getMultipleRestrictions($group) {
-		if($group['multiple'] === 'true') {
+		if($group['multiple'] === 'T') {
 			$min = $group['minimum'];
 			$max = $group['maximum'];
 			

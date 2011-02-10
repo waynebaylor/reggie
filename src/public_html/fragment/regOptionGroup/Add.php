@@ -54,7 +54,7 @@ _;
 							'id' => 'required_true',
 							'label' => 'Required',
 							'name' => 'required',
-							'value' => 'true'
+							'value' => 'T'
 						))}
 					</div>
 					<div>
@@ -62,7 +62,7 @@ _;
 							'id' => 'allow-multiple',
 							'label' => 'Allow Multiple',
 							'name' => 'multiple',
-							'value' => 'true'
+							'value' => 'T'
 						))}
 					</div>
 					<div class="restriction multiple-allowed hide">

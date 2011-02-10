@@ -9,7 +9,7 @@ class page_admin_emailTemplate_Helper
 			$template = new stdClass();
 			
 			$template->id = $t['id'];
-			$template->enabled = $t['enabled'] === 'true'? 'Enabled' : 'Disabled';
+			$template->enabled = $t['enabled'] === 'T'? 'Enabled' : 'Disabled';
 			
 			$field = db_ContactFieldManager::getInstance()->find($t['contactFieldId']);
 			$template->fieldName = $field['displayName'];

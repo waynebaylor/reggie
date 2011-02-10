@@ -55,7 +55,7 @@ _;
 		// convert the checked value to the valid value.		
 		if(isset($config['checked'])) {
 			$checked = $config['checked'];
-			if($checked === 'checked' || $checked === 'true' || $checked === true) {
+			if($checked === 'checked' || $checked === 'T' || $checked === true) {
 				$config['checked'] = 'checked';
 			}
 			else {
@@ -155,7 +155,7 @@ _;
 
 		if(isset($config['checked'])) {
 			$checked = $config['checked'];
-			if($checked === 'checked' || $checked === 'true' || $checked === true) {
+			if($checked === 'checked' || $checked === 'T' || $checked === true) {
 				$config['checked'] = 'checked';
 			}
 			else {

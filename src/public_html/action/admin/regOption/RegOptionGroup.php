@@ -35,14 +35,14 @@ class action_admin_regOption_RegOptionGroup extends action_BaseAction
 
 		$description = $_REQUEST['description'];
 		
-		$required = isset($_REQUEST['required'])? $_REQUEST['required'][0] : 'false';
-		$required = ($required === 'true')? 'true' : 'false';
+		$required = isset($_REQUEST['required'])? $_REQUEST['required'][0] : 'F';
+		$required = ($required === 'T')? 'T' : 'F';
 		
-		$multiple = isset($_REQUEST['multiple'])? $_REQUEST['multiple'][0] : 'false';
-		$multiple = ($multiple === 'true')? 'true' : 'false';
+		$multiple = isset($_REQUEST['multiple'])? $_REQUEST['multiple'][0] : 'F';
+		$multiple = ($multiple === 'T')? 'T' : 'F';
 
-		$minimum = ($multiple === 'true')? $_REQUEST['minimum'] : 0;
-		$maximum = ($multiple === 'true')? $_REQUEST['maximum'] : 0;
+		$minimum = ($multiple === 'T')? $_REQUEST['minimum'] : 0;
+		$maximum = ($multiple === 'T')? $_REQUEST['maximum'] : 0;
 		
 		$group = array(
 			'regOptionId' => $option['id'],
@@ -120,17 +120,17 @@ class action_admin_regOption_RegOptionGroup extends action_BaseAction
 		$group = array(
 			'id' => $_REQUEST['id'],
 			'description' => $_REQUEST['description'],
-			'required' => isset($_REQUEST['required'])? $_REQUEST['required'][0] : 'false',
-			'multiple' => isset($_REQUEST['multiple'])? $_REQUEST['multiple'][0] : 'false',
+			'required' => isset($_REQUEST['required'])? $_REQUEST['required'][0] : 'F',
+			'multiple' => isset($_REQUEST['multiple'])? $_REQUEST['multiple'][0] : 'F',
 			'minimum' => $_REQUEST['minimum'],
 			'maximum' => $_REQUEST['maximum']
 		);
 		
-		$group['required'] = ($group['required'] === 'true')? 'true' : 'false';
-		$group['multiple'] = ($group['multiple'] === 'true')? 'true' : 'false';
+		$group['required'] = ($group['required'] === 'T')? 'T' : 'F';
+		$group['multiple'] = ($group['multiple'] === 'T')? 'T' : 'F';
 		
-		$group['minimum'] = $group['multiple'] === 'true'? intval($group['minimum'], 10) : 0;
-		$group['maximum'] = $group['multiple'] === 'true'? intval($group['maximum'], 10) : 0;
+		$group['minimum'] = $group['multiple'] === 'T'? intval($group['minimum'], 10) : 0;
+		$group['maximum'] = $group['multiple'] === 'T'? intval($group['maximum'], 10) : 0;
 		
 		$this->optionGroupManager->save($group);
 		

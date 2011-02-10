@@ -19,8 +19,8 @@ class action_admin_event_EditGroupRegistration extends action_BaseAction
 			'eventId'
 		));
 		
-		$groupReg['enabled'] = RequestUtil::getValue('enabled', 'false');
-		$groupReg['defaultRegType'] = RequestUtil::getValue('defaultRegType', 'false');
+		$groupReg['enabled'] = RequestUtil::getValue('enabled', 'F');
+		$groupReg['defaultRegType'] = RequestUtil::getValue('defaultRegType', 'F');
 		
 		db_GroupRegistrationManager::getInstance()->save($groupReg);
 		

@@ -81,8 +81,8 @@ class db_GroupRegistrationManager extends db_Manager
 		
 		$params = array(
 			'eventId' => $eventId,
-			'enabled' => 'false',
-			'defaultRegType' => 'true'
+			'enabled' => 'F',
+			'defaultRegType' => 'T'
 		);
 		
 		$this->execute($sql, $params, 'Create event group registration.');

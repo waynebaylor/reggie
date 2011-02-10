@@ -28,7 +28,7 @@ _;
 	
 	private function getFormRows() {
 		$groupReg = $this->event['groupRegistration'];
-		$infoClass = $groupReg['enabled'] === 'true'? '' : 'hide';
+		$infoClass = $groupReg['enabled'] === 'T'? '' : 'hide';
 		
 		return <<<_
 			<tr>
@@ -45,17 +45,17 @@ _;
 					
 					{$this->HTML->radios(array(
 						'name' => 'enabled',
-						'value' => $groupReg['enabled'] === 'true'? 'true' : 'false',
+						'value' => $groupReg['enabled'] === 'T'? 'T' : 'F',
 						'items' => array(
 							array(
 								'id' => 'enabled_true',
 								'label' => 'Enabled',
-								'value' => 'true'
+								'value' => 'T'
 							),
 							array(
 								'id' => 'enabled_false',
 								'label' => 'Disabled',
-								'value' => 'false'
+								'value' => 'F'
 							)				
 						)	
 					))}
@@ -67,7 +67,7 @@ _;
 					{$this->HTML->checkbox(array(
 						'label' => 'Default to first registrant\'s selection.',
 						'name' => 'defaultRegType',
-						'value' => 'true',
+						'value' => 'T',
 						'checked' => $groupReg['defaultRegType']
 					))}
 				</td>

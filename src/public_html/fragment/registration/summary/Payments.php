@@ -32,7 +32,7 @@ class fragment_registration_summary_Payments extends template_Template
 			
 			$paymentType =	model_PaymentType::valueOf($payment['paymentTypeId']); 
 			
-			$received = ($payment['paymentReceived'] === 'true')? '(Received)' : '(Pending)';
+			$received = ($payment['paymentReceived'] === 'T')? '(Received)' : '(Pending)';
 				
 			if($paymentType['id'] == model_PaymentType::$CHECK) {
 				$type = "{$paymentType['displayName']} {$payment['checkNumber']} {$received}";

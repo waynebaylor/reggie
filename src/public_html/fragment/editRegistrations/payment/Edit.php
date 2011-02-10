@@ -61,11 +61,11 @@ _;
 							'items' => array(
 								array(
 									'label' => 'Pending',
-									'value' => 'false'
+									'value' => 'F'
 								),
 								array(
 									'label' => 'Paid',
-									'value' => 'true'
+									'value' => 'T'
 								)
 							)
 						))}
@@ -107,11 +107,11 @@ _;
 							'items' => array(
 								array(
 									'label' => 'Pending',
-									'value' => 'false'
+									'value' => 'F'
 								),
 								array(
 									'label' => 'Paid',
-									'value' => 'true'
+									'value' => 'T'
 								)
 							)
 						))}

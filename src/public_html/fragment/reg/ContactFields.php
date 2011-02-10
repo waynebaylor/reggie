@@ -15,7 +15,7 @@ class fragment_reg_ContactFields extends template_Template
 	}
 	
 	public function html() {
-		if($this->section['numbered'] === 'true') {
+		if($this->section['numbered'] === 'T') {
 			return $this->orderedFields($this->regTypeId, $this->section['content']);
 		}
 		else {

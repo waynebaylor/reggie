@@ -25,7 +25,7 @@ class action_admin_registration_Payment extends action_ValidatorAction
 		}
 		
 		$p = RequestUtil::getParameters(array('id', 'amount', 'checkNumber', 'purchaseOrderNumber'));
-		$p['paymentReceived'] = RequestUtil::getValue('paymentReceived', 'false');
+		$p['paymentReceived'] = RequestUtil::getValue('paymentReceived', 'F');
 		$p['paymentTypeId'] = $payment['paymentTypeId'];
 		db_reg_PaymentManager::getInstance()->save($p);
 		

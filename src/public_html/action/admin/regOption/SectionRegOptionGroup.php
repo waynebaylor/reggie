@@ -27,8 +27,8 @@ class action_admin_regOption_SectionRegOptionGroup extends action_ValidatorActio
 		$group = array(
 			'sectionId' => $section['id'],
 			'description' => RequestUtil::getValue('description', ''),
-			'required' => RequestUtil::getValue('required', 'false'),
-			'multiple' => RequestUtil::getValue('multiple', 'false'),
+			'required' => RequestUtil::getValue('required', 'F'),
+			'multiple' => RequestUtil::getValue('multiple', 'F'),
 			'minimum' => RequestUtil::getValue('minimum', 0),
 			'maximum' => RequestUtil::getValue('maximum', 0)
 		);
@@ -84,8 +84,8 @@ class action_admin_regOption_SectionRegOptionGroup extends action_ValidatorActio
 		$group = $this->strictFindById(db_SectionRegOptionGroupManager::getInstance(), $_REQUEST['id']);
 		
 		$group['description'] = RequestUtil::getValue('description', '');
-		$group['required'] = RequestUtil::getValue('required', 'false');
-		$group['multiple'] = RequestUtil::getValue('multiple', 'false');
+		$group['required'] = RequestUtil::getValue('required', 'F');
+		$group['multiple'] = RequestUtil::getValue('multiple', 'F');
 		$group['minimum'] = RequestUtil::getValue('minimum', 0);
 		$group['maximum'] = RequestUtil::getValue('maximum', 0);
 		
@@ -97,20 +97,20 @@ class action_admin_regOption_SectionRegOptionGroup extends action_ValidatorActio
 	public function validate($fieldNames = array()) {
 		$errors = parent::validate($fieldNames);
 		
-		$validBooleans = array('true', 'false');
+		$validBooleans = array('T', 'F');
 		
-		$required = RequestUtil::getValue('required', 'false');
-		$multiple = RequestUtil::getValue('multiple', 'false');
+		$required = RequestUtil::getValue('required', 'F');
+		$multiple = RequestUtil::getValue('multiple', 'F');
 		
 		if(!in_array($required, $validBooleans)) {
-			$required = 'false';
+			$required = 'F';
 		}
 		
 		if(!in_array($multiple, $validBooleans)) {
-			$multiple = 'false';
+			$multiple = 'F';
 		}
 		
-		if($multiple === 'true') {
+		if($multiple === 'T') {
 			// don't let min/max start with 0, since octal numbers start with 0.
 			
 			$minimum = RequestUtil::getValue('minimum', 0);
@@ -120,11 +120,11 @@ class action_admin_regOption_SectionRegOptionGroup extends action_ValidatorActio
 				$errors['minimum'] = 'Minimum must be 0 or more.';
 			}
 			// if required, then the minimum must be at least one.
-			else if($required === 'true' && $minimum < 1) {
+			else if($required === 'T' && $minimum < 1) {
 				$errors['minimum'] = 'Minimum must be 1 or more if Required.';
 			}
 			// if minimum is greater than 0, then required must be true.
-			else if($required === 'false' && $minimum > 0) {
+			else if($required === 'F' && $minimum > 0) {
 				$errors['minimum'] = 'Minimum must be 0 if not Required.';		
 			}
 			// maximum can't be less than minimum.

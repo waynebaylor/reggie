@@ -88,7 +88,7 @@ _;
 	}
 	
 	private function getRestrictions($option) {
-		if($option['defaultSelected'] === 'true') {
+		if($option['defaultSelected'] === 'T') {
 			return 'Selected By Default';
 		}
 		

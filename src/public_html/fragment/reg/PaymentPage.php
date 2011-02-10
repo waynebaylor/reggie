@@ -53,7 +53,7 @@ _;
 		
 		$value = self::$ADD_PERSON_ACTION;
 		
-		if($this->event['groupRegistration']['enabled'] === 'true') {
+		if($this->event['groupRegistration']['enabled'] === 'T') {
 			$html = <<<_
 				<div>
 					You may add another person to your group before entering payment information.

@@ -63,14 +63,14 @@ _;
 						{$this->HTML->checkbox(array(
 							'label' => 'Selected By Default',
 							'name' => 'defaultSelected',
-							'value' => 'true'
+							'value' => 'T'
 						))}
 					</div>
 					<div>
 						{$this->HTML->checkbox(array(
 							'label' => 'Show Option Price',
 							'name' => 'showPrice',
-							'value' => 'true'
+							'value' => 'T'
 						))}
 					</div>
 				</td>

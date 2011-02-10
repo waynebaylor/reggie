@@ -51,7 +51,7 @@ _;
 				)
 			));
 			
-			$required = $group['required'] === 'true'? 'Required' : '';
+			$required = $group['required'] === 'T'? 'Required' : '';
 			
 			$evenRow = !$evenRow;
 			$rowClass = $evenRow? 'even' : 'odd';
@@ -102,7 +102,7 @@ _;
 	}
 	
 	private function getMultipleRestrictions($group) {
-		if($group['multiple'] === 'true') {
+		if($group['multiple'] === 'T') {
 			return <<<_
 				<div>
 					Minimum Required: {$group['minimum']}

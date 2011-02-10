@@ -158,8 +158,8 @@ unique
 create table if not exists `RegOptionGroup` (
 	`id` 		integer 	not null auto_increment,
 	`description` 	varchar(255) 	not null,
-	`required` 	varchar(255) 	not null,
-	`multiple` 	varchar(255) 	not null,
+	`required` 	char(1) 	not null,
+	`multiple` 	char(1) 	not null,
 	`minimum`	integer		not null,
 	`maximum`	integer		not null,
 	primary key (`id`)
@@ -210,8 +210,8 @@ create table if not exists `RegOption` (
 	`code` 			varchar(255) 	not null,
 	`description`		varchar(255) 	not null,
 	`capacity` 		integer 	not null,
-	`defaultSelected`	varchar(255)	not null, 
-	`showPrice`		varchar(255)	not null,
+	`defaultSelected`	char(1)		not null, 
+	`showPrice`		char(1)		not null,
 	`displayOrder` 		integer 	not null,
 	primary key (`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
@@ -750,7 +750,7 @@ create table if not exists `ContactFieldOption` (
 	`id` 			integer 	not null auto_increment,
 	`contactFieldId` 	integer 	not null,
 	`displayName` 		varchar(255) 	not null,
-	`defaultSelected`	varchar(255)	not null,
+	`defaultSelected`	char(1)		not null,
 	`displayOrder`		integer 	not null,
 	primary key (`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
@@ -924,7 +924,7 @@ create table if not exists `EmailTemplate` (
 	`id`			integer 	not null auto_increment,
 	`eventId`		integer		not null,
 	`contactFieldId`	integer		not null,
-	`enabled`		varchar(255)	not null,
+	`enabled`		char(1)		not null,
 	`fromAddress`		varchar(255),
 	`bcc`			varchar(255),
 	`subject`		text,
@@ -1255,7 +1255,7 @@ create table if not exists `Payment` (
 	`paymentTypeId`		integer		not null,
 	`regGroupId`		integer		not null,
 	`transactionDate`	datetime	not null,
-	`paymentReceived`	varchar(255)	not null default 'false',
+	`paymentReceived`	char(1)		not null default 'F',
 
 	`checkNumber`		varchar(100),   -- check fields
 
@@ -1299,12 +1299,12 @@ create table if not exists `Report` (
 	`id`			integer		not null auto_increment,
 	`eventId`		integer		not null,
 	`name`			varchar(255)	not null,
-	`showDateRegistered`	varchar(255)	not null default 'false',
-	`showCategory`		varchar(255)	not null default 'false',
-	`showRegType`		varchar(255)	not null default 'false',
-	`showTotalCost`		varchar(255)	not null default 'false',
-	`showTotalPaid`		varchar(255)	not null default 'false',
-	`showRemainingBalance`	varchar(255)	not null default 'false',
+	`showDateRegistered`	char(1)		not null default 'F',
+	`showCategory`		char(1)		not null default 'F'
+	`showRegType`		char(1)		not null default 'F',
+	`showTotalCost`		char(1)		not null default 'F',
+	`showTotalPaid`		char(1)		not null default 'F',
+	`showRemainingBalance`	char(1)		not null default 'F',
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
@@ -1375,7 +1375,7 @@ create table if not exists `User` (
 	`id`		integer		not null auto_increment,
 	`email`		varchar(255)	not null,
 	`password`	varchar(40) 	not null,
-	`isAdmin`	varchar(255)	not null,
+	`isAdmin`	char(1)		not null,
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
@@ -1425,8 +1425,8 @@ unique
 create table if not exists `GroupRegistration` (
 	`id`			integer 	not null auto_increment,
 	`eventId`		integer		not null,
-	`enabled`		varchar(255)	not null,
-	`defaultRegType`	varchar(255)	not null,
+	`enabled`		char(1)		not null,
+	`defaultRegType`	char(1)		not null,
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 

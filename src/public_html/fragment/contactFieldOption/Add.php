@@ -48,7 +48,7 @@ _;
 					{$this->HTML->checkbox(array(
 						'label' => 'Selected By Default',
 						'name' => 'defaultSelected',
-						'value' => 'true'	
+						'value' => 'T'	
 					))}
 				</td>
 			</tr>

@@ -45,7 +45,7 @@ _;
 					{$this->HTML->checkbox(array(
 						'label' => 'Admin',
 						'name' => 'isAdmin',
-						'value' => 'true'
+						'value' => 'T'
 					))}
 				</td>
 			</tr>

@@ -24,7 +24,7 @@ class action_admin_user_User extends action_ValidatorAction
 		}
 		
 		$user = RequestUtil::getParameters(array('id', 'email', 'password'));
-		$user['isAdmin'] = RequestUtil::getValue('isAdmin', 'false');
+		$user['isAdmin'] = RequestUtil::getValue('isAdmin', 'F');
 		
 		db_UserManager::getInstance()->saveUser($user);
 		
@@ -41,7 +41,7 @@ class action_admin_user_User extends action_ValidatorAction
 		}
 
 		$user = RequestUtil::getParameters(array('email', 'password'));
-		$user['isAdmin'] = RequestUtil::getValue('isAdmin', 'false');
+		$user['isAdmin'] = RequestUtil::getValue('isAdmin', 'F');
 		
 		db_UserManager::getInstance()->createUser($user);
 		

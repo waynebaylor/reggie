@@ -65,8 +65,8 @@ _;
 					{$this->HTML->checkbox(array(
 						'label' => 'Use Numbered Fields',
 						'name' => 'numbered',
-						'value' => 'true',
-						'checked' => $this->section['numbered'] === 'true'
+						'value' => 'T',
+						'checked' => $this->section['numbered'] === 'T'
 					))}
 				</td>
 			</tr>

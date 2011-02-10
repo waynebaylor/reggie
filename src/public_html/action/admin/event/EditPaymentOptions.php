@@ -31,7 +31,7 @@ class action_admin_event_EditPaymentOptions extends action_BaseAction
 	private function saveCheckDirections($event, $directions) {
 		$directions['eventId'] = $event['id'];
 		
-		if($directions['enabled'] === 'true') {
+		if($directions['enabled'] === 'T') {
 			db_payment_CheckDirectionsManager::getInstance()->create($directions);
 		}
 		else {
@@ -42,7 +42,7 @@ class action_admin_event_EditPaymentOptions extends action_BaseAction
 	private function savePoDirections($event, $directions) {
 		$directions['eventId'] = $event['id'];
 		
-		if($directions['enabled'] === 'true') {
+		if($directions['enabled'] === 'T') {
 			db_payment_PurchaseOrderDirectionsManager::getInstance()->create($directions);
 		}
 		else {
@@ -53,7 +53,7 @@ class action_admin_event_EditPaymentOptions extends action_BaseAction
 	private function saveAuthNetDirections($event, $directions) {
 		$directions['eventId'] = $event['id'];
 		
-		if($directions['enabled'] === 'true') {
+		if($directions['enabled'] === 'T') {
 			db_payment_AuthorizeNetDirectionsManager::getInstance()->create($directions);
 		}
 		else {

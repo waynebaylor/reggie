@@ -27,8 +27,8 @@ class action_admin_regOption_RegOption extends action_ValidatorAction
 		
 		$option = array();
 		ObjectUtils::populate($option, $_REQUEST);
-		$option['defaultSelected'] = RequestUtil::getValue('defaultSelected', 'false');
-		$option['showPrice'] = RequestUtil::getValue('showPrice', 'false');
+		$option['defaultSelected'] = RequestUtil::getValue('defaultSelected', 'F');
+		$option['showPrice'] = RequestUtil::getValue('showPrice', 'F');
 		
 		db_RegOptionManager::getInstance()->createRegOption($option);
 		
@@ -84,8 +84,8 @@ class action_admin_regOption_RegOption extends action_ValidatorAction
 			'description',
 			'capacity'
 		));
-		$option['defaultSelected'] = RequestUtil::getValue('defaultSelected', 'false');
-		$option['showPrice'] = RequestUtil::getValue('showPrice', 'false');
+		$option['defaultSelected'] = RequestUtil::getValue('defaultSelected', 'F');
+		$option['showPrice'] = RequestUtil::getValue('showPrice', 'F');
 		
 		db_RegOptionManager::getInstance()->save($option);
 		

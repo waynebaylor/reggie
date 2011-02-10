@@ -47,7 +47,7 @@ _;
 		
 		$amount = '$'.number_format($payment['amount'], 2);
 		
-		$received = ($payment['paymentReceived'] === 'true')? 'Received' : 'Pending';
+		$received = ($payment['paymentReceived'] === 'T')? 'Received' : 'Pending';
 							
 		$editLink = '';
 		if(in_array($payment['paymentTypeId'], array(model_PaymentType::$CHECK, model_PaymentType::$PO))) {

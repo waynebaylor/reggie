@@ -19,7 +19,7 @@ class action_admin_contactField_Option extends action_ValidatorAction
 			db_ContactFieldOptionManager::getInstance()->createOption(array(
 				'contactFieldId' => $field['id'],
 				'displayName' => $_REQUEST['displayName'],
-				'defaultSelected' => RequestUtil::getValue('defaultSelected', 'false')
+				'defaultSelected' => RequestUtil::getValue('defaultSelected', 'F')
 			));
 		}
 		

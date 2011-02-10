@@ -106,7 +106,7 @@ _;
 			
 			// if the validation restriction is a true/false flag,
 			// then we don't need to display the value.
-			if($rule['value'] === 'true') {
+			if($rule['value'] === 'T') {
 				$value = ''; 
 			}
 			

@@ -3,7 +3,7 @@
 class SecurityUtil
 {
 	public static function isAdmin($user) {
-		return $user['isAdmin'] === 'true';
+		return $user['isAdmin'] === 'T';
 	}
 	
 	public static function hasEvent($user, $eventId) {

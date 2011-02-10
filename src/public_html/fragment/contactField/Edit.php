@@ -114,7 +114,7 @@ _;
 			if($ruleId === model_Validation::$REQUIRED) {
 				$html .= $this->HTML->checkbox(array(
 							'name'    => "validationRules_{$rule['id']}",
-							'value'   => 'true',
+							'value'   => 'T',
 							'checked' => $this->getValidationValue($rule),
 							'label'   => $rule['displayName']
 						));

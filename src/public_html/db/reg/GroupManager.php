@@ -136,7 +136,7 @@ class db_reg_GroupManager extends db_Manager
 		
 		$params = array(
 			'id' => $id,
-			'paymentReceived' => 'true'
+			'paymentReceived' => 'T'
 		);
 		
 		$result = $this->rawQueryUnique($sql, $params, 'Find total paid by registration group.');

@@ -53,10 +53,10 @@ _;
 				<td class="label">Role</td>
 				<td>
 					{$this->HTML->checkbox(array(
-						'checked' => $this->user['isAdmin'] === 'true',
+						'checked' => $this->user['isAdmin'] === 'T',
 						'label' => 'Admin',
 						'name' => 'isAdmin',
-						'value' => 'true'
+						'value' => 'T'
 					))}
 				</td>
 			</tr>	

@@ -111,7 +111,7 @@ _;
 						{$this->HTML->checkbox(array(
 							'label' => $rule['displayName'], 
 							'name' => "validationRules_{$rule['id']}",
-							'value' => 'true'
+							'value' => 'T'
 						))}
 					</div>
 _;

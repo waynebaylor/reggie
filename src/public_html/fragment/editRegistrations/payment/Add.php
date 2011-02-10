@@ -58,15 +58,15 @@ _;
 				<td>
 					{$this->HTML->radios(array(
 						'name' => 'paymentReceived',
-						'value' => 'false',
+						'value' => 'F',
 						'items' => array(
 							array(
 								'label' => 'Pending',
-								'value' => 'false'
+								'value' => 'F'
 							),
 							array(
 								'label' => 'Paid',
-								'value' => 'true'
+								'value' => 'T'
 							)
 						)
 					))}

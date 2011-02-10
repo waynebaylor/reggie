@@ -63,7 +63,7 @@ _;
 			$config['disabled'] = 'disabled';
 		}
 		
-		if('true' === $this->group['multiple']) {
+		if('T' === $this->group['multiple']) {
 			// add the brackets so we can handle multiple checks if necessary.
 			$config['name'] .= '[]';
 			return $this->HTML->checkbox($config);
@@ -82,7 +82,7 @@ _;
 				return 'Sold out.';
 			}
 			else {
-				if($option['showPrice'] !== 'true') {
+				if($option['showPrice'] !== 'T') {
 					// use a space if the price won't be displayed.
 					return '&nbsp;';
 				}

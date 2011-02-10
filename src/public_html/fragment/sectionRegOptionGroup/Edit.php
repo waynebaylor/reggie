@@ -28,7 +28,7 @@ _;
 	}
 	
 	private function getFormRows() {
-		$rangeClass = $this->group['multiple'] === 'true'? '' : 'hide';
+		$rangeClass = $this->group['multiple'] === 'T'? '' : 'hide';
 		
 		return <<<_
 			<tr>
@@ -52,7 +52,7 @@ _;
 							'id' => 'required_true',
 							'label' => 'Required',
 							'name' => 'required',
-							'value' => 'true',
+							'value' => 'T',
 							'checked' => $this->group['required']
 						))}
 					</div>
@@ -61,7 +61,7 @@ _;
 							'id' => 'allow-multiple',
 							'label' => 'Allow Multiple',
 							'name' => 'multiple',
-							'value' => 'true',
+							'value' => 'T',
 							'checked' => $this->group['multiple']
 						))}
 					</div>

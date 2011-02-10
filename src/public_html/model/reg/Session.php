@@ -25,7 +25,7 @@ public static function reset($category, $event) {
 	public static function addPerson($event) {
 		$groupReg = $event['groupRegistration'];
 		
-		if($groupReg['enabled'] === 'true') {
+		if($groupReg['enabled'] === 'T') {
 			$newReg = array(
 				'completedPages' => array(),
 				'regType' => NULL,
@@ -34,7 +34,7 @@ public static function reset($category, $event) {
 				'variableQuantity' => array()
 			);
 				
-			if($groupReg['defaultRegType'] === 'true') {
+			if($groupReg['defaultRegType'] === 'T') {
 				$newReg['regType'] = self::getRegType(self::getCurrent());
 			}
 			

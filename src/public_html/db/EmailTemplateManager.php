@@ -107,7 +107,7 @@ class db_EmailTemplateManager extends db_Manager
 		
 		$params = array(
 			'eventId' => $eventId,
-			'enabled' => 'true'
+			'enabled' => 'T'
 		);
 		
 		$template = $this->queryUnique($sql, $params, 'Find email template available to all.');
@@ -140,7 +140,7 @@ class db_EmailTemplateManager extends db_Manager
 			
 			$params = array(
 				'eventId' => $eventId,
-				'enabled' => 'true',
+				'enabled' => 'T',
 				'regTypeId' => $regTypeId
 			);
 			

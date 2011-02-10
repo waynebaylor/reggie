@@ -92,15 +92,15 @@ _;
 						<td>
 							{$this->HTML->radios(array(
 								'name' => "paymentTypes_{$type['id']}_enabled",
-								'value' => $enabled? 'true' : 'false',
+								'value' => $enabled? 'T' : 'F',
 								'items' => array(
 									array(
 										'label' => 'Enabled',
-										'value' => 'true'
+										'value' => 'T'
 									),
 									array(
 										'label' => 'Disabled',
-										'value' => 'false'
+										'value' => 'F'
 									)
 								)
 							))}
@@ -126,15 +126,15 @@ _;
 						<td>
 							{$this->HTML->radios(array(
 								'name' => "paymentTypes_{$type['id']}_enabled",
-								'value' => $enabled? 'true' : 'false',
+								'value' => $enabled? 'T' : 'F',
 								'items' => array(
 									array(
 										'label' => 'Enabled',
-										'value' => 'true'
+										'value' => 'T'
 									),
 									array(
 										'label' => 'Disabled',
-										'value' => 'false'
+										'value' => 'F'
 									)
 								)
 							))}
@@ -160,15 +160,15 @@ _;
 						<td>
 							{$this->HTML->radios(array(
 								'name' => "paymentTypes_{$type['id']}_enabled",
-								'value' => $enabled? 'true' : 'false',
+								'value' => $enabled? 'T' : 'F',
 								'items' => array(
 									array(
 										'label' => 'Enabled',
-										'value' => 'true'
+										'value' => 'T'
 									),
 									array(
 										'label' => 'Disabled',
-										'value' => 'false'
+										'value' => 'F'
 									)
 								)
 							))}

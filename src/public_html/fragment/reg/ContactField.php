@@ -152,7 +152,7 @@ class fragment_reg_ContactField extends template_Template
 	private function getSelectedOption() {
 		if(!empty($this->field['options'])) {
 			foreach($this->field['options'] as $option) {
-				if($option['defaultSelected'] === 'true') {
+				if($option['defaultSelected'] === 'T') {
 					return $option;
 				}
 			}

@@ -52,7 +52,7 @@ _;
 		if(model_reg_Registration::isRegOptionSelected($option, $this->index)) {
 			$regTypeId = model_reg_Session::getRegType($this->index);
 			$price = model_RegOption::getPrice(array('id' => $regTypeId), $option);
-			$priceDisplayed = ($option['showPrice'] === 'true')? '$'.number_format($price['price'], 2) : '';
+			$priceDisplayed = ($option['showPrice'] === 'T')? '$'.number_format($price['price'], 2) : '';
 			$html .= <<<_
 				<li>
 					<div class="reg-option">

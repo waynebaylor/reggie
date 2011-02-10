@@ -32,7 +32,7 @@ _;
 		
 		$users = db_UserManager::getInstance()->findAll();
 		foreach($users as $user) {
-			$role = $user['isAdmin'] === 'true'? 'Admin' : '';
+			$role = $user['isAdmin'] === 'T'? 'Admin' : '';
 			
 			$html .= <<<_
 				<tr>

@@ -101,8 +101,8 @@ _;
 	}
 	
 	private function getRestrictions($option) {
-		$default = $option['defaultSelected'] === 'true'? 'Selected By Default' : '';
-		$showPrice = $option['showPrice'] === 'true'? 'Show Price' : '';
+		$default = $option['defaultSelected'] === 'T'? 'Selected By Default' : '';
+		$showPrice = $option['showPrice'] === 'T'? 'Show Price' : '';
 		$capacity = (is_numeric($option['capacity']) && $option['capacity'] > 0)? "Capacity: {$this->escapeHtml($option['capacity'])}" : '';
 		
 		return <<<_

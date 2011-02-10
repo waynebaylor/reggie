@@ -131,14 +131,14 @@ class db_reg_PaymentManager extends db_Manager
 		';
 		
 		$today = new DateTime();
-		$received = ArrayUtil::getValue($check, 'paymentReceived', 'false');
+		$received = ArrayUtil::getValue($check, 'paymentReceived', 'F');
 		
 		$params = array(
 			'paymentTypeId' => model_PaymentType::$CHECK,
 			'regGroupId' => $groupId,
 			'transactionDate' => date_format($today,'Y-m-d H:i'),
 			'checkNumber' => $check['checkNumber'],
-			'amount' => $received === 'true'? $check['amount'] : 0.00,
+			'amount' => $received === 'T'? $check['amount'] : 0.00,
 			'paymentReceived' => $received
 		);
 		
@@ -167,15 +167,15 @@ class db_reg_PaymentManager extends db_Manager
 		';
 		
 		$today = new DateTime();
-		$received = ArrayUtil::getValue($po, 'paymentReceived', 'false');
+		$received = ArrayUtil::getValue($po, 'paymentReceived', 'F');
 		
 		$params = array(
 			'paymentTypeId' => model_PaymentType::$PO,
 			'regGroupId' => $groupId,
 			'transactionDate' => date_format($today,'Y-m-d H:i'),
 			'purchaseOrderNumber' => $po['purchaseOrderNumber'],
-			'amount' => $received === 'true'? $po['amount'] : 0.00,
-			'paymentReceived' => ArrayUtil::getValue($po, 'paymentReceived', 'false')
+			'amount' => $received === 'T'? $po['amount'] : 0.00,
+			'paymentReceived' => ArrayUtil::getValue($po, 'paymentReceived', 'F')
 		);
 		
 		$this->execute($sql, $params, 'Create registration PO payment.');
@@ -226,7 +226,7 @@ class db_reg_PaymentManager extends db_Manager
 			'paymentTypeId' => model_PaymentType::$AUTHORIZE_NET,
 			'regGroupId' => $groupId,
 			'transactionDate' => date_format($today,'Y-m-d H:i'),
-			'paymentReceived' => 'true',
+			'paymentReceived' => 'T',
 			'cardType' => $authNet['cardType'],
 			'cardSuffix' => $authNet['cardSuffix'],
 			'authorizationCode' => $authNet['authorizationCode'],
@@ -268,7 +268,7 @@ class db_reg_PaymentManager extends db_Manager
 		$params = array(
 			'id' => $check['id'],
 			'checkNumber' => $check['checkNumber'],
-			'amount' => $received === 'true'? $check['amount'] : 0.00,
+			'amount' => $received === 'T'? $check['amount'] : 0.00,
 			'paymentReceived' => $received
 		);
 		
@@ -291,7 +291,7 @@ class db_reg_PaymentManager extends db_Manager
 		$params = array(
 			'id' => $po['id'],
 			'purchaseOrderNumber' => $po['purchaseOrderNumber'],
-			'amount' => $received === 'true'? $po['amount'] : 0.00,
+			'amount' => $received === 'T'? $po['amount'] : 0.00,
 			'paymentReceived' => $po['paymentReceived']
 		);
 		

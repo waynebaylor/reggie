@@ -12,11 +12,11 @@
 			'items' => array(
 				array(
 					'label' => 'Enabled',
-					'value' => 'true'
+					'value' => 'T'
 				),
 				array(
 					'label' => 'Disabled',
-					'value' => 'false'
+					'value' => 'F'
 				)
 			)
 		)) ?>

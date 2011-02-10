@@ -189,7 +189,7 @@ class db_ReportManager extends db_Manager
 				
 		$params = array(
 			'id' => $field['reportId'],
-			'value' => 'true'
+			'value' => 'T'
 		);
 		
 		$this->execute($sql, $params, 'Add special field to report.');
@@ -209,7 +209,7 @@ class db_ReportManager extends db_Manager
 				
 		$params = array(
 			'id' => $field['reportId'],
-			'value' => 'false'
+			'value' => 'F'
 		);
 		
 		$this->execute($sql, $params, 'Remove special field from report.');
@@ -312,7 +312,7 @@ class db_ReportManager extends db_Manager
 		//
 		foreach(array('registration_type', 'category', 'date_cancelled', 'date_registered') as $specialFieldId) {
 			$column = self::$SPECIAL_FIELDS[$specialFieldId]['dbColumn'];
-			if($report[$column] === 'true') {
+			if($report[$column] === 'T') {
 				$field = array(
 					'id' => $specialFieldId, 
 					'displayName' => self::$SPECIAL_FIELDS[$specialFieldId]['displayName']
@@ -327,7 +327,7 @@ class db_ReportManager extends db_Manager
 		//
 		foreach(array('total_cost', 'total_paid', 'remaining_balance') as $specialFieldId) {
 			$column = self::$SPECIAL_FIELDS[$specialFieldId]['dbColumn'];
-			if($report[$column] === 'true') {
+			if($report[$column] === 'T') {
 				$field = array(
 					'id' => $specialFieldId, 
 					'displayName' => self::$SPECIAL_FIELDS[$specialFieldId]['displayName']
@@ -429,7 +429,7 @@ class db_ReportManager extends db_Manager
 			$column = self::$SPECIAL_FIELDS[$specialFieldId]['dbColumn'];
 			$valueColumn = self::$SPECIAL_FIELDS[$specialFieldId]['dbValueColumn'];
 
-			if($report[$column] === 'true') {
+			if($report[$column] === 'T') {
 				$fieldValues[$specialFieldId] = $result[$valueColumn];
 			}
 		}
@@ -438,15 +438,15 @@ class db_ReportManager extends db_Manager
 		// group members will have these cells blank.
 		$groupId = $result['groupId'];
 		if(!in_array($groupId, $processedGroupIds)) {
-			if($report[self::$SPECIAL_FIELDS['total_cost']['dbColumn']] === 'true') {
+			if($report[self::$SPECIAL_FIELDS['total_cost']['dbColumn']] === 'T') {
 				$cost = db_reg_GroupManager::getInstance()->findTotalCost($groupId);
 				$fieldValues['total_cost'] = '$'.number_format($cost, 2);
 			}
-			if($report[self::$SPECIAL_FIELDS['total_paid']['dbColumn']] === 'true') {
+			if($report[self::$SPECIAL_FIELDS['total_paid']['dbColumn']] === 'T') {
 				$paid = db_reg_GroupManager::getInstance()->findTotalPaid($groupId);
 				$fieldValues['total_paid'] = '$'.number_format($paid, 2);
 			}
-			if($report[self::$SPECIAL_FIELDS['remaining_balance']['dbColumn']] === 'true') {
+			if($report[self::$SPECIAL_FIELDS['remaining_balance']['dbColumn']] === 'T') {
 				$cost = db_reg_GroupManager::getInstance()->findTotalCost($groupId);
 				$paid = db_reg_GroupManager::getInstance()->findTotalPaid($groupId);
 				$remaining = $cost - $paid;

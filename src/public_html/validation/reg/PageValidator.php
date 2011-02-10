@@ -125,17 +125,17 @@ class validation_reg_PageValidator
 		if(model_RegOptionGroup::hasOptionsVisible($group, $regTypeId)) {
 			$name = model_ContentType::$REG_OPTION.'_'.$group['id'];
 			
-			if($group['required'] === 'true') {
+			if($group['required'] === 'T') {
 				// there may be multiple values if this is a checkbox, but we only 
 				// want to know if there is at least one value.
 				$value = RequestUtil::getValue($name, NULL);
 				if(empty($value)) {
-					$inputName = ($group['multiple'] === 'true')? $name.'[]' : $name;
+					$inputName = ($group['multiple'] === 'T')? $name.'[]' : $name;
 					$errors[$inputName] = 'Please choose an option.';
 				}
 			}
 			
-			if($group['multiple'] === 'true') {
+			if($group['multiple'] === 'T') {
 				$values = RequestUtil::getValueAsArray($name, array());
 				$min = intval($group['minimum'], 10);
 				$max = intval($group['maximum'], 10);
