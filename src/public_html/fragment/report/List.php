@@ -32,14 +32,31 @@ _;
 	
 	private function getReports() {
 		$html = '';
-		$evenRow = true;
+		
+		// special sample report for MM2011.
+		if($this->event['id'] == 4) {
+			$html = <<<_
+				<tr>
+					<td>
+						{$this->HTML->link(array(
+							'label' => 'Payments To Date',
+							'href' => '/admin/report/RunReport',
+							'parameters' => array(
+								'a' => 'view',
+								'id' => 'payments_to_date',
+								'eventId' => $this->event['id']
+							)
+						))}
+					</td>
+					<td></td>
+				</tr>
+_;
+		}
 		
 		$reports = $this->event['reports'];
 		foreach($reports as $report) {
-			$evenRow = !$evenRow;
-			$rowClass = $evenRow? 'even' : 'odd';
 			$html .= <<<_
-				<tr class="{$rowClass}">
+				<tr>
 					<td>
 						{$this->HTML->link(array(
 							'label' => $report['name'],

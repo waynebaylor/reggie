@@ -143,6 +143,23 @@ class db_reg_GroupManager extends db_Manager
 		
 		return $result['total_paid'];
 	}
+	
+	public function findByEventId($eventId) {
+		$sql = '
+			SELECT DISTINCT 
+				regGroupId as id
+			FROM
+				Registration 
+			WHERE
+				eventId = :eventId
+		';
+		
+		$params = array(
+			'eventId' => $eventId
+		);
+		
+		return $this->query($sql, $params, 'Find registration groups by event.');
+	}
 }
 
 ?>
