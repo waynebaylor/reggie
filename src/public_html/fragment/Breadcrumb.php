@@ -53,7 +53,7 @@ class fragment_Breadcrumb extends template_Template
 				$html .= $this->SEPARATOR;
 				$html .= 'Edit Registrations';
 				break;
-			case 'ReportResults':
+			case 'GenerateReport':
 				$html = $this->reportResults();
 				$html .= $this->SEPARATOR;
 				$html .= "Report Results ({$this->config['reportName']})";

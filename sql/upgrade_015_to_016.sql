@@ -151,4 +151,12 @@ set
 where
 	validationValue = 'false';
 
+-- add columnfor new report type
+
+alter table
+	Report
+add column
+	isPaymentsToDate char(1) not null default 'F';
+
+
 

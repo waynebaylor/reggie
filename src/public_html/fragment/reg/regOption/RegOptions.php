@@ -6,12 +6,13 @@ class fragment_reg_regOption_RegOptions extends template_Template
 	private $regTypeId;
 	private $selectedOptions;
 	
-	function __construct($group, $regTypeId, $selectedOpts) {
+	function __construct($group, $regTypeId, $selectedOpts, $pageId) {
 		parent::__construct();
 		
 		$this->group = $group;
 		$this->regTypeId = $regTypeId;
 		$this->selectedOptions = $selectedOpts;
+		$this->pageId = $pageId;
 	}	
 	
 	public function html() {
@@ -29,7 +30,7 @@ _;
 			$price = $this->getPrice($option);
 			
 			if(!empty($price)) {
-				$groupsTemplate = new fragment_reg_regOptionGroup_RegOptionGroups($option['groups'], $this->regTypeId, $this->selectedOptions);
+				$groupsTemplate = new fragment_reg_regOptionGroup_RegOptionGroups($option['groups'], $this->regTypeId, $this->selectedOptions, $this->pageId);
 				$optionGroupsHtml = $groupsTemplate->html();
 				
 				$html .= <<<_
@@ -112,6 +113,9 @@ _;
 			else {
 				return $option['id'] === $value;
 			}
+		}
+		else if(!in_array($this->pageId, model_reg_Session::getCompletedPages())) {
+			return $option['defaultSelected'] === 'T';
 		}
 		
 		return false;

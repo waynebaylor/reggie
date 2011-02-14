@@ -257,11 +257,11 @@ class db_EventManager extends db_Manager
 		// create the event's appearance information.
 		db_AppearanceManager::getInstance()->createAppearance($id);
 		 
-		// create the event's email template.
-		db_EmailTemplateManager::getInstance()->createEmailTemplate($id);
-		
 		// create the event's group registration information.
 		db_GroupRegistrationManager::getInstance()->createGroupRegistration($id);
+		
+		// create built-in reports.
+		db_ReportManager::getInstance()->createPaymentsToDate($id);
 		
 		return $id;
 	}

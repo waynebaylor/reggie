@@ -96,7 +96,7 @@ _;
 		return <<<_
 			<tr>
 				<td class="label">{$option['description']}</td>
-				<td class="quantity">
+				<td class="quantity" style="white-space:nowrap;">
 					{$this->HTML->text(array(
 						'name' => model_ContentType::$VAR_QUANTITY_OPTION.'_'.$option['id'],
 						'value' => $value,

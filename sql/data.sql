@@ -86,7 +86,7 @@ values
 insert into
 	User(email, password, isAdmin)
 values
-	('wade.taylor@baylorsc.com', '400e999ddb50b048dff711856116871d09b7ff55', 'true');
+	('wade.taylor@baylorsc.com', '400e999ddb50b048dff711856116871d09b7ff55', 'T');
 
 -- --------------------------------------------	
 	

@@ -48,7 +48,7 @@ _;
 		else if(model_Section::containsRegOptions($this->section)) {
 			$selectedOpts = model_reg_Session::getRegOptions();
 
-			$groups = new fragment_reg_regOptionGroup_RegOptionGroups($this->section['content'], $regTypeId, $selectedOpts);
+			$groups = new fragment_reg_regOptionGroup_RegOptionGroups($this->section['content'], $regTypeId, $selectedOpts, $this->section['pageId']);
 			return $groups->html();
 		}
 		else if(model_Section::containsVariableQuantityOptions($this->section)) {

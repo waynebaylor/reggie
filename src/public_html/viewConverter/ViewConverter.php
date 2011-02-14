@@ -46,6 +46,11 @@ abstract class viewConverter_ViewConverter
 		return $form->html();
 	}
 	
+	protected function arrows($config) {
+		$arrows = new fragment_Arrows($config);
+		return $arrows->html();
+	}
+	
 	protected abstract function head();
 	
 	protected abstract function body();

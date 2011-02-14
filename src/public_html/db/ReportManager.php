@@ -79,7 +79,8 @@ class db_ReportManager extends db_Manager
 				showRegType,
 				showTotalCost,
 				showTotalPaid,
-				showRemainingBalance
+				showRemainingBalance,
+				isPaymentsToDate
 			FROM
 				Report
 			WHERE
@@ -105,7 +106,8 @@ class db_ReportManager extends db_Manager
 				showRegType,
 				showTotalCost,
 				showTotalPaid,
-				showRemainingBalance
+				showRemainingBalance,
+				isPaymentsToDate
 			FROM
 				Report
 			WHERE
@@ -256,7 +258,7 @@ class db_ReportManager extends db_Manager
 		$results = $this->rawQuery($sql, $params, 'Find report results.');
 		
 		//
-		// put the fields to gether into something the report can use.
+		// put the fields together into something the report can use.
 		//
 		
 		$fieldResults = array();
@@ -344,6 +346,13 @@ class db_ReportManager extends db_Manager
 	}
 	
 	private function getReportFieldValues($registration) {
+		return $this->getReportFieldValuesByRegistrationId($registration['id']);
+	}
+	
+	/**
+	 * field values [(field id) -> (value | [values])].
+	 */
+	private function getReportFieldValuesByRegistrationId($registrationId) { 
 		// single input fields (text, textarea).
 		$sql = '
 			SELECT 
@@ -368,7 +377,7 @@ class db_ReportManager extends db_Manager
 		';
 		
 		$params = array(
-			'registrationId' => $registration['registrationId']
+			'registrationId' => $registrationId
 		);
 		
 		$results = $this->rawQuery($sql, $params, 'Find report field values.');
@@ -455,6 +464,197 @@ class db_ReportManager extends db_Manager
 		}
 		
 		return $fieldValues;
+	}
+	
+	public function createPaymentsToDate($eventId) {
+		$sql = '
+			INSERT INTO
+				Report (
+					eventId,
+					name,
+					isPaymentsToDate	
+				)
+			VALUES (
+				:eventId,
+				:name,
+				:isPaymentsToDate
+			)
+		';
+		
+		$params = array(
+			'eventId' => $eventId,
+			'name' => 'Payments To Date',
+			'isPaymentsToDate' => 'T'
+			
+		);
+		
+		$this->execute($sql, $params, 'Create payments to date report.');
+		
+		return $this->lastInsertId();
+	}
+	
+	public function findPaymentsToDate($eventId) {
+		$sql = '
+			SELECT
+				id,
+				eventId,
+				name,
+				showDateRegistered,
+				showDateCancelled,
+				showCategory,
+				showRegType,
+				showTotalCost,
+				showTotalPaid,
+				showRemainingBalance,
+				isPaymentsToDate
+			FROM
+				Report
+			WHERE
+				eventId = :eventId
+			AND
+				isPaymentsToDate = :isPaymentsToDate
+		';
+		
+		$params = array(
+			'eventId' => $eventId,
+			'isPaymentsToDate' => 'T'
+		);
+		
+		return $this->queryUnique($sql, $params, 'Find payments to date report.');
+	}
+	
+	public function findReportFieldHeadings($reportId) {
+		$sql = '
+			SELECT 
+				ContactField.id,
+				ContactField.displayName
+			FROM
+				ContactField
+			INNER JOIN
+				Report_ContactField
+			ON
+				ContactField.id = Report_ContactField.contactFieldId
+			WHERE
+				Report_ContactField.reportId = :reportId
+			ORDER BY
+				Report_ContactField.displayOrder
+		';
+		
+		$params = array(
+			'reportId' => $reportId
+		);
+		
+		return $this->rawQuery($sql, $params, 'Find report contact field names.');
+	}
+
+	public function findReportRegistrationValues($reportId) {
+		$sql = '
+			SELECT
+				Registration.id as registrationId,
+				Registration.regGroupId as groupId,
+				Registration.dateRegistered,
+				Registration.dateCancelled,
+				Category.displayName as categoryName,
+				RegType.description as regTypeName
+			FROM
+				Registration
+			INNER JOIN
+				Category
+			ON
+				Registration.categoryId = Category.id
+			INNER JOIN
+				RegType
+			ON
+				Registration.regTypeId = RegType.id
+			INNER JOIN
+				Report
+			ON
+				Report.eventId = Registration.eventId
+			WHERE
+				Report.id = :reportId
+			ORDER BY
+				Registration.dateRegistered
+			DESC
+		';
+		
+		$params = array(
+			'reportId' => $reportId
+		);
+		
+		return $this->rawQuery($sql, $params, 'Find report special values.');
+	}
+	
+	/**
+	 * payment values [(reg group id) -> (cost, paid, balance)].
+	 */
+	public function findReportPaymentValues($reportId) {
+		$sql = '
+			SELECT DISTINCT
+				Registration.regGroupId
+			FROM
+				Registration
+			INNER JOIN
+				Report
+			ON
+				Registration.eventId = Report.eventId
+			WHERE
+				Report.id = :reportId
+		';
+		
+		$params = array(
+			'reportId' => $reportId
+		);
+		
+		$regGroupIds = $this->rawQuery($sql, $params, 'Find reg groups for event by report.');
+
+		$paymentValues = array();
+		foreach($regGroupIds as $regGroupId) {
+			$regGroupId = $regGroupId['regGroupId'];
+			$cost = db_reg_GroupManager::getInstance()->findTotalCost($regGroupId);
+			$paid = db_reg_GroupManager::getInstance()->findTotalPaid($regGroupId);
+			
+			$paymentValues[$regGroupId] = array(
+				'cost' => $cost,
+				'paid' => $paid,
+				'balance' => $cost - $paid
+			);	
+		}
+		
+		return $paymentValues;
+	}
+	
+	/**
+	 * report field values [(registration id) -> [(field id) -> (value | [values])]].
+	 */
+	public function findReportFieldValues($reportId) {
+		// find the registrations first.
+		$sql = '
+			SELECT 
+				Registration.id
+			FROM
+				Registration
+			INNER JOIN
+				Report
+			ON 
+				Registration.eventId = Report.eventId
+			WHERE
+				Report.id = :reportId
+		';
+		
+		$params = array(
+			'reportId' => $reportId
+		);
+		
+		$regIds = $this->rawQuery($sql, $params, 'Find registration ids by report.');
+		
+		// get the values for each registration.
+		$values = array();
+		foreach($regIds as $regId) { 
+			$regId = $regId['id']; 
+			$values[$regId] = $this->getReportFieldValuesByRegistrationId($regId);
+		}
+		
+		return $values;
 	}
 }
 
