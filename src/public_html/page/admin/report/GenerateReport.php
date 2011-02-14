@@ -16,23 +16,25 @@
 					<?php echo implode('</td><td>', $row['data']) ?>
 				</td>
 				<td>
-					<?php echo $this->HTML->link(array(
-						'label' => 'Details',
-						'href' => '/admin/registration/Registration',
-						'parameters' => array(
-							'groupId' => $row['regGroupId'],
-							'reportId' => $this->info['reportId']
-						)
-					)) ?>
-					
-					<?php echo $this->HTML->link(array(
-						'label' => 'Summary',
-						'href' => '/admin/registration/Summary',
-						'parameters' => array(
-							'regGroupId' => $row['regGroupId'],
-							'reportId' => $this->info['reportId']
-						)
-					)) ?>
+					<?php if(isset($row['registrationId'])): ?>
+						<?php echo $this->HTML->link(array(
+							'label' => 'Details',
+							'href' => '/admin/registration/Registration',
+							'parameters' => array(
+								'groupId' => $row['regGroupId'],
+								'reportId' => $this->info['reportId']
+							)
+						)) ?>
+						
+						<?php echo $this->HTML->link(array(
+							'label' => 'Summary',
+							'href' => '/admin/registration/Summary',
+							'parameters' => array(
+								'regGroupId' => $row['regGroupId'],
+								'reportId' => $this->info['reportId']
+							)
+						)) ?>
+					<?php endif; ?>
 				</td>
 			</tr>
 			<?php endforeach; ?>

@@ -14,6 +14,7 @@ class logic_admin_report_PaymentsToDate extends logic_Performer
 		$paymentData[] = array(
 			'Group Id', 
 			'Registration Id', 
+		//	'Date Registered', 
 			'Date Cancelled', 
 			'Last Name', 
 			'First Name', 
