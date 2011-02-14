@@ -35,7 +35,7 @@ class logic_admin_report_GenerateReport extends logic_Performer
 			));
 			
 			$emptyPayment = array('', '', '', '', '');
-			$emptyRegistration = array_fill(0, count($info['headings'])-count($emptyPayment), '');
+			$emptyRegistration = array_fill(0, count($info['headings'])-count($emptyPayment)-1, ''); // -1 because we always have RegGroupID value.
 		
 			$regGroups = db_reg_GroupManager::getInstance()->findByEventId($report['eventId']);
 			foreach($regGroups as $regGroup) {
@@ -44,6 +44,8 @@ class logic_admin_report_GenerateReport extends logic_Performer
 				$num = max(count($payments), count($registrations));
 				
 				for($i=0; $i<$num; ++$i) {
+					unset($regId); // reset so it's not inadvertantly used below.
+					
 					// registration and user fields.
 					$augmentedRow = array($regGroup['id']);
 					if(empty($registrations[$i])) {
