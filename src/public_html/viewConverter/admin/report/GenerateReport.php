@@ -18,7 +18,7 @@ class viewConverter_admin_report_GenerateReport extends viewConverter_admin_Admi
 		$info = db_BreadcrumbManager::getInstance()->findGenerateReportCrumbs($this->info['reportId']);
 		
 		$crumbs = new fragment_Breadcrumb(array(
-			'location' => 'GenerateReport', //ReportResults
+			'location' => 'GenerateReport', 
 			'eventCode' => $info['code'],
 			'eventId' => $this->info['eventId'],
 			'reportName' => $this->info['reportName']
