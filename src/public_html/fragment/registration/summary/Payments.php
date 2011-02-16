@@ -41,7 +41,12 @@ class fragment_registration_summary_Payments extends template_Template
 				$type = "{$paymentType['displayName']} {$payment['purchaseOrderNumber']} {$received}";
 			}
 			else if($paymentType['id'] == model_PaymentType::$AUTHORIZE_NET) {
-				$type = $payment['cardType'].' '.$payment['cardSuffix'];
+				$type = "{$payment['cardType']} {$payment['cardSuffix']}";
+				// admin's can see the transaction id on the group summary page, 
+				// but it shouldn't show on the user confirmation page.
+				if(SecurityUtil::isAdmin(SessionUtil::getUser())) {
+					$type .= "<br>Transaction ID: {$payment['transactionId']}";
+				}
 			}
 			
 			$amount = '$'.number_format($payment['amount'], 2);
