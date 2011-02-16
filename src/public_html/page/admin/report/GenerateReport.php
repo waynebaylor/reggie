@@ -31,6 +31,7 @@
 		<?php echo $this->title ?>
 	</h3>
 	
+	<?php if(ArrayUtil::getValue($this->info, 'showCreateRegLink', true)): ?>
 	<span id="create-reg-link" class="link">Create New Registration</span>
 	<div id="create-reg-content" class="hide">
 		<?php echo $this->xhrTableForm(
@@ -42,6 +43,7 @@
 	</div>
 	
 	<div class="sub-divider"></div>
+	<?php endif; ?>
 				
 	<table class="admin">
 		<tr>

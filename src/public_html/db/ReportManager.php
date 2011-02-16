@@ -80,7 +80,10 @@ class db_ReportManager extends db_Manager
 				showTotalCost,
 				showTotalPaid,
 				showRemainingBalance,
-				isPaymentsToDate
+				isPaymentsToDate,
+				isAllRegToDate,
+				isOptionCount,
+				isRegTypeBreakdown
 			FROM
 				Report
 			WHERE
@@ -107,7 +110,10 @@ class db_ReportManager extends db_Manager
 				showTotalCost,
 				showTotalPaid,
 				showRemainingBalance,
-				isPaymentsToDate
+				isPaymentsToDate,
+				isAllRegToDate,
+				isOptionCount,
+				isRegTypeBreakdown
 			FROM
 				Report
 			WHERE
@@ -221,70 +227,6 @@ class db_ReportManager extends db_Manager
 	// methods for running reports.
 	//////////////////////////////////////////////////////////////
 	
-	public function generateReport($report) {
-		$sql = '
-			SELECT
-				Registration.id as registrationId,
-				Registration.regGroupId as groupId,
-				Registration.dateRegistered,
-				Registration.dateCancelled,
-				Category.displayName as categoryName,
-				RegType.description as regTypeName
-			FROM
-				Registration
-			INNER JOIN
-				Category
-			ON
-				Registration.categoryId = Category.id
-			INNER JOIN
-				RegType
-			ON
-				Registration.regTypeId = RegType.id
-			INNER JOIN
-				Report
-			ON
-				Report.eventId = Registration.eventId
-			WHERE
-				Report.id = :reportId
-			ORDER BY
-				Registration.dateRegistered
-			DESC
-		';
-		
-		$params = array(
-			'reportId' => $report['id']
-		);
-		
-		$results = $this->rawQuery($sql, $params, 'Find report results.');
-		
-		//
-		// put the fields together into something the report can use.
-		//
-		
-		$fieldResults = array();
-		
-		$processedGroupIds = array(); // only display payment info for one registrant per group.
-		foreach($results as $result) {
-			$fieldValues = $this->getReportFieldValues($result);
-
-			// can't use array_merge because $fieldValues have integer keys which will be
-			// renumbered after the merge.
-			$specialFieldValues = $this->getSpecialFieldValues($report, $result, $processedGroupIds);
-			foreach($specialFieldValues as $key => $value) {
-				$fieldValues[$key] = $value;
-			}
-			
-			// this is used for the 'details' link.
-			$fieldValues['details'] = $result['groupId'];
-						
-			$fieldResults[] = array('fieldValues' => $fieldValues);
-		
-			$processedGroupIds[] = $result['groupId'];
-		}
-
-		return $fieldResults;
-	}
-	
 	public function getReportFieldNames($report) {
 		$sql = '
 			SELECT 
@@ -345,10 +287,6 @@ class db_ReportManager extends db_Manager
 		return $results;
 	}
 	
-	private function getReportFieldValues($registration) {
-		return $this->getReportFieldValuesByRegistrationId($registration['id']);
-	}
-	
 	/**
 	 * field values [(field id) -> (value | [values])].
 	 */
@@ -391,7 +329,7 @@ class db_ReportManager extends db_Manager
 		$sql = '
 			SELECT 
 				ContactField.id,
-				ContactFieldOption.displayName as value
+				ContactFieldOption.displayName AS value
 			FROM
 				ContactField
 			INNER JOIN
@@ -431,39 +369,76 @@ class db_ReportManager extends db_Manager
 		return $values;
 	}
 	
-	private function getSpecialFieldValues($report, $result, $processedGroupIds) {
-		$fieldValues = array();
+	public function createRegTypeBreakdown($eventId) {
+		$sql = '
+			INSERT INTO
+				Report (
+					eventId,
+					name,
+					isRegTypeBreakdown
+				)
+			VALUES (
+				:eventId,
+				:name,
+				:isRegTypeBreakdown
+			)
+		';	
 		
-		foreach(array('registration_type', 'category', 'date_cancelled', 'date_registered') as $specialFieldId) {
-			$column = self::$SPECIAL_FIELDS[$specialFieldId]['dbColumn'];
-			$valueColumn = self::$SPECIAL_FIELDS[$specialFieldId]['dbValueColumn'];
-
-			if($report[$column] === 'T') {
-				$fieldValues[$specialFieldId] = $result[$valueColumn];
-			}
-		}
-			
-		// add special payment fields. this info should only be shown once per group. additional
-		// group members will have these cells blank.
-		$groupId = $result['groupId'];
-		if(!in_array($groupId, $processedGroupIds)) {
-			if($report[self::$SPECIAL_FIELDS['total_cost']['dbColumn']] === 'T') {
-				$cost = db_reg_GroupManager::getInstance()->findTotalCost($groupId);
-				$fieldValues['total_cost'] = '$'.number_format($cost, 2);
-			}
-			if($report[self::$SPECIAL_FIELDS['total_paid']['dbColumn']] === 'T') {
-				$paid = db_reg_GroupManager::getInstance()->findTotalPaid($groupId);
-				$fieldValues['total_paid'] = '$'.number_format($paid, 2);
-			}
-			if($report[self::$SPECIAL_FIELDS['remaining_balance']['dbColumn']] === 'T') {
-				$cost = db_reg_GroupManager::getInstance()->findTotalCost($groupId);
-				$paid = db_reg_GroupManager::getInstance()->findTotalPaid($groupId);
-				$remaining = $cost - $paid;
-				$fieldValues['remaining_balance'] = '$'.number_format($remaining, 2);
-			}
-		}
+		$params = array(
+			'eventId' => $eventId,
+			'name' => 'Registration Type Breakdown',
+			'isRegTypeBreakdown' => 'T'
+		);
 		
-		return $fieldValues;
+		$this->execute($sql, $params, 'Create reg type breakdown report.');
+	}
+	
+	public function createOptionCount($eventId) {
+		$sql = '
+			INSERT INTO
+				Report (
+					eventId,
+					name,
+					isOptionCount
+				)
+			VALUES (
+				:eventId,
+				:name,
+				:isOptionCount
+			)
+		';	
+		
+		$params = array(
+			'eventId' => $eventId,
+			'name' => 'Option Counts',
+			'isOptionCount' => 'T'
+		); 
+		
+		$this->execute($sql, $params, 'Create option count report.');
+	}
+	
+	public function createAllRegToDate($eventId) {
+		$sql = '
+			INSERT INTO
+				Report (
+					eventId,
+					name,
+					isAllRegToDate
+				)
+			VALUES (
+				:eventId,
+				:name,
+				:isAllRegToDate
+			)
+		';	
+		
+		$params = array(
+			'eventId' => $eventId,
+			'name' => 'All Registrations To Date',
+			'isAllRegToDate' => 'T'
+		);
+		
+		$this->execute($sql, $params, 'Create all reg to date report.');
 	}
 	
 	public function createPaymentsToDate($eventId) {
@@ -489,40 +464,8 @@ class db_ReportManager extends db_Manager
 		);
 		
 		$this->execute($sql, $params, 'Create payments to date report.');
-		
-		return $this->lastInsertId();
 	}
-	
-	public function findPaymentsToDate($eventId) {
-		$sql = '
-			SELECT
-				id,
-				eventId,
-				name,
-				showDateRegistered,
-				showDateCancelled,
-				showCategory,
-				showRegType,
-				showTotalCost,
-				showTotalPaid,
-				showRemainingBalance,
-				isPaymentsToDate
-			FROM
-				Report
-			WHERE
-				eventId = :eventId
-			AND
-				isPaymentsToDate = :isPaymentsToDate
-		';
-		
-		$params = array(
-			'eventId' => $eventId,
-			'isPaymentsToDate' => 'T'
-		);
-		
-		return $this->queryUnique($sql, $params, 'Find payments to date report.');
-	}
-	
+
 	public function findReportFieldHeadings($reportId) {
 		$sql = '
 			SELECT 
@@ -550,12 +493,12 @@ class db_ReportManager extends db_Manager
 	public function findReportRegistrationValues($reportId) {
 		$sql = '
 			SELECT
-				Registration.id as registrationId,
-				Registration.regGroupId as groupId,
+				Registration.id AS registrationId,
+				Registration.regGroupId AS groupId,
 				Registration.dateRegistered,
 				Registration.dateCancelled,
-				Category.displayName as categoryName,
-				RegType.description as regTypeName
+				Category.displayName AS categoryName,
+				RegType.description AS regTypeName
 			FROM
 				Registration
 			INNER JOIN
@@ -655,6 +598,181 @@ class db_ReportManager extends db_Manager
 		}
 		
 		return $values;
+	}
+	
+	public function findAllRegToDateValues($eventId) {
+		$sql = '
+			(
+				SELECT
+					Registration.regGroupId,
+					Registration.id AS regId,
+					RegType.code AS regTypeCode,
+					Registration_RegOption.dateAdded,
+					Registration_RegOption.dateCancelled,
+					RegOption.code AS optionCode,
+					RegOption.description AS optionName,
+					RegOptionPrice.description AS priceName,
+					RegOptionPrice.price AS price,
+					1 AS quantity	
+				FROM
+					Registration
+				INNER JOIN
+					Registration_RegOption
+				ON
+					Registration.id = Registration_RegOption.registrationId
+				INNER JOIN
+					RegOption
+				ON
+					RegOption.id = Registration_RegOption.regOptionId
+				INNER JOIN
+					RegOptionPrice
+				ON
+					RegOptionPrice.id = Registration_RegOption.priceId
+				INNER JOIN
+					RegType
+				ON
+					RegType.id = Registration.regTypeId
+				WHERE
+					Registration.eventId = :eventId
+			)
+			UNION ALL
+			(
+				SELECT
+					Registration.regGroupId,
+					Registration.id AS regId,
+					RegType.code AS regTypeCode,
+					null AS dateAdded,
+					null AS dateCancelled,
+					VariableQuantityOption.code AS optionCode,
+					VariableQuantityOption.description AS optionName,
+					RegOptionPrice.description AS priceName,
+					RegOptionPrice.price AS price,
+					Registration_VariableQuantityOption.quantity	
+				FROM
+					Registration
+				INNER JOIN
+					Registration_VariableQuantityOption
+				ON
+					Registration.id = Registration_VariableQuantityOption.registrationId
+				INNER JOIN
+					VariableQuantityOption
+				ON
+					VariableQuantityOption.id = Registration_VariableQuantityOption.variableQuantityId
+				INNER JOIN
+					RegOptionPrice
+				ON
+					RegOptionPrice.id = Registration_VariableQuantityOption.priceId
+				INNER JOIN
+					RegType
+				ON
+					RegType.id = Registration.regTypeId
+				WHERE
+					Registration.eventId = :eventId
+			)
+			ORDER BY
+				regGroupId, regId
+		';
+		
+		$params = array(
+			'eventId' => $eventId
+		);
+		
+		return $this->rawQuery($sql, $params, 'Find all reg to date values.');
+	}
+	
+	public function findOptionCounts($eventId) {
+		$sql = '
+			(
+				SELECT
+					RegOption.code AS optionCode,
+					RegOption.description AS optionName,
+					RegOptionPrice.description AS priceName,
+					RegOptionPrice.price AS price,
+					COUNT(priceId) AS priceCount,
+					COUNT(priceId)*RegOptionPrice.price AS revenue
+				FROM 
+					RegOption
+				INNER JOIN
+					Registration_RegOption
+				ON
+					RegOption.id = Registration_RegOption.regOptionId
+				INNER JOIN 
+					RegOptionPrice
+				ON
+					Registration_RegOption.priceId = RegOptionPrice.id
+				INNER JOIN
+					Registration
+				ON
+					Registration.id = Registration_RegOption.registrationId
+				WHERE
+					Registration.eventId = :eventId
+				AND
+					Registration_RegOption.dateCancelled is null
+				GROUP BY
+					Registration_RegOption.priceId
+			)
+			UNION ALL
+			(
+				SELECT 
+					VariableQuantityOption.code AS optionCode,
+					VariableQuantityOption.description AS optionName,
+					RegOptionPrice.description AS priceName,
+					RegOptionPrice.price AS price,
+					sum(Registration_VariableQuantityOption.quantity) AS priceCount,
+					sum(Registration_VariableQuantityOption.quantity)*RegOptionPrice.price AS revenue
+				FROM
+					VariableQuantityOption
+				INNER JOIN
+					Registration_VariableQuantityOption
+				ON
+					VariableQuantityOption.id = Registration_VariableQuantityOption.variableQuantityId
+				INNER JOIN
+					RegOptionPrice
+				ON
+					Registration_VariableQuantityOption.priceId = RegOptionPrice.id
+				INNER JOIN
+					Registration
+				ON 
+					Registration.id = Registration_VariableQuantityOption.registrationId
+				WHERE
+					Registration.eventId = :eventId
+				GROUP BY
+					Registration_VariableQuantityOption.priceId
+			)
+			ORDER BY 
+				optionCode, price
+		';
+		
+		$params = array(
+			'eventId' => $eventId
+		);
+		
+		return $this->rawQuery($sql, $params, 'Find option counts.');
+	}
+	
+	public function findRegTypeBreakdown($eventId) {
+		$sql = '
+			SELECT
+				Registration.regTypeId AS regTypeId, 
+				RegType.description AS regTypeName, 
+				count(Registration.regTypeId) AS regTypeCount 
+			FROM 
+				Registration 
+			INNER JOIN
+				RegType
+			ON
+				Registration.regTypeId = RegType.id
+			WHERE 
+				Registration.eventId = :eventId
+			GROUP BY 
+				Registration.regTypeId
+		';
+		
+		$params = array(
+			'eventId' => $eventId
+		);
+		
+		return $this->rawQuery($sql, $params, 'Find reg type breakdown.');
 	}
 }
 

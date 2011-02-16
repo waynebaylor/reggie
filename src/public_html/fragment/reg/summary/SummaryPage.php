@@ -23,13 +23,25 @@ class fragment_reg_summary_SummaryPage extends template_Template
 		}
 		
 		return <<<_
-				{$allSummaries}
-				
-				<div class="registrant-heading">
-					Payment
-				</div>
+			<script type="text/javascript">
+				dojo.addOnLoad(function() {
+					dojo.query("a.remove").forEach(function(item) {
+						dojo.connect(item, "onclick", function(event) {
+							if(!confirm("Are you sure?")) {
+								dojo.stopEvent(event);
+							}
+						});
+					});
+				});
+			</script>
 			
-				<table class="summary">
+			{$allSummaries}
+			
+			<div class="registrant-heading">
+				Payment
+			</div>
+		
+			<table class="summary">
 				{$this->getGrandTotal()}
 				
 				<tr>
@@ -39,7 +51,7 @@ class fragment_reg_summary_SummaryPage extends template_Template
 				</tr>
 				
 				{$this->getPaymentInfo()}
-				</table>
+			</table>
 			
 			<div class="section-divider"></div>
 

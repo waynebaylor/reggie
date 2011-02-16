@@ -158,5 +158,24 @@ alter table
 add column
 	isPaymentsToDate char(1) not null default 'F';
 
+alter table
+	Report
+add column
+	isAllRegToDate char(1) not null default 'F';
+
+alter table
+	Report
+add column
+	isOptionCount char(1) not null default 'F';
+
+alter table
+	Report
+add column
+	isRegTypeBreakdown char(1) not null default 'F';	
+
+
+
+
+
 
 

@@ -255,13 +255,16 @@ class db_EventManager extends db_Manager
 		$id = $this->lastInsertId();
 		
 		// create the event's appearance information.
-		db_AppearanceManager::getInstance()->createAppearance($id);
+		db_AppearanceManager::getInstance()->createAppearance($id, $event['displayName']);
 		 
 		// create the event's group registration information.
 		db_GroupRegistrationManager::getInstance()->createGroupRegistration($id);
 		
 		// create built-in reports.
 		db_ReportManager::getInstance()->createPaymentsToDate($id);
+		db_ReportManager::getInstance()->createAllRegToDate($id);
+		db_ReportManager::getInstance()->createOptionCount($id);
+		db_ReportManager::getInstance()->createRegTypeBreakdown($id);
 		
 		return $id;
 	}

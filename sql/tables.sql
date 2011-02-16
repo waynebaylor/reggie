@@ -1307,6 +1307,9 @@ create table if not exists `Report` (
 	`showTotalPaid`		char(1)		not null default 'F',
 	`showRemainingBalance`	char(1)		not null default 'F',
 	`isPaymentsToDate`	char(1)		not null default 'F',
+	`isAllRegToDate`	char(1)		not null default 'F',
+	`isOptionCount`		char(1)		not null default 'F',
+	`isRegTypeBreakdown`	char(1)		not null default 'F',
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
@@ -1326,13 +1329,6 @@ add constraint
 	report_eventId_name_uni
 unique
 	(eventId, name);
-
-alter table
-	Report
-add constraint
-	report_eventId_isPayToDate_uni
-unique
-	(eventId, isPaymentsToDate);
 
 -- --------------------------------------------------
 

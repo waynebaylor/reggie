@@ -78,7 +78,7 @@ class db_AppearanceManager extends db_Manager
 		return $this->queryUnique($sql, $params, 'Find appearance by event.');
 	}
 	
-	public function createAppearance($eventId) {
+	public function createAppearance($eventId, $displayName) {
 		$sql = '
 			INSERT INTO
 				Appearance(
@@ -117,8 +117,8 @@ class db_AppearanceManager extends db_Manager
 
 		$params = array(
 			'eventId' => $eventId,
-			'headerContent' => '<span style="font-size:2em;">New Event</span>',
-			'menuTitle' => '<div>Registration Menu</div>'
+			'headerContent' => '<div style="text-align:center; font-weight:bold; font-size:2.5em;">'.$displayName.'</div>',
+			'menuTitle' => 'Registration Menu'
 		);
 		
 		$this->execute($sql, $params, 'Create event appearance.');
