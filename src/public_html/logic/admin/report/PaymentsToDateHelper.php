@@ -57,7 +57,7 @@ class logic_admin_report_PaymentsToDateHelper
 							$method = 'PO';
 							break;
 						case model_PaymentType::$AUTHORIZE_NET:
-							$paymentInfo = 'Ending '.$payments[$i]['cardSuffix'];
+							$paymentInfo = "Ending {$payments[$i]['cardSuffix']} (Card Holder: {$payments[$i]['name']})";
 							$method = $payments[$i]['cardType'];
 							break;
 					}
