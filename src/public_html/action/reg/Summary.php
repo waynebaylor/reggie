@@ -3,7 +3,7 @@
 class action_reg_Summary extends action_ValidatorAction
 {
 	private $event;
-	private $payment;
+	private $payment; // set in the validate() method.
 	
 	function __construct($event) {
 		parent::__construct();
@@ -124,6 +124,8 @@ class action_reg_Summary extends action_ValidatorAction
 	 */
 	private function completeRegistration($payment) {
 		$registrations = model_reg_Registration::getConvertedRegistrationsFromSession();
+		
+		$payment['eventId'] = $this->event['id'];
 		
 		$regGroupId = db_reg_RegistrationManager::getInstance()->createRegistrations($registrations, $payment);
 		$regGroup = db_reg_GroupManager::getInstance()->find($regGroupId);

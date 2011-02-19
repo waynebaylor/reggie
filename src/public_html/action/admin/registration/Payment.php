@@ -91,6 +91,8 @@ class action_admin_registration_Payment extends action_ValidatorAction
 			}
 		}
 				
+		$payment['eventId'] = $report['eventId'];
+		
 		db_reg_PaymentManager::getInstance()->createPayment($group['id'], $payment);
 		
 		return new fragment_editRegistrations_payment_List($event, $report, $group);

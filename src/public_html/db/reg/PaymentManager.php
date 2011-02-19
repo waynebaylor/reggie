@@ -26,6 +26,7 @@ class db_reg_PaymentManager extends db_Manager
 		$sql = '
 			SELECT
 				id,
+				eventId,
 				paymentTypeId,
 				regGroupId,
 				transactionDate,
@@ -60,6 +61,7 @@ class db_reg_PaymentManager extends db_Manager
 		$sql = '
 			SELECT
 				id,
+				eventId,
 				paymentTypeId,
 				regGroupId,
 				transactionDate,
@@ -113,6 +115,7 @@ class db_reg_PaymentManager extends db_Manager
 		$sql = '
 			INSERT INTO
 				Payment(
+					eventId,
 					paymentTypeId,
 					regGroupId,
 					transactionDate,
@@ -121,6 +124,7 @@ class db_reg_PaymentManager extends db_Manager
 					paymentReceived
 				)
 			VALUES(
+				:eventId,
 				:paymentTypeId,
 				:regGroupId,
 				:transactionDate,
@@ -134,6 +138,7 @@ class db_reg_PaymentManager extends db_Manager
 		$received = ArrayUtil::getValue($check, 'paymentReceived', 'F');
 		
 		$params = array(
+			'eventId' => $check['eventId'],
 			'paymentTypeId' => model_PaymentType::$CHECK,
 			'regGroupId' => $groupId,
 			'transactionDate' => date_format($today,'Y-m-d H:i'),
@@ -149,6 +154,7 @@ class db_reg_PaymentManager extends db_Manager
 		$sql = '
 			INSERT INTO
 				Payment(
+					eventId,
 					paymentTypeId,
 					regGroupId,
 					transactionDate,
@@ -157,6 +163,7 @@ class db_reg_PaymentManager extends db_Manager
 					paymentReceived
 				)
 			VALUES(
+				:eventId,
 				:paymentTypeId,
 				:regGroupId,
 				:transactionDate,
@@ -170,6 +177,7 @@ class db_reg_PaymentManager extends db_Manager
 		$received = ArrayUtil::getValue($po, 'paymentReceived', 'F');
 		
 		$params = array(
+			'eventId' => $po['eventId'],
 			'paymentTypeId' => model_PaymentType::$PO,
 			'regGroupId' => $groupId,
 			'transactionDate' => date_format($today,'Y-m-d H:i'),
@@ -185,6 +193,7 @@ class db_reg_PaymentManager extends db_Manager
 		$sql = '
 			INSERT INTO
 				Payment(
+					eventId,
 					paymentTypeId,
 					regGroupId,
 					transactionDate,
@@ -202,6 +211,7 @@ class db_reg_PaymentManager extends db_Manager
 					amount
 				)
 			VALUES(
+				:eventId,
 				:paymentTypeId,
 				:regGroupId,
 				:transactionDate,
@@ -223,6 +233,7 @@ class db_reg_PaymentManager extends db_Manager
 		$today = new DateTime();
 		
 		$params = array(
+			'eventId' => $authNet['eventId'],
 			'paymentTypeId' => model_PaymentType::$AUTHORIZE_NET,
 			'regGroupId' => $groupId,
 			'transactionDate' => date_format($today,'Y-m-d H:i'),
