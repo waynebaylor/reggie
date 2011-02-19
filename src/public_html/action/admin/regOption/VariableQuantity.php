@@ -30,6 +30,7 @@ class action_admin_regOption_VariableQuantity extends action_ValidatorAction
 			'description',
 			'capacity'
 		));
+		$option['eventId'] = $section['eventId'];
 		
 		db_VariableQuantityOptionManager::getInstance()->createOption($option);
 		

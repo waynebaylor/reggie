@@ -32,6 +32,7 @@ class db_VariableQuantityOptionManager extends db_OrderableManager
 		$sql = '
 			SELECT
 				id,
+				eventId,
 				sectionId,
 				code,
 				description,
@@ -54,6 +55,7 @@ class db_VariableQuantityOptionManager extends db_OrderableManager
 		$sql = '
 			SELECT
 				id,
+				eventId,
 				sectionId,
 				code,
 				description,
@@ -78,6 +80,7 @@ class db_VariableQuantityOptionManager extends db_OrderableManager
 		$sql = '
 			INSERT INTO
 				VariableQuantityOption(
+					eventId,
 					sectionId,
 					code,
 					description,
@@ -85,6 +88,7 @@ class db_VariableQuantityOptionManager extends db_OrderableManager
 					displayOrder
 				)
 			VALUES(
+				:eventId,
 				:sectionId,
 				:code,
 				:description,
