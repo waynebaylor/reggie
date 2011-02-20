@@ -22,16 +22,21 @@ class Reggie
 	}
 	
 	// passed to spl_autoload_register(). replaces underscore 
-	// with slash to convert a class name to a file path.
+	// with slash to convert a class name to a file path. 
 	public static function autoload($c) { 
 		$file = str_replace('_', '/', $c).'.php';
 		
-		if(file_exists($file)) {
-			require_once $file;
+		// look in each dir listed in include path.
+		foreach(explode(PATH_SEPARATOR, get_include_path()) as $path) { 
+			$path = rtrim($path, '/').'/'.$file;
+			if(file_exists($path)) {
+				require_once $path;
+
+				return; 
+			}
 		}
-		else {
-			throw new Exception("Error loading class: '{$c}'. File not found: '{$file}'.");
-		}
+		
+		throw new Exception("Error loading class: '{$c}'. File not found: '{$file}'.");
 	}
 	
 	/**

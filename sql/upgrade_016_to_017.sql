@@ -75,6 +75,12 @@ foreign key
 references
 	Event(id);
 
+-- add eventId column to RegOptionGroup table.
+
+alter table
+	RegOptionGroup
+add column
+	eventId integer;
 
 
 
