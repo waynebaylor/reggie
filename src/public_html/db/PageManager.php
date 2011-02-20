@@ -71,7 +71,7 @@ class db_PageManager extends db_OrderableManager
 		return $this->query($sql, $params, 'Find pages by event.');
 	}
 	
-	public function createPage($event, $title, $categories) {
+	public function createPage($eventId, $title, $categories) {
 		// create the Page row.
 		$sql = '
 			INSERT INTO
@@ -88,7 +88,7 @@ class db_PageManager extends db_OrderableManager
 		';
 
 		$params = array(
-			'eventId' => $event['id'],
+			'eventId' => $eventId,
 			'title' => $title,
 			'displayOrder' => $this->getNextOrder()
 		);
@@ -99,6 +99,8 @@ class db_PageManager extends db_OrderableManager
 		
 		// create the mapping rows.
 		$this->makePageAvailableTo($pageId, $categories);
+		
+		return $pageId;
 	}
 	
 	public function savePage($page, $categoryIds) {

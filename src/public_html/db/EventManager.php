@@ -266,6 +266,14 @@ class db_EventManager extends db_Manager
 		db_ReportManager::getInstance()->createOptionCount($id);
 		db_ReportManager::getInstance()->createRegTypeBreakdown($id);
 		
+		// create event pages.
+		$visibleToCategoryIds = array(1); // attendee only.
+		$this->createRegTypeTemplatePage($id, $visibleToCategoryIds);
+		$this->createContactInfoTemplatePage($id, $visibleToCategoryIds);
+		$this->createConferenceRegTemplatePage($id, $visibleToCategoryIds);
+		$this->createSpecialEventsTemplatePage($id, $visibleToCategoryIds);
+		$this->createSurveyTemplatePage($id, $visibleToCategoryIds);
+		
 		return $id;
 	}
 	
@@ -349,6 +357,36 @@ class db_EventManager extends db_Manager
 		);
 		
 		return $this->queryUnique($sql, $params, 'Find event by code.');
+	}
+	
+	private function createRegTypeTemplatePage($eventId, $categoryIds) {
+		$pageId = db_PageManager::getInstance()->createPage($eventId, 'Registration Type', $categoryIds);
+		$textSectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'reg type text', model_ContentType::$TEXT);
+		db_PageSectionManager::getInstance()->save(array(
+			'id' => $textSectionId,
+			'name' => 'reg type text',
+			'text' => 'Plese choose a registration type below.',
+			'numbered' => 'F'
+		));
+	}
+
+	private function createContactInfoTemplatePage($eventId, $categoryIds) {
+		db_PageManager::getInstance()->createPage($eventId, 'Contact Information', $categoryIds);
+	}
+
+	private function createConferenceRegTemplatePage($eventId, $categoryIds) {
+		db_PageManager::getInstance()->createPage($eventId, 'Conference Registration', $categoryIds);
+		
+	}
+
+	private function createSpecialEventsTemplatePage($eventId, $categoryIds) {
+		db_PageManager::getInstance()->createPage($eventId, 'Special Events', $categoryIds);
+
+	}
+
+	private function createSurveyTemplatePage($eventId, $categoryIds) {
+		db_PageManager::getInstance()->createPage($eventId, 'Survey', $categoryIds);
+
 	}
 }
 

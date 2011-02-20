@@ -43,7 +43,7 @@ class action_admin_section_Section extends action_ValidatorAction
 		$name = RequestUtil::getValue('name', '');
 		$contentTypeId = $_REQUEST['contentTypeId'];
 
-		db_PageSectionManager::getInstance()->createSection($page['eventId'], $page, $name, $contentTypeId);
+		db_PageSectionManager::getInstance()->createSection($page['eventId'], $page['id'], $name, $contentTypeId);
 	
 		$page = db_PageManager::getInstance()->find($page['id']);
 		

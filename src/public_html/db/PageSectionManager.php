@@ -100,7 +100,7 @@ class db_PageSectionManager extends db_OrderableManager
 		return $this->query($sql, $params, 'Find page sections.');
 	}	
 	
-	public function createSection($eventId, $page, $name, $contentTypeId) {
+	public function createSection($eventId, $pageId, $name, $contentTypeId) {
 		$sql = '
 			INSERT INTO
 				Section(
@@ -121,13 +121,15 @@ class db_PageSectionManager extends db_OrderableManager
 		
 		$params = array(
 			'eventId' => $eventId,
-			'pageId' => $page['id'],
+			'pageId' => $pageId,
 			'name' => $name,
 			'contentTypeId' => $contentTypeId,
 			'displayOrder' => $this->getNextOrder()
 		);
 		
 		$this->execute($sql, $params, 'Create page section.');
+		
+		return $this->lastInsertId();
 	}
 	
 	public function save($section) {

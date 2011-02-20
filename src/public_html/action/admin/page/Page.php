@@ -43,7 +43,7 @@ class action_admin_page_Page extends action_ValidatorAction
 		$title = empty($title)? 'New Page' : $title;
 		$categories = $_REQUEST['categoryIds'];
 
-		db_PageManager::getInstance()->createPage($event, $title, $categories);
+		db_PageManager::getInstance()->createPage($event['id'], $title, $categories);
 
 		$event = db_EventManager::getInstance()->find($event['id']);
 			
