@@ -173,40 +173,6 @@ alter table
 add column
 	isRegTypeBreakdown char(1) not null default 'F';	
 
--- new table for reg type to email mapping
-
-create table if not exists `RegType_EmailTemplate` (
-	`id`			integer 	not null auto_increment,
-	`regTypeId`		integer,
-	`emailTemplateId`	integer		not null,
-	primary key(`id`)
-) ENGINE=InnoDB default CHARSET=utf8;
-
-alter table
-	RegType_EmailTemplate
-add constraint
-	regType_emailTemplate_regTypeId_fk
-foreign key
-	(regTypeId)
-references
-	RegType(id);
-
-alter table
-	RegType_EmailTemplate
-add constraint
-	regType_emailTemplate_emailTempId_fk
-foreign key
-	(emailTemplateId)
-references
-	EmailTemplate(id);
-
-alter table
-	RegType_EmailTemplate
-add constraint
-	regType_emailTemplate_typeTemplate_uni
-unique
-	(regTypeId, emailTemplateId);
-
 
 
 
