@@ -368,6 +368,10 @@ class db_EventManager extends db_Manager
 			'text' => 'Plese choose a registration type below.',
 			'numbered' => 'F'
 		));
+		
+		$regTypeSectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'reg types', model_ContentType::$REG_TYPE);
+		db_RegTypeManager::getInstance()->createRegType($eventId, $regTypeSectionId, 'Member', 'M', $categoryIds);
+		db_RegTypeManager::getInstance()->createRegType($eventId, $regTypeSectionId, 'Non-Member', 'NM', $categoryIds);
 	}
 
 	private function createContactInfoTemplatePage($eventId, $categoryIds) {
