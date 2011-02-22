@@ -86,6 +86,11 @@ alter table
 modify
 	defaultRegType char(1) not null;
 
+alter table
+	Section
+modify
+	numbered char(1) not null;
+
 -- update column values
 
 update 
@@ -151,7 +156,12 @@ set
 where
 	validationValue = 'false';
 
--- add columnfor new report type
+update 
+	Section
+set
+	numbered = upper(numbered);
+
+-- add column for new report type
 
 alter table
 	Report
