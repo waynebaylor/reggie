@@ -260,19 +260,8 @@ class db_EventManager extends db_Manager
 		// create the event's group registration information.
 		db_GroupRegistrationManager::getInstance()->createGroupRegistration($id);
 		
-		// create built-in reports.
-		db_ReportManager::getInstance()->createPaymentsToDate($id);
-		db_ReportManager::getInstance()->createAllRegToDate($id);
-		db_ReportManager::getInstance()->createOptionCount($id);
-		db_ReportManager::getInstance()->createRegTypeBreakdown($id);
-		
-		// create event pages.
-		$visibleToCategoryIds = array(1); // attendee only.
-		$this->createRegTypeTemplatePage($id, $visibleToCategoryIds);
-		$this->createContactInfoTemplatePage($id, $visibleToCategoryIds);
-		$this->createConferenceRegTemplatePage($id, $visibleToCategoryIds);
-		$this->createSpecialEventsTemplatePage($id, $visibleToCategoryIds);
-		$this->createSurveyTemplatePage($id, $visibleToCategoryIds);
+		// create defaults based on template.
+		db_EventTemplate::getInstance()->createDefaults($eventId);
 		
 		return $id;
 	}
@@ -357,40 +346,6 @@ class db_EventManager extends db_Manager
 		);
 		
 		return $this->queryUnique($sql, $params, 'Find event by code.');
-	}
-	
-	private function createRegTypeTemplatePage($eventId, $categoryIds) {
-		$pageId = db_PageManager::getInstance()->createPage($eventId, 'Registration Type', $categoryIds);
-		$textSectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'reg type text', model_ContentType::$TEXT);
-		db_PageSectionManager::getInstance()->save(array(
-			'id' => $textSectionId,
-			'name' => 'reg type text',
-			'text' => 'Plese choose a registration type below.',
-			'numbered' => 'F'
-		));
-		
-		$regTypeSectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'reg types', model_ContentType::$REG_TYPE);
-		db_RegTypeManager::getInstance()->createRegType($eventId, $regTypeSectionId, 'Member', 'M', $categoryIds);
-		db_RegTypeManager::getInstance()->createRegType($eventId, $regTypeSectionId, 'Non-Member', 'NM', $categoryIds);
-	}
-
-	private function createContactInfoTemplatePage($eventId, $categoryIds) {
-		db_PageManager::getInstance()->createPage($eventId, 'Contact Information', $categoryIds);
-	}
-
-	private function createConferenceRegTemplatePage($eventId, $categoryIds) {
-		db_PageManager::getInstance()->createPage($eventId, 'Conference Registration', $categoryIds);
-		
-	}
-
-	private function createSpecialEventsTemplatePage($eventId, $categoryIds) {
-		db_PageManager::getInstance()->createPage($eventId, 'Special Events', $categoryIds);
-
-	}
-
-	private function createSurveyTemplatePage($eventId, $categoryIds) {
-		db_PageManager::getInstance()->createPage($eventId, 'Survey', $categoryIds);
-
 	}
 }
 

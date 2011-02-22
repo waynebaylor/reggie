@@ -151,6 +151,8 @@ class db_ContactFieldManager extends db_OrderableManager
 		// map to RegType.
 		$typeIds = $properties['regTypeIds'];
 		$this->setRegTypes($contactFieldId, $typeIds);
+		
+		return $contactFieldId;
 	}
 	
 	private function isVisibleToAllRegTypes($field) {
