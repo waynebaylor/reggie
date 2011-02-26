@@ -51,8 +51,14 @@ abstract class db_GroupManager extends db_OrderableManager
 		
 		$this->execute($sql, $params, 'Create reg option group.');
 		
+		$groupId = $this->lastInsertId();
+		
+		$group['id'] = $groupId;
+		
 		// create mapping row
 		$this->createMappingRow($group);
+		
+		return $groupId;
 	}
 	
 	public function delete($group) {

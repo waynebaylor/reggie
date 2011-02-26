@@ -93,7 +93,6 @@ class db_EventTemplate extends db_Manager
 
 	private function createConferenceRegTemplatePage($eventId, $categoryIds) {
 		$pageId = db_PageManager::getInstance()->createPage($eventId, 'Conference Registration', $categoryIds);
-		
 	}
 
 	private function createSpecialEventsTemplatePage($eventId, $categoryIds) {

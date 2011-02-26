@@ -29,7 +29,7 @@ class db_RegOptionGroupManager extends db_GroupManager
 		
 		$params = array(
 			'regOptionId'     => $group['regOptionId'],
-			'optionGroupId' => $this->lastInsertId(),
+			'optionGroupId' => $group['id'],
 			'displayOrder'  => $this->getNextOrder()
 		);
 		
