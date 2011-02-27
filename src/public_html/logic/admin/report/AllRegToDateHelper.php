@@ -11,7 +11,7 @@ class logic_admin_report_AllRegToDateHelper
 		);
 		$info['headings'] = array_merge(
 			$info['headings'], 
-			array('Option Code', 'Date Added', 'Date Cancelled', 'Option Name', 'Price Name', 'Option Price', 'Quantity')
+			array('Option Code', 'Date Option Added', 'Date Option Cancelled', 'Option Name', 'Price Name', 'Option Price', 'Quantity')
 		);
 	
 		$values = db_ReportManager::getInstance()->findAllRegToDateValues($report['eventId']);

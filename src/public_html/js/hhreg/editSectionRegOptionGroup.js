@@ -1,6 +1,5 @@
-dojo.require("hhreg.xhrTableForm");
-dojo.require("hhreg.xhrAddForm");
-dojo.require("hhreg.list");
+dojo.require("hhreg.xhrAddList");
+dojo.require("hhreg.xhrEditForm");
 
 (function() {
 	dojo.provide("hhreg.editSectionRegOptionGroup");
@@ -32,12 +31,8 @@ dojo.require("hhreg.list");
 	///////////////////////////////////////////////////////
 	
 	dojo.addOnLoad(function() {
-		var form = dojo.query(".fragment-edit form")[0];
-		hhreg.xhrTableForm.bind(form);
-		
-		var addForm = dojo.query(".fragment-add .xhr-add-form")[0];
-		hhreg.xhrAddForm.bind(addForm, function(response) {
-			hhreg.list.update(response);
+		dojo.query(".fragment-options").forEach(function(item) {
+			hhreg.xhrAddList.bind(item);
 		});
 		
 		// connect the multiple checkbox behavior.

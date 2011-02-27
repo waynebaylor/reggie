@@ -52,6 +52,7 @@ _;
 			));
 			
 			$required = $group['required'] === 'T'? 'Required' : '';
+			$multiple = $group['multiple'] === 'T'? 'Allow Multiple' : '';
 			
 			$evenRow = !$evenRow;
 			$rowClass = $evenRow? 'even' : 'odd';
@@ -68,7 +69,7 @@ _;
 							{$required}
 						</div>
 						<div>
-							Allow Multiple: {$group['multiple']}
+							{$multiple}
 						</div>
 						{$this->getMultipleRestrictions($group)}
 					</td>

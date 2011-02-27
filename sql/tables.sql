@@ -112,7 +112,7 @@ create table if not exists `Section` (
 	`pageId` 	integer 	not null,
 	`name`	 	varchar(255)	not null,
 	`text`		text,
-	`numbered`	varchar(255)	not null default 'false',
+	`numbered`	char(1)		not null default 'F',
 	`contentTypeId` integer 	not null,
 	`displayOrder` 	integer 	not null,
 	primary key (`id`)
@@ -157,6 +157,7 @@ unique
 
 create table if not exists `RegOptionGroup` (
 	`id` 		integer 	not null auto_increment,
+	`eventId`	integer		not null,
 	`description` 	varchar(255) 	not null,
 	`required` 	char(1) 	not null,
 	`multiple` 	char(1) 	not null,
@@ -812,6 +813,7 @@ unique
 
 create table if not exists `VariableQuantityOption` (
 	`id`			integer		not null auto_increment,
+	`eventId`		integer		not null,
 	`sectionId`		integer		not null,
 	`code` 			varchar(255) 	not null,
 	`description`		varchar(255) 	not null,
@@ -819,6 +821,15 @@ create table if not exists `VariableQuantityOption` (
 	`displayOrder` 		integer 	not null,
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
+
+alter table
+	VariableQuantityOption
+add constraint
+	varQuantityOpt_eventId_fk
+foreign key
+	(eventId)
+references
+	Event(id);
 
 alter table 
 	VariableQuantityOption
@@ -1252,6 +1263,7 @@ unique
 
 create table if not exists `Payment` (
 	`id`			integer		not null auto_increment,
+	`eventId`		integer		not null,
 	`paymentTypeId`		integer		not null,
 	`regGroupId`		integer		not null,
 	`transactionDate`	datetime	not null,
@@ -1274,6 +1286,15 @@ create table if not exists `Payment` (
 	`amount`		decimal(10, 2),
 	primary key(`id`)	
 ) ENGINE=InnoDB default CHARSET=utf8;
+
+alter table
+	Payment
+add constraint
+	payment_eventId_fk
+foreign key
+	(eventId)
+references
+	Event(id);
 
 alter table
 	Payment
