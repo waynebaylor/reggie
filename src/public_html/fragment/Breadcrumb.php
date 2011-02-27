@@ -8,8 +8,6 @@ class fragment_Breadcrumb extends template_Template
 	private $sectionManager;
 	private $pageManager;
 	private $regTypeManager;
-	private $optionGroupManager;
-	private $sectionGroupManager;
 	private $regOptionManager;
 	private $regOptionPriceManager;
 	
@@ -22,8 +20,6 @@ class fragment_Breadcrumb extends template_Template
 		$this->sectionManager = db_PageSectionManager::getInstance();
 		$this->pageManager = db_PageManager::getInstance();
 		$this->regTypeManager = db_RegTypeManager::getInstance();
-		$this->optionGroupManager = db_RegOptionGroupManager::getInstance();
-		$this->sectionGroupManager = db_SectionRegOptionGroupManager::getInstance();
 		$this->regOptionManager = db_RegOptionManager::getInstance();
 			
 		$this->config = $config;
@@ -230,7 +226,7 @@ _;
 	
 	private function optionGroup($id, $isSectionGroup) {
 		if($isSectionGroup === true) {
-			$group = $this->sectionGroupManager->find($id);
+			$group = db_GroupManager::getInstance()->find($id);
 			
 			$this->config = db_BreadcrumbManager::getInstance()->findSectionCrumbs($group['sectionId']);
 			
@@ -248,7 +244,7 @@ _;
 _;
 		}
 		else {
-			$group = $this->optionGroupManager->find($id);
+			$group = db_GroupManager::getInstance()->find($id);
 			
 			return <<<_
 				{$this->regOption($group['regOptionId'])}
@@ -269,10 +265,7 @@ _;
 	private function regOption($id) {
 		$option = $this->regOptionManager->find($id);
 		
-		$group = $this->sectionGroupManager->find($option['parentGroupId']);
-		if(empty($group)) {
-			$group = $this->optionGroupManager->find($option['parentGroupId']);
-		}
+		$group = db_GroupManager::getInstance()->find($option['parentGroupId']);
 		
 		$action = model_RegOptionGroup::isSectionGroup($group)? 
 			'/admin/regOption/SectionRegOptionGroup' : 

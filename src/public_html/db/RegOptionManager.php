@@ -17,7 +17,7 @@ class db_RegOptionManager extends db_OrderableManager
 	protected function populate(&$obj, $arr) {
 		parent::populate($obj, $arr);
 		
-		$obj['groups'] = db_RegOptionGroupManager::getInstance()->findByRegOption($obj);
+		$obj['groups'] = db_GroupManager::getInstance()->findByOptionId($obj['id']);
 		$obj['prices'] = db_RegOptionPriceManager::getInstance()->findByRegOption($obj);
 
 		return $obj;
@@ -35,6 +35,7 @@ class db_RegOptionManager extends db_OrderableManager
 		$sql = '
 			SELECT
 				id,
+				eventId,
 				parentGroupId,
 				code,
 				description,
@@ -59,6 +60,7 @@ class db_RegOptionManager extends db_OrderableManager
 		$sql = '
 			SELECT
 				id,
+				eventId,
 				parentGroupId,
 				code,
 				description,
@@ -85,6 +87,7 @@ class db_RegOptionManager extends db_OrderableManager
 		$sql = '
 			INSERT INTO
 				RegOption(
+					eventId,
 					parentGroupId,
 					code,
 					description,
@@ -94,6 +97,7 @@ class db_RegOptionManager extends db_OrderableManager
 					displayOrder	
 				)
 			VALUES(
+				:eventId,
 				:parentGroupId,
 				:code,
 				:description,
@@ -105,13 +109,14 @@ class db_RegOptionManager extends db_OrderableManager
 		';
 		
 		$params = array(
-			'parentGroupId'   => $option['parentGroupId'],
-			'code'            => $option['code'],
-			'description'     => $option['description'],
-			'capacity'        => $option['capacity'],
+			'eventId' => $option['eventId'],
+			'parentGroupId' => $option['parentGroupId'],
+			'code' => $option['code'],
+			'description' => $option['description'],
+			'capacity' => $option['capacity'],
 			'defaultSelected' => $option['defaultSelected'],
-			'showPrice'       => $option['showPrice'],
-			'displayOrder'    => $this->getNextOrder()
+			'showPrice' => $option['showPrice'],
+			'displayOrder' => $this->getNextOrder()
 		);
 		
 		$this->execute($sql, $params, 'Create reg option.');
@@ -147,7 +152,7 @@ class db_RegOptionManager extends db_OrderableManager
 		// delete the option's groups.
 		$option = $this->find($option['id']);
 		foreach($option['groups'] as $group) {
-			db_RegOptionGroupManager::getInstance()->delete($group);
+			db_GroupManager::getInstance()->deleteById($group['id']);
 		}		
 		
 		// delete the option's prices.

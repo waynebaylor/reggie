@@ -25,6 +25,7 @@ class action_admin_regOption_RegOptionPrice extends action_ValidatorAction
 		$option = $this->strictFindById(db_VariableQuantityOptionManager::getInstance(), $_REQUEST['regOptionId']);
 		
 		$price = RequestUtil::getParameters(array(
+			'eventId',
 			'regOptionId',
 			'description',
 			'startDate',
@@ -36,7 +37,7 @@ class action_admin_regOption_RegOptionPrice extends action_ValidatorAction
 		db_RegOptionPriceManager::getInstance()->createVariableQuantityPrice($price);
 		
 		$option = db_VariableQuantityOptionManager::getInstance()->find($option['id']);
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
+		$event = db_EventManager::getInstance()->find($price['eventId']);
 		
 		return new fragment_regOptionPrice_List($event, $option);
 	}
@@ -51,6 +52,7 @@ class action_admin_regOption_RegOptionPrice extends action_ValidatorAction
 		$option = $this->strictFindById(db_RegOptionManager::getInstance(), $_REQUEST['regOptionId']);
 		
 		$price = RequestUtil::getParameters(array(
+			'eventId',
 			'regOptionId',
 			'description',
 			'startDate',
@@ -62,7 +64,7 @@ class action_admin_regOption_RegOptionPrice extends action_ValidatorAction
 		db_RegOptionPriceManager::getInstance()->createRegOptionPrice($price);
 		
 		$option = db_RegOptionManager::getInstance()->find($option['id']);
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
+		$event = db_EventManager::getInstance()->find($price['eventId']);
 		
 		return new fragment_regOptionPrice_List($event, $option);
 	}

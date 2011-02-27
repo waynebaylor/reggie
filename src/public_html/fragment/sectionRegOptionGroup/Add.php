@@ -29,27 +29,17 @@ _;
 	private function getFormRows() {
 		return <<<_
 			<tr>
-				<td class="label">Name</td>
-				<td>
-					{$this->HTML->hidden(array(
-						'name' => 'eventId',
-						'value' => $this->event['id']
-					))}
-					{$this->HTML->hidden(array(
-						'name' => 'sectionId',
-						'value' => $this->section['id']
-					))}
-
-					{$this->HTML->text(array(
-						'name' => 'description',
-						'value' => ''
-					))}
-				</td>
-			</tr>
-			<tr>
 				<td class="label">Restrictions</td>
 				<td>
 					<div>
+						{$this->HTML->hidden(array(
+							'name' => 'eventId',
+							'value' => $this->event['id']
+						))}
+						{$this->HTML->hidden(array(
+							'name' => 'sectionId',
+							'value' => $this->section['id']
+						))}
 						{$this->HTML->checkbox(array(
 							'id' => 'required_true',
 							'label' => 'Required',

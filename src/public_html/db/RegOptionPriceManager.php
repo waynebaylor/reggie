@@ -44,6 +44,7 @@ class db_RegOptionPriceManager extends db_Manager
 		$sql = '
 			SELECT
 				RegOptionPrice.id,
+				RegOptionPrice.eventId,
 				VariableQuantityOption_RegOptionPrice.variableQuantityId as regOptionId,
 				RegOptionPrice.description,
 				RegOptionPrice.startDate,
@@ -54,9 +55,9 @@ class db_RegOptionPriceManager extends db_Manager
 			INNER JOIN
 				VariableQuantityOption_RegOptionPrice
 			ON
-				RegOptionPrice.id=VariableQuantityOption_RegOptionPrice.regOptionPriceId
+				RegOptionPrice.id = VariableQuantityOption_RegOptionPrice.regOptionPriceId
 			WHERE
-				VariableQuantityOption_RegOptionPrice.variableQuantityId=:id
+				VariableQuantityOption_RegOptionPrice.variableQuantityId = :id
 			ORDER BY
 				RegOptionPrice.startDate
 		';
@@ -72,6 +73,7 @@ class db_RegOptionPriceManager extends db_Manager
 		$sql = '
 			SELECT
 				RegOptionPrice.id,
+				RegOptionPrice.eventId,
 				RegOption_RegOptionPrice.regOptionId,
 				RegOptionPrice.description,
 				RegOptionPrice.startDate,
@@ -82,9 +84,9 @@ class db_RegOptionPriceManager extends db_Manager
 			INNER JOIN
 				RegOption_RegOptionPrice
 			ON
-				RegOptionPrice.id=RegOption_RegOptionPrice.regOptionPriceId
+				RegOptionPrice.id = RegOption_RegOptionPrice.regOptionPriceId
 			WHERE
-				RegOption_RegOptionPrice.regOptionId=:id
+				RegOption_RegOptionPrice.regOptionId = :id
 			ORDER BY
 				RegOptionPrice.startDate
 		';
@@ -128,12 +130,14 @@ class db_RegOptionPriceManager extends db_Manager
 		$sql = '
 			INSERT INTO
 				RegOptionPrice(
+					eventId,
 					description,
 					startDate,
 					endDate,
 					price
 				)
 			VALUES(
+				:eventId,
 				:description,
 				:startDate,
 				:endDate,
@@ -142,6 +146,7 @@ class db_RegOptionPriceManager extends db_Manager
 		';
 		
 		$params = array(
+			'eventId' => $price['eventId'],
 			'description' => $price['description'],
 			'startDate' => $price['startDate'],
 			'endDate' => $price['endDate'],
@@ -202,7 +207,7 @@ class db_RegOptionPriceManager extends db_Manager
 			FROM
 				VariableQuantityOption_RegOptionPrice
 			WHERE
-				regOptionPriceId=:id
+				regOptionPriceId = :id
 		';
 
 		$params = array(
@@ -220,7 +225,7 @@ class db_RegOptionPriceManager extends db_Manager
 			FROM 
 				RegType_RegOptionPrice
 			WHERE
-				regOptionPriceId=:id
+				regOptionPriceId = :id
 			AND
 				regTypeId is NULL
 		';
@@ -239,7 +244,7 @@ class db_RegOptionPriceManager extends db_Manager
 			DELETE FROM
 				RegType_RegOptionPrice
 			WHERE
-				regOptionPriceId=:id
+				regOptionPriceId = :id
 		';
 		
 		$params = array(
@@ -339,6 +344,7 @@ class db_RegOptionPriceManager extends db_Manager
 		$sql = '
 			SELECT
 				RegOptionPrice.id,
+				RegOptionPrice.eventId,
 				VariableQuantityOption_RegOptionPrice.variableQuantityId as regOptionId,
 				RegOptionPrice.description,
 				RegOptionPrice.startDate,
@@ -349,9 +355,9 @@ class db_RegOptionPriceManager extends db_Manager
 			INNER JOIN
 				VariableQuantityOption_RegOptionPrice
 			ON
-				RegOptionPrice.id=VariableQuantityOption_RegOptionPrice.regOptionPriceId
+				RegOptionPrice.id = VariableQuantityOption_RegOptionPrice.regOptionPriceId
 			WHERE
-				RegOptionPrice.id=:id
+				RegOptionPrice.id = :id
 		';
 		
 		$params = array(
@@ -365,6 +371,7 @@ class db_RegOptionPriceManager extends db_Manager
 		$sql = '
 			SELECT
 				RegOptionPrice.id,
+				RegOptionPrice.eventId,
 				RegOption_RegOptionPrice.regOptionId,
 				RegOptionPrice.description,
 				RegOptionPrice.startDate,
@@ -375,9 +382,9 @@ class db_RegOptionPriceManager extends db_Manager
 			INNER JOIN
 				RegOption_RegOptionPrice
 			ON
-				RegOptionPrice.id=RegOption_RegOptionPrice.regOptionPriceId
+				RegOptionPrice.id = RegOption_RegOptionPrice.regOptionPriceId
 			WHERE
-				RegOptionPrice.id=:id
+				RegOptionPrice.id = :id
 		';
 		
 		$params = array(

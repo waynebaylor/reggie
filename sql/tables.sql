@@ -37,9 +37,7 @@ drop table if exists Category;
 drop table if exists RegOption_RegOptionPrice;
 drop table if exists RegOptionPrice;
 drop table if exists RegType;
-drop table if exists RegOption_RegOptionGroup;
 drop table if exists RegOption;
-drop table if exists Section_RegOptionGroup;
 drop table if exists RegOptionGroup;
 drop table if exists Section;
 drop table if exists Page;
@@ -211,45 +209,9 @@ unique
 
 -- --------------------------------------------------------------------------
 
-create table if not exists `Section_RegOptionGroup` (
-	`id`		integer		not null auto_increment,
-	`sectionId`	integer		not null,
-	`optionGroupId`	integer		not null,
-	`displayOrder`	integer		not null,
-	primary key (`id`)
-) ENGINE=InnoDB default CHARSET=utf8;
-	
-alter table
-	Section_RegOptionGroup
-add constraint
-	sectionOptGroup_dispOrder_uni
-unique
-	(sectionId, displayOrder);
-
-alter table 
-	Section_RegOptionGroup
-add constraint
-	sectionOptGroup_sectionId_fk
-foreign key
-	(sectionId)
-references
-	Section(id)
-on delete cascade;
-
-alter table 
-	Section_RegOptionGroup
-add constraint
-	sectionOptGroup_groupId_fk
-foreign key
-	(optionGroupId)
-references
-	RegOptionGroup(id)
-on delete cascade;
-
--- --------------------------------------------------------------------------
-
 create table if not exists `RegOption` (
 	`id` 			integer 	not null auto_increment,
+	`eventId`		integer		not null,
 	`parentGroupId` 	integer 	not null,
 	`code` 			varchar(255) 	not null,
 	`description`		varchar(255) 	not null,
@@ -259,6 +221,15 @@ create table if not exists `RegOption` (
 	`displayOrder` 		integer 	not null,
 	primary key (`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
+
+alter table
+	RegOption
+add constraint
+	regOption_eventId_fk
+foreign key
+	(eventId)
+references
+	Event(id);
 
 alter table
 	RegOption
@@ -283,43 +254,6 @@ add constraint
 	regOption_displayOrder_uni
 unique
 	(parentGroupId, displayOrder);
-	
--- --------------------------------------------------------------------------
-
-create table if not exists `RegOption_RegOptionGroup` (
-	`id`		integer		not null auto_increment,
-	`regOptionId`	integer		not null,
-	`optionGroupId`	integer		not null,
-	`displayOrder`	integer		not null,
-	primary key (`id`)
-) ENGINE=InnoDB default CHARSET=utf8;
-
-alter table
-	RegOption_RegOptionGroup
-add constraint
-	regOpt_regOptGroup_optId_fk
-foreign key
-	(regOptionId)
-references
-	RegOption(id)
-on delete cascade;
-
-alter table 
-	RegOption_RegOptionGroup
-add constraint
-	regOpt_regOptGroup_groupId_fk
-foreign key
-	(optionGroupId)
-references
-	RegOptionGroup(id)
-on delete cascade;
-
-alter table 
-	RegOption_RegOptionGroup
-add constraint
-	regOpt_regOptGroup_dispOrder_uni
-unique
-	(regOptionId, displayOrder);
 	
 -- --------------------------------------------------------------------------
 
@@ -369,12 +303,22 @@ unique(sectionId, displayOrder);
 
 create table if not exists `RegOptionPrice` (
 	`id` 		integer 	not null auto_increment,
+	`eventId`	integer		not null,
 	`startDate` 	datetime 	not null,
 	`endDate` 	datetime 	not null,
 	`price` 	decimal(10,2) 	not null,
 	`description` 	varchar(255) 	not null,  
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
+
+alter table
+	RegOptionPrice
+add constraint
+	regOptionPrice_eventId_fk
+foreign key
+	(eventId)
+references 
+	Event(id);
 
 -- --------------------------------------------------------------------------
 

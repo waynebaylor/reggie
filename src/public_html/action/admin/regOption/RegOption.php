@@ -22,17 +22,21 @@ class action_admin_regOption_RegOption extends action_ValidatorAction
 			return new fragment_validation_ValidationErrors($errors);
 		}
 		 
-		$groupId = $_REQUEST['parentGroupId'];
-		$group = $this->getGroup($groupId);
+		$group = $this->strictFindById(db_GroupManager::getInstance(), RequestUtil::getValue('parentGroupId', 0));
 		
-		$option = array();
-		ObjectUtils::populate($option, $_REQUEST);
+		$option = RequestUtil::getParameters(array(
+			'eventId',
+			'parentGroupId',
+			'code',
+			'description',
+			'capacity'
+		));
 		$option['defaultSelected'] = RequestUtil::getValue('defaultSelected', 'F');
 		$option['showPrice'] = RequestUtil::getValue('showPrice', 'F');
 		
 		db_RegOptionManager::getInstance()->createRegOption($option);
 		
-		$group = $this->getGroup($groupId);
+		$group = db_GroupManager::getInstance()->find($group['id']);
 		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
 		
 		return new fragment_sectionRegOption_List($event, $group);
@@ -90,18 +94,6 @@ class action_admin_regOption_RegOption extends action_ValidatorAction
 		db_RegOptionManager::getInstance()->save($option);
 		
 		return new fragment_Success();
-	}
-	
-	private function getGroup($id) {
-		$group = db_SectionRegOptionGroupManager::getInstance()->find($id);
-		
-		if(empty($group)) {
-			// the strict find is here because we don't want the search to end
-			// prematurely if the above find doesn't return anything.
-			$group = $this->strictFindById(db_RegOptionGroupManager::getInstance(), $id);
-		}
-		
-		return $group;
 	}
 	
 	protected function getValidationConfig() {

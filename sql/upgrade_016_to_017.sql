@@ -216,6 +216,77 @@ foreign key
 references
 	Event(id);
 
+-- drop unused tables.
+
+drop table
+	Section_RegOptionGroup;
+
+drop table
+	RegOption_RegOptionGroup;
+
+-- add eventId column to RegOption table.
+
+alter table
+	RegOption
+add column
+	eventId integer;
+
+update
+	RegOption
+join
+	RegOptionGroup
+on
+	RegOption.parentGroupId = RegOptionGroup.id
+set
+	RegOption.eventId = RegOptionGroup.eventId;
+
+alter table
+	RegOption
+modify column
+	eventId integer not null;
+
+alter table
+	RegOption
+add constraint
+	regOption_eventId_fk
+foreign key
+	(eventId)
+references
+	Event(id);
+
+-- add eventId column to RegOptionPrice table.
+
+alter table
+	RegOptionPrice
+add column
+	eventId integer;
+
+update
+	RegOptionPrice
+inner join
+	RegOption_RegOptionPrice
+on
+	RegOptionPrice.id = RegOption_RegOptionPrice.regOptionPriceId
+inner join
+	RegOption
+on
+	RegOption_RegOptionPrice.regOptionId = RegOption.id
+set
+	RegOptionPrice.eventId = RegOption.eventId;
+
+alter table
+	RegOptionPrice
+modify column
+	eventId integer not null;
+
+alter table
+	RegOptionPrice
+add constraint
+	regOptionPrice_eventId_fk
+foreign key
+	(eventId)
+references 
+	Event(id);
 
 
 

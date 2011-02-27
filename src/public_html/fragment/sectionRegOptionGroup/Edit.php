@@ -32,21 +32,12 @@ _;
 		
 		return <<<_
 			<tr>
-				<td class="label">Name</td>
+				<td class="label">Restrictions</td>
 				<td>
 					{$this->HTML->hidden(array(
 						'name' => 'id',
 						'value' => $this->group['id']
 					))}
-					{$this->HTML->text(array(
-						'name' => 'description',
-						'value' => $this->escapeHtml($this->group['description'])
-					))}
-				</td>
-			</tr>
-			<tr>
-				<td class="label">Restrictions</td>
-				<td>
 					<div>
 						{$this->HTML->checkbox(array(
 							'id' => 'required_true',

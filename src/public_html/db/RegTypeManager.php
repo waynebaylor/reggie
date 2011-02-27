@@ -302,63 +302,7 @@ class db_RegTypeManager extends db_OrderableManager
 			return $this->query($sql, $params, 'Find reg types for which reg option price is visible.');
 		}
 		else {
-			if(db_RegOptionPriceManager::getInstance()->isVariableQuantityPrice($price)) {
-				$sql = '
-					SELECT
-						VariableQuantityOption.sectionId
-					FROM
-						VariableQuantityOption
-					INNER JOIN
-						VariableQuantityOption_RegOptionPrice
-					ON
-						VariableQuantityOption.id=VariableQuantityOption_RegOptionPrice.variableQuantityId
-					WHERE
-						VariableQuantityOption_RegOptionPrice.regOptionPriceId=:id
-				';
-				
-				$params = array(
-					'id' => $price['id']
-				);
-				
-				$result = $this->rawQueryUnique($sql, $params, 'Find section associated with variable quantity price.');
-				$sectionId = $result['sectionId'];
-			}
-			else {
-				// get all reg types for the event since RegType_RegOptionPrice.regTypeId is NULL.
-				$groupId = $this->getPriceGroupId($price);
-					
-				// walk up to a section level group.
-				$sectionId = $this->getSectionId($groupId);
-				while(empty($sectionId)) {
-					$optionId = $this->getOptionId($groupId);
-					$groupId = $this->getOptionGroupId($optionId);
-					$sectionId = $this->getSectionId($groupId);
-				}
-			}
-				
-			$sql = '
-				SELECT
-					Page.eventId as eventId
-				FROM
-					Section
-				INNER JOIN
-					Page
-				ON
-					Section.pageId=Page.id
-				WHERE
-					Section.id=:id
-			';
-				
-			$params = array(
-				'id' => $sectionId
-			);
-				
-			$result = $this->rawQueryUnique($sql, $params, 'Find event for section.');
-			$event = array(
-				'id' => $result['eventId']
-			);
-				
-			return $this->findByEvent($event);
+			return $this->findByEventId($price['eventId']);
 		}
 	}
 	
@@ -396,18 +340,19 @@ class db_RegTypeManager extends db_OrderableManager
 	private function getSectionId($groupId) {
 		$sql = '
 			SELECT
+				id,
 				sectionId
 			FROM
-				Section_RegOptionGroup
+				RegOptionGroup
 			WHERE
-				optionGroupId=:id
+				id = :id
 		';
 		
 		$params = array(
 			'id' => $groupId
 		);
 		
-		$result = $this->rawQueryUnique($sql, $params, 'Check if group is a child of a section.');
+		$result = $this->rawQueryUnique($sql, $params, 'Check if section option-group.');
 		
 		return $result['sectionId'];
 	}
@@ -415,18 +360,19 @@ class db_RegTypeManager extends db_OrderableManager
 	private function getOptionId($groupId) {
 		$sql = '
 			SELECT
+				id,
 				regOptionId
 			FROM
-				RegOption_RegOptionGroup
+				RegOptionGroup
 			WHERE
-				optionGroupId=:id
+				id = :id
 		';
 		
 		$params = array(
 			'id' => $groupId
 		);
 		
-		$result = $this->rawQueryUnique($sql, $params, 'Check is group is a child of an option.');
+		$result = $this->rawQueryUnique($sql, $params, 'Check if reg option option-group.');
 		
 		return $result['regOptionId'];
 	}

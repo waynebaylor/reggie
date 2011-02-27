@@ -73,7 +73,7 @@ abstract class db_OrderableManager extends db_Manager
 			FROM
 				{$this->getTableName()}
 			WHERE
-				{$restrictField}=:restrictValue
+				{$restrictField} = :restrictValue
 			ORDER BY
 				displayOrder
 		";

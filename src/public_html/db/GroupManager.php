@@ -1,9 +1,23 @@
 <?php
 
-abstract class db_GroupManager extends db_OrderableManager
+class db_GroupManager extends db_OrderableManager
 {
+	private static $instance;
+	
+	public static function getInstance() {
+		if(empty(self::$instance)) {
+			self::$instance = new db_GroupManager();
+		}
+		
+		return self::$instance;
+	}
+	
 	protected function __construct() {
 		parent::__construct();
+	}
+	
+	protected function getTableName() {
+		return 'RegOptionGroup';
 	}
 	
 	protected function populate(&$obj, $arr) {
@@ -14,56 +28,191 @@ abstract class db_GroupManager extends db_OrderableManager
 		return $obj;
 	}
 	
-	protected abstract function createMappingRow($group);
+	public function find($id) {
+		$sql = '
+			SELECT
+				id,
+				eventId,
+				sectionId,
+				regOptionId,
+				required,
+				multiple,
+				minimum,
+				maximum,
+				displayOrder
+			FROM
+				RegOptionGroup
+			WHERE
+				id = :id
+		';
+		
+		$params = array(
+			'id' => $id
+		);
+		
+		return $this->queryUnique($sql, $params, 'Find reg option group.');
+	}
 	
-	public abstract function find($id);
+	public function findBySectionId($sectionId) {
+		$sql = '
+			SELECT
+				id,
+				eventId,
+				sectionId,
+				regOptionId,
+				required,
+				multiple,
+				minimum,
+				maximum,
+				displayOrder
+			FROM
+				RegOptionGroup
+			WHERE
+				sectionId = :id
+			ORDER BY
+				displayOrder
+		';
+		
+		$params = array(
+			'id' => $sectionId
+		);
+		
+		return $this->query($sql, $params, 'Find reg option groups in section.');
+	}
 	
-	public abstract function moveGroupUp($group);
+	public function findByOptionId($optionId) {
+		$sql = '
+			SELECT
+				id,
+				eventId,
+				sectionId,
+				regOptionId,
+				required,
+				multiple,
+				minimum,
+				maximum,
+				displayOrder
+			FROM
+				RegOptionGroup
+			WHERE
+				regOptionId = :id
+			ORDER BY
+				displayOrder
+		';
+		
+		$params = array(
+			'id' => $optionId
+		);
+		
+		return $this->query($sql, $params, 'Find reg option groups in option.');
+	}
 	
-	public abstract function moveGroupDown($group);
+	public function moveGroupUp($group) {
+		if(empty($group['sectionId'])) {
+			$this->moveUp($group, 'regOptionId', $group['regOptionId']);
+		}
+		else {
+			$this->moveUp($group, 'sectionId', $group['sectionId']);
+		}
+	}
 	
-	public function createGroup($group) {
+	public function moveGroupDown($group) {
+		if(empty($group['sectionId'])) {
+			$this->moveDown($group, 'regOptionId', $group['regOptionId']);
+		}
+		else {
+			$this->moveDown($group, 'sectionId', $group['sectionId']);
+		}
+	}
+	
+	public function createGroupUnderSection($group) {
 		$sql = '
 			INSERT INTO
 				RegOptionGroup(
-					description,
+					eventId,
+					sectionId,
 					required,
 					multiple,
 					minimum,
-					maximum
+					maximum,
+					displayOrder
 				)
 			VALUES(
-				:description,
+				:eventId,
+				:sectionId,
 				:required,
 				:multiple,
 				:minimum,
-				:maximum
+				:maximum,
+				:displayOrder
 			)
 		';
 		
 		$params = array(
-			'description' => $group['description'],
-			'required'    => $group['required'],
-			'multiple'    => $group['multiple'],
-			'minimum'     => $group['minimum'],
-			'maximum'     => $group['maximum']	
+			'eventId' => $group['eventId'],
+			'sectionId' => $group['sectionId'],
+			'required' => $group['required'],
+			'multiple' => $group['multiple'],
+			'minimum' => $group['minimum'],
+			'maximum' => $group['maximum'],
+			'displayOrder' => $this->getNextOrder()
 		);
 		
-		$this->execute($sql, $params, 'Create reg option group.');
+		$this->execute($sql, $params, 'Create reg option group under section.');
 		
-		$groupId = $this->lastInsertId();
-		
-		$group['id'] = $groupId;
-		
-		// create mapping row
-		$this->createMappingRow($group);
-		
-		return $groupId;
+		return $this->lastInsertId();
 	}
 	
-	public function delete($group) {
+	public function createGroupUnderOption($group) {
+		$sql = '
+			INSERT INTO
+				RegOptionGroup(
+					eventId,
+					regOptionId,
+					required,
+					multiple,
+					minimum,
+					maximum,
+					displayOrder
+				)
+			VALUES(
+				:eventId,
+				:regOptionId,
+				:required,
+				:multiple,
+				:minimum,
+				:maximum,
+				:displayOrder
+			)
+		';
+		
+		$params = array(
+			'eventId' => $group['eventId'],
+			'regOptionId' => $group['regOptionId'],
+			'required' => $group['required'],
+			'multiple' => $group['multiple'],
+			'minimum' => $group['minimum'],
+			'maximum' => $group['maximum'],
+			'displayOrder' => $this->getNextOrder()
+		);
+		
+		$this->execute($sql, $params, 'Create reg option group under option.');
+		
+		return $this->lastInsertId();
+	}
+	
+	public function createGroup($group) {
+		if(empty($group['sectionId'])) {
+			return $this->createGroupUnderOption($group);
+		}
+		else {
+			return $this->createGroupUnderSection($group);
+		}
+	}
+	
+	public function deleteById($groupId) {
 		// delete the group's options.
-		$group = $this->find($group['id']);
+		$group = $this->find($groupId);
 		foreach($group['options'] as $option) {
 			db_RegOptionManager::getInstance()->delete($option);			
 		}
@@ -77,10 +226,14 @@ abstract class db_GroupManager extends db_OrderableManager
 		';
 		
 		$params = array(
-			'id' => $group['id']
+			'id' => $groupId
 		);
 		
 		$this->execute($sql, $params, 'Delete reg option group.');
+	}
+	
+	public function delete($group) {
+		$this->deleteById($group['id']);
 	}
 	
 	public function save($group) {
@@ -88,7 +241,6 @@ abstract class db_GroupManager extends db_OrderableManager
 			UPDATE
 				RegOptionGroup
 			SET
-				description=:description,
 				required=:required,
 				multiple=:multiple,
 				minimum=:minimum,
@@ -99,7 +251,6 @@ abstract class db_GroupManager extends db_OrderableManager
 		
 		$params = array(
 			'id'          => $group['id'],
-			'description' => $group['description'],
 			'required'    => $group['required'],
 			'multiple'    => $group['multiple'],
 			'minimum'     => $group['minimum'],

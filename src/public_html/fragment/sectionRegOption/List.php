@@ -24,8 +24,8 @@ class fragment_sectionRegOption_List extends template_Template
 				<table class="admin">
 					<tr>
 						<th></th>
-						<th>Description</th>
 						<th>Code</th>
+						<th>Description</th>
 						<th>Restrictions</th>
 						<th>Options</th>
 					</tr>
@@ -37,7 +37,6 @@ _;
 	
 	private function getOptions() {
 		$html = '';
-		$evenRow = true;
 		
 		$options = $this->group['options'];
 		foreach($options as $option) {
@@ -56,18 +55,16 @@ _;
 				)
 			));
 			
-			$evenRow = !$evenRow;
-			$rowClass = $evenRow? 'even' : 'odd'; 
 			$html .= <<<_
-				<tr class="{$rowClass}">
+				<tr>
 					<td>
 						{$arrows->html()}
 					</td>
 					<td>
-						{$this->escapeHtml($option['description'])}
+						{$this->escapeHtml($option['code'])}
 					</td>
 					<td>
-						{$this->escapeHtml($option['code'])}
+						{$this->escapeHtml($option['description'])}
 					</td>
 					<td>
 						{$this->getRestrictions($option)}

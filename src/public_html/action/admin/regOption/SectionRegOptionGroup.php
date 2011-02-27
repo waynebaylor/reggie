@@ -7,9 +7,9 @@ class action_admin_regOption_SectionRegOptionGroup extends action_ValidatorActio
 	}
 	
 	public function view() {
-		$group = $this->strictFindById(db_SectionRegOptionGroupManager::getInstance(), $_REQUEST['id']);
+		$group = $this->strictFindById(db_GroupManager::getInstance(), RequestUtil::getValue('id', 0));
 		
-		$eventId = $_REQUEST['eventId'];
+		$eventId = RequestUtil::getValue('eventId', 0);
 		$event = db_EventManager::getInstance()->find($eventId);
 		
 		return new template_admin_EditSectionRegOptionGroup($event, $group);
@@ -25,15 +25,15 @@ class action_admin_regOption_SectionRegOptionGroup extends action_ValidatorActio
 		$section = $this->strictFindById(db_PageSectionManager::getInstance(), $_REQUEST['sectionId']);
 		
 		$group = array(
+			'eventId' => $section['eventId'],
 			'sectionId' => $section['id'],
-			'description' => RequestUtil::getValue('description', ''),
 			'required' => RequestUtil::getValue('required', 'F'),
 			'multiple' => RequestUtil::getValue('multiple', 'F'),
 			'minimum' => RequestUtil::getValue('minimum', 0),
 			'maximum' => RequestUtil::getValue('maximum', 0)
 		);
 		
-		db_SectionRegOptionGroupManager::getInstance()->createGroup($group);
+		db_GroupManager::getInstance()->createGroupUnderSection($group);
 		
 		$section = db_PageSectionManager::getInstance()->find($section['id']);
 		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
@@ -42,34 +42,34 @@ class action_admin_regOption_SectionRegOptionGroup extends action_ValidatorActio
 	}
 	
 	public function removeGroup() {
-		$group = $this->strictFindById(db_SectionRegOptionGroupManager::getInstance(), $_REQUEST['id']);
+		$group = $this->strictFindById(db_GroupManager::getInstance(), RequestUtil::getValue('id', 0));
 		
-		db_SectionRegOptionGroupManager::getInstance()->delete($group);
+		db_GroupManager::getInstance()->deleteById($group['id']);
 		
 		$section = db_PageSectionManager::getInstance()->find($group['sectionId']);
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
+		$event = db_EventManager::getInstance()->find($group['eventId']);
 		
 		return new fragment_sectionRegOptionGroup_List($event, $section);
 	}
 	
 	public function moveGroupUp() {
-		$group = $this->strictFindById(db_SectionRegOptionGroupManager::getInstance(), $_REQUEST['id']);
+		$group = $this->strictFindById(db_GroupManager::getInstance(), RequestUtil::getValue('id', 0));
 		
-		db_SectionRegOptionGroupManager::getInstance()->moveGroupUp($group);
+		db_GroupManager::getInstance()->moveGroupUp($group);
 		
 		$section = db_PageSectionManager::getInstance()->find($group['sectionId']);
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
+		$event = db_EventManager::getInstance()->find($group['eventId']);
 		
 		return new fragment_sectionRegOptionGroup_List($event, $section);
 	}
 	
 	public function moveGroupDown() {
-		$group = $this->strictFindById(db_SectionRegOptionGroupManager::getInstance(), $_REQUEST['id']);
+		$group = $this->strictFindById(db_GroupManager::getInstance(), RequestUtil::getValue('id', 0));
 		
-		db_SectionRegOptionGroupManager::getInstance()->moveGroupDown($group);
+		db_GroupManager::getInstance()->moveGroupDown($group);
 		
 		$section = db_PageSectionManager::getInstance()->find($group['sectionId']);
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
+		$event = db_EventManager::getInstance()->find($group['eventId']);
 		
 		return new fragment_sectionRegOptionGroup_List($event, $section);
 	}
@@ -81,15 +81,14 @@ class action_admin_regOption_SectionRegOptionGroup extends action_ValidatorActio
 			return new fragment_validation_ValidationErrors($errors);	
 		}
 		
-		$group = $this->strictFindById(db_SectionRegOptionGroupManager::getInstance(), $_REQUEST['id']);
+		$group = $this->strictFindById(db_GroupManager::getInstance(), RequestUtil::getValue('id', 0));
 		
-		$group['description'] = RequestUtil::getValue('description', '');
 		$group['required'] = RequestUtil::getValue('required', 'F');
 		$group['multiple'] = RequestUtil::getValue('multiple', 'F');
 		$group['minimum'] = RequestUtil::getValue('minimum', 0);
 		$group['maximum'] = RequestUtil::getValue('maximum', 0);
 		
-		db_SectionRegOptionGroupManager::getInstance()->save($group);
+		db_GroupManager::getInstance()->save($group);
 		
 		return new fragment_Success();
 	}

@@ -20,7 +20,7 @@ class fragment_sectionRegOptionGroup_List extends template_Template
 				<table class="admin">
 					<tr>
 						<th></th>
-						<th>Description</th>
+						<th>Registration Options</th>
 						<th>Restrictions</th>
 						<th>Options</th>
 					</tr>
@@ -54,15 +54,13 @@ _;
 			$required = $group['required'] === 'T'? 'Required' : '';
 			$multiple = $group['multiple'] === 'T'? 'Allow Multiple' : '';
 			
-			$evenRow = !$evenRow;
-			$rowClass = $evenRow? 'even' : 'odd';
 			$html .= <<<_
-				<tr class="{$rowClass}">
+				<tr>
 					<td>
 						{$arrows->html()}
 					</td>
 					<td>
-						{$this->escapeHtml($group['description'])}
+						{$this->getGroupOptions($group)}
 					</td>
 					<td>
 						<div>
@@ -78,7 +76,7 @@ _;
 							'label' => 'Edit',
 							'href' => '/admin/regOption/SectionRegOptionGroup',
 							'parameters' => array(
-								'action' => 'view',
+								'a' => 'view',
 								'id' => $group['id'],
 								'eventId' => $this->event['id']
 							)
@@ -88,7 +86,7 @@ _;
 							'label' => 'Remove',
 							'href' => '/admin/regOption/SectionRegOptionGroup',
 							'parameters' => array(
-								'action' => 'removeGroup',
+								'a' => 'removeGroup',
 								'id' => $group['id'],
 								'eventId' => $this->event['id']
 							),
@@ -97,6 +95,22 @@ _;
 					</td>
 				</tr>
 _;
+		}
+		
+		return $html;
+	}
+	
+	private function getGroupOptions($group) {
+		$html = '';
+		
+		foreach($group['options'] as $option) {
+			$html .= <<<_
+				<div>({$this->escapeHtml($option['code'])}) {$this->escapeHtml($option['description'])}</div>		
+_;
+		}
+		
+		if(empty($html)) {
+			$html = 'No Registration Options';
 		}
 		
 		return $html;

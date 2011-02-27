@@ -23,7 +23,7 @@ class db_PageSectionManager extends db_OrderableManager
 			$obj['content'] = db_ContactFieldManager::getInstance()->findBySection($obj);	
 		}
 		else if(model_Section::containsRegOptions($obj)) {
-			$obj['content'] = db_SectionRegOptionGroupManager::getInstance()->findBySection($obj);
+			$obj['content'] = db_GroupManager::getInstance()->findBySectionId($obj['id']);
 		}
 		else if(model_Section::containsVariableQuantityOptions($obj)) {
 			$obj['content'] = db_VariableQuantityOptionManager::getInstance()->findBySection($obj);
