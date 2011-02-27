@@ -120,6 +120,29 @@ set
 
 alter table
 	RegOptionGroup
+modify column
+	displayOrder integer not null;
+
+alter table
+	RegOptionGroup
+add constraint
+	regOptGroup_sectionId_fk
+foreign key
+	(sectionId)
+references
+	Section(id);
+
+alter table
+	RegOptionGroup
+add constraint
+	regOptGroup_regOptionId_fk
+foreign key
+	(regOptionId)
+references
+	RegOption(id);
+
+alter table
+	RegOptionGroup
 add constraint
 	regOptGroup_sectionId_dispOrder_uni
 unique
@@ -139,7 +162,7 @@ alter table
 add column
 	eventId integer;
 
--- update eventId
+-- update eventId for groups under a section.
 
 update
 	RegOptionGroup
@@ -154,6 +177,7 @@ set
 		limit 1
 	);
 
+-- update eventId for groups nested under an option.
 update
 	RegOptionGroup child
 inner join (
@@ -176,9 +200,21 @@ on
 set
 	child.eventId = x.eventId;
 
+-- apply eventId constraints.
 
+alter table
+	RegOptionGroup
+modify column
+	eventId integer not null;
 
-
+alter table
+	RegOptionGroup
+add constraint
+	regOptGroup_eventId_fk
+foreign key
+	(eventId)
+references
+	Event(id);
 
 
 

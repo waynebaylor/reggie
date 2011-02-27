@@ -158,7 +158,9 @@ unique
 create table if not exists `RegOptionGroup` (
 	`id` 		integer 	not null auto_increment,
 	`eventId`	integer		not null,
-	`description` 	varchar(255) 	not null,
+	`sectionId`	integer 			comment 'either sectionId or regOptionId will be set',
+	`regOptionId`	integer 			comment 'either sectionId or regOptionId will be set',
+	`displayOrder`	integer		not null 	comment 'unique with reference to sectionId or regOptionId',
 	`required` 	char(1) 	not null,
 	`multiple` 	char(1) 	not null,
 	`minimum`	integer		not null,
@@ -166,6 +168,47 @@ create table if not exists `RegOptionGroup` (
 	primary key (`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 	
+alter table
+	RegOptionGroup
+add constraint
+	regOptGroup_eventId_fk
+foreign key
+	(eventId)
+references
+	Event(id);
+
+alter table
+	RegOptionGroup
+add constraint
+	regOptGroup_sectionId_fk
+foreign key
+	(sectionId)
+references
+	Section(id);
+
+alter table
+	RegOptionGroup
+add constraint
+	regOptGroup_regOptionId_fk
+foreign key
+	(regOptionId)
+references
+	RegOption(id);
+
+alter table
+	RegOptionGroup
+add constraint
+	regOptGroup_sectionId_dispOrder_uni
+unique
+	(sectionId, displayOrder);
+
+alter table
+	RegOptionGroup
+add constraint
+	regOptGroup_regOptId_dispOrder_uni
+unique
+	(regOptionId, displayOrder);
+
 -- --------------------------------------------------------------------------
 
 create table if not exists `Section_RegOptionGroup` (
