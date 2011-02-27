@@ -62,6 +62,13 @@ abstract class db_GroupManager extends db_OrderableManager
 	}
 	
 	public function delete($group) {
+		// delete the group's options.
+		$group = $this->find($group['id']);
+		foreach($group['options'] as $option) {
+			db_RegOptionManager::getInstance()->delete($option);			
+		}
+		
+		// delete the group.
 		$sql = '
 			DELETE FROM
 				RegOptionGroup

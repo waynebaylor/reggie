@@ -144,6 +144,18 @@ class db_RegOptionManager extends db_OrderableManager
 	}
 	
 	public function delete($option) {
+		// delete the option's groups.
+		$option = $this->find($option['id']);
+		foreach($option['groups'] as $group) {
+			db_RegOptionGroupManager::getInstance()->delete($group);
+		}		
+		
+		// delete the option's prices.
+		foreach($option['prices'] as $price) {
+			db_RegOptionPriceManager::getInstance()->delete($price);
+		}
+
+		// delete the option.
 		$sql = '
 			DELETE FROM
 				RegOption
