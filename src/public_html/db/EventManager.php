@@ -46,6 +46,7 @@ class db_EventManager extends db_Manager
 				Event.regOpen,
 				Event.regClosed,
 				Event.capacity,
+				Event.confirmationText,
 				Event.cancellationPolicy,
 				Event.regClosedText,
 				Event.paymentInstructions
@@ -81,6 +82,7 @@ class db_EventManager extends db_Manager
 				Event.regOpen,
 				Event.regClosed,
 				Event.capacity,
+				Event.confirmationText,
 				Event.cancellationPolicy,
 				Event.regClosedText,
 				Event.paymentInstructions
@@ -113,6 +115,7 @@ class db_EventManager extends db_Manager
 				Event.regOpen,
 				Event.regClosed,
 				Event.capacity,
+				Event.confirmationText,
 				Event.cancellationPolicy,
 				Event.regClosedText,
 				Event.paymentInstructions
@@ -145,6 +148,7 @@ class db_EventManager extends db_Manager
 				regOpen,
 				regClosed,
 				capacity,
+				confirmationText,
 				cancellationPolicy,
 				regClosedText,
 				Event.paymentInstructions
@@ -173,6 +177,7 @@ class db_EventManager extends db_Manager
 				regOpen,
 				regClosed,
 				capacity,
+				confirmationText,
 				cancellationPolicy,
 				regClosedText,
 				Event.paymentInstructions
@@ -198,6 +203,7 @@ class db_EventManager extends db_Manager
 				regOpen,
 				regClosed,
 				capacity,
+				confirmationText,
 				cancellationPolicy,
 				regClosedText,
 				Event.paymentInstructions
@@ -223,6 +229,7 @@ class db_EventManager extends db_Manager
 					regOpen,
 					regClosed,
 					capacity,
+					confirmationText,
 					cancellationPolicy,
 					regClosedText,
 					paymentInstructions
@@ -233,6 +240,7 @@ class db_EventManager extends db_Manager
 				:regOpen,
 				:regClosed,
 				:capacity,
+				:confirmationText,
 				:cancellationPolicy,
 				:regClosedText,
 				:paymentInstructions
@@ -245,6 +253,7 @@ class db_EventManager extends db_Manager
 			'regOpen' => $event['regOpen'],
 			'regClosed' => $event['regClosed'],
 			'capacity' => 0,
+			'confirmationText' => 'Thank you for registering!',
 			'cancellationPolicy' => '',
 			'regClosedText' => '',
 			'paymentInstructions' => ''
@@ -276,11 +285,12 @@ class db_EventManager extends db_Manager
 				regOpen = :regOpen,
 				regClosed = :regClosed,
 				capacity = :capacity,
+				confirmationText = :confirmationText,
 				cancellationPolicy = :cancellationPolicy,
 				regClosedText = :regClosedText,
 				paymentInstructions = :paymentInstructions
 			WHERE
-				id=:id
+				id = :id
 		';
 		
 		$params = array(
@@ -289,6 +299,7 @@ class db_EventManager extends db_Manager
 			'regOpen' => $event['regOpen'],
 			'regClosed' => $event['regClosed'],
 			'capacity' => $event['capacity'],
+			'confirmationText' => $event['confirmationText'],
 			'cancellationPolicy' => $event['cancellationPolicy'],
 			'regClosedText' => $event['regClosedText'],
 			'id' => $event['id'],
@@ -307,6 +318,7 @@ class db_EventManager extends db_Manager
 				regOpen,
 				regClosed,
 				capacity,
+				confirmationText,
 				cancellationPolicy,
 				regClosedText,
 				paymentInstructions
@@ -332,6 +344,7 @@ class db_EventManager extends db_Manager
 				regOpen,
 				regClosed,
 				capacity,
+				confirmationText,
 				cancellationPolicy,
 				regClosedText,
 				paymentInstructions

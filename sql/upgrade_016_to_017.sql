@@ -288,6 +288,12 @@ foreign key
 references 
 	Event(id);
 
+-- add confirmationText column to event table.
+
+alter table
+	Event
+add column
+	confirmationText text not null;
 
 
 

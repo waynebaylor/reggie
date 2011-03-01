@@ -136,6 +136,17 @@ _;
 				</td>
 			</tr>
 			<tr>
+				<td class="label">Confirmation Page Text</td>
+				<td>
+					{$this->HTML->textarea(array(
+						'name' => 'confirmationText',
+						'value' => $this->escapeHtml($this->event['confirmationText']),
+						'rows' => 10,
+						'cols' => 75
+					))}
+				</td>
+			</tr>
+			<tr>
 				<td class="label">Reg Closed Text</td>
 				<td class="admin_td">
 					{$this->HTML->textarea(array(

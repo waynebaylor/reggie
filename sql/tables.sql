@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS `Event` (
 	`regOpen` 		datetime 	not null,
 	`regClosed` 		datetime 	not null,
 	`capacity`		integer		not null,
+	`confirmationText`	text		not null,
 	`cancellationPolicy` 	text 		not null,
 	`regClosedText` 	text 		not null,
 	`paymentInstructions`	text		not null,

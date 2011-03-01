@@ -33,8 +33,10 @@ class action_reg_Summary extends action_ValidatorAction
 		// payment is only required if non-zero total due and event has at least one payment type enabled.
 		$totalDue = model_reg_Registration::getTotalCost($this->event);
 		
+		$this->payment = null;
+		
 		if($totalDue > 0 && !empty($this->event['paymentTypes'])) {
-			$errors = $this->validate();
+			$errors = $this->validate(); // sets $this->payment in validate() method.
 			
 			if(!empty($errors)) {
 				// if there are payment errors, then we should take the user
@@ -125,8 +127,6 @@ class action_reg_Summary extends action_ValidatorAction
 	private function completeRegistration($payment) {
 		$registrations = model_reg_Registration::getConvertedRegistrationsFromSession();
 		
-		$payment['eventId'] = $this->event['id'];
-		
 		$regGroupId = db_reg_RegistrationManager::getInstance()->createRegistrations($registrations, $payment);
 		$regGroup = db_reg_GroupManager::getInstance()->find($regGroupId);
 		
@@ -144,6 +144,7 @@ class action_reg_Summary extends action_ValidatorAction
 			case model_PaymentType::$CHECK:
 				return array(
 					'success' => true,
+					'eventId' => $this->event['id'],
 					'paymentType' => model_PaymentType::$CHECK,
 					'checkNumber' => $info['checkNumber'],
 					'amount' => 0.00
@@ -151,6 +152,7 @@ class action_reg_Summary extends action_ValidatorAction
 			case model_PaymentType::$PO:
 				return array(
 					'success' => true,
+					'eventId' => $this->event['id'],
 					'paymentType' => model_PaymentType::$PO,
 					'purchaseOrderNumber' => $info['purchaseOrderNumber'],
 					'amount' => 0.00
@@ -159,6 +161,7 @@ class action_reg_Summary extends action_ValidatorAction
 				$authorizeNet = new payment_AuthorizeNET($this->event, $info, $cost);
 				$result = $authorizeNet->makePayment();
 				
+				$result['eventId'] = $this->event['id'];
 				$result['paymentType'] = model_PaymentType::$AUTHORIZE_NET;
 				$result['name'] = $info['firstName'].' '.$info['lastName'];
 				$result['amount'] = $cost;

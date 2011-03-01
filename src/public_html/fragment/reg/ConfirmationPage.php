@@ -18,7 +18,7 @@ class fragment_reg_ConfirmationPage extends template_Template
 		return <<<_
 			<table class="confirmation">
 				<tr>
-					<td>Thank you for registering!</td>
+					<td>{$this->event['confirmationText']}</td>
 				</tr>
 			</table>
 			

@@ -52,6 +52,7 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 			'regOpen',
 			'regClosed',
 			'capacity',
+			'confirmationText',
 			'regClosedText',
 			'cancellationPolicy',
 			'paymentInstructions'
