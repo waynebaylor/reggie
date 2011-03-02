@@ -4,19 +4,19 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->logic = new logic_admin_event_EditEvent();
+		$this->converter = new viewConverter_admin_event_EditEvent();
 	}
 	
 	public function view() {
 		$id = RequestUtil::getValue('id', 0);
 		
-		$event = db_EventManager::getInstance()->find($id);
+		$event = $this->logic->view($id);
 		
-		if(empty($event)) {
-			return new template_ErrorPage();
-		}
-		else {
-			return new template_admin_EditEvent($event);
-		}
+		return $this->converter->getView(array(
+			'event' => $event
+		));
 	}
 	
 	public function addEvent() {
