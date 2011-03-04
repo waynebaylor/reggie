@@ -24,6 +24,10 @@ class viewConverter_admin_event_EditEvent extends viewConverter_admin_AdminConve
 		
 		return $bc->html();
 	}
+	
+	public function getSaveEvent($properties = array()) {
+		return new fragment_Success();
+	}
 }
 
 ?>

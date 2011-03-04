@@ -45,7 +45,7 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 			return new fragment_validation_ValidationErrors($errors);
 		}
 		
-		$event = RequestUtil::getParameters(array(
+		$eventInfo = RequestUtil::getParameters(array(
 			'id',
 			'code',
 			'displayName',
@@ -58,13 +58,9 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 			'paymentInstructions'
 		));
 		
-		$oldEvent = $this->strictFindById(db_EventManager::getInstance(), $event['id']);
-	
-		db_EventManager::getInstance()->save($event);
+		$this->logic->saveEvent($eventInfo);
 		
-		FileUtil::renameEventDir($oldEvent, $event);
-		
-		return new fragment_Success();	
+		return $this->converter->getSaveEvent();
 	}
 	
 	public function validate($fieldNames = array()) {
