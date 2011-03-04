@@ -16,6 +16,10 @@
 <tr>
 	<td class="label">Visible To</td>
 	<td>
-		{$this->getCategories()}
+		<div>
+			<?php echo fragment_category_HTML::checkboxes(array(
+				'name' => 'categoryIds[]',
+			)) ?>
+		</div>
 	</td>
 </tr>

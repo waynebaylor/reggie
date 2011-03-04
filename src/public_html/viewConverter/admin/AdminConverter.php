@@ -62,7 +62,7 @@ _;
 						<td>
 							{$this->getBreadcrumbs()}
 						</td>
-						<td style="text-align:right; padding:10px 20px 0 0;">
+						<td style="text-align:right;">
 							{$this->getLogout()}
 						</td>
 					</tr>	

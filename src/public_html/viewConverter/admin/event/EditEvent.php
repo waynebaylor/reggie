@@ -17,7 +17,12 @@ class viewConverter_admin_event_EditEvent extends viewConverter_admin_AdminConve
 	}
 	
 	protected function getBreadcrumbs() {
+		$bc = new fragment_Breadcrumb(array(
+			'location' => 'Event',
+			'event' => $this->event
+		));
 		
+		return $bc->html();
 	}
 }
 
