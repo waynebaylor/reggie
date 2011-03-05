@@ -13,6 +13,7 @@
 cd ~/development/dojo-sdk
 rm -rf dojo-release-1.5.0-src
 tar -xvzf dojo-release-1.5.0-src.tar.gz
+cp -r ~/workspace/reggie/src/public_html/js/hhreg ~/development/dojo-sdk/dojo-release-1.5.0-src 
 cp ~/workspace/reggie/config/reggie.profile.js ~/development/dojo-sdk/dojo-release-1.5.0-src/util/buildscripts/profiles
 cd ~/development/dojo-sdk/dojo-release-1.5.0-src/util/buildscripts
 ./build.sh profile=reggie
