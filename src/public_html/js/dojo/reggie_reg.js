@@ -1,0 +1,14 @@
+/*
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+/*
+	This is an optimized version of Dojo, built for deployment and not for
+	development. To get sources and documentation, please visit:
+
+		http://dojotoolkit.org
+*/
+
+if(!dojo._hasResource["hhreg.util"]){dojo._hasResource["hhreg.util"]=true;(function(){var _1=dojo.provide("hhreg.util");_1.parentNode=function(_2,_3){var _4=_2.parentNode;var i;while(_4){for(i=0;i<_3.length;++i){if(dojo.hasClass(_4,_3[i])){return _4;}}_4=_4.parentNode;}return null;};_1.contextUrl=function(_5){var _6=dojo.byId("reggie.contextPath").value+_5;return _6.replace(/\/\//g,"/");};})();}if(!dojo._hasResource["hhreg.validation"]){dojo._hasResource["hhreg.validation"]=true;(function(){var _7=dojo.provide("hhreg.validation");var _8=function(_9){if(_9.id){var _a=dojo.query("label").filter(function(_b){return dojo.attr(_b,"for")===_9.id;});return _a[0];}return null;};var _c=function(_d,_e){dojo.style(_d,"position","static");_e.appendChild(_d);};var _f=function(div,_10){var _11=hhreg.util.parentNode(_10,["checkbox-label","radio-label"]);dojo.style(div,{position:"static",padding:"0px"});dojo.place(div,_11,"before");};var _12=function(div,_13){var _14=hhreg.util.parentNode(_13,["hhreg-calendar"]);var _15=dojo.position(_14,true);dojo.style(div,{top:_15.y+"px",left:(_15.x+_15.w)+"px"});if(_13.form){_13.form.appendChild(div);}else{dojo.body().appendChild(div);}};var _16=function(div,_17){_17=_8(_17)||_17;var _18=dojo.position(_17,true);dojo.style(div,{top:_18.y+"px",left:(_18.x+_18.w)+"px"});if(_17.form){_17.form.appendChild(div);}else{dojo.body().appendChild(div);}};var _19=function(_1a,_1b){var div=dojo.create("div");dojo.addClass(div,"error-message");var img=dojo.create("img",{src:hhreg.util.contextUrl("/images/caution_red.gif"),alt:"Validation Error",title:"Validation Error"});div.appendChild(img);var _1c=dojo.create("span");dojo.addClass(_1c,"error-text");_1c.appendChild(document.createTextNode(" "+_1b));div.appendChild(_1c);var _1d;if(_1a.id==="general-errors"){_c(div,_1a);}else{if(hhreg.util.parentNode(_1a,["hhreg-calendar"])){_12(div,_1a);}else{if(hhreg.util.parentNode(_1a,["checkbox-label","radio-label"])){_f(div,_1a);}else{_16(div,_1a);}}}};_7.removeMessages=function(_1e){if(_1e){dojo.query(".error-message",_1e).orphan();}else{dojo.query(".error-message").orphan();}};_7.showMessages=function(_1f,_20){var _21;var _22;for(fieldName in _1f){if(fieldName==="general"){_21=dojo.byId("general-errors");}else{if(_20){for(var i=0;i<_20.elements.length;++i){if(_20.elements[i].name===fieldName){_21=_20.elements[i];break;}}}else{_21=document.getElementsByName(fieldName)[0];}}_19(_21,_1f[fieldName]);}};})();}
