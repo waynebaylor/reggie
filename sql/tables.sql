@@ -1090,6 +1090,7 @@ create table if not exists `Registration_VariableQuantityOption` (
 	`variableQuantityId`	integer		not null,
 	`priceId`		integer		not null,
 	`quantity`		integer		not null,
+	`lastModified`		datetime	not null,
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 

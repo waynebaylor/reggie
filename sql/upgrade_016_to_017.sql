@@ -295,6 +295,31 @@ alter table
 add column
 	confirmationText text not null;
 
+-- add lastModified column to Registration_VariableQuantityOption table.
+
+alter table
+	Registration_VariableQuantityOption
+add column
+	lastModified datetime;
+
+update 
+	Registration_VariableQuantityOption
+inner join
+	Registration
+on
+	Registration.id = Registration_VariableQuantityOption.registrationId
+set
+	Registration_VariableQuantityOption.lastModified = Registration.dateRegistered;
+
+alter table
+	Registration_VariableQuantityOption
+modify column
+	lastModified datetime not null;
+
+
+
+
+
 
 
 
