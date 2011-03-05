@@ -30,53 +30,6 @@ class action_admin_page_Page extends action_ValidatorAction
 		return new fragment_Success();
 	}
 	
-	public function addPage() {
-		$errors = $this->validate();
-		
-		if(!empty($errors)) {
-			return new fragment_validation_ValidationErrors($errors);
-		}
-		
-		$event = $this->strictFindById(db_EventManager::getInstance(), $_REQUEST['eventId']);
-		
-		$title = $_REQUEST['title'];
-		$title = empty($title)? 'New Page' : $title;
-		$categories = $_REQUEST['categoryIds'];
-
-		db_PageManager::getInstance()->createPage($event['id'], $title, $categories);
-
-		$event = db_EventManager::getInstance()->find($event['id']);
-			
-		return new fragment_page_List($event);
-	}
-	
-	public function removePage() {
-		$page = $this->strictFindById(db_PageManager::getInstance(), $_REQUEST['id']);
-
-		db_PageManager::getInstance()->deletePage($page);
-		$event = db_EventManager::getInstance()->find($page['eventId']);
-			
-		return new fragment_page_List($event);
-	}
-	
-	public function movePageUp() {
-		$page = $this->strictFindById(db_PageManager::getInstance(), $_REQUEST['id']);
-
-		db_PageManager::getInstance()->movePageUp($page);
-		$event = db_EventManager::getInstance()->find($page['eventId']);
-			
-		return new fragment_page_List($event);
-	}
-	
-	public function movePageDown() {
-		$page = $this->strictFindById(db_PageManager::getInstance(), $_REQUEST['id']);
-		
-		db_PageManager::getInstance()->movePageDown($page);
-		$event = db_EventManager::getInstance()->find($page['eventId']);
-			
-		return new fragment_page_List($event);
-	}
-
 	protected function getValidationConfig() {
 		return array(
 			array(

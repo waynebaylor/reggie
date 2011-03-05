@@ -19,8 +19,64 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 		));
 	}
 	
+	public function addPage() {
+		$errors = validation_Validator::validate(validation_admin_Page::getConfig(), array(
+			'title' => RequestUtil::getValue('title', '')
+		));
+		
+		if(!empty($errors)) {
+			return new fragment_validation_ValidationErrors($errors);
+		}
+		
+		$eventId = RequestUtil::getValue('eventId', 0);
+		$title = RequestUtil::getValue('title', '');
+		$categoryIds = RequestUtil::getValueAsArray('categoryIds', array());
+		
+		$event = $this->logic->addPage($eventId, $title, $categoryIds);
+		
+		return $this->converter->getAddPage(array(
+			'event' => $event
+		));
+	}
+	
+	public function removePage() {
+		$pageId = RequestUtil::getValue('id', 0);
+		
+		$event = $this->logic->removePage($pageId);
+		
+		return $this->converter->getRemovePage(array(
+			'event' => $event
+		));
+	}
+	
+	public function movePageUp() {
+		$pageId = RequestUtil::getValue('id', 0);
+		
+		$event = $this->logic->movePageUp($pageId);
+		
+		return $this->converter->getMovePageUp(array(
+			'event' => $event
+		));
+	}
+	
+	public function movePageDown() {
+		$pageId = RequestUtil::getValue('id', 0);
+		
+		$event = $this->logic->movePageDown($pageId);
+		
+		return $this->converter->getMovePageDown(array(
+			'event' => $event
+		));
+	}
+	
+	// TODO: this method doesn't belong here. need to conver the home page and move it to 
+	//       that supporting action.
 	public function addEvent() {
-		$errors = $this->validate();
+		$errors = validation_Validator::validate(validation_admin_Event::getConfig(), array(
+			'code' => RequestUtil::getValue('code', ''),
+			'regOpen' => RequestUtil::getValue('regOpen', ''),
+			'regClosed' => RequestUtil::getValue('regClosed', '')
+		));
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);
@@ -39,7 +95,11 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 	}
 	
 	public function saveEvent() {
-		$errors = $this->validate();
+		$errors = validation_Validator::validate(validation_admin_Event::getConfig(), array(
+			'code' => RequestUtil::getValue('code', ''),
+			'regOpen' => RequestUtil::getValue('regOpen', ''),
+			'regClosed' => RequestUtil::getValue('regClosed', '')
+		));
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);
@@ -63,20 +123,6 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 		return $this->converter->getSaveEvent();
 	}
 	
-	public function validate($fieldNames = array()) {
-		$errors = parent::validate($fieldNames);
-		
-		// check if an event with this code already exists.
-		if(empty($errors['code'])) {
-			$event = db_EventManager::getInstance()->findByCode($_REQUEST['code']); 
-			if(isset($event) && intval($event['id'], 10) !== intval(RequestUtil::getValue('id', 0), 10)) {
-				$errors['code'] = 'An event with this Code already exists.';
-			}
-		}
-		
-		return $errors;
-	}
-	
 	protected function performSecurityCheck($action) {
 		if(in_array($action, array('view', 'saveEvent'))) {
 			$user = SessionUtil::getUser();
@@ -86,61 +132,6 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 				'eventId' => RequestUtil::getValue('id', 0)
 			));
 		}
-	}
-	
-	protected function getValidationConfig() {
-		return array(
-			array(
-				'name' => 'code',
-				'value' => $_REQUEST['code'],
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Code is required.'
-					),
-					array(
-						'name' => 'pattern',
-						'regex' => '/^[A-Za-z]/',
-						'text' => 'Code must begin with a letter.'
-					),
-					array(
-						'name' => 'pattern',
-						'regex' => '/^[A-Za-z][_A-Za-z0-9]*$/',
-						'text' => 'Code can only contain letters, numbers, and underscore.'
-					)
-				)
-			),
-			array(
-				'name' => 'regOpen',
-				'value' => $_REQUEST['regOpen'],
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Reg Open is required.'
-					),
-					array(
-						'name' => 'pattern',
-						'regex' => '/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2})?$/',
-						'text' => 'Enter date as "yyyy-MM-dd" or "yyyy-MM-dd HH:mm".'
-					)
-				)
-			),
-			array(
-				'name' => 'regClosed',
-				'value' => $_REQUEST['regClosed'],
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Reg Closed is required.'
-					),
-					array(
-						'name' => 'pattern',
-						'regex' => '/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2})?$/',
-						'text' => 'Enter date as "yyyy-MM-dd" or "yyyy-MM-dd HH:mm".'
-					)
-				)
-			)
-		);
 	}
 }
 

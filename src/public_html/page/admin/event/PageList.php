@@ -13,7 +13,7 @@
 		<tr>
 			<td>
 				<?php echo $this->arrows(array(
-					'href' => '/admin/page/Page',
+					'href' => '/admin/event/EditEvent',
 					'parameters' => array(
 						'eventId' => $this->event['id']
 					),
@@ -50,7 +50,7 @@
 				
 				<?php echo $this->HTML->link(array(
 					'label' => 'Remove',
-					'href' => '/admin/page/Page',
+					'href' => '/admin/event/EditEvent',
 					'parameters' => array(
 						'action' => 'removePage',
 						'id' => $page['id']

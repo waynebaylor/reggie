@@ -78,7 +78,7 @@
 		<div class="fragment-add">
 			<?php echo $this->xhrAddForm(
 				'Add Page', 
-				'/admin/page/Page', 
+				'/admin/event/EditEvent', 
 				'addPage', 
 				$this->getFileContents('page_admin_event_AddPage')
 			) ?>
