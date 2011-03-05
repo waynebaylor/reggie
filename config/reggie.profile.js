@@ -18,10 +18,12 @@ dependencies = {
 				"dijit.Calendar",
 				"dijit._Widget",
 				"dijit.Dialog",
+				"dojox.form.BusyButton",
 				"hhreg.validation",
 				"hhreg.list",
 				"hhreg.xhrTableForm",
 				"hhreg.xhrAddList",
+				"hhreg.xhrAddForm",
 				"hhreg.dialog",
 				"hhreg.calendar",
 				"hhreg.arrows",
@@ -39,6 +41,7 @@ dependencies = {
 	}],
 	prefixes: [
 		["dijit", "../dijit"],
+		["dojox", "../dojox"],
 		["hhreg", "../hhreg"]
 	]
 }
