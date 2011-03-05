@@ -29,7 +29,8 @@ class db_reg_VariableQuantityManager extends db_Manager
 				registrationId,
 				variableQuantityId,
 				priceId,
-				quantity
+				quantity,
+				lastModified
 			FROM
 				Registration_VariableQuantityOption
 			WHERE
@@ -81,7 +82,8 @@ class db_reg_VariableQuantityManager extends db_Manager
 				Registration_VariableQuantityOption
 			SET
 				priceId = :priceId,
-				quantity = :quantity
+				quantity = :quantity,
+				lastModified = :lastModified
 			WHERE
 				id = :id
 		';
@@ -89,7 +91,8 @@ class db_reg_VariableQuantityManager extends db_Manager
 		$params = array(
 			'id' => $option['id'],
 			'priceId' => $option['priceId'],
-			'quantity' => $option['quantity']
+			'quantity' => $option['quantity'],
+			'lastModified' => date(db_Manager::$DATE_FORMAT)
 		);
 		
 		$this->execute($sql, $params, 'Save variable quantity registration option.');
@@ -102,13 +105,15 @@ class db_reg_VariableQuantityManager extends db_Manager
 					registrationId,
 					variableQuantityId,
 					priceId,
-					quantity
+					quantity,
+					lastModified
 				)
 			VALUES(
 				:registrationId,
 				:variableQuantityId,
 				:priceId,
-				:quantity
+				:quantity,
+				:lastModified
 			)
 		';
 			
@@ -116,7 +121,8 @@ class db_reg_VariableQuantityManager extends db_Manager
 			'registrationId' => $option['registrationId'],
 			'variableQuantityId' => $option['variableQuantityId'],
 			'priceId' => $option['priceId'],
-			'quantity' => $option['quantity']
+			'quantity' => $option['quantity'],
+			'lastModified' => date(db_Manager::$DATE_FORMAT)
 		);
 		
 		$this->execute($sql, $params, 'Create variable quantity registration option.');

@@ -50,12 +50,6 @@ class action_admin_registration_RegOption extends action_ValidatorAction
 	}
 	
 	private function saveVariableQuantityOption($currentOpts, $registrationId, $optId, $priceId, $value) {
-		if(!is_numeric($value) || intval($value, 10) === 0) {
-			// delete option
-			db_reg_VariableQuantityManager::getInstance()->delete($registrationId, $optId);
-			return;
-		}
-
 		// if the option already exists, then update it.
 		foreach($currentOpts as $currentOpt) {
 			if($currentOpt['variableQuantityId'] == $optId) {
