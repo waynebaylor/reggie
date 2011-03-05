@@ -37,8 +37,29 @@ dojo.require("hhreg.util");
 	
 	var placeCalendarError = function(/*DOM Node[div.error-message]*/ div, /*DOM Node*/ node) {
 		// display calendar messages to the right of the calendar img.
+		// the placeError() logic is very similar to this, but here we
+		// need to place the message next to the span that encompases the
+		// input and calendar img.
 		
-		placeError(div, hhreg.util.parentNode(node, ["hhreg-calendar"]));
+		var parentSpan = hhreg.util.parentNode(node, ["hhreg-calendar"]);
+		
+		var position = dojo.position(parentSpan, true);
+		dojo.style(div, {
+			top: position.y+"px",
+			left: (position.x+position.w)+"px"
+		});
+		
+		// if the node is a form element, then
+		// place the message in the form. this
+		// makes it possible to remove all the 
+		// messages associated with a form.
+		if(node.form) {
+			node.form.appendChild(div);
+		}
+		// otherwise put it in the body.
+		else {
+			dojo.body().appendChild(div);
+		}
 	};
 	
 	var placeError = function(/*DOM Node[div.error-message]*/ div, /*DOM Node*/ node) {
@@ -48,7 +69,7 @@ dojo.require("hhreg.util");
 		
 		node = getInputLabel(node) || node;
 		
-		position = dojo.position(node, true);
+		var position = dojo.position(node, true);
 		dojo.style(div, {
 			top: position.y+"px",
 			left: (position.x+position.w)+"px"
@@ -101,7 +122,7 @@ dojo.require("hhreg.util");
 		if(node.id === "general-errors") {
 			placeGeneralError(div, node);
 		}
-		else if(hhreg.util.parentNode(node, ["hhreg-calendar"])) {
+		else if(hhreg.util.parentNode(node, ["hhreg-calendar"])) { 
 			placeCalendarError(div, node);
 		}
 		else if(hhreg.util.parentNode(node, ["checkbox-label", "radio-label"])) {
