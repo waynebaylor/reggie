@@ -270,7 +270,7 @@ class db_EventManager extends db_Manager
 		db_GroupRegistrationManager::getInstance()->createGroupRegistration($id);
 		
 		// create defaults based on template.
-		db_EventTemplate::getInstance()->createDefaults($eventId);
+		db_EventTemplate::getInstance()->createDefaults($id);
 		
 		return $id;
 	}

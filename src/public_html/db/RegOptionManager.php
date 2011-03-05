@@ -120,6 +120,8 @@ class db_RegOptionManager extends db_OrderableManager
 		);
 		
 		$this->execute($sql, $params, 'Create reg option.');
+		
+		return $this->lastInsertId();
 	}
 	
 	public function save($option) {

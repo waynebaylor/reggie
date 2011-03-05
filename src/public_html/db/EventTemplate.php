@@ -27,7 +27,7 @@ class db_EventTemplate extends db_Manager
 		$visibleToCategoryIds = array(1); // attendee only.
 		$this->createRegTypeTemplatePage($eventId, $visibleToCategoryIds);
 		$this->createContactInfoTemplatePage($eventId, $visibleToCategoryIds);
-		$this->createConferenceRegTemplatePage($eventId, $visibleToCategoryIds);
+		$this->createConferenceRegTemplatePage($eventId, $visibleToCategoryIds); 
 		$this->createSpecialEventsTemplatePage($eventId, $visibleToCategoryIds);
 		$this->createSurveyTemplatePage($eventId, $visibleToCategoryIds);
 		
@@ -35,6 +35,7 @@ class db_EventTemplate extends db_Manager
 	
 	private function createRegTypeTemplatePage($eventId, $categoryIds) {
 		$pageId = db_PageManager::getInstance()->createPage($eventId, 'Registration Type', $categoryIds);
+		
 		$textSectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'reg type text', model_ContentType::$TEXT);
 		db_PageSectionManager::getInstance()->save(array(
 			'id' => $textSectionId,
@@ -44,13 +45,17 @@ class db_EventTemplate extends db_Manager
 		));
 		
 		$regTypeSectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'reg types', model_ContentType::$REG_TYPE);
+		
 		db_RegTypeManager::getInstance()->createRegType($eventId, $regTypeSectionId, 'Member', 'M', $categoryIds);
+		
 		db_RegTypeManager::getInstance()->createRegType($eventId, $regTypeSectionId, 'Non-Member', 'NM', $categoryIds);
 	}
 
 	private function createContactInfoTemplatePage($eventId, $categoryIds) {
 		$pageId = db_PageManager::getInstance()->createPage($eventId, 'Contact Information', $categoryIds);
+		
 		$contactInfoSectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'contact info', model_ContentType::$CONTACT_FIELD);
+		
 		db_ContactFieldManager::getInstance()->createContactField(array(
 			'eventId' => $eventId,
 			'sectionId' => $contactInfoSectionId,
@@ -59,10 +64,11 @@ class db_EventTemplate extends db_Manager
 			'formInputId' => model_FormInput::$TEXT,
 			'attributes' => array(),
 			'validationRules' => array(
-				array(model_Validation::$REQUIRED, 'T'),
+				model_Validation::$REQUIRED => 'T'
 			),
 			'regTypeIds' => array(-1)
 		));
+		
 		db_ContactFieldManager::getInstance()->createContactField(array(
 			'eventId' => $eventId,
 			'sectionId' => $contactInfoSectionId,
@@ -71,10 +77,11 @@ class db_EventTemplate extends db_Manager
 			'formInputId' => model_FormInput::$TEXT,
 			'attributes' => array(),
 			'validationRules' => array(
-				array(model_Validation::$REQUIRED, 'T'),
+				model_Validation::$REQUIRED => 'T'
 			),
 			'regTypeIds' => array(-1)
 		));
+		
 		db_ContactFieldManager::getInstance()->createContactField(array(
 			'eventId' => $eventId,
 			'sectionId' => $contactInfoSectionId,
@@ -82,10 +89,10 @@ class db_EventTemplate extends db_Manager
 			'displayName' => 'Email',
 			'formInputId' => model_FormInput::$TEXT,
 			'attributes' => array(
-				array(model_Attribute::$SIZE, 30)
+				model_Attribute::$SIZE => 30
 			),
 			'validationRules' => array(
-				array(model_Validation::$REQUIRED, 'T'),
+				model_Validation::$REQUIRED => 'T'
 			),
 			'regTypeIds' => array(-1)
 		));
@@ -93,16 +100,107 @@ class db_EventTemplate extends db_Manager
 
 	private function createConferenceRegTemplatePage($eventId, $categoryIds) {
 		$pageId = db_PageManager::getInstance()->createPage($eventId, 'Conference Registration', $categoryIds);
+		
+		$sectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'reg options', model_ContentType::$REG_OPTION);
+		
+		// option group.
+		$optGroupId = db_GroupManager::getInstance()->createGroupUnderSection(array(
+			'eventId' => $eventId,
+			'sectionId' => $sectionId,
+			'required' => 'T',
+			'multiple' => 'F',
+			'minimum' => 0,
+			'maximum' => 0
+		));
+		
+		// first option.
+		$optOneId = db_RegOptionManager::getInstance()->createRegOption(array(
+			'eventId' => $eventId,
+			'parentGroupId' => $optGroupId,
+			'code' => 'OPT1',
+			'description' => 'This is option number one',
+			'capacity' => 0,
+			'defaultSelected' => 'T',
+			'showPrice' => 'T'
+		));
+		
+		db_RegOptionPriceManager::getInstance()->createRegOptionPrice(array(
+			'eventId' => $eventId,
+			'regOptionId' => $optOneId,
+			'description' => 'full price',
+			'startDate' => date(db_Manager::$DATE_FORMAT),
+			'endDate' => date(db_Manager::$DATE_FORMAT, time()+604800),
+			'price' => '100.00',
+			'regTypeIds' => array(-1)
+		));
+		
+		// second option.
+		$optTwoId = db_RegOptionManager::getInstance()->createRegOption(array(
+			'eventId' => $eventId,
+			'parentGroupId' => $optGroupId,
+			'code' => 'OPT2',
+			'description' => 'This is option number two',
+			'capacity' => 0,
+			'defaultSelected' => 'F',
+			'showPrice' => 'T'
+		));
+		
+		db_RegOptionPriceManager::getInstance()->createRegOptionPrice(array(
+			'eventId' => $eventId,
+			'regOptionId' => $optTwoId,
+			'description' => 'full price',
+			'startDate' => date(db_Manager::$DATE_FORMAT),
+			'endDate' => date(db_Manager::$DATE_FORMAT, time()+604800),
+			'price' => '1.99',
+			'regTypeIds' => array(-1)
+		));
 	}
 
 	private function createSpecialEventsTemplatePage($eventId, $categoryIds) {
 		$pageId = db_PageManager::getInstance()->createPage($eventId, 'Special Events', $categoryIds);
-
+		
+		$sectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'special', model_ContentType::$VAR_QUANTITY_OPTION);
+		
+		$varOptId = db_VariableQuantityOptionManager::getInstance()->createOption(array(
+			'eventId' => $eventId,
+			'sectionId' => $sectionId,
+			'code' => 'SPE1',
+			'description' => 'Tickets for Special Event',
+			'capacity' => 0,
+		));
+		
+		db_RegOptionPriceManager::getInstance()->createVariableQuantityPrice(array(
+			'eventId' => $eventId,
+			'regOptionId' => $varOptId,
+			'description' => 'full price',
+			'startDate' => date(db_Manager::$DATE_FORMAT),
+			'endDate' => date(db_Manager::$DATE_FORMAT, time()+604800),
+			'price' => '25.00',
+			'regTypeIds' => array(-1)
+		));
 	}
 
 	private function createSurveyTemplatePage($eventId, $categoryIds) {
 		$pageId = db_PageManager::getInstance()->createPage($eventId, 'Survey', $categoryIds);
 
+		$sectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'survey questions', model_ContentType::$CONTACT_FIELD);
+		db_PageSectionManager::getInstance()->save(array(
+			'id' => $sectionId,
+			'name' => 'survey questions',
+			'text' => '',
+			'numbered' => 'T'
+		));
+		
+		db_ContactFieldManager::getInstance()->createContactField(array(
+			'eventId' => $eventId,
+			'sectionId' => $sectionId,
+			'code' => 'Q1',
+			'displayName' => 'Please enter your answer below.',
+			'formInputId' => model_FormInput::$TEXT,
+			'attributes' => array(),
+			'validationRules' => array(),
+			'regTypeIds' => array(-1)
+		));
 	}
 }
 

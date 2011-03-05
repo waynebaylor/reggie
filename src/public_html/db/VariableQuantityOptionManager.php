@@ -101,6 +101,8 @@ class db_VariableQuantityOptionManager extends db_OrderableManager
 		$params = $option;
 		
 		$this->execute($sql, $params, 'Create variable quantity option.');
+		
+		return $this->lastInsertId();
 	}
 	
 	public function delete($option) {
