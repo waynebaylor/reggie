@@ -36,7 +36,7 @@ dojo.require("hhreg.validation");
 			.removeClass("hide");
 	};
 	
-	var submitForm = function(/*DOM Node[form]*/ form, /*function(optional)*/ callback) {
+	var submitForm = function(/*DOM Node[form]*/ form, /*BusyButton*/ button, /*function(optional)*/ callback) {
 		// remove any previous error messages.
 		hhreg.validation.removeMessages(form);
 	
@@ -49,12 +49,15 @@ dojo.require("hhreg.validation");
 		post.addCallback(function(response) { 
 			var success = handleResponse(form, response);
 
+			button.cancel();
+			
 			if(success && callback) {
 				callback(response);
 			}
 		});
 		
 		post.addErrback(function(error) { 
+			button.cancel();
 			showErrorIcon(form);
 		});
 	};
@@ -98,17 +101,26 @@ dojo.require("hhreg.validation");
 	};
 	
 	xhrTableForm.bind = function(/*DOM Node[form]*/ form, /*function(optional)*/ callback) {
+		var button = dojo.query("input[type=button]", form)[0];
+		var saveButton = new dojox.form.BusyButton({
+			label: button.value,
+			busyLabel: "Processing...",
+			onClick: function() {
+				submitForm(form, saveButton, callback);
+			}
+		}, button);
+		saveButton.startup();
+		
 		// xhr form when user hits enter key. as if the continue button were
 		// a submit button.
 		dojo.connect(form, "onkeypress", function(event) {
 			if(event.keyCode === dojo.keys.ENTER && event.target.tagName.toLowerCase() !== 'textarea') {
 				dojo.stopEvent(event);
-				submitForm(form, callback);
+				
+				saveButton.makeBusy();
+				
+				submitForm(form, saveButton, callback);
 			}
-		});
-		
-		dojo.query("input[type=button]", form).connect("onclick", function() {
-			submitForm(form, callback);
 		});
 	};
 	

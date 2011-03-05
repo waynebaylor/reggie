@@ -79,15 +79,11 @@ dojo.require("dojox.form.BusyButton");
 	};
 	
 	var submitForm = function(/*Object*/ spec) {
-		//*DOM Node[form]*/ form, /*DOM Node[.add-form]*/ formDiv, 
-        //*DOM Node[.add-link]*/ addLink, /*dojox.form.BusyButton*/ continueButton, 
-		//*function(optional)*/ callback
-		
-		var form = spec.form;
-		var formDiv = spec.formDiv;
-		var addLink = spec.addLink;
-		var continueButton = spec.continueButton;
-		var callback = spec.callback;
+		var form = spec.form; // DOM Node[form]
+		var formDiv = spec.formDiv; //DOM Node[.add-form]
+		var addLink = spec.addLink; // DOM Node[.add-link]
+		var continueButton = spec.continueButton; // dojox.form.BusyButton
+		var callback = spec.callback; // function(optional)
 		
 		hhreg.validation.removeMessages(form);
 		
@@ -190,7 +186,9 @@ dojo.require("dojox.form.BusyButton");
 		dojo.connect(form, "onkeypress", function(event) {
 			if(event.keyCode === dojo.keys.ENTER && event.target.tagName.toLowerCase() !== 'textarea') {
 				dojo.stopEvent(event);
+				
 				continueButton.makeBusy();
+				
 				submitForm({
 					form: form, 
 					formDiv: formDiv, 
