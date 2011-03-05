@@ -1,4 +1,5 @@
 dojo.require("hhreg.validation");
+dojo.require("dojox.form.BusyButton");
 
 (function() {
 	var xhrAddForm = dojo.provide("hhreg.xhrAddForm");
@@ -18,6 +19,10 @@ dojo.require("hhreg.validation");
 	
 	var resetForm = function(/*DOM Node[form]*/ form) {
 		dojo.query("input[type=text]", form).forEach(function(item) {
+			item.value = "";
+		});
+		
+		dojo.query("input[type=password]", form).forEach(function(item) {
 			item.value = "";
 		});
 		
@@ -73,8 +78,17 @@ dojo.require("hhreg.validation");
 			.removeClass("hide");
 	};
 	
-	var submitForm = function(/*DOM Node[form]*/ form, /*DOM Node[.add-form]*/ formDiv, 
-			                  /*DOM Node[.add-link]*/ addLink, /*function(optional)*/ callback) {
+	var submitForm = function(/*Object*/ spec) {
+		//*DOM Node[form]*/ form, /*DOM Node[.add-form]*/ formDiv, 
+        //*DOM Node[.add-link]*/ addLink, /*dojox.form.BusyButton*/ continueButton, 
+		//*function(optional)*/ callback
+		
+		var form = spec.form;
+		var formDiv = spec.formDiv;
+		var addLink = spec.addLink;
+		var continueButton = spec.continueButton;
+		var callback = spec.callback;
+		
 		hhreg.validation.removeMessages(form);
 		
 		var post = dojo.xhrPost({
@@ -86,9 +100,12 @@ dojo.require("hhreg.validation");
 		post.addCallback(function(response) {
 			var success = handleResponse(form, response);
 			
+			continueButton.cancel();
+			
 			if(success) {
 				dojo.addClass(formDiv, "hide");
 				dojo.removeClass(addLink, "hide");
+				
 				resetForm(form);
 				
 				if(callback) {
@@ -98,6 +115,7 @@ dojo.require("hhreg.validation");
 		});
 		
 		post.addErrback(function(error) {
+			continueButton.cancel();
 			showErrorIcon(form);
 		});
 	};
@@ -142,15 +160,29 @@ dojo.require("hhreg.validation");
 		var addLink = dojo.query(".add-link", node)[0];
 		var formDiv = dojo.query(".add-form", node)[0];
 		var form = dojo.query("form", formDiv)[0];
-		var continueButton = dojo.query("input[type=button]", form)[0];
 		var cancelLink = dojo.query(".cancel-link", form)[0];
+		
+		// xhr form when user clicks continue button.
+		var continueButton = new dojox.form.BusyButton({
+			label: "Continue",
+			busyLabel: "Processing...",
+			onClick: function() {
+				submitForm({
+					form: form, 
+					formDiv: formDiv, 
+					addLink: addLink, 
+					continueButton: continueButton,
+					callback: callback
+				});
+			}
+		}, dojo.query("input[type=button]", form)[0]);
+		continueButton.startup();
 		
 		// show the form when user clicks add link.
 		dojo.connect(addLink, "onclick", function() {
 			dojo.addClass(addLink, "hide");
 			dojo.removeClass(formDiv, "hide");
 			setFocus(form);
-			
 		});
 		
 		// xhr form when user hits enter key. as if the continue button were
@@ -158,15 +190,17 @@ dojo.require("hhreg.validation");
 		dojo.connect(form, "onkeypress", function(event) {
 			if(event.keyCode === dojo.keys.ENTER && event.target.tagName.toLowerCase() !== 'textarea') {
 				dojo.stopEvent(event);
-				submitForm(form, formDiv, addLink, callback);
+				continueButton.makeBusy();
+				submitForm({
+					form: form, 
+					formDiv: formDiv, 
+					addLink: addLink, 
+					continueButton: continueButton,
+					callback: callback
+				});
 			}
 		});
 		
-		// xhr form when user clicks continue button.
-		dojo.connect(continueButton, "onclick", function() {
-			submitForm(form, formDiv, addLink, callback);
-		});
-
 		// hide the form when user clicks cancel link.
 		dojo.connect(cancelLink, "onclick", function() {
 			hhreg.validation.removeMessages(form);
@@ -175,6 +209,8 @@ dojo.require("hhreg.validation");
 			
 			dojo.addClass(formDiv, "hide");
 			dojo.removeClass(addLink, "hide");
+			
+			continueButton.cancel();
 			
 			resetForm(form);
 		});
