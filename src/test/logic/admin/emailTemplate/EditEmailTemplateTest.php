@@ -1,20 +1,21 @@
 <?php
 
-class logic_admin_emailTemplate_EditEmailTemplateTest extends PHPUnit_Framework_TestCase
+class logic_admin_emailTemplate_EditEmailTemplateTest extends logic_admin_emailTemplate_Base
 {
-	protected function setUp() {
-		$this->event = db_EventManager::getInstance()->find(1);
+	protected function setUp() { 
+		$emailTemplates = self::$event['emailTemplates'];
+		$this->emailTemplate = current($emailTemplates);
 		$this->logic = new logic_admin_emailTemplate_EditEmailTemplate();
 	}
+	
 	public function testView() {
-		$this->logic->view(1);
+		$this->logic->view($this->emailTemplate['id']);
 	}
 	
 	public function testSaveEmailTemplate() {
-		$emailTemplate = current($this->event['emailTemplates']);
 		$emailField = null;
 		
-		$fields = model_Event::getInformationFields($this->event);
+		$fields = model_Event::getInformationFields(self::$event);
 		foreach($fields as $field) {
 			if($field['formInput']['id'] == model_FormInput::$TEXT) {
 				$emailField = $field;		
@@ -22,7 +23,7 @@ class logic_admin_emailTemplate_EditEmailTemplateTest extends PHPUnit_Framework_
 		}
 		
 		$template = array(
-			'id' => $emailTemplate['id'],
+			'id' => $this->emailTemplate['id'],
 			'enabled' => 'T',
 			'contactFieldId' => $emailField['id'],
 			'fromAddress' => 'unit@test.ccc',
@@ -37,10 +38,8 @@ class logic_admin_emailTemplate_EditEmailTemplateTest extends PHPUnit_Framework_
 		$this->logic->saveEmailTemplate($template, $regTypeIds);
 	}
 	
-	public function testSendTestEmail() {
-		$emailTemplate = current($this->event['emailTemplates']);
-		
-		$this->logic->sendTestEmail($emailTemplate['id'], 'unit@test.ccc');
+	public function testSendTestEmail() { 
+		$this->logic->sendTestEmail($this->emailTemplate['id'], 'unit@test.ccc');
 	}
 }
 

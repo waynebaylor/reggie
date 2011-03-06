@@ -181,6 +181,8 @@ class db_EmailTemplateManager extends db_Manager
 		
 		// create reg type associations.
 		$this->createRegTypeAssociation($emailTemplateId, $regTypeIds);
+		
+		return $emailTemplateId;
 	}
 	
 	public function save($params, $regTypeIds) {

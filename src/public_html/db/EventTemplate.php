@@ -26,11 +26,26 @@ class db_EventTemplate extends db_Manager
 		// create event pages.
 		$visibleToCategoryIds = array(1); // attendee only.
 		$this->createRegTypeTemplatePage($eventId, $visibleToCategoryIds);
-		$this->createContactInfoTemplatePage($eventId, $visibleToCategoryIds);
+		$emailFieldId = $this->createContactInfoTemplatePage($eventId, $visibleToCategoryIds);
 		$this->createConferenceRegTemplatePage($eventId, $visibleToCategoryIds); 
 		$this->createSpecialEventsTemplatePage($eventId, $visibleToCategoryIds);
 		$this->createSurveyTemplatePage($eventId, $visibleToCategoryIds);
 		
+		// create default email template.
+		$this->createEmailTemplate($eventId, $emailFieldId);
+	}
+	
+	private function createEmailTemplate($eventId, $emailFieldId) {
+		db_EmailTemplateManager::getInstance()->createEmailTemplate(array(
+			'eventId' => $eventId,
+			'contactFieldId' => $emailFieldId,
+			'enabled' => 'F',
+			'fromAddress' => '',
+			'bcc' => '',
+			'subject' => 'Thank you for registering.',
+			'header' => '',
+			'footer' => ''
+		), array(-1));	
 	}
 	
 	private function createRegTypeTemplatePage($eventId, $categoryIds) {
@@ -82,7 +97,7 @@ class db_EventTemplate extends db_Manager
 			'regTypeIds' => array(-1)
 		));
 		
-		db_ContactFieldManager::getInstance()->createContactField(array(
+		$emailFieldId = db_ContactFieldManager::getInstance()->createContactField(array(
 			'eventId' => $eventId,
 			'sectionId' => $contactInfoSectionId,
 			'code' => 'email',
@@ -96,6 +111,8 @@ class db_EventTemplate extends db_Manager
 			),
 			'regTypeIds' => array(-1)
 		));
+		
+		return $emailFieldId;
 	}
 
 	private function createConferenceRegTemplatePage($eventId, $categoryIds) {
