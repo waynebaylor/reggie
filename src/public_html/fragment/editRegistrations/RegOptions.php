@@ -85,11 +85,13 @@ _;
 		$value = 0;
 		$comments = '';
 		$priceId = 0;
+		$lastModified = '';
 		
 		foreach($registration['variableQuantity'] as $varQuantity) {
 			if($option['id'] == $varQuantity['variableQuantityId']) {
 				$value = $varQuantity['quantity'];
 				$priceId = $varQuantity['priceId'];
+				$lastModified = "( Last Modified: {$varQuantity['lastModified']} )";
 			}
 		}
 		
@@ -106,6 +108,7 @@ _;
 				</td>
 				<td class="price">
 					{$this->getVarQuantityPrice($option, $priceId)}
+					{$lastModified}
 				</td>
 			</tr>
 _;

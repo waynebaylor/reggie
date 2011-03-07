@@ -316,9 +316,10 @@ class db_reg_RegistrationManager extends db_Manager
 			db_reg_RegOptionManager::getInstance()->cancel($opt['id']);	
 		}
 		
-		// 4. remove all variable quantity options.
+		// 4. set quantity to 0 for all variable quantity options.
 		foreach($registration['variableQuantity'] as $varQuantity) {
-			db_reg_VariableQuantityManager::getInstance()->delete($varQuantity['registrationId'], $varQuantity['variableQuantityId']);
+			$varQuantity['quantity'] = 0;
+			db_reg_VariableQuantityManager::getInstance()->save($varQuantity);
 		}
 	}
 	
