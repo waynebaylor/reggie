@@ -200,6 +200,20 @@ on
 set
 	child.eventId = x.eventId;
 
+-- remove orphaned rows
+
+delete from 
+	RegOptionGroup
+where
+	eventId is null
+and 
+	regOptionId is not null;
+
+delete from 
+	RegOptionGroup
+where
+	eventId is null;
+
 -- apply eventId constraints.
 
 alter table
@@ -261,6 +275,8 @@ alter table
 add column
 	eventId integer;
 
+-- set eventId column value.
+
 update
 	RegOptionPrice
 inner join
@@ -273,6 +289,28 @@ on
 	RegOption_RegOptionPrice.regOptionId = RegOption.id
 set
 	RegOptionPrice.eventId = RegOption.eventId;
+
+update
+	RegOptionPrice
+inner join
+	VariableQuantityOption_RegOptionPrice
+on
+	RegOptionPrice.id = VariableQuantityOption_RegOptionPrice.regOptionPriceId
+inner join
+	VariableQuantityOption
+on
+	VariableQuantityOption_RegOptionPrice.variableQuantityId = VariableQuantityOption.id
+set
+	RegOptionPrice.eventId = VariableQuantityOption.eventId;
+
+-- delete orphaned rows.
+
+delete from
+	RegOptionPrice
+where
+	eventId is null;
+
+-- apply constraints.
 
 alter table
 	RegOptionPrice
