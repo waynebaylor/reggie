@@ -37,7 +37,7 @@ class fragment_XhrTableForm extends template_Template
 								'value' => $this->action
 							))}
 
-							<input type="button" class="button" value="{$this->buttonText}"/>
+							<input type="button" class="button" value="{$this->buttonText}">
 							
 							<div class="xhr-save-success hide">
 								{$this->HTML->img(array(

@@ -23,10 +23,6 @@ class template_admin_EditRegType extends template_AdminPage
 		$edit = new fragment_regType_Edit($this->regType);
 		
 		return <<<_
-			<script type="text/javascript">
-				dojo.require("hhreg.editRegType");
-			</script>
-			
 			<div id="content">
 				{$edit->html()}
 			</div>
