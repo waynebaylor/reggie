@@ -1,4 +1,6 @@
 
+set foreign_key_checks = 0;
+
 drop table if exists RegType_EmailTemplate;
 drop table if exists GroupRegistration_ContactField;
 drop table if exists GroupRegistration;
