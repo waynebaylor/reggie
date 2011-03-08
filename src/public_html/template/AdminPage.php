@@ -84,7 +84,7 @@ _;
 					<td>
 						{$this->getBreadcrumbs()->html()}
 					</td>
-					<td style="text-align:right; padding-right:20px;">
+					<td style="text-align:right;">
 						{$logoutLink}
 					</td>
 				</tr></table>
