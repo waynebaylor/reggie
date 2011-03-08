@@ -81,12 +81,12 @@ _;
 				</div>	
 				
 				<table class="sub-header-links"><tr>
-				<td>
-					{$this->getBreadcrumbs()->html()}
-				</td>
-				<td style="text-align:right; padding:10px 20px 0 0;">
-					{$logoutLink}
-				</td>
+					<td>
+						{$this->getBreadcrumbs()->html()}
+					</td>
+					<td style="text-align:right; padding-right:20px;">
+						{$logoutLink}
+					</td>
 				</tr></table>
 				
 				{$this->getContent()}
