@@ -69,31 +69,6 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 		));
 	}
 	
-	// TODO: this method doesn't belong here. need to conver the home page and move it to 
-	//       that supporting action.
-	public function addEvent() {
-		$errors = validation_Validator::validate(validation_admin_Event::getConfig(), array(
-			'code' => RequestUtil::getValue('code', ''),
-			'regOpen' => RequestUtil::getValue('regOpen', ''),
-			'regClosed' => RequestUtil::getValue('regClosed', '')
-		));
-		
-		if(!empty($errors)) {
-			return new fragment_validation_ValidationErrors($errors);
-		}
-		
-		$event = RequestUtil::getParameters(array('code', 'displayName', 'regOpen', 'regClosed'));
-		
-		$id = db_EventManager::getInstance()->createEvent($event);
-		db_UserManager::getInstance()->setEvent(SessionUtil::getUser(), array('id' => $id));
-		
-		$event = db_EventManager::getInstance()->find($id);
-		
-		FileUtil::createEventDir($event);
-
-		return new fragment_event_List();
-	}
-	
 	public function saveEvent() {
 		$errors = validation_Validator::validate(validation_admin_Event::getConfig(), array(
 			'code' => RequestUtil::getValue('code', ''),

@@ -7,7 +7,7 @@ dojo.require("hhreg.util");
 	dojo.addOnLoad(function() {
 		dojo.query(".fragment-login form").forEach(function(item) { 
 			hhreg.xhrTableForm.bind(item, function() {
-				document.location = hhreg.util.contextUrl("/admin/MainMenu?a=view");
+				document.location = hhreg.util.contextUrl("/admin/dashboard/MainMenu?a=view");
 			});
 		});
 		

@@ -13,7 +13,7 @@ class action_admin_Login extends action_ValidatorAction
 			return new template_admin_Login();			
 		}
 		else {
-			return new template_Redirect('/admin/MainMenu?a=view');
+			return new template_Redirect('/admin/dashboard/MainMenu?a=view');
 		}
 	}
 	

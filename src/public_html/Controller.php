@@ -100,8 +100,8 @@ class Controller
 	private function getAction() {
 		//
 		// there are two ways to indicate the method to execute:
-		// 1) include it in the request - localhost/admin/MainMenu?a=view
-		// 2) DEPRECATED: include it in the request - localhost/admin/MainMenu?action=view
+		// 1) include it in the request - localhost/admin/dashboard/MainMenu?a=view
+		// 2) DEPRECATED: include it in the request - localhost/admin/dashboard/MainMenu?action=view
 		//
 		
 		if(isset($_REQUEST['action'])) {

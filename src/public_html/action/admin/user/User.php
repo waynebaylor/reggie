@@ -31,32 +31,6 @@ class action_admin_user_User extends action_ValidatorAction
 		return new fragment_Success();
 	}
 	
-	public function addUser() {
-		$this->checkRole();
-		
-		$errors = $this->validate(array('email', 'password'));
-		
-		if(!empty($errors)) {
-			return new fragment_validation_ValidationErrors($errors);
-		}
-
-		$user = RequestUtil::getParameters(array('email', 'password'));
-		$user['isAdmin'] = RequestUtil::getValue('isAdmin', 'F');
-		
-		db_UserManager::getInstance()->createUser($user);
-		
-		return new fragment_user_List();
-	}
-	
-	public function removeUser() {
-		$this->checkRole();
-		
-		$user = $this->strictFindById(db_UserManager::getInstance(), RequestUtil::getValue('id', 0));
-		db_UserManager::getInstance()->deleteUser($user);
-
-		return new fragment_user_List();
-	}
-	
 	public function validate($fieldNames = array()) {
 		$errors = parent::validate($fieldNames);
 		
