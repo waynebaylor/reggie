@@ -106,6 +106,21 @@ class db_reg_RegOptionManager extends db_Manager
 		
 		$this->execute($sql, $params, 'Cancel registration option.');
 	}
+	
+	public function deleteByRegistrationId($registrationId) {
+		$sql = '
+			DELETE FROM
+				Registration_RegOption
+			WHERE
+				registrationId = :registrationId
+		';
+		
+		$params = array(
+			'registrationId' => $registrationId
+		);
+		
+		$this->execute($sql, $params, 'Delete registration options.');
+	}
 }
 
 ?>

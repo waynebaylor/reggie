@@ -111,14 +111,30 @@ _;
 					)
 				));
 			}
+			
+			// must cancel registration before you can delete it.
+			$deleteLink = '';
+			if(!empty($r['dateCancelled'])) {
+				$deleteLink = $this->HTML->link(array(
+					'label' => 'Perminantly Delete',
+					'class' => 'delete-registrant',
+					'title' => 'Perminantly delete this registrant',
+					'href' => '/admin/registration/Registration',
+					'parameters' => array(
+						'a' => 'deleteRegistration',
+						'registrationId' => $r['id'],
+						'reportId' => $this->report['id']
+					)
+				));
+			}
 					
 			$html .= <<<_
 				<div class="registrant {$cancelCss}">
 					<div class="registrant-heading">
 						Registrant {$num} {$cancelDate}
 					</div>	
-					<div>
-						{$cancelLink} &nbsp; {$sendEmailLink}
+					<div class="registrant-links">
+						{$cancelLink} {$sendEmailLink} {$deleteLink}
 					</div>
 					
 					<div class="sub-divider"></div>

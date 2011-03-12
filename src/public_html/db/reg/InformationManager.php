@@ -148,6 +148,21 @@ class db_reg_InformationManager extends db_Manager
 		
 		$this->execute($sql, $params, 'Retain information fields by reg type.');
 	}
+	
+	public function deleteByRegistrationId($registrationId) {
+		$sql = '
+			DELETE FROM
+				Registration_Information
+			WHERE
+				registrationId = :registrationId
+		';
+		
+		$params = array(
+			'registrationId' => $registrationId
+		);
+		
+		$this->execute($sql, $params, 'Delete registration information.');
+	}
 }
 
 ?>

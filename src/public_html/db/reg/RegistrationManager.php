@@ -381,6 +381,30 @@ class db_reg_RegistrationManager extends db_Manager
 	public function findTotalCost($registration) {
 		return $this->findRegOptionCost($registration) + $this->findVariableOptionCost($registration);
 	}
+	
+	public function delete($registration) {
+		// delete reg information.
+		db_reg_InformationManager::getInstance()->deleteByRegistrationId($registration['id']);
+		
+		// delete reg options.
+		db_reg_RegOptionManager::getInstance()->deleteByRegistrationId($registration['id']);
+		
+		// delete var quantitiy options.
+		db_reg_VariableQuantityManager::getInstance()->deleteByRegistrationId($registration['id']);
+		
+		$sql = '
+			DELETE FROM
+				Registration
+			WHERE
+				id = :id
+		';
+
+		$params = array(
+			'id' => $registration['id']
+		);
+		
+		$this->execute($sql, $params, 'Delete registration.');
+	}
 }
 
 ?>

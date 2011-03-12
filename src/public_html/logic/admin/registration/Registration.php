@@ -95,6 +95,21 @@ _;
 			}
 		}
 	}
+	
+	public function deleteRegistration($registrationId, $reportId) {
+		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $registrationId);
+		
+		db_reg_RegistrationManager::getInstance()->delete($registration);
+		
+		$regGroup = db_reg_GroupManager::getInstance()->find($registration['regGroupId']);
+		$isGroupEmpty = count($regGroup['registrations']) === 0;
+		
+		return array(
+			'regGroupId' => $registration['regGroupId'],
+			'reportId' => $reportId,
+			'isGroupEmpty' => $isGroupEmpty
+		);
+	}
 }
 
 ?>

@@ -2,10 +2,11 @@
 
 class action_admin_registration_Registration extends action_ValidatorAction
 {
-	private $logic;
-	
 	function __construct() {
+		parent::__construct();
+		
 		$this->logic = new logic_admin_registration_Registration();
+		$this->converter = new viewConverter_admin_registration_Registration();
 	}
 	
 	public function view() {
@@ -106,6 +107,15 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		$this->logic->createNewRegistration($eventId, $categoryId);
 		
 		return new fragment_Success();
+	}
+	
+	public function deleteRegistration() {
+		$registrationId = RequestUtil::getValue('registrationId', 0);
+		$reportId = RequestUtil::getValue('reportId', 0);
+
+		$info = $this->logic->deleteRegistration($registrationId, $reportId);
+		
+		return $this->converter->getDeleteRegistration($info);
 	}
 }
 

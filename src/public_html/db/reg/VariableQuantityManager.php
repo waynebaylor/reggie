@@ -127,6 +127,21 @@ class db_reg_VariableQuantityManager extends db_Manager
 		
 		$this->execute($sql, $params, 'Create variable quantity registration option.');
 	}
+	
+	public function deleteByRegistrationId($registrationId) {
+		$sql = '
+			DELETE FROM
+				Registration_VariableQuantityOption
+			WHERE
+				registrationId = :registrationId
+		';
+		
+		$params = array(
+			'registrationId' => $registrationId
+		);
+		
+		$this->execute($sql, $params, 'Delete variable quantity options.');
+	}
 }
 
 ?>
