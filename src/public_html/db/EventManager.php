@@ -360,6 +360,28 @@ class db_EventManager extends db_Manager
 		
 		return $this->queryUnique($sql, $params, 'Find event by code.');
 	}
+	
+	public function delete($eventId) {
+		// delete appearance, email templates, payment options, group registration.
+		
+		// delete event pages.
+		
+		// delete event registrations.
+		
+		// delete event.
+		$sql = '
+			DELETE FROM
+				Event
+			WHERE
+				id = :id
+		';
+		
+		$params = array(
+			'id' => $eventId
+		);
+		
+		$this->execute($sql, $params, 'Delete event.');
+	}
 }
 
 ?>

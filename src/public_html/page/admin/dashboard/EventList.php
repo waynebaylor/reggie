@@ -32,7 +32,7 @@
 					'label' => 'Edit',
 					'href' => '/admin/event/EditEvent',
 					'parameters' => array(
-						'action' => 'view',
+						'a' => 'view',
 						'id' => $eventInfo['event']['id']
 					),
 					'title' => 'Edit Event'
@@ -42,7 +42,7 @@
 					'label' => 'Reports',
 					'href' => '/admin/report/Report',
 					'parameters' => array(
-						'action' => 'eventReports',
+						'a' => 'eventReports',
 						'id' => $eventInfo['event']['id']
 					),
 					'title' => 'Event Reports'
@@ -52,10 +52,20 @@
 					'label' => 'Files',
 					'href' => '/admin/fileUpload/FileUpload',
 					'parameters' => array(
-						'action' => 'view',
+						'a' => 'view',
 						'id' => $eventInfo['event']['id']
 					),
 					'title' => 'Event Files'
+				)) ?>
+				
+				<?php echo $this->HTML->link(array(
+					'label' => 'Delete',
+					'href' => '/admin/dashboard/ConfirmDeleteEvent',
+					'parameters' => array(
+						'a' => 'view',
+						'id' => $eventInfo['event']['id']
+					),
+					'style' => 'margin-left:15px;'
 				)) ?>
 			</td>
 		</tr>

@@ -19,20 +19,20 @@ class viewConverter_admin_dashboard_MainMenu extends viewConverter_admin_AdminCo
 		return '';
 	}
 	
-	public function getAddEvent($info) {
-		$this->setProperties($info);
+	public function getAddEvent($properties) {
+		$this->setProperties($properties);
 		
 		return new template_TemplateWrapper($this->getFileContents('page_admin_dashboard_EventList'));
 	}
 	
-	public function getAddUser($info) {
-		$this->setProperties($info);
+	public function getAddUser($properties) {
+		$this->setProperties($properties);
 		
 		return new template_TemplateWrapper($this->getFileContents('page_admin_dashboard_UserList'));
 	}
 	
-	public function getRemoveUser($info) {
-		$this->setProperties($info);
+	public function getRemoveUser($properties) {
+		$this->setProperties($properties);
 		
 		return new template_TemplateWrapper($this->getFileContents('page_admin_dashboard_UserList'));
 	}
