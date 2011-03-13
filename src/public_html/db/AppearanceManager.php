@@ -165,6 +165,19 @@ class db_AppearanceManager extends db_Manager
 		
 		$this->execute($sql, $params, 'Save event appearance.');
 	}
+	
+	public function deleteByEventId($eventId) {
+		$sql = '
+			DELETE FROM
+				Appearance
+			WHERE
+				eventId = :eventId
+		';
+		
+		$params = array();
+		
+		$this->execute($sql, $params, 'Delete event appearance.');
+	}
 }
 
 ?>

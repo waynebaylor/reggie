@@ -95,8 +95,7 @@ add constraint
 foreign key
 	(eventId)
 references
-	Event(id)
-on delete cascade;
+	Event(id);
 
 alter table
 	Page
@@ -134,8 +133,7 @@ add constraint
 foreign key
 	(pageId)
 references
-	Page(id)
-on delete cascade;
+	Page(id);
 
 alter table
 	Section
@@ -144,8 +142,7 @@ add constraint
 foreign key
 	(contentTypeId)
 references
-	ContentType(id)
-on delete cascade;
+	ContentType(id);
 
 alter table 
 	Section
@@ -241,8 +238,7 @@ add constraint
 foreign key
 	(parentGroupId)
 references
-	RegOptionGroup(id)
-on delete cascade;
+	RegOptionGroup(id);
 	
 alter table 
 	RegOption
@@ -277,8 +273,7 @@ add constraint
 foreign key
 	(eventId)
 references
-	Event(id)
-on delete cascade;
+	Event(id);
 	
 alter table
 	RegType
@@ -339,8 +334,7 @@ add constraint
 foreign key
 	(regOptionId)
 references
-	RegOption(id)
-on delete cascade;
+	RegOption(id);
 
 alter table
 	RegOption_RegOptionPrice
@@ -349,8 +343,7 @@ add constraint
 foreign key
 	(regOptionPriceId)
 references
-	RegOptionPrice(id)
-on delete cascade;
+	RegOptionPrice(id);
 
 alter table 
 	RegOption_RegOptionPrice
@@ -410,8 +403,7 @@ add constraint
 foreign key
 	(eventId)
 references
-	Event(id)
-on delete cascade;
+	Event(id);
 
 alter table
 	ContactField
@@ -420,8 +412,7 @@ add constraint
 foreign key
 	(sectionId)
 references
-	Section(id)
-on delete cascade;
+	Section(id);
 	
 alter table
 	ContactField
@@ -430,8 +421,7 @@ add constraint
 foreign key
 	(formInputId)
 references
-	FormInput(id)
-on delete cascade;
+	FormInput(id);
 
 alter table 
 	ContactField
@@ -465,8 +455,7 @@ add constraint
 foreign key
 	(regTypeId)
 references
-	RegType(id)
-on delete cascade;
+	RegType(id);
 	
 alter table 
 	RegTypeContactField
@@ -475,8 +464,7 @@ add constraint
 foreign key
 	(contactFieldId)
 references
-	ContactField(id)
-on delete cascade;
+	ContactField(id);
 	
 alter table 
 	RegTypeContactField
@@ -501,8 +489,7 @@ add constraint
 foreign key
 	(categoryId)
 references
-	Category(id)
-on delete cascade;
+	Category(id);
 	
 alter table
 	CategoryRegType
@@ -511,8 +498,7 @@ add constraint
 foreign key
 	(regTypeId)
 references
-	RegType(id)
-on delete cascade;
+	RegType(id);
 	
 alter table 
 	CategoryRegType
@@ -554,8 +540,7 @@ add constraint
 foreign key
 	(contactFieldId)
 references
-	ContactField(id)
-on delete cascade;
+	ContactField(id);
 
 alter table
 	ContactFieldAttribute
@@ -564,8 +549,7 @@ add constraint
 foreign key
 	(attributeId)
 references
-	Attribute(id)
-on delete cascade;
+	Attribute(id);
 		
 alter table
 	ContactFieldAttribute
@@ -607,8 +591,7 @@ add constraint
 foreign key
 	(contactFieldId)
 references
-	ContactField(id)
-on delete cascade;
+	ContactField(id);
 	
 alter table
 	ContactFieldValidation
@@ -617,8 +600,7 @@ add constraint
 foreign key
 	(validationId)
 references
-	Validation(id)
-on delete cascade;
+	Validation(id);
 	
 alter table
 	ContactFieldValidation
@@ -643,8 +625,7 @@ add constraint
 foreign key
 	(formInputId)
 references
-	FormInput(id)
-on delete cascade;
+	FormInput(id);
 	
 alter table
 	FormInputValidation
@@ -653,8 +634,7 @@ add constraint
 foreign key
 	(validationId)
 references
-	Validation(id)
-on delete cascade;
+	Validation(id);
 	
 alter table
 	FormInputValidation
@@ -679,8 +659,7 @@ add constraint
 foreign key
 	(formInputId)
 references
-	FormInput(id)
-on delete cascade;
+	FormInput(id);
 	
 alter table
 	FormInputAttribute
@@ -689,8 +668,7 @@ add constraint
 foreign key
 	(attributeId)
 references
-	Attribute(id)
-on delete cascade;
+	Attribute(id);
 	
 alter table
 	FormInputAttribute
@@ -715,8 +693,7 @@ add constraint
 foreign key
 	(categoryId)
 references
-	Category(id)
-on delete cascade;
+	Category(id);
 	
 alter table
 	Category_Page
@@ -725,8 +702,7 @@ add constraint
 foreign key
 	(pageId)
 references
-	Page(id)
-on delete cascade;
+	Page(id);
 
 alter table
 	Category_Page
@@ -753,8 +729,7 @@ add constraint
 foreign key
 	(contactFieldId)
 references
-	ContactField(id)
-on delete cascade;
+	ContactField(id);
 
 alter table
 	ContactFieldOption
@@ -779,8 +754,7 @@ add constraint
 foreign key
 	(regTypeId)
 references
-	RegType(id)
-on delete cascade;
+	RegType(id);
 
 alter table
 	RegType_RegOptionPrice
@@ -789,8 +763,7 @@ add constraint
 foreign key
 	(regOptionPriceId)
 references
-	RegOptionPrice(id)
-on delete cascade;
+	RegOptionPrice(id);
 
 alter table
 	RegType_RegOptionPrice
@@ -828,8 +801,7 @@ add constraint
 foreign key
 	(sectionId)
 references
-	Section(id)
-on delete cascade;
+	Section(id);
 
 alter table
 	VariableQuantityOption
@@ -861,8 +833,7 @@ add constraint
 foreign key
 	(variableQuantityId)
 references
-	VariableQuantityOption(id)
-on delete cascade;
+	VariableQuantityOption(id);
 
 alter table
 	VariableQuantityOption_RegOptionPrice
@@ -871,8 +842,7 @@ add constraint
 foreign key
 	(regOptionPriceId)
 references
-	RegOptionPrice(id)
-on delete cascade;
+	RegOptionPrice(id);
 
 alter table 
 	VariableQuantityOption_RegOptionPrice
@@ -909,8 +879,7 @@ add constraint
 foreign key
 	(eventId)
 references
-	Event(id)
-on delete cascade;
+	Event(id);
 
 alter table
 	Appearance
@@ -1155,8 +1124,7 @@ add constraint
 foreign key
 	(paymentTypeId)
 references
-	PaymentType(id)
-on delete cascade;
+	PaymentType(id);
 
 alter table 
 	CheckDirections
@@ -1165,8 +1133,7 @@ add constraint
 foreign key
 	(eventId)
 references
-	Event(id)
-on delete cascade;
+	Event(id);
 
 alter table
 	CheckDirections
@@ -1192,8 +1159,7 @@ add constraint
 foreign key
 	(paymentTypeId)
 references
-	PaymentType(id)
-on delete cascade;
+	PaymentType(id);
 
 alter table 
 	PurchaseOrderDirections
@@ -1202,8 +1168,7 @@ add constraint
 foreign key
 	(eventId)
 references
-	Event(id)
-on delete cascade;
+	Event(id);
 
 alter table
 	PurchaseOrderDirections
@@ -1231,8 +1196,7 @@ add constraint
 foreign key
 	(paymentTypeId)
 references
-	PaymentType(id)
-on delete cascade;
+	PaymentType(id);
 
 alter table 
 	AuthorizeNetDirections
@@ -1332,8 +1296,7 @@ add constraint
 foreign key
 	(eventId)
 references
-	Event(id)
-on delete cascade;
+	Event(id);
 
 alter table
 	Report
@@ -1359,8 +1322,7 @@ add constraint
 foreign key
 	(reportId)
 references 
-	Report(id)
-on delete cascade;
+	Report(id);
 
 alter table
 	Report_ContactField
@@ -1369,8 +1331,7 @@ add constraint
 foreign key
 	(contactFieldId)
 references
-	ContactField(id)
-on delete cascade;
+	ContactField(id);
 
 alter table
 	Report_ContactField
@@ -1454,8 +1415,7 @@ add constraint
 foreign key
 	(eventId)
 references
-	Event(id)
-on delete cascade;
+	Event(id);
 
 alter table
 	GroupRegistration
@@ -1480,8 +1440,7 @@ add constraint
 foreign key
 	(groupRegistrationId)
 references
-	GroupRegistration(id)
-on delete cascade;
+	GroupRegistration(id);
 
 alter table
 	GroupRegistration_ContactField
@@ -1490,8 +1449,7 @@ add constraint
 foreign key
 	(contactFieldId)
 references
-	ContactField(id)
-on delete cascade;
+	ContactField(id);
 
 alter table
 	GroupRegistration_ContactField

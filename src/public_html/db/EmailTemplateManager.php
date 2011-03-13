@@ -299,6 +299,13 @@ class db_EmailTemplateManager extends db_Manager
 		
 		$this->execute($sql, $params, 'Delete email template.');
 	}
+	
+	public function deleteByEventId($eventId) {
+		$templates = $this->findByEventId($eventId);
+		foreach($templates as $t) {
+			$this->delete($t['id']);
+		}
+	}
 }
 
 ?>

@@ -51,6 +51,31 @@ class db_reg_RegistrationManager extends db_Manager
 		return $this->queryUnique($sql, $params, 'Find registration.');
 	}
 	
+	public function findByEventId($eventId) {
+		$sql = '
+			SELECT
+				id,
+				dateRegistered,
+				comments,
+				dateCancelled,
+				regGroupId,
+				categoryId,
+				eventId,
+				regTypeId,
+				confirmationNumber
+			FROM
+				Registration
+			WHERE
+				eventId = :eventId
+		';
+		
+		$params = array(
+			'eventId' => $eventId
+		);
+		
+		return $this->query($sql, $params, 'Find registrations by event.');
+	}
+	
 	/**
 	 * creates a row in the registration table for the 
 	 * given registration. this includes the associated
@@ -404,6 +429,14 @@ class db_reg_RegistrationManager extends db_Manager
 		);
 		
 		$this->execute($sql, $params, 'Delete registration.');
+	}
+	
+	public function deleteByEventId($eventId) {
+		$regs = $this->findByEventId($eventId);
+		
+		foreach($regs as $r) {
+			$this->delete($r);
+		}
 	}
 }
 

@@ -98,6 +98,10 @@ class db_ReportManager extends db_Manager
 	}
 	
 	public function findByEvent($event) {
+		return $this->findByEventId($event['id']);
+	}
+	
+	public function findByEventId($eventId) {
 		$sql = '
 			SELECT
 				id,
@@ -117,11 +121,11 @@ class db_ReportManager extends db_Manager
 			FROM
 				Report
 			WHERE
-				eventId=:eventId
+				eventId = :eventId
 		';
 		
 		$params = array(
-			'eventId' => $event['id']
+			'eventId' => $eventId
 		);
 		
 		return $this->query($sql, $params, 'Find reports by event.');
@@ -775,6 +779,14 @@ class db_ReportManager extends db_Manager
 		);
 		
 		return $this->rawQuery($sql, $params, 'Find reg type breakdown.');
+	}
+	
+	public function deleteByEventId($eventId) {
+		$reports = $this->findByEventId($eventId);
+		
+		foreach($reports as $r) {
+			$this->delete($r);
+		}
 	}
 }
 

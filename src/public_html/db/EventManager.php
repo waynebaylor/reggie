@@ -363,10 +363,25 @@ class db_EventManager extends db_Manager
 	
 	public function delete($eventId) {
 		// delete appearance, email templates, payment options, group registration.
+		db_AppearanceManager::getInstance()->deleteByEventId($eventId);
+		db_EmailTemplateManager::getInstance()->deleteByEventId($eventId);
+		db_payment_CheckDirectionsManager::getInstance()->deleteByEventId($eventId);
+		db_payment_PurchaseOrderDirectionsManager::getInstance()->deleteByEventId($eventId);
+		db_payment_AuthorizeNetDirectionsManager::getInstance()->deleteByEventId($eventId);
+		db_GroupRegistrationManager::getInstance()->deleteByEventId($eventId);
+		
+		// delete reg types.
+		db_RegTypeManager::getInstance()->deleteByEventId($eventId);
+		
+		// delete reports.
+		db_ReportManager::getInstance()->deleteByEventId($eventId);
+		
 		
 		// delete event pages.
+		db_PageManager::getInstance()->deleteByEventId($eventId);
 		
 		// delete event registrations.
+		db_reg_RegistrationManager::getInstance()->deleteByEventId($eventId);
 		
 		// delete event.
 		$sql = '

@@ -50,6 +50,10 @@ class db_PageManager extends db_OrderableManager
 	}
 	
 	public function findByEvent($event) {
+		return $this->findByEventId($event['id']);
+	}
+	
+	public function findByEventId($eventId) {
 		$sql = '
 			SELECT 
 				id,
@@ -59,13 +63,13 @@ class db_PageManager extends db_OrderableManager
 			FROM
 				Page
 			WHERE
-				eventId=:eventId
+				eventId = :eventId
 			ORDER BY
 				displayOrder
 		';
 		
 		$params = array(
-			'eventId' => $event['id']
+			'eventId' => $eventId
 		);
 		
 		return $this->query($sql, $params, 'Find pages by event.');
@@ -182,6 +186,14 @@ class db_PageManager extends db_OrderableManager
 			);
 			
 			$this->execute($sql, $params, 'Make page available to category.');
+		}
+	}
+	
+	public function deleteByEventId($eventId) {
+		$pages = $this->findByEventId($eventId);
+		
+		foreach($pages as $page) {
+			db_PageManager::getInstance()->deletePage($page);
 		}
 	}
 }

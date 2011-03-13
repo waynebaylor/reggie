@@ -92,7 +92,7 @@ class db_payment_PurchaseOrderDirectionsManager extends db_Manager
 		$this->execute($sql, $params, 'Create purchase order payment directions.');
 	}
 	
-	public function delete($directions) { 
+	public function deleteByEventId($eventId) { 
 		$sql = '
 			DELETE FROM
 				PurchaseOrderDirections
@@ -101,10 +101,14 @@ class db_payment_PurchaseOrderDirectionsManager extends db_Manager
 		';
 		
 		$params = array(
-			'eventId' => $directions['eventId']
+			'eventId' => $eventId
 		);
 		
 		$this->execute($sql, $params, 'Delete purchase order payment directions.');
+	}
+	
+	public function delete($directions) { 
+		$this->deleteByEventId($directions['eventId']);
 	}
 }
 

@@ -423,6 +423,14 @@ class db_RegTypeManager extends db_OrderableManager
 			return $this->rawQuery($sql, $params, 'Find reg types for which email template is available.');
 		}
 	}
+	
+	public function deleteByEventId($eventId) {
+		$regTypes = $this->findByEventId($eventId);
+		
+		foreach($regTypes as $regType) {
+			$this->delete($regType);
+		}
+	}
 }
 
 ?>

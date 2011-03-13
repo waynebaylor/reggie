@@ -102,7 +102,7 @@ class db_payment_AuthorizeNetDirectionsManager extends db_Manager
 		$this->execute($sql, $params, 'Create Authorize.NET payment directions.');
 	}
 	
-	public function delete($directions) {
+	public function deleteByEventId($eventId) {
 		$sql = '
 			DELETE FROM
 				AuthorizeNetDirections
@@ -111,10 +111,14 @@ class db_payment_AuthorizeNetDirectionsManager extends db_Manager
 		';
 		
 		$params = array(
-			'eventId' => $directions['eventId']
+			'eventId' => $eventId
 		);
 		
 		$this->execute($sql, $params, 'Delete Authorize.NET payment directions.');
+	}
+	
+	public function delete($directions) {
+		$this->deleteByEventId($directions['eventId']);
 	}
 }
 

@@ -103,6 +103,27 @@ class db_GroupRegistrationManager extends db_Manager
 		
 		$this->execute($sql, $params, 'Save event group registration.');
 	}
+	
+	public function deleteByEventId($eventId) {
+		$gr = $this->findByEvent(array('id' => $eventId));
+		
+		foreach($gr['fields'] as $field) {
+			db_GroupRegistrationFieldManager::getInstance()->deleteField($field);
+		}
+		
+		$sql = '
+			DELETE FROM
+				GroupRegistration
+			WHERE
+				eventId = :eventId
+		';
+		
+		$params = array(
+			'eventId' => $eventId
+		);
+		
+		$this->execute($sql, $params, 'Delete group registration for event.');
+	}
 }
 
 ?>
