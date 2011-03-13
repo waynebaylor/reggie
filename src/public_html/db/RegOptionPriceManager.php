@@ -159,6 +159,10 @@ class db_RegOptionPriceManager extends db_Manager
 	}
 	
 	public function delete($price) {
+		// delete reg type associations.
+		$this->removeRegTypes($price['id']);		
+		
+		// delete price.
 		$sql = '
 			DELETE FROM
 				RegOptionPrice

@@ -155,6 +155,28 @@ class db_PageSectionManager extends db_OrderableManager
 	}
 	
 	public function delete($section) {
+		if(model_Section::containsContactFields($section)) {
+			foreach($section['content'] as $field) {
+				db_ContactFieldManager::getInstance()->delete($field);
+			}
+		}
+		else if(model_Section::containsRegOptions($section)) {
+			foreach($section['content'] as $opt) {
+				db_RegOptionManager::getInstance()->delete($opt);
+			}
+		}
+		else if(model_Section::containsRegTypes($section)) {
+			foreach($section['content'] as $regType) {
+				db_RegTypeManager::getInstance()->delete($regType);
+			}
+		}
+		else if(model_Section::containsVariableQuantityOptions($section)) {
+			foreach($section['content'] as $opt) {
+				db_VariableQuantityOptionManager::getInstance()->delete($opt);
+			}
+		}
+		
+		// delete section.
 		$sql = '
 			DELETE FROM
 				Section

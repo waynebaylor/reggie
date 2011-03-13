@@ -372,6 +372,19 @@ class db_ContactFieldManager extends db_OrderableManager
 	}
 	
 	public function delete($field) {
+		// delete attributes.
+		$this->removeAttributes($field);
+		
+		// delete validation rules.
+		$this->removeValidationRules($field);
+		
+		// delete reg type associations.
+		$this->removeRegTypes($field);
+		
+		// delete field options.
+		db_ContactFieldOptionManager::getInstance()->removeOptions($field);
+		
+		// delete field.
 		$sql = '
 			DELETE FROM
 				ContactField

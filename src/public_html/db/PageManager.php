@@ -129,6 +129,26 @@ class db_PageManager extends db_OrderableManager
 	}
 	
 	public function deletePage($page) {
+		// delete category page associations.
+		$sql = '
+			DELETE FROM
+				Category_Page
+			WHERE
+				pageId = :pageId
+		';
+		
+		$params = array(
+			'pageId' => $page['id']
+		);
+		
+		$this->execute($sql, $params, 'Delete category page associations.');
+		
+		// delte sections.
+		foreach($page['sections'] as $section) {
+			db_PageSectionManager::getInstance()->delete($section);
+		}
+		
+		// delete page.
 		$sql = '
 			DELETE FROM
 				Page

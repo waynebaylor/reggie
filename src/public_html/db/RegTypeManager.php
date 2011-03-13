@@ -159,6 +159,10 @@ class db_RegTypeManager extends db_OrderableManager
 	}
 	
 	public function delete($regType) {
+		// delete category associations.
+		$this->removeRegTypeCategories($regType['id']);
+		
+		// delete reg type.
 		$sql = '
 			DELETE FROM
 				RegType
@@ -181,8 +185,7 @@ class db_RegTypeManager extends db_OrderableManager
 		$this->moveDown($regType, 'sectionId', $regType['sectionId']);
 	}
 	
-	private function makeRegTypeAvailableTo($regTypeId, $categoryIds) {
-		// remove existing mappings.
+	private function removeRegTypeCategories($regTypeId) {
 		$sql = '
 			DELETE FROM
 				CategoryRegType
@@ -195,6 +198,11 @@ class db_RegTypeManager extends db_OrderableManager
 		);
 		
 		$this->execute($sql, $params, 'Make reg type unavailable.');
+	}
+	
+	private function makeRegTypeAvailableTo($regTypeId, $categoryIds) {
+		// remove existing mappings.
+		$this->removeRegTypeCategories($regTypeId);
 		
 		// add new mappings.
 		$sql = '
