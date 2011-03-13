@@ -106,6 +106,20 @@ class db_VariableQuantityOptionManager extends db_OrderableManager
 	}
 	
 	public function delete($option) {
+		// delete price associations.
+		$sql = '
+			DELETE FROM
+				VariableQuantityOption_RegOptionPrice
+			WHERE
+				variableQuantityId = :variableQuantityId
+		';
+		
+		$params = array(
+			'variableQuantityId' => $option['id']
+		);
+		
+		$this->execute($sql, $params, 'Delete option price associations.');
+		
 		// delete prices.
 		foreach($option['prices'] as $price) {
 			db_RegOptionPriceManager::getInstance()->delete($price);

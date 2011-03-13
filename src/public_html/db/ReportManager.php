@@ -155,6 +155,21 @@ class db_ReportManager extends db_Manager
 	}
 	
 	public function deleteReport($report) {
+		// delete report fields.
+		$sql = '
+			DELETE FROM
+				Report_ContactField
+			WHERE
+				reportId = :reportId
+		';
+		
+		$params = array(
+			'reportId' => $report['id']
+		);
+		
+		$this->execute($sql, $params, 'Delete report fields.');
+		
+		// delete report.
 		$sql = '
 			DELETE FROM
 				Report
@@ -785,7 +800,7 @@ class db_ReportManager extends db_Manager
 		$reports = $this->findByEventId($eventId);
 		
 		foreach($reports as $r) {
-			$this->delete($r);
+			$this->deleteReport($r);
 		}
 	}
 }

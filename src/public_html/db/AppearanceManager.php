@@ -174,7 +174,9 @@ class db_AppearanceManager extends db_Manager
 				eventId = :eventId
 		';
 		
-		$params = array();
+		$params = array(
+			'eventId' => $eventId
+		);
 		
 		$this->execute($sql, $params, 'Delete event appearance.');
 	}

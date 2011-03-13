@@ -159,9 +159,48 @@ class db_RegTypeManager extends db_OrderableManager
 	}
 	
 	public function delete($regType) {
+		/////////////////////////////////////////////////////////////////////////////////
+		// delete information field associations.
+		$sql = '
+			DELETE FROM
+				RegTypeContactField
+			WHERE
+				regTypeId = :regTypeId
+		';
+		
+		$params = array(
+			'regTypeId' => $regType['id']
+		);
+		
+		$this->execute($sql, $params, 'Delete information field associations.');
+		
+		/////////////////////////////////////////////////////////////////////////////////
+		// delete email template associations.
+		$sql = '
+			DELETE FROM
+				RegType_EmailTemplate
+			WHERE
+				regTypeId = :regTypeId
+		';
+		
+		$this->execute($sql, $params, 'Delete email template associations.');
+		
+		/////////////////////////////////////////////////////////////////////////////////
+		// delete reg option price associations.
+		$sql = '
+			DELETE FROM
+				RegType_RegOptionPrice
+			WHERE
+				regTypeId = :regTypeId
+		';
+		
+		$this->execute($sql, $params, 'Delete reg option price associations.');
+		
+		/////////////////////////////////////////////////////////////////////////////////
 		// delete category associations.
 		$this->removeRegTypeCategories($regType['id']);
 		
+		/////////////////////////////////////////////////////////////////////////////////
 		// delete reg type.
 		$sql = '
 			DELETE FROM

@@ -161,8 +161,8 @@ class db_PageSectionManager extends db_OrderableManager
 			}
 		}
 		else if(model_Section::containsRegOptions($section)) {
-			foreach($section['content'] as $opt) {
-				db_RegOptionManager::getInstance()->delete($opt);
+			foreach($section['content'] as $optGroup) {
+				db_GroupManager::getInstance()->delete($optGroup);
 			}
 		}
 		else if(model_Section::containsRegTypes($section)) {

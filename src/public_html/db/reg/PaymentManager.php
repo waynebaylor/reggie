@@ -308,6 +308,21 @@ class db_reg_PaymentManager extends db_Manager
 		
 		$this->execute($sql, $params, 'Save purchase order payment.');
 	}
+	
+	public function deleteByEventId($eventId) {
+		$sql = '
+			DELETE FROM
+				Payment
+			WHERE
+				eventId = :eventId
+		';
+		
+		$params = array(
+			'eventId' => $eventId
+		);
+		
+		$this->execute($sql, $params, 'Delete event payments.');
+	}
 }
 
 ?>

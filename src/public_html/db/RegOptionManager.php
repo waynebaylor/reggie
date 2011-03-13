@@ -157,6 +157,20 @@ class db_RegOptionManager extends db_OrderableManager
 			db_GroupManager::getInstance()->deleteById($group['id']);
 		}		
 		
+		// delete the price associations.
+		$sql = '
+			DELETE FROM
+				RegOption_RegOptionPrice
+			WHERE
+				regOptionId = :regOptionId
+		';
+		
+		$params = array(
+			'regOptionId' => $option['id']
+		);
+		
+		$this->execute($sql, $params, 'Delete option price associations.');
+		
 		// delete the option's prices.
 		foreach($option['prices'] as $price) {
 			db_RegOptionPriceManager::getInstance()->delete($price);

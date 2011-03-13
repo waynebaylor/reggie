@@ -361,28 +361,48 @@ class db_EventManager extends db_Manager
 		return $this->queryUnique($sql, $params, 'Find event by code.');
 	}
 	
-	public function delete($eventId) {
+	public function delete($eventId) {   
+		/////////////////////////////////////////////////////////////////////////////////
+		// delete event payments.
+		db_reg_PaymentManager::getInstance()->deleteByEventId($eventId);
+		
+		/////////////////////////////////////////////////////////////////////////////////
+		// delete event registrations.
+		db_reg_RegistrationManager::getInstance()->deleteByEventId($eventId);
+		
+		/////////////////////////////////////////////////////////////////////////////////
+		// delete reports.
+		db_ReportManager::getInstance()->deleteByEventId($eventId);
+		
+		/////////////////////////////////////////////////////////////////////////////////
+		// delete user associations.
+		$sql = '
+			DELETE FROM
+				User_Event
+			WHERE
+				eventId = :eventId
+		';
+		
+		$params = array(
+			'eventId' => $eventId
+		);
+		
+		$this->execute($sql, $params, 'Delete user associations.');
+		
+		/////////////////////////////////////////////////////////////////////////////////
 		// delete appearance, email templates, payment options, group registration.
-		db_AppearanceManager::getInstance()->deleteByEventId($eventId);
+		db_AppearanceManager::getInstance()->deleteByEventId($eventId);    
 		db_EmailTemplateManager::getInstance()->deleteByEventId($eventId);
-		db_payment_CheckDirectionsManager::getInstance()->deleteByEventId($eventId);
+		db_payment_CheckDirectionsManager::getInstance()->deleteByEventId($eventId);   
 		db_payment_PurchaseOrderDirectionsManager::getInstance()->deleteByEventId($eventId);
 		db_payment_AuthorizeNetDirectionsManager::getInstance()->deleteByEventId($eventId);
 		db_GroupRegistrationManager::getInstance()->deleteByEventId($eventId);
 		
-		// delete reg types.
-		db_RegTypeManager::getInstance()->deleteByEventId($eventId);
-		
-		// delete reports.
-		db_ReportManager::getInstance()->deleteByEventId($eventId);
-		
-		
+		/////////////////////////////////////////////////////////////////////////////////
 		// delete event pages.
 		db_PageManager::getInstance()->deleteByEventId($eventId);
 		
-		// delete event registrations.
-		db_reg_RegistrationManager::getInstance()->deleteByEventId($eventId);
-		
+		/////////////////////////////////////////////////////////////////////////////////
 		// delete event.
 		$sql = '
 			DELETE FROM
