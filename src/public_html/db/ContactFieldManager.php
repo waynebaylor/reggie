@@ -372,18 +372,53 @@ class db_ContactFieldManager extends db_OrderableManager
 	}
 	
 	public function delete($field) {
+		////////////////////////////////////////////////////////////////////
 		// delete attributes.
 		$this->removeAttributes($field);
 		
+		////////////////////////////////////////////////////////////////////
 		// delete validation rules.
 		$this->removeValidationRules($field);
 		
+		////////////////////////////////////////////////////////////////////
 		// delete reg type associations.
 		$this->removeRegTypes($field);
 		
+		////////////////////////////////////////////////////////////////////
 		// delete field options.
 		db_ContactFieldOptionManager::getInstance()->removeOptions($field);
 		
+		//////////////////////////////////////////////////////////////////////
+		// delete group registration associations.
+		$sql = '
+			DELETE FROM
+				GroupRegistration_ContactField
+			WHERE
+				contactFieldId = :contactFieldId
+		';
+		
+		$params = array(
+			'contactFieldId' => $field['id']
+		);
+		
+		$this->execute($sql, $params, 'Delete group registration associations.');
+		
+		////////////////////////////////////////////////////////////////////
+		// delete report associations.
+		$sql = '
+			DELETE FROM
+				Report_ContactField
+			WHERE
+				contactFieldId = :contactFieldId
+		';
+		
+		$params = array(
+			'contactFieldId' => $field['id']
+		);
+		
+		$this->execute($sql, $params, 'Delete report associations.');
+		
+		////////////////////////////////////////////////////////////////////
 		// delete field.
 		$sql = '
 			DELETE FROM
