@@ -39,8 +39,17 @@ class viewConverter_admin_report_GenerateReport extends viewConverter_admin_Admi
 		}
 		
 		$fileName = preg_replace('/\s+/', '_', $this->info['reportName']).'.csv';
+		
 		header('Content-Type: text/csv');
-		header("Content-Disposition: attachment; filename=\"{$fileName}\"");
+		
+		// f'n IE doesn't recognize it as a downloadable so we have to do 
+		// something special.
+		if(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE')) {
+			header("Content-Disposition: inline; filename=\"{$fileName}\"");
+		}
+		else {
+			header("Content-Disposition: attachment; filename=\"{$fileName}\"");
+		}
 		
 		return new template_TemplateWrapper($text);		
 	}
