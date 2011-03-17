@@ -47,7 +47,7 @@ class action_admin_regOption_RegOption extends action_ValidatorAction
 		
 		db_RegOptionManager::getInstance()->delete($option);
 		
-		$group = $this->getGroup($option['parentGroupId']);
+		$group = db_GroupManager::getInstance()->find($option['parentGroupId']);
 		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
 		
 		return new fragment_sectionRegOption_List($event, $group);
@@ -58,7 +58,7 @@ class action_admin_regOption_RegOption extends action_ValidatorAction
 		
 		db_RegOptionManager::getInstance()->moveOptionUp($option);
 		
-		$group = $this->getGroup($option['parentGroupId']);
+		$group = db_GroupManager::getInstance()->find($option['parentGroupId']);
 		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
 		
 		return new fragment_sectionRegOption_List($event, $group);
@@ -69,7 +69,7 @@ class action_admin_regOption_RegOption extends action_ValidatorAction
 		
 		db_RegOptionManager::getInstance()->moveOptionDown($option);
 		
-		$group = $this->getGroup($option['parentGroupId']);
+		$group = db_GroupManager::getInstance()->find($option['parentGroupId']);
 		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
 		
 		return new fragment_sectionRegOption_List($event, $group);
