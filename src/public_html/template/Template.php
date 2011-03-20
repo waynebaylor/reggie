@@ -11,7 +11,7 @@ abstract class template_Template
 	public abstract function html();
 	
 	protected function escapeHtml($text) {
-		return htmlspecialchars($text);			
+		return htmlentities($text, ENT_QUOTES, 'UTF-8');
 	}
 	
 	protected function contextUrl($url) {
