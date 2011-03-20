@@ -32,7 +32,18 @@ class action_admin_regOption_VariableQuantity extends action_ValidatorAction
 		));
 		$option['eventId'] = $section['eventId'];
 		
-		db_VariableQuantityOptionManager::getInstance()->createOption($option);
+		$newVarOptId = db_VariableQuantityOptionManager::getInstance()->createOption($option);
+		
+		// create default $0 price for new option.
+		db_RegOptionPriceManager::getInstance()->createVariableQuantityPrice(array(
+			'eventId' => $option['eventId'],
+			'regOptionId' => $newVarOptId,
+			'description' => 'free',
+			'startDate' => date(db_Manager::$DATE_FORMAT),
+			'endDate' => date(db_Manager::$DATE_FORMAT, time()+604800),
+			'price' => '0.00',
+			'regTypeIds' => array(-1)
+		));
 		
 		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
 		$section = db_PageSectionManager::getInstance()->find($section['id']);
