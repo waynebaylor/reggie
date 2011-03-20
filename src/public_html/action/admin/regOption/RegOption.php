@@ -34,7 +34,18 @@ class action_admin_regOption_RegOption extends action_ValidatorAction
 		$option['defaultSelected'] = RequestUtil::getValue('defaultSelected', 'F');
 		$option['showPrice'] = RequestUtil::getValue('showPrice', 'F');
 		
-		db_RegOptionManager::getInstance()->createRegOption($option);
+		$newOptionId = db_RegOptionManager::getInstance()->createRegOption($option);
+		
+		// create default $0 price for new option.
+		db_RegOptionPriceManager::getInstance()->createRegOptionPrice(array(
+			'eventId' => $option['eventId'],
+			'regOptionId' => $newOptionId,
+			'description' => 'free',
+			'startDate' => date(db_Manager::$DATE_FORMAT),
+			'endDate' => date(db_Manager::$DATE_FORMAT, time()+604800),
+			'price' => '0.00',
+			'regTypeIds' => array(-1)
+		));
 		
 		$group = db_GroupManager::getInstance()->find($group['id']);
 		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
