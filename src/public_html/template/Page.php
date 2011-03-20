@@ -11,6 +11,8 @@ abstract class template_Page extends template_Template
 	protected function body() {}
 	
 	public function html() {
+		header('Content-Type: text/html; charset=utf-8');
+		
 		return <<<_
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
