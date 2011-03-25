@@ -536,7 +536,7 @@ class db_ReportManager extends db_Manager
 				Report.id = :reportId
 			ORDER BY
 				Registration.dateRegistered
-			DESC
+			ASC
 		';
 		
 		$params = array(
