@@ -55,11 +55,11 @@ _;
 					'id' => $option['id']
 				)
 			));
+
+			$capacity = !empty($option['capacity'])? 'Capacity: '.$this->escapeHtml($option['capacity']) : '';
 			
-			$evenRow = !$evenRow;
-			$rowClass = $evenRow? 'even' : 'odd';
 			$html .= <<<_
-				<tr class="{$rowClass}">
+				<tr>
 					<td>
 						{$arrows->html()}
 					</td>
@@ -70,7 +70,7 @@ _;
 						{$this->escapeHtml($option['code'])}
 					</td>
 					<td>
-						Capacity: {$this->escapeHtml($option['capacity'])}
+						{$capacity}
 					</td>
 					<td>
 						{$this->HTML->link(array(
