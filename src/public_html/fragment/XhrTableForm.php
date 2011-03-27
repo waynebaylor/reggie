@@ -24,7 +24,7 @@ class fragment_XhrTableForm extends template_Template
 				dojo.require("hhreg.xhrTableForm");
 			</script>
 			
-			<form method="post" class="save-form" action="{$this->contextUrl($this->url)}">
+			<form method="post" name="{$this->action}" action="{$this->contextUrl($this->url)}">
 				<table class="xhr-table-form">
 					{$this->rows}
 					<tr>

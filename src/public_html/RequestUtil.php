@@ -16,6 +16,10 @@ class RequestUtil
 		return is_array($value)? $value[0] : $value;		
 	}
 	
+	public static function getValues($defaults) {
+		return ArrayUtil::getValues($_REQUEST, $defaults);
+	}
+	
 	/**
 	 * Returns the request scope array associated with the
 	 * given key name. if there is only one value associated 

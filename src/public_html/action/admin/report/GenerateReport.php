@@ -29,6 +29,25 @@ class action_admin_report_GenerateReport extends action_ValidatorAction
 			'info' => $reportInfo
 		));
 	}
+	
+	public function search() {
+		$reportId = RequestUtil::getValue('reportId', 0);
+		$eventId = RequestUtil::getValue('eventId', 0);
+		$term = RequestUtil::getValue('term', '');
+		$field = RequestUtil::getValue('field', '');
+		
+		error_log(print_r(array($reportId, $eventId, $term, $field), true));
+		
+		
+		
+		
+		$reportInfo = $this->logic->view($reportId);
+		
+		return $this->converter->getView(array(
+			'title' => $reportInfo['reportName'],
+			'info' => $reportInfo
+		));
+	}
 }
 
 ?>

@@ -3,32 +3,72 @@
 	dojo.require("hhreg.dialog");
 	dojo.require("hhreg.xhrTableForm");
 	dojo.require("hhreg.util");
+	dojo.require("dijit.form.Button");
 
 	dojo.addOnLoad(function() {
-		var triggerLink = dojo.byId("create-reg-link");
-		if(triggerLink) {
-			var content = dojo.byId("create-reg-content");
-			var form = dojo.query("form", content)[0];
+		// create registration link and form dialog.
+		var createRegLink = dojo.byId("create-reg-link");
+		if(createRegLink) {
+			var createRegContent = dojo.byId("create-reg-content");
+			var createRegForm = dojo.query("form", createRegContent)[0];
 			var redirectUrl = dojo.byId("create-reg-redirect").value;
 			
-			var dialog = hhreg.dialog.create({
+			var createRegDialog = hhreg.dialog.create({
 				title: "Create New Registration",
-				trigger: triggerLink,
-				content: content,
+				trigger: createRegLink,
+				content: createRegContent,
 				onClose: function() {
-					hhreg.xhrTableForm.hideIcons(form)
+					hhreg.xhrTableForm.hideIcons(createRegForm)
 				}
 			});
 			
-			hhreg.xhrTableForm.bind(form, function() { 
-				dialog.hide();
+			hhreg.xhrTableForm.bind(createRegForm, function() { 
+				createRegDialog.hide();
 				document.location = hhreg.util.contextUrl(redirectUrl);
 			});
 		}
+
+		// search link and form dialog.
+		var searchLink = dojo.byId("search-form-link");
+		var searchContent = dojo.byId("search-form-content");
+		var searchForm = dojo.query("form", searchContent)[0];
+
+		var searchDialog = hhreg.dialog.create({
+			title: "Search Report",
+			trigger: searchLink,
+			content: searchContent
+		});		
+
+		var plainSearchButton = dojo.query("input[type=button]", searchContent)[0];
+		var searchButton = new dijit.form.Button({
+			label: plainSearchButton.value,
+			onClick: function() {
+				searchForm.submit();
+			}
+		}, plainSearchButton);
+		searchButton.startup();
+
+		dojo.connect(searchForm, "onkeypress", function(event) {
+			if(event.keyCode === dojo.keys.ENTER && event.target.tagName.toLowerCase() !== 'textarea') {
+				dojo.stopEvent(event);
+				searchForm.submit();
+			}
+		});
 	});
 </script>
 
 <div id="content">
+
+	<span id="search-form-link" class="link">Search</span>
+	<div id="search-form-content" class="hide">
+		<?php echo $this->tableForm(         
+			'/admin/report/GenerateReport',
+			'search',
+			$this->getFileContents('page_admin_report_SearchForm'),
+			'Search'
+		) ?>
+	</div>
+
 	<h3>
 		<?php echo $this->title ?>
 	</h3>

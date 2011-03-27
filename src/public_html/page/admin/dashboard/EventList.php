@@ -40,9 +40,9 @@
 				
 				<?php echo $this->HTML->link(array(
 					'label' => 'Reports',
-					'href' => '/admin/report/Report',
+					'href' => '/admin/report/Reports',
 					'parameters' => array(
-						'a' => 'eventReports',
+						'a' => 'view',
 						'id' => $eventInfo['event']['id']
 					),
 					'title' => 'Event Reports'

@@ -36,13 +36,18 @@ abstract class viewConverter_ViewConverter
 		return $contents;
 	}
 	
-	protected function xhrTableForm($url, $action, $rows) {
-		$form = new fragment_XhrTableForm($url, $action, $rows);
+	protected function xhrTableForm($url, $action, $rows, $buttonText = 'Save') {
+		$form = new fragment_XhrTableForm($url, $action, $rows, $buttonText);
 		return $form->html();
 	}
 	
 	protected function xhrAddForm($link, $url, $action, $rows) {
 		$form = new fragment_XhrAddForm($link, $url, $action, $rows);
+		return $form->html();
+	}
+	
+	protected function tableForm($url, $action, $rows, $buttonText) {
+		$form = new fragment_TableForm($url, $action, $rows, $buttonText);
 		return $form->html();
 	}
 	

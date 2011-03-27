@@ -46,6 +46,16 @@ class ArrayUtil
 	public static function getValue($arr, $name, $default) {
 		return isset($arr[$name])? $arr[$name] : $default;
 	}
+	
+	public static function getValues($arr, $nameDefaults) {
+		$values = array();
+		
+		foreach($nameDefaults as $name => $default) {
+			$values[$name] = self::getValue($arr, $name, $default);
+		}
+		
+		return $values;
+	}
 }
 
 ?>

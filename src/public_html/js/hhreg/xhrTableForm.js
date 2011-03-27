@@ -101,7 +101,7 @@ dojo.require("hhreg.validation");
 	};
 	
 	xhrTableForm.bind = function(/*DOM Node[form]*/ form, /*function(optional)*/ callback) {
-		var button = dojo.query("input[type=button]", form)[0]; console.log(button);
+		var button = dojo.query("input[type=button]", form)[0]; 
 		var saveButton = new dojox.form.BusyButton({
 			label: button.value,
 			busyLabel: "Processing...",

@@ -345,9 +345,9 @@ _;
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
 				'label' => "Reports ({$this->config['eventCode']})",
-				'href' => '/admin/report/Report',
+				'href' => '/admin/report/Reports',
 				'parameters' => array(
-					'a' => 'eventReports',
+					'a' => 'view',
 					'id' => $this->config['eventId']
 				)
 			))}	
@@ -428,9 +428,9 @@ _;
 			{$this->SEPARATOR}
 			{$this->HTML->link(array(
 				'label' => "Reports ({$this->config['eventCode']})",
-				'href' => '/admin/report/Report',
+				'href' => '/admin/report/Reports',
 				'parameters' => array(
-					'a' => 'eventReports',
+					'a' => 'view',
 					'id' => $this->config['eventId']
 				)
 			))}	

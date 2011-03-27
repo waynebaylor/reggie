@@ -1,53 +1,8 @@
 <?php
 
-class fragment_report_field_Add extends template_Template
+class fragment_reportField_HTML
 {
-	private $event;
-	private $report;
-	
-	function __construct($event, $report) {
-		parent::__construct();
-		
-		$this->event = $event;
-		$this->report = $report;
-	}
-	
-	public function html() {
-		$form = new fragment_XhrAddForm(
-			'Add Field',
-			'/admin/report/ReportField',
-			'addField',
-			$this->getFormRows()
-		);
-			
-		return <<<_
-			<div class="fragment-add">
-				{$form->html()}
-			</div>
-_;
-	}
-	
-	private function getFormRows() {
-		return <<<_
-			<tr>
-				<td class="required label">Field</td>
-				<td>
-					{$this->HTML->hidden(array(
-						'name' => 'reportId',
-						'value' => $this->report['id']
-					))}
-					
-					{$this->HTML->select(array(
-						'name' => 'contactFieldId',
-						'value' => '',
-						'items' => $this->getFields()
-					))}
-				</td>
-			</tr>
-_;
-	}
-	
-	private function getFields() {
+	public static function select($event) {
 		$opts = array();
 		
 		// general registrant info comes first.
@@ -76,9 +31,9 @@ _;
 		// group all the information fields by section id.
 		$sectionFields = array();
 		
-		$fields = model_Event::getInformationFields($this->event);
+		$fields = model_Event::getInformationFields($event);
 		foreach($fields as $field) {
-			$section = model_Event::getSectionById($this->event, $field['sectionId']);
+			$section = model_Event::getSectionById($event, $field['sectionId']);
 			
 			if(empty($sectionFields[$section['id']])) {
 				$sectionFields[$section['id']] = array();
@@ -91,7 +46,7 @@ _;
 		}
 		
 		foreach($sectionFields as $sectionId => $fields) {
-			$section = model_Event::getSectionById($this->event, $sectionId);
+			$section = model_Event::getSectionById($event, $sectionId);
 			$opts[] = array(
 				'label' => $section['name'],
 				'value' => $fields
@@ -117,8 +72,13 @@ _;
 			)
 		);
 		
-		return $opts;
-	}
+		$html = new HTML();
+		return $html->select(array(
+			'name' => 'contactFieldId',
+			'value' => '',
+			'items' => $opts
+		));
+	}	
 }
 
 ?>
