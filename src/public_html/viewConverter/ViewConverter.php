@@ -1,30 +1,57 @@
 <?php
 
+/**
+ * 
+ * A View Converter provides the presentation content in response to a user's action. This
+ * base class implements a template for viewing a page (see the getView method) and makes 
+ * various utilities available to sub-classes.
+ * 
+ * @author wtaylor
+ *
+ */
 abstract class viewConverter_ViewConverter
 {
 	protected $HTML;
 	
-	/**
-	 * required properties: title.
-	 */
 	function __construct() {
 		$this->HTML = new HTML();	
 	}
 	
+	/**
+	 * Set the given key/values as dynamic properties. 
+	 * @param array $properties the property names/values to set
+	 */
 	protected function setProperties($properties) {
 		foreach($properties as $name => $value) {
 			$this->$name = $value;
 		}
 	}
 		
+	/**
+	 * Utility method for escaping text. This should be used to sanitize any
+	 * text content entered by the user.
+	 * @param string $text the text
+	 * @return string
+	 */
 	protected function escapeHtml($text) {
 		return htmlentities($text, ENT_QUOTES, 'UTF-8');		
 	}
 	
+	/**
+	 * Utility method for prefixing the given URL with the application's
+	 * context. This method also acts as an alias for use in heredocs.
+	 * @param string $url the URL 
+	 * @return string
+	 */
 	protected function contextUrl($url) {
 		return Reggie::contextUrl($url);
 	}
 	
+	/**
+	 * Utility method for reading the contents of the given file. 
+	 * @param string $name the file name
+	 * @return string
+	 */
 	protected function getFileContents($name) {
 		$file = str_replace('_', '/', $name).'.php';
 		
@@ -36,30 +63,84 @@ abstract class viewConverter_ViewConverter
 		return $contents;
 	}
 	
+	/**
+	 * Alias needed for use in heredocs. Returns the HTML/JS for a table-based
+	 * form layout. Form submission is done via Ajax.
+	 *  
+	 * @param string $url the form's action attribute value
+	 * @param string $action the server-side action to perform
+	 * @param string $rows HTML fragment
+	 * @param string $buttonText the text to display in the submit button
+	 * @return string
+	 */
 	protected function xhrTableForm($url, $action, $rows, $buttonText = 'Save') {
 		$form = new fragment_XhrTableForm($url, $action, $rows, $buttonText);
 		return $form->html();
 	}
 	
+	/**
+	 * Alias needed for use in heredocs. Returns the HTML for a table-based form
+	 * whose visibility is triggered by a click on a link. Form submission is 
+	 * done via Ajax.
+	 *
+	 * @param string $link the text used in the trigger to display the form
+	 * @param string $url the form's action attribute value
+	 * @param string $action the server-side action to perform
+	 * @param string $rows HTML fragment
+	 * @return string
+	 */
 	protected function xhrAddForm($link, $url, $action, $rows) {
 		$form = new fragment_XhrAddForm($link, $url, $action, $rows);
 		return $form->html();
 	}
 	
+	/**
+	 * Alias needed for use in heredocs. Returns the HTML for a table-based
+	 * form layout. Form submission is standard--no Ajax.
+	 * 
+	 * @param string $url the form's action attribute value
+	 * @param string $action the server-side action to perform
+	 * @param string $rows HTML fragment
+	 * @param string $buttonText the text to display in the submit button
+	 * @return string
+	 */
 	protected function tableForm($url, $action, $rows, $buttonText) {
 		$form = new fragment_TableForm($url, $action, $rows, $buttonText);
 		return $form->html();
 	}
-	
+
+	/**
+	 * Alias needed for use in heredocs. Returns the HTML for a pair of up/down 
+	 * arrows.
+	 *
+	 * @param array $config the arrow configuration
+	 */
 	protected function arrows($config) {
 		$arrows = new fragment_Arrows($config);
 		return $arrows->html();
 	}
 	
+	/**
+	 * Additional content for the HTML document's head.
+	 * 
+	 * @return string
+	 */
 	protected abstract function head();
 	
+	/**
+	 * Additional content for the HTML document's body.
+	 *
+	 * @return string
+	 */
 	protected abstract function body();
 	
+	/**
+	 * Returns the HTML for viewing a page. This includes all standard CSS and JavaScript needed
+	 * in general. Additional includes can be made by implementing the head and/or body methods.
+	 * 
+	 * @param array $properties dynamic properties used to create the HTML
+	 * @return template_Template
+	 */
 	public function getView($properties) {
 		$this->setProperties($properties);
 

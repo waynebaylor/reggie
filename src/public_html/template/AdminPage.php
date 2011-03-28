@@ -65,17 +65,6 @@ _;
 		
 		return <<<_
 			<div id="body">
-				<script type="text/javascript">
-					dojo.addOnLoad(function() { 
-						// cancel button
-						if(dojo.byId("cancelButton")) {
-							dojo.connect(dojo.byId("cancelButton"), "onclick", function() {
-								history.back();
-							});
-						}
-					});
-				</script>
-		
 				<div id="header">
 					{$banner}
 				</div>	

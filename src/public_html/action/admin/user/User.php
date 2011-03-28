@@ -1,11 +1,22 @@
 <?php
 
+/**
+ * 
+ * Aggregation of User related actions.
+ * 
+ * @author wtaylor
+ *
+ */
 class action_admin_user_User extends action_ValidatorAction
 {
 	function __construct() {
 		parent::__construct();
 	}
 	
+	/**
+	 * View the Edit User page.
+	 * @return template_Template
+	 */
 	public function view() {
 		$this->checkRole();
 		
@@ -14,6 +25,10 @@ class action_admin_user_User extends action_ValidatorAction
 		return new template_admin_EditUser($user);
 	}
 	
+	/**
+	 * Save changes to an existing user.
+	 * @return template_Template
+	 */
 	public function saveUser() {
 		$this->checkRole();
 		
@@ -30,7 +45,11 @@ class action_admin_user_User extends action_ValidatorAction
 		
 		return new fragment_Success();
 	}
-	
+
+	/**
+	 * (non-PHPdoc)
+	 * @see action_ValidatorAction::validate()
+	 */
 	public function validate($fieldNames = array()) {
 		$errors = parent::validate($fieldNames);
 		
@@ -53,6 +72,7 @@ class action_admin_user_User extends action_ValidatorAction
 		
 		return $errors;
 	}
+	
 	protected function getValidationConfig() {
 		return array(
 			array(
@@ -78,6 +98,10 @@ class action_admin_user_User extends action_ValidatorAction
 		);
 	}
 	
+	/**
+	 * Check if the current user is an administrator. 
+	 * @throws Exception if user is not administrator
+	 */
 	private function checkRole() {
 		$user = SessionUtil::getUser();
 		if(!SecurityUtil::isAdmin($user)) {

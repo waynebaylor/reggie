@@ -1,11 +1,14 @@
 <?php
 
+/**
+ * 
+ * Presentation base class for administrative pages.
+ * 
+ * @author wtaylor
+ *
+ */
 abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConverter
 {
-	/**
-	 * required properties: title.
-	 * optional properties: showLogoutLink, bannerLinkActive
-	 */
 	function __construct() {
 		parent::__construct();
 		
@@ -13,6 +16,10 @@ abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConv
 		$this->bannerLinkActive = true;
 	}
 	
+	/**
+	 * Returns the HTML for displaying the breadcrumbs associated with this page.
+	 * @return string
+	 */
 	protected function getBreadcrumbs() {
 		return '';	
 	}
@@ -35,13 +42,6 @@ _;
 		return <<<_
 				<script type="text/javascript">
 					dojo.addOnLoad(function() { 
-						// cancel button
-						if(dojo.byId("cancelButton")) {
-							dojo.connect(dojo.byId("cancelButton"), "onclick", function() {
-								history.back();
-							});
-						}
-						
 						dojo.require("dijit.form.Textarea");
 						dojo.query("textarea").forEach(function(item) {
 							var ta = new dijit.form.Textarea({
@@ -70,6 +70,10 @@ _;
 _;
 	}
 	
+	/**
+	 * Returns the HTML for the Logout Link.  
+	 * @return string
+	 */
 	private function getLogout() {
 		$logoutLink = '';
 		
@@ -89,6 +93,10 @@ _;
 		return $logoutLink;
 	}
 	
+	/**
+	 * Returns the HTML for the page's banner.
+	 * @return string
+	 */
 	private function getBanner() {
 		$banner = 'Registration System';
 		

@@ -1,6 +1,14 @@
 <?php
 
-class action_BaseAction implements action_Action
+/**
+ * 
+ * Core Action class that performs the mapping between user requested 
+ * action and method execution.
+ * 
+ * @author wtaylor
+ *
+ */
+abstract class action_BaseAction implements action_Action
 {
 	function __construct() {}
 	
@@ -41,7 +49,7 @@ class action_BaseAction implements action_Action
 	protected function performSecurityCheck($action) {}
 	
 	/**
-	 * invokes the method named by the 'action' request parameter.
+	 * Invokes the method named by the 'action' request parameter.
 	 */
 	private function performAction($action) {
 		if(!empty($action) && method_exists($this, $action)) {
