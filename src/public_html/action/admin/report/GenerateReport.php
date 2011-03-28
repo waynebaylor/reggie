@@ -31,21 +31,18 @@ class action_admin_report_GenerateReport extends action_ValidatorAction
 	}
 	
 	public function search() {
-		$reportId = RequestUtil::getValue('reportId', 0);
-		$eventId = RequestUtil::getValue('eventId', 0);
-		$term = RequestUtil::getValue('term', '');
-		$field = RequestUtil::getValue('field', '');
+		$params = RequestUtil::getValues(array(
+			'reportId' => 0,
+			'eventId' => 0,
+			'term' => '',
+			'contactFieldId' => ''
+		));
 		
-		error_log(print_r(array($reportId, $eventId, $term, $field), true));
+		$info = $this->logic->search($params);
 		
-		
-		
-		
-		$reportInfo = $this->logic->view($reportId);
-		
-		return $this->converter->getView(array(
-			'title' => $reportInfo['reportName'],
-			'info' => $reportInfo
+		return $this->converter->getSearch(array(
+			'title' => $info['reportName'],
+			'info' => $info
 		));
 	}
 }

@@ -6,10 +6,11 @@ class logic_admin_report_GenerateReport extends logic_Performer
 		parent::__construct();
 	}
 	
-	public function view($reportId) {
+	public function view($reportId, $searchTerm = '', $searchFieldId = 0) {
 		$report = $this->strictFindById(db_ReportManager::getInstance(), $reportId);
 		
-		$info = $this->getBaseInfo($report);
+		$info = $this->getBaseInfo($report, $searchTerm, $searchFieldId);
+		$info['event'] = db_EventManager::getInstance()->find($info['eventId']);
 		
 		if($report['isPaymentsToDate'] === 'T') {
 			$info = logic_admin_report_PaymentsToDateHelper::addSpecialInfo($report, $info);
@@ -20,23 +21,41 @@ class logic_admin_report_GenerateReport extends logic_Performer
 		else if($report['isOptionCount'] === 'T') {
 			$info = logic_admin_report_OptionCountHelper::addSpecialInfo($report, $info);
 			$info['showCreateRegLink'] = false;
+			$info['showSearchLink']	= false;
 		}
 		else if($report['isRegTypeBreakdown'] === 'T') {
 			$info = logic_admin_report_RegTypeBreakdownHelper::addSpecialInfo($report, $info);
 			$info['showCreateRegLink'] = false;
+			$info['showSearchLink'] = false;
 		}
 		
 		return $info;
 	}
 	
-	public function getBaseInfo($report) {
+	public function getBaseInfo($report, $searchTerm, $searchFieldId) {
 		$fieldHeadings = db_ReportManager::getInstance()->findReportFieldHeadings($report['id']);
+		
+		// null regIds indicates that we should return all values.
+		if(empty($searchTerm) || empty($searchFieldId)) {
+			$regIds = null;
+		}
+		else {
+			$regIds = db_ReportManager::getInstance()->findRegIdsMatchingSearch($report['eventId'], $searchTerm, $searchFieldId);
+		}
+		
 		$fieldValues = db_ReportManager::getInstance()->findReportFieldValues($report['id']); 
 		$registrationValues = db_ReportManager::getInstance()->findReportRegistrationValues($report['id']); 
 		$paymentValues = db_ReportManager::getInstance()->findReportPaymentValues($report['id']); 
 		
 		$headings = $this->getHeadings($report, $fieldHeadings); 
-		$values = $this->getValues($report, $registrationValues, $fieldHeadings, $fieldValues, $paymentValues);
+		$values = $this->getValues(array(
+			'report' => $report,
+			'registrationIds' => $regIds,
+			'registrationValues' => $registrationValues,
+			'fieldHeadings' => $fieldHeadings,
+			'fieldValues' => $fieldValues,
+			'paymentValues' => $paymentValues
+		));
 		
 		$info = array(
 			'eventId' => $report['eventId'],
@@ -53,42 +72,51 @@ class logic_admin_report_GenerateReport extends logic_Performer
 		return $this->view($reportId);
 	}
 	
-	private function getValues($report, $registrationValues, $fieldHeadings, $fieldValues, $paymentValues) { 
+	public function search($params) {
+		return $this->view($params['reportId'], $params['term'], $params['contactFieldId']);
+	}
+	
+	private function getValues($params) { 
 		$values = array();
 		$processedGroupIds = array();
 		
-		foreach($registrationValues as $reg) {
+		foreach($params['registrationValues'] as $reg) {
+			// if we're doing a search, then skip this reg if they're not in the search results.
+			if(isset($params['registrationIds']) && !in_array($reg['registrationId'], $params['registrationIds'])) {
+				continue;
+			}
+			
 			$value = array();
 			// registration values.
-			if($report['showDateRegistered'] === 'T') {
+			if($params['report']['showDateRegistered'] === 'T') {
 				$value[] = $reg['dateRegistered'];
 			}
-			if($report['showDateCancelled'] === 'T') {
+			if($params['report']['showDateCancelled'] === 'T') {
 				$value[] = $reg['dateCancelled'];
 			}
-			if($report['showCategory'] === 'T') {
+			if($params['report']['showCategory'] === 'T') {
 				$value[] = $reg['categoryName'];
 			}
-			if($report['showRegType'] === 'T') {
+			if($params['report']['showRegType'] === 'T') {
 				$value[] = $reg['regTypeName'];
 			}
 			// user selected field values.
 			// field headings have the order.
-			foreach($fieldHeadings as $fieldHeading) { 
+			foreach($params['fieldHeadings'] as $fieldHeading) { 
 				$fieldId = $fieldHeading['id']; 
-				$fieldValue = ArrayUtil::getValue($fieldValues[$reg['registrationId']], $fieldId, ''); // value may be an array.
+				$fieldValue = ArrayUtil::getValue($params['fieldValues'][$reg['registrationId']], $fieldId, ''); // value may be an array.
 				$value[] = is_array($fieldValue)? implode(', ', $fieldValue) : $fieldValue; // if value is array convert to comma list.
 			}
 			// payment values (only show once per registration group.
 			$hideValue = in_array($reg['groupId'], $processedGroupIds);
-			if($report['showTotalCost'] === 'T') {
-				$value[] = $hideValue? '' : '$'.number_format($paymentValues[$reg['groupId']]['cost'], 2);
+			if($params['report']['showTotalCost'] === 'T') {
+				$value[] = $hideValue? '' : '$'.number_format($params['paymentValues'][$reg['groupId']]['cost'], 2);
 			}
-			if($report['showTotalPaid'] === 'T') {
-				$value[] = $hideValue? '' : '$'.number_format($paymentValues[$reg['groupId']]['paid'], 2);
+			if($params['report']['showTotalPaid'] === 'T') {
+				$value[] = $hideValue? '' : '$'.number_format($params['paymentValues'][$reg['groupId']]['paid'], 2);
 			}
-			if($report['showRemainingBalance'] === 'T') {
-				$value[] = $hideValue? '' : '$'.number_format($paymentValues[$reg['groupId']]['balance'], 2);
+			if($params['report']['showRemainingBalance'] === 'T') {
+				$value[] = $hideValue? '' : '$'.number_format($params['paymentValues'][$reg['groupId']]['balance'], 2);
 			}
 			
 			if(!$hideValue) {

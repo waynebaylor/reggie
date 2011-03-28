@@ -53,6 +53,10 @@ class viewConverter_admin_report_GenerateReport extends viewConverter_admin_Admi
 		
 		return new template_TemplateWrapper($text);		
 	}
+	
+	public function getSearch($properties) {
+		return $this->getView($properties);
+	}
 }
 
 ?>

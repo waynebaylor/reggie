@@ -30,35 +30,41 @@
 
 		// search link and form dialog.
 		var searchLink = dojo.byId("search-form-link");
-		var searchContent = dojo.byId("search-form-content");
-		var searchForm = dojo.query("form", searchContent)[0];
-
-		var searchDialog = hhreg.dialog.create({
-			title: "Search Report",
-			trigger: searchLink,
-			content: searchContent
-		});		
-
-		var plainSearchButton = dojo.query("input[type=button]", searchContent)[0];
-		var searchButton = new dijit.form.Button({
-			label: plainSearchButton.value,
-			onClick: function() {
-				searchForm.submit();
-			}
-		}, plainSearchButton);
-		searchButton.startup();
-
-		dojo.connect(searchForm, "onkeypress", function(event) {
-			if(event.keyCode === dojo.keys.ENTER && event.target.tagName.toLowerCase() !== 'textarea') {
-				dojo.stopEvent(event);
-				searchForm.submit();
-			}
-		});
+		if(searchLink) {
+			var searchContent = dojo.byId("search-form-content");
+			var searchForm = dojo.query("form", searchContent)[0];
+	
+			var searchDialog = hhreg.dialog.create({
+				title: "Search Report",
+				trigger: searchLink,
+				content: searchContent
+			});		
+	
+			var plainSearchButton = dojo.query("input[type=button]", searchContent)[0];
+			var searchButton = new dijit.form.Button({
+				label: plainSearchButton.value,
+				onClick: function() {
+					searchForm.submit();
+				}
+			}, plainSearchButton);
+			searchButton.startup();
+	
+			dojo.connect(searchForm, "onkeypress", function(event) {
+				if(event.keyCode === dojo.keys.ENTER && event.target.tagName.toLowerCase() !== 'textarea') {
+					dojo.stopEvent(event);
+					searchForm.submit();
+				}
+			});
+		}
 	});
 </script>
 
 <div id="content">
-
+	<h3>
+		<?php echo $this->title ?>
+	</h3>
+	
+	<?php if(ArrayUtil::getValue($this->info, 'showSearchLink', true)): ?>
 	<span id="search-form-link" class="link">Search</span>
 	<div id="search-form-content" class="hide">
 		<?php echo $this->tableForm(         
@@ -68,10 +74,8 @@
 			'Search'
 		) ?>
 	</div>
-
-	<h3>
-		<?php echo $this->title ?>
-	</h3>
+	&nbsp;
+	<?php endif; ?>
 	
 	<?php if(ArrayUtil::getValue($this->info, 'showCreateRegLink', true)): ?>
 	<span id="create-reg-link" class="link">Create New Registration</span>
@@ -83,9 +87,9 @@
 			'Continue'
 		) ?>
 	</div>
+	<?php endif; ?>
 	
 	<div class="sub-divider"></div>
-	<?php endif; ?>
 				
 	<table class="admin">
 		<tr>

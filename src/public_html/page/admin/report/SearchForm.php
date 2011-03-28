@@ -17,10 +17,7 @@
 			'value' => ''
 		)) ?>
 		in
-		<?php echo $this->HTML->select(array(
-			'name' => 'field',
-			'items' => array()
-		)) ?>
+		<?php echo fragment_reportField_HTML::select($this->info['event'], false) ?>
 	</td>
 </tr>
 

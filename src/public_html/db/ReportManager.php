@@ -602,7 +602,7 @@ class db_ReportManager extends db_Manager
 			WHERE
 				Report.id = :reportId
 		';
-		
+
 		$params = array(
 			'reportId' => $reportId
 		);
@@ -617,6 +617,80 @@ class db_ReportManager extends db_Manager
 		}
 		
 		return $values;
+	}
+	
+	public function findRegIdsMatchingSearch($eventId, $searchTerm, $searchFieldId) {
+		// single value fields.
+		$sql = "
+			SELECT
+				Registration_Information.registrationId
+			FROM
+				Registration_Information
+			INNER JOIN
+				ContactField
+			ON
+				ContactField.id = Registration_Information.contactFieldId
+			WHERE
+				ContactField.formInputId
+			IN
+				(1, 2)
+			AND
+				Registration_Information.contactFieldId = :searchFieldId
+			AND
+				Registration_Information.value 
+			LIKE
+				CONCAT('%', :searchTerm, '%')
+		";
+		
+		$params = array(
+			'searchTerm' => $searchTerm,
+			'searchFieldId' => $searchFieldId
+		);
+		
+		$results = $this->rawQuery($sql, $params, 'Find reg ids matching search.');
+		
+		// we don't know if the search field is a multi value field, so we run this query
+		// if the previous one doesn't return any results. if the search field is not a 
+		// multi value field and the previous search is empty, then this one will be 
+		// emtpy too, but no harm done just a little wasted effort. we do it this way
+		// because it's harder to determine the field type beforehand.
+		 
+		if(empty($results)) {
+			// multiple value fields.
+			$sql = "
+				SELECT DISTINCT
+					Registration_Information.registrationId
+				FROM
+					Registration_Information
+				INNER JOIN
+					ContactField
+				ON
+					Registration_Information.contactFieldId = ContactField.id
+				INNER JOIN
+					ContactFieldOption
+				ON
+					Registration_Information.value = ContactFieldOption.id
+				WHERE
+					Registration_Information.contactFieldId = :searchFieldId
+				AND
+					ContactField.formInputId 
+				IN
+					(3, 4, 5)
+				AND
+					ContactFieldOption.displayName
+				LIKE
+					CONCAT('%', :searchTerm, '%')	
+			";
+			
+			$results = $this->rawQuery($sql, $params, 'Find reg ids matching search.');
+		}
+		
+		$ids = array();
+		foreach($results as $result) {
+			$ids[] = $result['registrationId'];
+		}
+		
+		return $ids;
 	}
 	
 	public function findAllRegToDateValues($eventId) {
