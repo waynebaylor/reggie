@@ -8,7 +8,7 @@
  * @author wtaylor
  *
  */
-abstract class action_BaseAction implements action_Action
+abstract class action_BaseAction
 {
 	function __construct() {}
 	
