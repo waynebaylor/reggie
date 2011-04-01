@@ -117,6 +117,14 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		
 		return $this->converter->getDeleteRegistration($info);
 	}
+	
+	public function paymentSummary() {
+		$groupId = RequestUtil::getValue('groupId', 0);
+		
+		$info = $this->logic->paymentSummary($groupId);
+
+		return $this->converter->getPaymentSummary($info);
+	}
 }
 
 ?>

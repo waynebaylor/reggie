@@ -9,8 +9,19 @@ dojo.require("hhreg.util");
 	//////////////////////////////////////////////
 	
 	dojo.addOnLoad(function() {
-		dojo.query(".fragment-payments").forEach(function(item) {
-			hhreg.xhrAddList.bind(item);
+		dojo.query(".fragment-payments").forEach(function(item) { 
+			hhreg.xhrAddList.bind(item, function() { 
+				var groupId = dojo.query("input[name=regGroupId]")[0].value;
+				
+				var get = dojo.xhrGet({
+					url: hhreg.util.contextUrl("/admin/registration/Registration?a=paymentSummary&groupId="+groupId),
+					handleAs: "text"
+				});
+				
+				get.addCallback(function(response) {
+					dojo.byId("payment-summary").innerHTML = response;
+				});
+			});
 		});
 		
 		dojo.query(".fragment-reg-options").forEach(function(item) {

@@ -110,6 +110,22 @@ _;
 			'isGroupEmpty' => $isGroupEmpty
 		);
 	}
+	
+	public function paymentSummary($groupId) {
+		$cost = db_reg_GroupManager::getInstance()->findTotalCost($groupId);
+		$paid = db_reg_GroupManager::getInstance()->findTotalPaid($groupId);
+		$remainingBalance = $cost - $paid;
+		
+		$cost = '$'.number_format($cost, 2);
+		$paid = '$'.number_format($paid, 2);
+		$remainingBalance = '$'.number_format($remainingBalance, 2);
+		
+		return array(
+			'cost' => $cost,
+			'paid' => $paid,
+			'remainingBalance' => $remainingBalance
+		);
+	}
 }
 
 ?>

@@ -36,7 +36,7 @@ class fragment_editRegistrations_payment_Payments extends template_Template
 			<div class="registrant-details-section">
 				<h3>All Payments For Group</h3>
 				
-				<table style="border-collapse:separate; border-spacing:15px 5px;">
+				<table id="payment-summary" style="border-collapse:separate; border-spacing:15px 5px;">
 					<tr>
 						<td>Total Cost</td>
 						<td>{$cost}</td>
