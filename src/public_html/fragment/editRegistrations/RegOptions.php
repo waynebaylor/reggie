@@ -75,7 +75,7 @@ _;
 		);
 		
 		return <<<_
-			<div class="fragment-edit">
+			<div class="fragment-edit var-quantity-options">
 				{$form->html()}
 			</div>
 _;

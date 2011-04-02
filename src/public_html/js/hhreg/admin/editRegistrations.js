@@ -6,21 +6,36 @@ dojo.require("hhreg.util");
 (function() {
 	dojo.provide("hhreg.admin.editRegistrations");
 	
+	var updatePaymentSummary = function() {
+		var groupId = dojo.query("input[name=regGroupId]")[0].value;
+		
+		var get = dojo.xhrGet({
+			url: hhreg.util.contextUrl("/admin/registration/Registration?a=paymentSummary&groupId="+groupId),
+			handleAs: "text"
+		});
+		
+		get.addCallback(function(response) {
+			dojo.byId("payment-summary").innerHTML = response;
+		});
+	};
+	
 	//////////////////////////////////////////////
 	
 	dojo.addOnLoad(function() {
+		dojo.query(".fragment-edit form").forEach(function(item) {
+			if(hhreg.util.parentNode(item, ["var-quantity-options"])) {
+				hhreg.xhrTableForm.bind(item, function() {
+					updatePaymentSummary();
+				});
+			}
+			else {
+				hhreg.xhrTableForm.bind(item);
+			}
+		});
+		
 		dojo.query(".fragment-payments").forEach(function(item) { 
 			hhreg.xhrAddList.bind(item, function() { 
-				var groupId = dojo.query("input[name=regGroupId]")[0].value;
-				
-				var get = dojo.xhrGet({
-					url: hhreg.util.contextUrl("/admin/registration/Registration?a=paymentSummary&groupId="+groupId),
-					handleAs: "text"
-				});
-				
-				get.addCallback(function(response) {
-					dojo.byId("payment-summary").innerHTML = response;
-				});
+				updatePaymentSummary();
 			});
 		});
 		

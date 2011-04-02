@@ -27,7 +27,6 @@ class template_admin_EditRegistrations extends template_AdminPage
 	protected function getContent() {
 		return <<<_
 			<script type="text/javascript">
-				dojo.require("hhreg.xhrEditForm");
 				dojo.require("hhreg.admin.editRegistrations");
 			</script>
 			

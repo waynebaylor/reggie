@@ -26,10 +26,8 @@ dependencies = {
 				"hhreg.xhrAddForm",
 				"hhreg.dialog",
 				"hhreg.calendar",
-				"hhreg.arrows",
 				"hhreg.xhrLink",
-				"hhreg.util",
-				"hhreg.xhrEditForm"
+				"hhreg.util"
 			]
 		},
 		{
