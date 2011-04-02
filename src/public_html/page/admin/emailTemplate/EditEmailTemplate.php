@@ -1,6 +1,19 @@
 
 <script type="text/javascript">
 	dojo.require("hhreg.xhrEditForm");
+	dojo.require("dijit.form.Button");
+	
+	dojo.addOnLoad(function() {
+		var button = dojo.byId("send-test-email-button");
+		var form = button.form;
+		
+		new dijit.form.Button({
+			label: 'Send',
+			onClick: function() {
+				form.submit();
+			}
+		}, button).startup();
+	});
 </script>
 
 <div id="content">
@@ -30,13 +43,14 @@
 			)) ?>
 			
 			<p>
+				<span>
 				Send Test Email <?php echo $this->HTML->text(array(
 					'name' => 'toAddress',
 					'value' => '',
 					'size' => 30
 				)) ?>
-				
-				<input type="submit" class="button" value="Send">
+				</span>
+				<input type="button" id="send-test-email-button" value="Send">
 			</p>
 		</form>
 	</div>
