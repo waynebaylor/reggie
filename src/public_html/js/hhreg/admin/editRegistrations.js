@@ -40,7 +40,16 @@ dojo.require("hhreg.util");
 		});
 		
 		dojo.query(".fragment-reg-options").forEach(function(item) {
-			hhreg.xhrAddList.bind(item);
+			hhreg.xhrAddList.bind(item, function() {
+				updatePaymentSummary();
+				
+				// re-bind confirmation.
+				dojo.query(".cancel-reg-option-link").connect("onclick", function(event) {
+					if(!confirm("Are you sure?")) {
+						dojo.stopEvent(event);
+					}	
+				});
+			});
 		});
 		
 		// cancel registrant links
