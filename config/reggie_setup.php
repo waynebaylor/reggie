@@ -8,6 +8,7 @@ if(isset($_REQUEST['unzip'])) {
 	if($z->open($file) === true) {
 		$z->extractTo($dir);
 		$z->close();
+		echo 'Unzip success.';
 	}
 	else {
 		echo 'Unzip failed.';
