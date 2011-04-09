@@ -4,6 +4,7 @@
 # usage: $> make_release.sh <release-name>
 #
 
+dojo="dojo-release-1.5.0-src"
 curr_dir=$(pwd)
  
 # create the tag for the release.
@@ -14,10 +15,10 @@ svn checkout svn://dino/baylorsc/reggie/tags/$1 $1-tmp
 
 # build optimized js.
 mkdir $1-js
-mv $1-tmp/config/dojo-release-1.5.0-src.tar.gz $1-js
-tar -C $1-js -xvzf dojo-release-1.5.0-src.tar.gz
-cp $1-tmp/src/config/reggie.profile.js $1-js/dojo-release-1.5.0-src/util/buildscripts/profiles
-cd $1-js/dojo-release-1.5.0-src/util/buildscripts
+tar -C $1-js -xvzf $1-tmp/config/$dojo.tar.gz
+cp $1-tmp/config/reggie.profile.js $1-js/$dojo/util/buildscripts/profiles
+cp -r $1-tmp/src/public_html/js/hhreg $1-js/$dojo
+cd $1-js/$dojo/util/buildscripts
 ./build.sh profile=reggie
 cd $curr_dir
 
