@@ -14,6 +14,7 @@ class logic_admin_report_GenerateReport extends logic_Performer
 		
 		if($report['isPaymentsToDate'] === 'T') {
 			$info = logic_admin_report_PaymentsToDateHelper::addSpecialInfo($report, $info);
+			$info['showSearchLink'] = false;
 		}
 		else if($report['isAllRegToDate'] === 'T') { 
 			$info = logic_admin_report_AllRegToDateHelper::addSpecialInfo($report, $info);
@@ -62,7 +63,8 @@ class logic_admin_report_GenerateReport extends logic_Performer
 			'reportId' => $report['id'],
 			'reportName' => $report['name'],
 			'headings' => $headings,
-			'rows' => $values
+			'rows' => $values,
+			'registrationIds' => $regIds
 		);
 			
 		return $info;

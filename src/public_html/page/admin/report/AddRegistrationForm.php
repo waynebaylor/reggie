@@ -1,7 +1,7 @@
 
 <tr>
 	<td colspan="2">
-		The new registration will show up as a blank row. 
+		The new registration will show up as a blank row at the bottom of the list. 
 		<br/>
 		Click the 'Details' link to select a registration type
 		<br/>

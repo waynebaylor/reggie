@@ -16,6 +16,11 @@ class logic_admin_report_AllRegToDateHelper
 	
 		$values = db_ReportManager::getInstance()->findAllRegToDateValues($report['eventId']);
 		foreach($values as $value) {
+			// skip reg ids not in search resuluts.
+			if(isset($info['registrationIds']) && !in_array($value['regId'], $info['registrationIds'])) {
+				continue;
+			}
+
 			$augmentedRow = array();
 			
 			foreach($info['rows'] as $row) {
