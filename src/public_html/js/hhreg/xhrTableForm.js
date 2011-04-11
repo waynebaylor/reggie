@@ -1,4 +1,5 @@
 dojo.require("hhreg.validation");
+dojo.require("dojox.form.BusyButton");
 
 (function() {
 	var xhrTableForm = dojo.provide("hhreg.xhrTableForm");
