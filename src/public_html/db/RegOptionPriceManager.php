@@ -176,6 +176,20 @@ class db_RegOptionPriceManager extends db_Manager
 		
 		$this->execute($sql, $params, 'Delete reg option association.');
 		
+		// delete var quantity option association.
+		$sql = '
+			DELETE FROM
+				VariableQuantityOption_RegOptionPrice
+			WHERE
+				regOptionPriceId = :id
+		';
+		
+		$params = array(
+			'id' => $price['id']
+		);
+		
+		$this->execute($sql, $params, 'Delete var quantity option association.');
+		
 		// delete price.
 		$sql = '
 			DELETE FROM
