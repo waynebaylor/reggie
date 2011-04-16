@@ -6,12 +6,12 @@ class fragment_reg_ContactFields extends template_Template
 	private $regTypeId;
 	private $fieldValues; // field id -> value
 	
-	function __construct($section, $regTypeId, $fieldValues) {
+	function __construct($section, $regTypeId, $values) {
 		parent::__construct();
 
 		$this->section = $section;
 		$this->regTypeId = $regTypeId;
-		$this->fieldValues = $fieldValues;
+		$this->fieldValues = $values;
 	}
 	
 	public function html() {

@@ -1,5 +1,6 @@
 
 <script type="text/javascript">
+	dojo.require("hhreg.util");
 	dojo.require("dijit.form.Button");
 	
 	dojo.addOnLoad(function() {

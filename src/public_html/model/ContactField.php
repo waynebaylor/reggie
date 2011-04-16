@@ -27,6 +27,27 @@ class model_ContactField
 		
 		return false;
 	}
+	
+	/**
+	 * if field is text or textarea, then an empty string is returned; if field has options, then an array containing
+	 * the default selected option ids is returned.
+	 * @param array $field
+	 */
+	public static function getDefaultValue($field) {
+		if(in_array($field['formInput']['id'], array(model_FormInput::$CHECKBOX, model_FormInput::$RADIO, model_FormInput::$SELECT))) {
+			$optIds = array();
+			foreach($field['options'] as $opt) {
+				if($opt['defaultSelected'] === 'T') {
+					$optIds[] = $opt['id'];
+				}
+			}
+			
+			return $optIds;
+		}
+		else {
+			return '';
+		}
+	}
 }
 
 ?>

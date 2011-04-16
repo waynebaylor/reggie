@@ -58,6 +58,10 @@ class fragment_reg_ContactField extends template_Template
 	}
 
 	private function checkboxHtml() {
+		if(empty($this->field['options'])) {
+			return '';
+		}
+
 		$config = $this->getBaseConfig();
 		
 		$opts = $this->getOptionsConfig();
@@ -67,13 +71,11 @@ class fragment_reg_ContactField extends template_Template
 	}
 
 	private function radioHtml() {
-		$config = $this->getBaseConfig();
-		
-		// radio buttons should start with one option selected.
-		if(empty($config['value'])) {
-			$o = $this->getSelectedOption();
-			$config['value'] = $o['id'];
+		if(empty($this->field['options'])) {
+			return '';
 		}
+		
+		$config = $this->getBaseConfig();
 		
 		$opts = $this->getOptionsConfig();
 		$config = array_merge($config, $opts);
@@ -82,6 +84,10 @@ class fragment_reg_ContactField extends template_Template
 	}
 
 	private function selectHtml() {
+		if(empty($this->field['options'])) {
+			return '';
+		}
+		
 		$config = $this->getBaseConfig();
 		
 		$opts = $this->getOptionsConfig();
@@ -142,23 +148,6 @@ class fragment_reg_ContactField extends template_Template
 		}
 
 		return $v;
-	}
-	
-	/**
-	 * Returns the option that should be selected by default. if none is
-	 * set as the default, then the first option is returned. otherwise
-	 * an empty string is returned.
-	 */
-	private function getSelectedOption() {
-		if(!empty($this->field['options'])) {
-			foreach($this->field['options'] as $option) {
-				if($option['defaultSelected'] === 'T') {
-					return $option;
-				}
-			}
-		}
-		
-		return array('id' => '');
 	}
 }
 

@@ -20,7 +20,7 @@ class action_reg_Registration extends action_ValidatorAction
 	
 	public function view() {
 		$page = model_Event::getPageById($this->event, $this->pageId);
-		$pageFragment = new fragment_reg_Page($page);
+		$pageFragment = new fragment_reg_Page($this->event, $page);
 		return new template_reg_BasePage(array(
 			'event' => $this->event,
 			'title' => $page['title'],
@@ -40,7 +40,7 @@ class action_reg_Registration extends action_ValidatorAction
 		// with the necessary error messages.
 		if(!empty($errors)) {
 			$currentPage = model_Event::getPageById($this->event, $this->pageId);
-			$pageFragment = new fragment_reg_Page($currentPage, $errors);
+			$pageFragment = new fragment_reg_Page($this->event, $currentPage);
 			
 			return new template_reg_BasePage(array(
 				'event' => $this->event,
@@ -69,7 +69,7 @@ class action_reg_Registration extends action_ValidatorAction
 		}
 		else {
 			$nextPage = model_reg_RegistrationPage::getNextPage($this->event, $this->pageId);
-			$pageFragment = new fragment_reg_Page($nextPage);
+			$pageFragment = new fragment_reg_Page($this->event, $nextPage);
 			return new template_reg_BasePage(array(
 				'event' => $this->event,
 				'title' => $nextPage['title'],
@@ -81,7 +81,7 @@ class action_reg_Registration extends action_ValidatorAction
 
 	public function Previous() {
 		$prevPage = model_reg_RegistrationPage::getPrevPage($this->event, $this->pageId);
-		$pageFragment = new fragment_reg_Page($prevPage);
+		$pageFragment = new fragment_reg_Page($this->event, $prevPage);
 		return new template_reg_BasePage(array(
 			'event' => $this->event,
 			'title' => $prevPage['title'],

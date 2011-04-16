@@ -107,6 +107,16 @@ class model_Event
 		
 		return NULL;
 	}
+	
+	public static function hasGroupRegDefault($event, $field) {
+		foreach($event['groupRegistration']['fields'] as $f) {
+			if($field['id'] === $f['contactFieldId']) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }
 
 ?>

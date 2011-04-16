@@ -67,8 +67,6 @@ class validation_reg_PageValidator
 	private function validateRegOptions($section) {
 		$errors = array();
 		
-		$regType = model_Event::getRegTypeById($this->event, model_reg_Session::getRegType());
-			
 		foreach($section['content'] as $regOptionGroup) {
 			$errors = array_merge($errors, $this->validateRegOptionGroup($regOptionGroup));
 		}
@@ -117,7 +115,7 @@ class validation_reg_PageValidator
 		return $errors;
 	}
 	
-	private function validateRegOptionGroup($group) {
+	private function validateRegOptionGroup($group) { 
 		$errors = array();
 		
 		$regTypeId = model_reg_Session::getRegType();
@@ -149,6 +147,19 @@ class validation_reg_PageValidator
 				}
 				else if($max > 0 && $max < count($values)) {
 					$errors[$name.'[]'] = "You may choose up to {$max} option(s).";
+				}
+			}
+			
+			// validate any sub-groups.
+			$selectedOptionIds = RequestUtil::getValueAsArray($name, array());
+			foreach($group['options'] as $option) {
+				$optionSelected = in_array($option['id'], $selectedOptionIds);
+				
+				// only validate if parent option is selected.
+				if($optionSelected) {
+					foreach($option['groups'] as $subGroup) {
+						$errors = array_merge($errors, $this->validateRegOptionGroup($subGroup));
+					}
 				}
 			}
 		}
