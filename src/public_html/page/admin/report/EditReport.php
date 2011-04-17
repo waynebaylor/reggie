@@ -1,7 +1,8 @@
 
 <script type="text/javascript">
 	dojo.require("hhreg.xhrEditForm");
-	
+	dojo.require("hhreg.xhrAddList");
+		
 	dojo.addOnLoad(function() {
 		dojo.query(".fragment-fields").forEach(function(item) {
 			hhreg.xhrAddList.bind(item);
