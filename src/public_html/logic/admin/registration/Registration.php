@@ -6,7 +6,7 @@ class logic_admin_registration_Registration extends logic_Performer
 		parent::__construct();
 	}
 	
-	public function addRegistrantToGroup($regGroupId) {
+	public function addRegistrantToGroup($regGroupId, $reportId) {
 		$group = $this->strictFindById(db_reg_GroupManager::getInstance(), $regGroupId);
 		
 		$r = reset($group['registrations']);
@@ -23,8 +23,12 @@ class logic_admin_registration_Registration extends logic_Performer
 		
 		db_reg_RegistrationManager::getInstance()->createRegistration($regGroupId, $newReg);
 		
-		// return the updated group.
-		return $this->strictFindById(db_reg_GroupManager::getInstance(), $regGroupId);
+		$group = $this->strictFindById(db_reg_GroupManager::getInstance(), $regGroupId);
+		
+		return array(
+			'group' => $group,
+			'reportId' => $reportId
+		);
 	}
 	
 	public function createNewRegistration($eventId, $categoryId) {

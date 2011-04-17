@@ -94,9 +94,9 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		$reportId = RequestUtil::getValue('reportId', 0);
 		$regGroupId = RequestUtil::getValue('regGroupId', 0);
 		
-		$this->logic->addRegistrantToGroup($regGroupId);
+		$info = $this->logic->addRegistrantToGroup($regGroupId, $reportId);
 		
-		return new template_Redirect("/admin/registration/Registration?reportId={$reportId}&groupId={$regGroupId}");
+		return $this->converter->getAddRegistrantToGroup($info);
 	}
 	
 	public function createNewRegistration() {

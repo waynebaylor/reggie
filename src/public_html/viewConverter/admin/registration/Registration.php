@@ -37,6 +37,14 @@ _;
 
 		return new template_TemplateWrapper($frag);
 	}
+	
+	public function getAddRegistrantToGroup($properties) {
+		$this->setProperties($properties);
+		
+		$count = count($this->group['registrations']);
+		
+		return new template_Redirect("/admin/registration/Registration?reportId={$this->reportId}&groupId={$this->group['id']}#registrant{$count}");
+	}
 }
 
 ?>
