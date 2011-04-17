@@ -218,17 +218,17 @@ class db_reg_RegistrationManager extends db_Manager
 	public function findVariableOptionCount($option) {
 		$sql = '
 			SELECT
-				count(*) as regOptionCount
+				sum(Registration_VariableQuantityOption.quantity) as regOptionCount
 			FROM
 				Registration
 			INNER JOIN
 				Registration_VariableQuantityOption
 			ON
-				Registration.id = Registration_VariableQuantityOption.variableQuantityId
+				Registration.id = Registration_VariableQuantityOption.registrationId
 			WHERE
 				Registration.dateCancelled is NULL
 			AND
-				variableQuantityId = :variableQuantityId
+				Registration_VariableQuantityOption.variableQuantityId = :variableQuantityId
 		';
 		
 		$params = array(

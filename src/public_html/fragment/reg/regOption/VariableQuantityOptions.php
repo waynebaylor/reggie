@@ -31,12 +31,22 @@ _;
 		if(!empty($price)) {
 			// check option capacity first.
 			if($this->optionAtCapacity($option)) {
-				$price = 'Sold out.';
+				$quantityInput = '';
+				$price = 'Sold&nbsp;out.';
 			}
 			else {
 				$name = model_ContentType::$VAR_QUANTITY_OPTION.'_'.$option['id'];
 				$value = model_reg_Session::getVariableQuantityOption($name);
 					
+				$quantityInput = <<<_
+					{$this->HTML->text(array(
+						'name' => $name,
+						'value' => $value,
+						'size' => 2
+					))}
+					&#64;&nbsp;			
+_;
+
 				$price = '$'.number_format($price['price'], 2);
 			}
 
@@ -44,12 +54,7 @@ _;
 				<tr>
 					<td class="var-option-description">{$option['description']}</td>
 					<td class="var-option-quantity">
-						{$this->HTML->text(array(
-							'name' => $name,
-							'value' => $value,
-							'size' => 2
-						))}
-						&#64;&nbsp;
+						{$quantityInput}
 					</td>
 					<td class="var-option-price">
 						{$price}
