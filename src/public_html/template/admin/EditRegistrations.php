@@ -44,8 +44,6 @@ class template_admin_EditRegistrations extends template_AdminPage
 					)
 				))}
 					
-				<div class="sub-divider"></div>
-				
 				{$this->getRegistrants()}
 				
 				<div class="divider"></div>
@@ -66,9 +64,11 @@ _;
 				$this->getRegistrantRow($r)
 			);
 
-			if($index > 0) {
-				$html .= '<div class="divider"></div>';	
-			}
+			$html .= <<<_
+				<div class="sub-divider"></div>
+				<a name="registrant{$num}"></a>
+				<div class="sub-divider"></div>
+_;
 			
 			$regFragment = new fragment_editRegistrations_Registration($this->event, $this->report, $this->group, $r);
 			$options = new fragment_editRegistrations_RegOptions($this->event, $this->report, $r);
@@ -115,9 +115,9 @@ _;
 			$deleteLink = '';
 			if(!empty($r['dateCancelled'])) {
 				$deleteLink = $this->HTML->link(array(
-					'label' => 'Perminantly Delete',
+					'label' => 'Permanantly Delete',
 					'class' => 'delete-registrant',
-					'title' => 'Perminantly delete this registrant',
+					'title' => 'Permanantly delete this registrant',
 					'href' => '/admin/registration/Registration',
 					'parameters' => array(
 						'a' => 'deleteRegistration',
