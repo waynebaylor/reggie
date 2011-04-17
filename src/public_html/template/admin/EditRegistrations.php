@@ -82,7 +82,8 @@ _;
 					'parameters' => array(
 						'a' => 'cancelRegistration',
 						'registrationId' => $r['id'],
-						'reportId' => $this->report['id']
+						'reportId' => $this->report['id'],
+						'registrantNumber' => $num
 						
 					)
 				));

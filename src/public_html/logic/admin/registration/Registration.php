@@ -130,6 +130,18 @@ _;
 			'remainingBalance' => $remainingBalance
 		);
 	}
+	
+	public function cancelRegistration($params) {
+		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $params['registrationId']);
+		
+		db_reg_RegistrationManager::getInstance()->cancelRegistration($registration);
+
+		return array(
+			'regGroupId' => $registration['regGroupId'],
+			'reportId' => $params['reportId'],
+			'registrantNumber' => $params['registrantNumber']
+		);
+	}
 }
 
 ?>

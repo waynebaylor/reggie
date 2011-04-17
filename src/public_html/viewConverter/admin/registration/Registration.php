@@ -45,6 +45,12 @@ _;
 		
 		return new template_Redirect("/admin/registration/Registration?reportId={$this->reportId}&groupId={$this->group['id']}#registrant{$count}");
 	}
+	
+	public function getCancelRegistration($properties) {
+		$this->setProperties($properties);
+		
+		return new template_Redirect("/admin/registration/Registration?groupId={$this->regGroupId}&reportId={$this->reportId}#registrant{$this->registrantNumber}");
+	}
 }
 
 ?>

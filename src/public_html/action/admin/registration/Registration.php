@@ -42,12 +42,17 @@ class action_admin_registration_Registration extends action_ValidatorAction
 	}
 	
 	public function cancelRegistration() {
-		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), RequestUtil::getValue('registrationId', 0));
+		$registrationId = RequestUtil::getValue('registrationId', 0);
 		$reportId = RequestUtil::getValue('reportId', 0);
+		$registrantNumber = RequestUtil::getValue('registrantNumber', 1);
 		
-		db_reg_RegistrationManager::getInstance()->cancelRegistration($registration);
+		$info = $this->logic->cancelRegistration(array(
+			'registrationId' => $registrationId, 
+			'reportId' => $reportId,
+			'registrantNumber' => $registrantNumber
+		));
 		
-		return new template_Redirect("/admin/registration/Registration?groupId={$registration['regGroupId']}&reportId={$reportId}");
+		return $this->converter->getCancelRegistration($info);
 	}
 	
 	public function changeRegType() {
