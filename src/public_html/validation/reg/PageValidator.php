@@ -43,7 +43,7 @@ class validation_reg_PageValidator
 
 		$regType = RequestUtil::getValue($name, NULL);
 		if(empty($regType)) {
-			$errors[$name] = 'Please choose a Registration Type.';
+			$errors[$name] = 'Please choose one.';
 		}
 
 		return $errors;
