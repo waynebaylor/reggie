@@ -202,9 +202,9 @@ class action_reg_Registration extends action_ValidatorAction
 		// remove invalid field ids from the session.
 		$currentFields = model_reg_Session::getContactFields();
 		foreach($currentFields as $key => $f) {
-			$id = str_replace(model_ContentType::$CONTACT_FIELD.'_', '', $key);
+			$id = str_replace(model_ContentType::$CONTACT_FIELD.'_', '', $key); 
 			if(!array_key_exists($id, $validFields) || !model_ContactField::isVisibleTo($validFields[$id], $regType)) {
-				model_reg_Session::setContactField($key, null);
+				model_reg_Session::setContactField($key, null); 
 			}
 		}
 	}

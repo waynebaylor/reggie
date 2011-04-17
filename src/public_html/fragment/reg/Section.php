@@ -44,20 +44,24 @@ _;
 			
 			$values = array();
 			foreach($this->section['content'] as $field) {
-				// defaults apply to first member in group and subsequent members where the field value is not
-				// set to carry over in group reg settings.
-				if($firstTimeOnPage && $firstRegInGroup) { 
-					// user hasn't filled this out, so use defaults (if any).
-					$values[$field['id']] = model_ContactField::getDefaultValue($field);
+				$sessionFieldValue = model_reg_Session::getContactField(model_ContentType::$CONTACT_FIELD.'_'.$field['id']);
+				
+				if($firstTimeOnPage) {
+					// user has fill out the field before, so use their previous value. this covers the case
+					// where they've changed reg types and need to click through the page again. when that 
+					// happens we want to keep the values they've already entered.
+					if(!empty($sessionFieldValue)) {
+						$values[$field['id']] = $sessionFieldValue;
+					}
+					// defaults apply to first member in group and subsequent members where the field value is not
+					// set to carry over in group reg settings.
+					else if($firstRegInGroup || !model_Event::hasGroupRegDefault($this->event, $field)) {
+						$values[$field['id']] = model_ContactField::getDefaultValue($field);
+					}
 				}
-				else if($firstTimeOnPage && !model_Event::hasGroupRegDefault($this->event, $field)) {
-					// first time on page for additional member in reg group AND field value from first
-					// member in group is not set to carry over.
-					$values[$field['id']] = model_ContactField::getDefaultValue($field);
-				}
+				// user has already filled this out, so get value from session.
 				else {
-					// user has already filled this out, so get value from session.
-					$values[$field['id']] = model_reg_Session::getContactField(model_ContentType::$CONTACT_FIELD.'_'.$field['id']);
+					$values[$field['id']] = $sessionFieldValue;
 				}
 			}
 			
