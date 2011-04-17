@@ -114,7 +114,7 @@ dojo.require("hhreg.util");
 		
 		var span = dojo.create("span");
 		dojo.addClass(span, "error-text");
-		span.appendChild(document.createTextNode(" "+text));
+		span.innerHTML = " "+text;
 		div.appendChild(span);
 	
 		var position;
