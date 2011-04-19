@@ -6,29 +6,33 @@ class logic_admin_registration_Registration extends logic_Performer
 		parent::__construct();
 	}
 	
-	public function addRegistrantToGroup($regGroupId, $reportId) {
-		$group = $this->strictFindById(db_reg_GroupManager::getInstance(), $regGroupId);
+	public function addRegistrantToGroup($params) {
+		$regTypes = db_RegTypeManager::getInstance()->findByEventId($params['eventId']);
+		// default is the first reg type whatever it is.
+		$regType = reset($regTypes);
+		$regTypeId = $regType['id'];
 		
-		$r = reset($group['registrations']);
+		// if we can find a reg type that is specifically visible to the selected category, 
+		// then go with that.
+		foreach($regTypes as $regType) {
+			if(model_RegType::isVisibleTo($regType, array('id' => $params['categoryId']))) {
+				$regTypeId = $regType['id'];
+			}
+		}
 		
 		$newReg = array(
-			'regGroupId' => $regGroupId,
-			'categoryId' => $r['categoryId'],
-			'regTypeId' => $r['regTypeId'],
-			'eventId' => $r['eventId'],
+			'regGroupId' => $params['regGroupId'],
+			'categoryId' => $params['categoryId'],
+			'regTypeId' => $regTypeId,
+			'eventId' => $params['eventId'],
 			'information' => array(),
 			'regOptionIds' => array(),
 			'variableQuantity' => array()
 		);
 		
-		db_reg_RegistrationManager::getInstance()->createRegistration($regGroupId, $newReg);
+		db_reg_RegistrationManager::getInstance()->createRegistration($params['regGroupId'], $newReg);
 		
-		$group = $this->strictFindById(db_reg_GroupManager::getInstance(), $regGroupId);
-		
-		return array(
-			'group' => $group,
-			'reportId' => $reportId
-		);
+		return array();
 	}
 	
 	public function createNewRegistration($eventId, $categoryId) {
@@ -105,13 +109,9 @@ _;
 		
 		db_reg_RegistrationManager::getInstance()->delete($registration);
 		
-		$regGroup = db_reg_GroupManager::getInstance()->find($registration['regGroupId']);
-		$isGroupEmpty = count($regGroup['registrations']) === 0;
-		
 		return array(
 			'regGroupId' => $registration['regGroupId'],
-			'reportId' => $reportId,
-			'isGroupEmpty' => $isGroupEmpty
+			'reportId' => $reportId
 		);
 	}
 	

@@ -9,12 +9,7 @@ class viewConverter_admin_registration_Registration extends viewConverter_admin_
 	public function getDeleteRegistration($properties) {
 		$this->setProperties($properties);
 		
-		if($this->isGroupEmpty) {
-			return new template_Redirect("/admin/report/GenerateReport?id={$this->reportId}");	
-		}
-		else {
-			return new template_Redirect("/admin/registration/Registration?groupId={$this->regGroupId}&reportId={$this->reportId}");
-		}
+		return new template_Redirect("/admin/registration/Registration?groupId={$this->regGroupId}&reportId={$this->reportId}");
 	}
 	
 	public function getPaymentSummary($properties) {
@@ -40,10 +35,7 @@ _;
 	
 	public function getAddRegistrantToGroup($properties) {
 		$this->setProperties($properties);
-		
-		$count = count($this->group['registrations']);
-		
-		return new template_Redirect("/admin/registration/Registration?reportId={$this->reportId}&groupId={$this->group['id']}#registrant{$count}");
+		return new fragment_Success();		
 	}
 	
 	public function getCancelRegistration($properties) {

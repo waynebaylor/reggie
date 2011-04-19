@@ -16,9 +16,7 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		$report = $this->strictFindById(db_ReportManager::getInstance(), $reportId);
 		$group = $this->strictFindById(db_reg_GroupManager::getInstance(), $groupId);
 		
-		$regs = $group['registrations'];
-		$firstReg = reset($regs);
-		$event = $this->strictFindById(db_EventManager::getInstance(), $firstReg['eventId']);
+		$event = $this->strictFindById(db_EventManager::getInstance(), $report['eventId']);
 		
 		return new template_admin_EditRegistrations($event, $report, $group);	
 	}
@@ -96,10 +94,15 @@ class action_admin_registration_Registration extends action_ValidatorAction
 	}
 	
 	public function addRegistrantToGroup() {
-		$reportId = RequestUtil::getValue('reportId', 0);
+		$categoryId = RequestUtil::getValue('categoryId', 0);
 		$regGroupId = RequestUtil::getValue('regGroupId', 0);
+		$eventId = RequestUtil::getValue('eventId', 0);
 		
-		$info = $this->logic->addRegistrantToGroup($regGroupId, $reportId);
+		$info = $this->logic->addRegistrantToGroup(array(
+			'eventId' => $eventId,
+			'regGroupId' => $regGroupId, 
+			'categoryId' => $categoryId
+		));
 		
 		return $this->converter->getAddRegistrantToGroup($info);
 	}

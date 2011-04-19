@@ -33,17 +33,14 @@ class template_admin_EditRegistrations extends template_AdminPage
 			<div id="content">
 				<h3>Edit Registrations</h3>
 				
-				{$this->HTML->link(array(
-					'label' => 'Add Registrant To Group',
-					'title' => 'Add a new registrant to this group',
-					'href' => '/admin/registration/Registration',
-					'parameters' => array(
-						'a' => 'addRegistrantToGroup',
-						'regGroupId' => $this->group['id'],
-						'reportId' => $this->report['id']
-					)
-				))}
+				<div class="add-registrant">
+					<span class="add-registrant-link link">Add Registrant To Group</span>
 					
+					<div class="add-registrant-content hide">
+						{$this->getAddRegistrantForm()}
+					</div>
+				</div>
+				
 				{$this->getRegistrants()}
 				
 				<div class="divider"></div>
@@ -51,12 +48,55 @@ class template_admin_EditRegistrations extends template_AdminPage
 _;
 	}
 	
+	private function getAddRegistrantForm() {
+		$categories = model_Category::values();
+		$category = reset($categories);
+		$categoryDropDown = fragment_category_HTML::radios(array(
+			'name' => 'categoryId',
+			'value' => $category['id']
+		));
+		
+		$newRegNumber = count($this->group['registrations'])+1;
+		
+		$addregistrantRows = <<<_
+			<tr>
+				<td class="label">Category</td>
+				<td style="padding-right:60px;">
+					{$this->HTML->hidden(array(
+						'class' => 'add-registrant-redirect',
+						'value' => "/admin/registration/Registration?reportId={$this->report['id']}&groupId={$this->group['id']}#registrant{$newRegNumber}"
+					))}
+					{$this->HTML->hidden(array(
+						'name' => 'regGroupId',
+						'value' => $this->group['id']
+					))}
+					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $this->event['id']
+					))}
+					
+					{$categoryDropDown}
+				</td>
+			</tr>
+_;
+
+		$addRegistrantForm = new fragment_XhrTableForm(
+			'/admin/registration/Registration', 
+			'addRegistrantToGroup', 
+			$addregistrantRows,
+			'Continue'
+		);
+		
+		return $addRegistrantForm->html();
+	}
+	
 	private function getRegistrants() {
 		$html = '';
 		
 		$registrations = $this->group['registrations'];
 		foreach($registrations as $index => $r) {
-			$num = (count($registrations) > 1)? $index+1 : '';
+			$num = $index+1;
+			$numDisplayed = count($registrations) > 1? $num : '';
 
 			$comments = new fragment_XhrTableForm(
 				'/admin/registration/Registration', 
@@ -131,7 +171,7 @@ _;
 			$html .= <<<_
 				<div class="registrant {$cancelCss}">
 					<div class="registrant-heading">
-						Registrant {$num} {$cancelDate}
+						Registrant {$numDisplayed} {$cancelDate}
 					</div>	
 					<div class="registrant-links">
 						{$cancelLink} {$sendEmailLink} {$deleteLink}

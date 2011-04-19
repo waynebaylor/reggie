@@ -94,5 +94,27 @@ dojo.require("hhreg.util");
 				document.location = hhreg.util.contextUrl(redirectUrl);
 			});
 		});
+		
+		// add registrant to group.
+		dojo.query(".add-registrant").forEach(function(item) {
+			var content = dojo.query(".add-registrant-content", item)[0];
+			var form = dojo.query("form", content)[0];
+			var triggerLink = dojo.query(".add-registrant-link", item)[0];
+			var redirectUrl = dojo.query(".add-registrant-redirect", item)[0].value;
+			
+			var dialog = hhreg.dialog.create({
+				title: 'Add Registrant To Group',
+				trigger: triggerLink,
+				content: content,
+				onClose: function() {
+					hhreg.xhrTableForm.hideIcons(form);
+				}
+			});
+			
+			hhreg.xhrTableForm.bind(form, function() {
+				dialog.hide();
+				document.location = hhreg.util.contextUrl(redirectUrl);
+			});
+		});
 	});
 })();
