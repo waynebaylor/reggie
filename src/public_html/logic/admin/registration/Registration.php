@@ -32,7 +32,14 @@ class logic_admin_registration_Registration extends logic_Performer
 		
 		db_reg_RegistrationManager::getInstance()->createRegistration($params['regGroupId'], $newReg);
 		
-		return array();
+		$group = db_reg_GroupManager::getInstance()->find($params['regGroupId']);
+		$count = count($group['registrations']);
+		
+		return array(
+			'reportId' => $params['reportId'],
+			'groupId' => $params['regGroupId'],
+			'newNumber' => $count
+		);
 	}
 	
 	public function createNewRegistration($eventId, $categoryId) {

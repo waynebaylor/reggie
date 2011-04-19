@@ -7,8 +7,10 @@ class fragment_XhrTableForm extends template_Template
 	private $rows;
 	private $buttonText;
 	private $errorText;
+	private $useAjax;
 	
-	function __construct($url, $action, $rows, $buttonText = 'Save', $errorText = 'There was a problem saving. Please try again.') {
+	function __construct($url, $action, $rows, $buttonText = 'Save', 
+		$errorText = 'There was a problem saving. Please try again.', $useAjax = true) {
 		parent::__construct();
 		
 		$this->url = $url;
@@ -16,6 +18,7 @@ class fragment_XhrTableForm extends template_Template
 		$this->rows = $rows;	
 		$this->buttonText = $buttonText;
 		$this->errorText = $errorText;
+		$this->useAjax = $useAjax;
 	}
 	
 	public function html() {
@@ -25,6 +28,11 @@ class fragment_XhrTableForm extends template_Template
 			</script>
 			
 			<form method="post" name="{$this->action}" action="{$this->contextUrl($this->url)}">
+				{$this->HTML->hidden(array(
+					'name' => 'useAjax',
+					'value' => $this->useAjax? 'true' : 'false'
+				))}
+				
 				<table class="xhr-table-form">
 					{$this->rows}
 					<tr>

@@ -35,7 +35,8 @@ _;
 	
 	public function getAddRegistrantToGroup($properties) {
 		$this->setProperties($properties);
-		return new fragment_Success();		
+		
+		return new template_Redirect("/admin/registration/Registration?groupId={$this->groupId}&reportId={$this->reportId}#registrant{$this->newNumber}");		
 	}
 	
 	public function getCancelRegistration($properties) {

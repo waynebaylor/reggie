@@ -1,5 +1,6 @@
 dojo.require("hhreg.validation");
 dojo.require("dojox.form.BusyButton");
+dojo.require("dijit.form.Button");
 
 (function() {
 	var xhrTableForm = dojo.provide("hhreg.xhrTableForm");
@@ -107,26 +108,42 @@ dojo.require("dojox.form.BusyButton");
 	
 	xhrTableForm.bind = function(/*DOM Node[form]*/ form, /*function(optional)*/ callback) {
 		var button = dojo.query("input[type=button]", form)[0]; 
-		var saveButton = new dojox.form.BusyButton({
-			label: button.value,
-			busyLabel: "Processing...",
-			onClick: function() {
-				submitForm(form, saveButton, callback);
-			}
-		}, button);
-		saveButton.startup();
+		var useAjax = dojo.query("input[name=useAjax]", form)[0].value;
 		
-		// xhr form when user hits enter key. as if the continue button were
-		// a submit button.
-		dojo.connect(form, "onkeypress", function(event) {
-			if(event.keyCode === dojo.keys.ENTER && event.target.tagName.toLowerCase() !== 'textarea') {
-				dojo.stopEvent(event);
-				
-				saveButton.makeBusy();
-				
-				submitForm(form, saveButton, callback);
-			}
-		});
+		var saveButton;
+		
+		if(useAjax === 'true') {
+			saveButton = new dojox.form.BusyButton({
+				label: button.value,
+				busyLabel: "Processing...",
+				onClick: function() {
+					submitForm(form, saveButton, callback);
+				}
+			}, button);
+			saveButton.startup();
+			
+			// xhr form when user hits enter key. as if the continue button were
+			// a submit button.
+			dojo.connect(form, "onkeypress", function(event) {
+				if(event.keyCode === dojo.keys.ENTER && event.target.tagName.toLowerCase() !== 'textarea') {
+					dojo.stopEvent(event);
+					
+					saveButton.makeBusy();
+					
+					submitForm(form, saveButton, callback);
+				}
+			});
+		}
+		else {
+			// do a standard form submit.
+			saveButton = new dijit.form.Button({
+				label: button.value,
+				onClick: function() {
+					form.submit();
+				}
+			}, button);
+			saveButton.startup();
+		}
 	};
 	
 	xhrTableForm.hideIcons = function(node) {

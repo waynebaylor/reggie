@@ -94,11 +94,13 @@ class action_admin_registration_Registration extends action_ValidatorAction
 	}
 	
 	public function addRegistrantToGroup() {
+		$reportId = RequestUtil::getValue('reportId', 0);
 		$categoryId = RequestUtil::getValue('categoryId', 0);
 		$regGroupId = RequestUtil::getValue('regGroupId', 0);
 		$eventId = RequestUtil::getValue('eventId', 0);
 		
 		$info = $this->logic->addRegistrantToGroup(array(
+			'reportId' => $reportId,
 			'eventId' => $eventId,
 			'regGroupId' => $regGroupId, 
 			'categoryId' => $categoryId

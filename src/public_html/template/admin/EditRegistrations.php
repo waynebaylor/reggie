@@ -56,15 +56,13 @@ _;
 			'value' => $category['id']
 		));
 		
-		$newRegNumber = count($this->group['registrations'])+1;
-		
 		$addregistrantRows = <<<_
 			<tr>
 				<td class="label">Category</td>
 				<td style="padding-right:60px;">
 					{$this->HTML->hidden(array(
-						'class' => 'add-registrant-redirect',
-						'value' => "/admin/registration/Registration?reportId={$this->report['id']}&groupId={$this->group['id']}#registrant{$newRegNumber}"
+						'name' => 'reportId',
+						'value' => $this->report['id']
 					))}
 					{$this->HTML->hidden(array(
 						'name' => 'regGroupId',
@@ -84,7 +82,9 @@ _;
 			'/admin/registration/Registration', 
 			'addRegistrantToGroup', 
 			$addregistrantRows,
-			'Continue'
+			'Continue',
+			'There was a problem saving. Please try again.',
+			false
 		);
 		
 		return $addRegistrantForm->html();
