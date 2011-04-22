@@ -18,6 +18,7 @@ class logic_admin_report_GenerateReport extends logic_Performer
 		}
 		else if($report['isAllRegToDate'] === 'T') { 
 			$info = logic_admin_report_AllRegToDateHelper::addSpecialInfo($report, $info);
+			$info['showCreateRegLink'] = false;
 		}
 		else if($report['isOptionCount'] === 'T') {
 			$info = logic_admin_report_OptionCountHelper::addSpecialInfo($report, $info);
