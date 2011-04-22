@@ -309,9 +309,13 @@ class db_reg_RegistrationManager extends db_Manager
 			db_reg_RegOptionManager::getInstance()->cancel($opt['id']);	
 		}
 		
-		// 3. remove var quantity amounts
+		// 3. zero-out var quantity amounts
 		foreach($registration['variableQuantity'] as $varQuantity) {
-			db_reg_VariableQuantityManager::getInstance()->delete($varQuantity['registrationId'], $varQuantity['variableQuantityId']);
+			db_reg_VariableQuantityManager::getInstance()->save(array(
+				'id' => $varQuantity['id'],
+				'priceId' => $varQuantity['priceId'],
+				'quantity' => 0
+			));
 		}
 	}
 	
