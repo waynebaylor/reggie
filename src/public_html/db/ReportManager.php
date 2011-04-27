@@ -859,6 +859,8 @@ class db_ReportManager extends db_Manager
 				Registration.regTypeId = RegType.id
 			WHERE 
 				Registration.eventId = :eventId
+			AND
+				Registration.dateCancelled is NULL
 			GROUP BY 
 				Registration.regTypeId
 		';
