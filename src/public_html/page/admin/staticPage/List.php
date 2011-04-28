@@ -45,7 +45,8 @@
 						'a' => 'removePage',
 						'id' => $page['id']
 					),
-					'title' => 'Delete Page'
+					'title' => 'Delete Page',
+					'class' => 'remove'
 				)) ?>
 			</td>
 		</tr>

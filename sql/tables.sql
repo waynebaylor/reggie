@@ -563,6 +563,17 @@ create table if not exists `RegType_EmailTemplate` (
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
+-- --------------------------------------------------
+
+create table if not exists `StaticPage` (
+	`id`			integer		not null auto_increment,
+	`eventId`		integer		not null,
+	`name`			varchar(100)	not null,
+	`title`			varchar(255),
+	`content`		text,
+	primary key(`id`)
+) ENGINE=InnoDB default CHARSET=utf8;
+
 -- -----------------------------------------
 -- ADD TABLE CONSTRAINTS
 -- -----------------------------------------
@@ -1100,6 +1111,12 @@ alter table RegType_EmailTemplate
 alter table RegType_EmailTemplate
 	add constraint regType_emailTemplate_typeTemplate_uni
 	unique (regTypeId, emailTemplateId);
+
+-- --------------------------------------------------
+
+alter table StaticPage
+	add constraint staticPage_eventId_fk
+	foreign key (eventId) references Event(id);
 
 -- --------------------------------------------------
 

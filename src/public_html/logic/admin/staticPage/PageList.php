@@ -7,39 +7,44 @@ class logic_admin_staticPage_PageList extends logic_Performer
 	}
 	
 	public function view($params) {
-		$event = db_EventManager::getInstance()->find($params['eventId']);
 		$pages = db_StaticPageManager::getInstance()->findByEventId($params['eventId']);
 		
 		$urlAdded = array();
 		foreach($pages as $p) {
 			$protocol = 'http://';
-			$url = $this->contextUrl('/pages/'.$this->event['code'].'/'.$p['name']);
+			$url = Reggie::contextUrl('/pages/'.$p['eventCode'].'/'.$p['name']);
 			$link = $protocol.$_SERVER['SERVER_NAME'].$url;
 			
-			$p['url'] = $list;
+			$p['url'] = $link;
 			$urlAdded[] = $p;
 		}
 		
 		return array(
 			'eventId' => $params['eventId'],
-			'pages' => $pages
+			'pages' => $urlAdded
 		);
 	}
 	
-	public function eventPages() {
+	public function addPage($params) {
+		db_StaticPageManager::getInstance()->createPage(array(
+			'eventId' => $params['eventId'],
+			'name' => $params['name'],
+			'title' => $params['title']
+		));
 		
+		return $this->view(array(
+			'eventId' => $params['eventId']
+		));
 	}
 	
-	public function create() {
+	public function removePage($params) {
+		$page = db_StaticPageManager::getInstance()->find($params['id']);
 		
-	}
-	
-	public function save() {
+		db_StaticPageManager::getInstance()->deletePage($params['id']);
 		
-	}
-	
-	public function remove() {
-		
+		return $this->view(array(
+			'eventId' => $page['eventId']
+		));
 	}
 }
 

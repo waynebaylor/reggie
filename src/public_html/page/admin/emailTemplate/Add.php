@@ -68,6 +68,7 @@
 	<td class="label">Before Summary</td>
 	<td>
 		<?php echo $this->HTML->textarea(array(
+			'class' => 'expanding',
 			'name' => 'header',
 			'value' => '',
 			'rows' => 10,
@@ -83,6 +84,7 @@
 	<td class="label">After Summary</td>
 	<td>
 		<?php echo $this->HTML->textarea(array(
+			'class' => 'expanding',
 			'name' => 'footer',
 			'value' => '',
 			'rows' => 10,

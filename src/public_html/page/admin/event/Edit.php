@@ -66,6 +66,7 @@
 	<td class="label">Confirmation Page Text</td>
 	<td>
 		<?php echo $this->HTML->textarea(array(
+			'class' => 'expanding',
 			'name' => 'confirmationText',
 			'value' => $this->escapeHtml($this->event['confirmationText']),
 			'rows' => 10,
@@ -77,6 +78,7 @@
 	<td class="label">Registration Closed Text</td>
 	<td class="admin_td">
 		<?php echo $this->HTML->textarea(array(
+			'class' => 'expanding',
 			'name' => 'regClosedText',
 			'value' => $this->escapeHtml($this->event['regClosedText']),
 			'rows' => 10,
@@ -88,6 +90,7 @@
 	<td class="label">Cancellation Policy</td>
 	<td class="admin_td">
 		<?php echo $this->HTML->textarea(array(
+			'class' => 'expanding',
 			'name' => 'cancellationPolicy',
 			'value' => $this->escapeHtml($this->event['cancellationPolicy']),
 			'rows' => 10,

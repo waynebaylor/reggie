@@ -4,6 +4,7 @@ class viewConverter_admin_staticPage_PageList extends viewConverter_admin_AdminC
 {
 	function __construct() {
 		parent::__construct();
+		$this->title = 'Event Pages';
 	}
 	
 	protected function body() {
@@ -15,6 +16,18 @@ class viewConverter_admin_staticPage_PageList extends viewConverter_admin_AdminC
 	
 	protected function getBreadcrumbs() {
 		return '';
+	}
+	
+	public function getAddPage($properties) {
+		$this->setProperties($properties);
+		
+		return new template_TemplateWrapper($this->getFileContents('page_admin_staticPage_List'));
+	}
+	
+	public function getRemovePage($properties) {
+		$this->setProperties($properties);
+		
+		return new template_TemplateWrapper($this->getFileContents('page_admin_staticPage_List'));
 	}
 }
 

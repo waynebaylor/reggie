@@ -43,7 +43,7 @@ _;
 				<script type="text/javascript">
 					dojo.addOnLoad(function() { 
 						dojo.require("dijit.form.Textarea");
-						dojo.query("textarea").forEach(function(item) {
+						dojo.query("textarea.expanding").forEach(function(item) {
 							var ta = new dijit.form.Textarea({
 								name: item.name, 
 								style: "min-height:75px; width:500px;"
