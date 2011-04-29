@@ -7,6 +7,8 @@
 	dojo.addOnLoad(function() {
 		var input = dojo.byId("static-content-input");
 		var value = dojo.byId("static-content-value");
+
+		input.value = value.innerHTML;
 		
 		var e = new dijit.InlineEditBox({
 			editor: "dijit.form.Textarea",

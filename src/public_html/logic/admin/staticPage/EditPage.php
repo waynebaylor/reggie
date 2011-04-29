@@ -15,13 +15,13 @@ class logic_admin_staticPage_EditPage extends logic_Performer
 	}
 	
 	public function savePage($params) {
-		$tidy = new tidy();
+		$fixedContent = $this->purifyHtml($params['content']);
 		
 		db_StaticPageManager::getInstance()->save(array(
 			'id' => $params['id'],
 			'name' => $params['name'],
 			'title' => $params['title'],
-			'content' => $params['content']
+			'content' => $fixedContent
 		));
 		
 		return $params;

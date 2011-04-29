@@ -38,7 +38,7 @@
 			'value' => ''
 		)) ?>
 		
-		<div id="static-content-value">
+		<div id="static-content-value" class="hide">
 			<?php echo $this->page['content'] ?>
 		</div>
 		
