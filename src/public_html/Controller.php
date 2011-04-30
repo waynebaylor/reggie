@@ -58,8 +58,29 @@ class Controller
 			
 			$this->invokeAdmin();
 		}
+		else if($this->isStaticPageRequest()) {
+			// no session for static pages.
+			$this->invokeStaticPage();
+		}
 		else {
 			throw new Exception('Invalid action: '.$this->url);
+		}
+	}
+	
+	private function invokeStaticPage() {
+		$segments = explode('/', ltrim($this->url, '/'));
+		if(count($segments) >= 3) {
+			$eventCode = $segments[1];
+			$pageName = $segments[2];
+			
+			$pageController = new action_staticPage_Controller();
+			$pageController->view(array(
+				'eventCode' => $eventCode,
+				'name' => $pageName
+			));
+		}
+		else {
+			throw new Exception('Invalid static page: '.$this->url);
 		}
 	}
 	
@@ -120,6 +141,10 @@ class Controller
 	
 	private function isAdminRequest() {
 		return strpos($this->url, '/admin') === 0;
+	}
+	
+	private function isStaticPageRequest() {
+		return strpos($this->url, '/pages') === 0;
 	}
 }
 

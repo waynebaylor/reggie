@@ -42,6 +42,35 @@ class db_StaticPageManager extends db_Manager
 		return $this->queryUnique($sql, $params, 'Find static page.');
 	}
 	
+	public function findByEventCodeAndName($eventCode, $name) {
+		$sql = '
+			SELECT
+				StaticPage.id,
+				StaticPage.eventId,
+				Event.code as eventCode,
+				StaticPage.name,
+				StaticPage.title,
+				StaticPage.content
+			FROM
+				StaticPage
+			INNER JOIN
+				Event
+			ON
+				StaticPage.eventId = Event.id
+			WHERE
+				Event.code = :eventCode
+			AND
+				StaticPage.name = :name
+		';
+		
+		$params = array(
+			'eventCode' => $eventCode,
+			'name' => $name
+		);
+		
+		return $this->queryUnique($sql, $params, 'Find static page by event code and name.');
+	}
+	
 	public function findByEventId($eventId) {
 		$sql = '
 			SELECT

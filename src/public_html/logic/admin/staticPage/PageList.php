@@ -12,7 +12,10 @@ class logic_admin_staticPage_PageList extends logic_Performer
 		$urlAdded = array();
 		foreach($pages as $p) {
 			$protocol = 'http://';
-			$url = Reggie::contextUrl('/pages/'.$p['eventCode'].'/'.$p['name']);
+			
+			$p['href'] = '/pages/'.$p['eventCode'].'/'.$p['name'];
+			
+			$url = Reggie::contextUrl($p['href']);
 			$link = $protocol.$_SERVER['SERVER_NAME'].$url;
 			
 			$p['url'] = $link;

@@ -23,7 +23,7 @@
 			<td>
 				<?php echo $this->HTML->link(array(
 					'label' => $page['url'],
-					'href' => $page['url'],
+					'href' => $page['href'],
 					'target' => '_blank',
 					'title' => 'View page in new window'
 				)) ?>
