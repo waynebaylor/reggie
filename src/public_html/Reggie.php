@@ -105,9 +105,21 @@ class Reggie
 	}
 	
 	private static function setupIncludePath() {
+		$currPath = dirname(__FILE__);
+		
 		// add the current dir to the include path.
-		if(strpos(get_include_path(), dirname(__FILE__)) === false) {
-			set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__));
+		if(strpos(get_include_path(), $currPath) === false) {
+			set_include_path(get_include_path() . PATH_SEPARATOR . $currPath);
+		}
+		
+		// add external libs.
+		$libsPath = $currPath.'/libs';
+		$libraryDirs = array('html_purifier', 'css_tidy');
+
+		foreach($libraryDirs as $dir) {
+			if(strpos(get_include_path(), $libsPath.'/'.$dir) === false) {
+				set_include_path(get_include_path() . PATH_SEPARATOR . $libsPath.'/'.$dir);
+			}
 		}
 	}
 	
