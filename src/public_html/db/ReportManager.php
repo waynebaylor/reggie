@@ -831,6 +831,8 @@ class db_ReportManager extends db_Manager
 					Registration.id = Registration_VariableQuantityOption.registrationId
 				WHERE
 					Registration.eventId = :eventId
+				AND
+					Registration_VariableQuantityOption.quantity > 0
 				GROUP BY
 					Registration_VariableQuantityOption.priceId
 			)
