@@ -82,6 +82,7 @@ class payment_AuthorizeNET
 		
 			'x_login' => $login,
 			'x_tran_key' => $transactionKey,
+			'x_description' => $this->event['code'].' Registration',
 			'x_amount' => $amount,
 			'x_card_num' => $this->info['cardNumber'],
 			'x_exp_date' => $this->info['month'].$this->info['year'],
