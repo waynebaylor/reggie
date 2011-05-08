@@ -146,4 +146,19 @@ class db_StaticPageManager extends db_Manager
 		
 		$this->execute($sql, $params, 'Save static event page.');
 	}
+	
+	public function deleteByEventId($eventId) {
+		$sql = '
+			DELETE FROM
+				StaticPage
+			WHERE
+				eventId = :eventId
+		';
+		
+		$params = array(
+			'eventId' => $eventId
+		);
+		
+		$this->execute($sql, $params, 'Delete static pages by event ID.');
+	}
 }

@@ -402,6 +402,10 @@ class db_EventManager extends db_Manager
 		// delete event pages.
 		db_PageManager::getInstance()->deleteByEventId($eventId);
 		
+		///////////////////////////////////////////////////////////////////////////////
+		// delete static pages.
+		db_StaticPageManager::getInstance()->deleteByEventId($eventId);
+		
 		/////////////////////////////////////////////////////////////////////////////////
 		// delete event.
 		$sql = '
