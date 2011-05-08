@@ -133,11 +133,18 @@ _;
 			else {
 				$cancelLink = '';
 				$cancelDate = '<span style="font-weight:bold; color:red;">( Cancelled )</span>'; 
-
 				$cancelCss = 'cancelled';
 			}	
 			
-			$sendEmailLink = '';
+			$sendEmailLink = $this->HTML->link(array(
+				'label' => 'Create/Enable Email Template',
+				'title' => 'An email template must be enabled to send email confirmations',
+				'href' => '/admin/emailTemplate/EmailTemplates',
+				'parameters' => array(
+					'a' => 'view',
+					'eventId' => $this->event['id']
+				)
+			));
 			$emailTemplate = db_EmailTemplateManager::getInstance()->findByRegTypeId($this->event['id'], $r['regTypeId']);
 			if(!empty($emailTemplate)) {
 				$sendEmailLink = $this->HTML->link(array(
@@ -156,9 +163,9 @@ _;
 			$deleteLink = '';
 			if(!empty($r['dateCancelled'])) {
 				$deleteLink = $this->HTML->link(array(
-					'label' => 'Permanantly Delete',
+					'label' => 'Permanently Delete',
 					'class' => 'delete-registrant',
-					'title' => 'Permanantly delete this registrant',
+					'title' => 'Permanently delete this registrant',
 					'href' => '/admin/registration/Registration',
 					'parameters' => array(
 						'a' => 'deleteRegistration',
@@ -174,7 +181,7 @@ _;
 						Registrant {$numDisplayed} {$cancelDate}
 					</div>	
 					<div class="registrant-links">
-						{$cancelLink} {$sendEmailLink} {$deleteLink}
+						{$sendEmailLink} {$cancelLink} {$deleteLink}
 					</div>
 					
 					<div class="sub-divider"></div>
