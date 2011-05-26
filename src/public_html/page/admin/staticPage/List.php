@@ -10,7 +10,7 @@
 			<th>Options</th>
 		</tr>
 		<?php if(empty($this->pages)): ?>
-		<tr><td colspan="3">No Pages</td></tr>
+		<tr><td colspan="4">No Pages</td></tr>
 		<?php else: ?>
 		<?php foreach($this->pages as $page): ?>
 		<tr>

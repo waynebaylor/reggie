@@ -31,9 +31,9 @@ class Controller
 			db_EventManager::getInstance()->commitTransaction();
 		}
 		catch(Exception $ex) {
-			db_EventManager::getInstance()->rollbackTransaction();			
-			
 			Logger::log($ex, 'Error executing action: '.$this->getAction().' in class "'.get_class($this).'"');
+			
+			db_EventManager::getInstance()->rollbackTransaction();			
 			
 			$page = new template_ErrorPage();
 			echo $page->html();

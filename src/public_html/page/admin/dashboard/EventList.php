@@ -59,6 +59,16 @@
 				)) ?>
 				
 				<?php echo $this->HTML->link(array(
+					'label' => 'Badge Templates',
+					'href' => '/admin/badge/BadgeTemplates',
+					'parameters' => array(
+						'a' => 'view',
+						'eventId' => $eventInfo['event']['id']
+					),
+					'title' => 'Badge Templates/Printing'
+				)) ?>
+				
+				<?php echo $this->HTML->link(array(
 					'label' => 'Delete',
 					'href' => '/admin/dashboard/ConfirmDeleteEvent',
 					'parameters' => array(

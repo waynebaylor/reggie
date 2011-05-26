@@ -3,13 +3,18 @@
 class ArrayUtil
 {
 	/**
-	 * Returns the key/value pairs from 'array' where the keys are 
-	 * in the array 'keys'. 
+	 * Returns the key/value pairs from 'arr' where the keys are 
+	 * in the array 'keys'. This is different from array_intersect* functions
+	 * in that the first argument is an associative array and the second is 
+	 * a simple array.
+	 * 
+	 * @param array $arr the key/value pairs
+	 * @param array $keys the keys to keep
 	 */
-	public static function keyIntersect($array, $keys) {
+	public static function keyIntersect($arr, $keys) {
 		$params = array();
 
-		foreach($array as $key => $value) {
+		foreach($arr as $key => $value) {
 			if(in_array($key, $keys)) {
 				$params[$key] = $value; 
 			}	
@@ -22,10 +27,10 @@ class ArrayUtil
 	 * Returns the key/value pairs from 'array' where the keys match
 	 * the given regular expression.
 	 */
-	public static function keyMatches($array, $regex) {
+	public static function keyMatches($arr, $regex) {
 		$params = array();
 		
-		foreach($array as $key => $value) {
+		foreach($arr as $key => $value) {
 			if(preg_match($regex, $key)) {
 				$params[$key] = $value;
 			}

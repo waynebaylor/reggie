@@ -1,6 +1,7 @@
 
 set foreign_key_checks = 0;
 
+drop table if exists StaticPage;
 drop table if exists RegType_EmailTemplate;
 drop table if exists GroupRegistration_ContactField;
 drop table if exists GroupRegistration;
@@ -548,17 +549,17 @@ create table if not exists `GroupRegistration` (
 -- --------------------------------------------------
 
 create table if not exists `GroupRegistration_ContactField` (
-	`id`			integer 	not null auto_increment,
+	`id`			        integer 	not null auto_increment,
 	`groupRegistrationId`	integer		not null,
-	`contactFieldId`	integer		not null,
+	`contactFieldId`	    integer		not null,
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
 -- --------------------------------------------------
 
 create table if not exists `RegType_EmailTemplate` (
-	`id`			integer 	not null auto_increment,
-	`regTypeId`		integer,
+	`id`			    integer 	not null auto_increment,
+	`regTypeId`		    integer,
 	`emailTemplateId`	integer		not null,
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
@@ -572,6 +573,59 @@ create table if not exists `StaticPage` (
 	`title`			varchar(255),
 	`content`		text,
 	primary key(`id`)
+) ENGINE=InnoDB default CHARSET=utf8;
+
+-- --------------------------------------------------
+
+create table if not exists `BadgeTemplate` (
+    `id`            integer         not null auto_increment,
+    `eventId`       integer         not null,
+    `name`          varchar(255)    not null,
+    primary key(`id`)
+) ENGINE=InnoDB default CHARSET=utf8;
+
+-- --------------------------------------------------
+
+create table if not exists `BadgeTemplate_RegType` (
+    `id`                integer         not null auto_increment,
+    `badgeTemplateId`   integer         not null,
+    `regTypeId`         integer,
+    primary key(`id`)
+) ENGINE=InnoDB default CHARSET=utf8;
+
+-- --------------------------------------------------
+
+create table if not exists `BadgeCell` (
+    `id`                integer         not null auto_increment,
+    `badgeTemplateId`   integer         not null,
+    `xCoord`            integer         not null,
+    `yCoord`            integer         not null,
+    `width`             decimal(10,2)   not null,
+    `font`              varchar(255)    not null,
+    `fontSize`          integer         not null,
+    `horizontalAlign`   varchar(6)      not null,
+    `hasBarcode`        char(1)         not null,
+    primary key(`id`)
+) ENGINE=InnoDB default CHARSET=utf8;
+
+-- --------------------------------------------------
+
+create table if not exists `BadgeCell_TextContent` (
+    `id`                integer         not null auto_increment,
+    `badgeCellId`       integer         not null,      
+    `displayOrder`      integer         not null,
+    `text`              varchar(255),
+    `contactFieldId`    integer,
+    primary key(`id`)
+) ENGINE=InnoDB default CHARSET=utf8;
+
+-- --------------------------------------------------
+
+create table if not exists `BadgeBarcodeField` (
+    `id`                integer         not null auto_increment,
+    `badgeCellId`       integer         not null,    
+    `contactFieldId`    integer         not null,  
+    primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
 -- -----------------------------------------
@@ -1117,7 +1171,13 @@ alter table RegType_EmailTemplate
 alter table StaticPage
 	add constraint staticPage_eventId_fk
 	foreign key (eventId) references Event(id);
+	
+alter table StaticPage
+    add constraint staticPage_eventIdName_uni
+    unique(eventId, name);
 
 -- --------------------------------------------------
+
+
 
 

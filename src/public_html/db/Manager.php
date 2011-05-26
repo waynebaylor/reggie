@@ -155,6 +155,164 @@ abstract class db_Manager
 	public function rollbackTransaction() {
 		self::$conn->rollBack();
 	}
+	
+	/**
+	 * Creates and runs an SQL insert statement based on the given
+	 * table name, parameters, and values. For example the given data
+	 * would generate the following SQL:
+	 * 
+	 * <pre>...insert('StaticPage', array(
+	 * 	'eventId' => 3,
+	 * 	'name' => 'about_us',
+	 * 	'title' => 'About Us Page',
+	 * 	'content' => 'Hello and welcome to our new page!'
+	 * ));
+	 * </pre>
+	 * 
+	 * <pre>
+	 * 	INSERT INTO
+	 * 		StaticPage(
+	 * 			eventId,
+	 * 			name,
+	 * 			title,
+	 * 			content
+	 * 		)
+	 * 	VALUES(
+	 * 		:eventId,
+	 * 		:name,
+	 * 		:title,
+	 * 		:content
+	 * 	)
+	 * </pre>
+	 * 
+	 * @param string $table the table name
+	 * @param array $values the column names and values
+	 */
+	protected function insert($table, $values) {
+		$columnNames = implode(',', array_keys($values));
+		
+		$fields = array();
+		foreach($values as $columnName => $_) {
+			$fields[] = ":{$columnName}";
+		}
+		$fields = implode(',', $fields);
+		
+		$sql = "INSERT INTO {$table}( {$columnNames} ) VALUES( {$fields} )";
+		
+		$this->execute($sql, $values, "Insert into {$table}.");
+	}
+	
+	/**
+	 * Updates the values in the given table based on the given 
+	 * conditions (interpreted as equality conditions).
+	 * 
+	 * @param string $table the table name
+	 * @param array $values the column names and values
+	 * @param array $restrictions the column equality conditions
+	 */
+	protected function update($table, $values, $restrictions) {
+		$fields = array();
+		foreach($values as $columnName => $_) {
+			$fields[] = "{$columnName} = :{$columnName}";
+		}
+		$fields = implode(',', $fields);
+		
+		$conditions = array();
+		foreach($restrictions as $columnName => $_) {
+			$conditions[] = "{$columnName} = :{$columnName}";
+		}
+		$conditions = implode(' AND ', $conditions);
+		
+		$sql = "UPDATE {$table} SET {$fields}";
+		if(!empty($conditions)) {
+			$sql .= " WHERE {$conditions}";
+		}
+		
+		$this->execute($sql, $values, "Update {$table}.");
+	}
+	
+	/**
+	 * Delete rows from the given table based on the given conditions
+	 * (interpreted as equality conditions).
+	 * 
+	 * @param string $table the table name
+	 * @param array $restrictions the column equality conditions
+	 */
+	protected function del($table, $restrictions) {
+		$conditions = array();
+		foreach($restrictions as $columnName => $_) {
+			$conditions[] = "{$columnName} = :{$columnName}";
+		}
+		$conditions = implode(' AND ', $conditions);
+		
+		$sql = "DELETE FROM {$table}";
+		if(!empty($conditions)) {
+			$sql .= " WHERE {$conditions}";
+		}
+		
+		$this->execute($sql, $restrictions, "Delete from {$table}.");
+	}
+	
+	/**
+	 * Query the given table based on the given conditions (interpreted
+	 * as equality conditions). If raw results are needed, then do not 
+	 * use this method; use selectRaw() instead.
+	 * 
+	 * @param string $table the table name
+	 * @param array $fields the column names
+	 * @param array $restrictions the equality conditions
+	 */
+	protected function select($table, $fields, $restrictions) {
+		$columnNames = implode(',', $fields);
+		
+		$conditions = array();
+		foreach($restrictions as $columnName => $_) {
+			$conditions[] = "{$columnName} = :{$columnName}";
+		}
+		$conditions = implode(' AND ', $conditions);
+		
+		$sql = "SELECT {$columnNames} FROM {$table}";
+		if(!empty($conditions)) {
+			$sql .= " WHERE {$conditions}";
+		}
+		
+		return $this->query($sql, $restrictions, "Find from {$table}.");
+	}
+	
+	/**
+	 * Same as select(), but returns raw result sets, like rawQuery().
+	 * 
+	 * @param string $table the table name
+	 * @param array $fields the column names
+	 * @param array $restrictions the equality conditions
+	 */
+	protected function rawSelect($table, $fields, $restrictions) {
+		$columnNames = implode(',', $fields);
+		
+		$conditions = array();
+		foreach($restrictions as $columnName => $_) {
+			$conditions[] = "{$columnName} = :{$columnName}";
+		}
+		$conditions = implode(' AND ', $conditions);
+		
+		$sql = "SELECT {$columnNames} FROM {$table}";
+		if(!empty($conditions)) {
+			$sql .= " WHERE {$conditions}";
+		}
+		
+		return $this->rawQuery($sql, $restrictions, "Find from {$table}.");
+	}
+	
+	protected function selectUnique($table, $fields, $restrictions) {
+		$r = $this->select($table, $fields, $restrictions);
+		
+		if(empty($r)) {
+			return NULL;
+		}
+		else {
+			return $r[0];
+		}
+	}
 }
 
 ?>

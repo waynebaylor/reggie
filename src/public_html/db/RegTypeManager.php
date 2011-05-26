@@ -478,6 +478,34 @@ class db_RegTypeManager extends db_OrderableManager
 			$this->delete($regType);
 		}
 	}
+	
+	public function findForBadgeTemplate($template) {
+		if($template['appliesToAll']) {
+			return $this->findByEventId($template['eventId']);
+		}
+		else {
+			$sql = '
+				SELECT
+					RegType.id,
+					RegType.code,
+					RegType.description
+				FROM
+					RegType
+				INNER JOIN
+					BadgeTemplate_RegType
+				ON
+					RegType.id = BadgeTemplate_RegType.regTypeId
+				WHERE
+					BadgeTemplate_RegType.badgeTemplateId = :badgeTemplateId
+			';
+			
+			$params = array(
+				'badgeTemplateId' => $template['id']
+			);
+			
+			return $this->rawQuery($sql, $params, 'Find reg types for which badge template is applied.');
+		}
+	}
 }
 
 ?>
