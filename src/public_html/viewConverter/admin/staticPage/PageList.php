@@ -15,7 +15,12 @@ class viewConverter_admin_staticPage_PageList extends viewConverter_admin_AdminC
 	}
 	
 	protected function getBreadcrumbs() {
-		return '';
+		$b = new fragment_Breadcrumb(array(
+			'location' => 'StaticPageList',
+			'eventCode' => $this->eventCode
+		));
+		
+		return $b->html();
 	}
 	
 	public function getAddPage($properties) {

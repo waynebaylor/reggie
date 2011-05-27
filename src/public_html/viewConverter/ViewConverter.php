@@ -147,7 +147,7 @@ abstract class viewConverter_ViewConverter
 		header('Content-Type: text/html; charset=utf-8');
 		
 		// set the title if given, otherwise it can be set in the head() method.
-		$title = !empty($this->title)? '' : '<title>{$this->title}</title>';
+		$title = empty($this->title)? '' : "<title>{$this->title}</title>";
 		
 		$html = <<<_
 			<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

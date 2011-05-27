@@ -29,6 +29,16 @@ class fragment_Breadcrumb extends template_Template
 		$html = '';
 		
 		switch($this->config['location']) {
+			case 'EditStaticPage':
+				$html = $this->editStaticPage();
+				$html .= $this->SEPARATOR;
+				$html .= 'Edit Page Content';
+				break;
+			case 'StaticPageList':
+				$html = $this->staticPageList();
+				$html .= $this->SEPARATOR;
+				$html .= "Event Pages ({$this->config['eventCode']})";
+				break;
 			case 'EditEmailTemplate':
 				$html = $this->editEmailTemplate();
 				$html .= $this->SEPARATOR;
@@ -489,6 +499,25 @@ _;
 			{$this->HTML->link(array(
 				'label' => 'Email Templates',
 				'href' => '/admin/emailTemplate/EmailTemplates',
+				'parameters' => array(
+					'a' => 'view',
+					'eventId' => $this->config['eventId']
+				)
+			))}	
+_;
+	}
+	
+	private function staticPageList() {
+		return $this->event();
+	}
+	
+	private function editStaticPage() {
+		return <<<_
+			{$this->staticPageList()}
+			{$this->SEPARATOR}
+			{$this->HTML->link(array(
+				'label' => "Event Pages ({$this->config['eventCode']})",
+				'href' => '/admin/staticPage/PageList',
 				'parameters' => array(
 					'a' => 'view',
 					'eventId' => $this->config['eventId']

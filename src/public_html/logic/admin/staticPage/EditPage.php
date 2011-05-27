@@ -8,9 +8,11 @@ class logic_admin_staticPage_EditPage extends logic_Performer
 	
 	public function view($params) {
 		$page = db_StaticPageManager::getInstance()->find($params['id']);
+		$eventInfo = db_EventManager::getInstance()->findInfoById($page['eventId']);
 		
 		return array(
-			'page' => $page
+			'page' => $page,
+			'eventCode' => $eventInfo['code']
 		);
 	}
 	

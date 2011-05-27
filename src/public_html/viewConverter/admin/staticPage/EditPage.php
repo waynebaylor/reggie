@@ -15,7 +15,13 @@ class viewConverter_admin_staticPage_EditPage extends viewConverter_admin_AdminC
 	}
 	
 	protected function getBreadcrumbs() {
-		return '';
+		$b = new fragment_Breadcrumb(array(
+			'location' => 'EditStaticPage',
+			'eventId' => $this->page['eventId'],
+			'eventCode' => $this->eventCode
+		));
+		
+		return $b->html();
 	}
 	
 	public function getSavePage($properties) {

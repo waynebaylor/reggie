@@ -7,6 +7,7 @@ class logic_admin_staticPage_PageList extends logic_Performer
 	}
 	
 	public function view($params) {
+		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
 		$pages = db_StaticPageManager::getInstance()->findByEventId($params['eventId']);
 		
 		$urlAdded = array();
@@ -24,6 +25,7 @@ class logic_admin_staticPage_PageList extends logic_Performer
 		
 		return array(
 			'eventId' => $params['eventId'],
+			'eventCode' => $eventInfo['code'],
 			'pages' => $urlAdded
 		);
 	}

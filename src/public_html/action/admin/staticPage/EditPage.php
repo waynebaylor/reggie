@@ -20,6 +20,14 @@ class action_admin_staticPage_EditPage extends action_ValidatorAction
 	}
 	
 	public function savePage() {
+		$errors = validation_Validator::validate(validation_admin_StaticPage::getConfig(), array(
+			'name' => RequestUtil::getValue('name', '')
+		));
+		
+		if(!empty($errors)) {
+			return new fragment_validation_ValidationErrors($errors);
+		}
+		
 		$params = RequestUtil::getValues(array(
 			'id' => 0,
 			'eventId' => 0,

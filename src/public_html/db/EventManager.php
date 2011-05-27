@@ -421,6 +421,32 @@ class db_EventManager extends db_Manager
 		
 		$this->execute($sql, $params, 'Delete event.');
 	}
+	
+	public function findInfoById($id) {
+		$sql = '
+			SELECT
+				id,
+				code,
+				displayName,
+				regOpen,
+				regClosed,
+				capacity,
+				confirmationText,
+				cancellationPolicy,
+				regClosedText,
+				paymentInstructions
+			FROM
+				Event
+			WHERE
+				id=:id
+		';
+		
+		$params = array(
+			'id' => $id
+		);
+		
+		return $this->rawQueryUnique($sql, $params, 'Find event info by id.');
+	}
 }
 
 ?>
