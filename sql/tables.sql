@@ -592,7 +592,7 @@ create table if not exists `BadgeTemplate_RegType` (
     `regTypeId`         integer,
     primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
-
+    
 -- --------------------------------------------------
 
 create table if not exists `BadgeCell` (
@@ -1178,6 +1178,55 @@ alter table StaticPage
 
 -- --------------------------------------------------
 
+alter table BadgeTemplate
+    add constraint badgeTemplate_eventId_fk
+    foreign key (eventId) references Event(id);
+    
+-- --------------------------------------------------
+
+alter table BadgeTemplate_RegType
+    add constraint badgeTempl_regType_badgeId_fk
+    foreign key (badgeTemplateId) references BadgeTemplate(id);
+    
+alter table BadgeTemplate_RegType
+    add constraint badgeTempl_regType_regTypeId_fk
+    foreign key (regTypeId) references RegType(id);
+    
+-- --------------------------------------------------
+
+alter table BadgeCell
+    add constraint badgeCell_badgeTemplId_fk
+    foreign key (badgeTemplateId) references BadgeTemplate(id);
+    
+-- --------------------------------------------------
+
+alter table BadgeCell_TextContent
+    add constraint badgeCell_textCont_badgeCellId_fk
+    foreign key (badgeCellId) references BadgeCell(id);
+    
+alter table BadgeCell_TextContent
+    add constraint badgeCell_textCont_contFieldId_fk
+    foreign key (contactFieldId) references ContactField(id);
+    
+alter table BadgeCell_TextContent
+    add constraint badgeCell_textCont_cellId_dispOrder_uni
+    unique (badgeCellId, displayOrder);
+    
+-- --------------------------------------------------
+
+alter table BadgeBarcodeField
+    add constraint badgeBarcodeField_badgeCellId_fk
+    foreign key (badgeCellId) references BadgeCell(id);
+    
+alter table BadgeBarcodeField
+    add constraint badgeBarcodeField_contFieldId_fk
+    foreign key (contactFieldId) references ContactField(id);
+    
+-- --------------------------------------------------
+
+
+
+    
 
 
 

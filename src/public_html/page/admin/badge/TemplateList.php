@@ -22,8 +22,10 @@
 			<td>
 				<?php echo $this->HTML->link(array(
 					'label' => 'Edit',
-					'href' => '',
-					'parameters' => array(),
+					'href' => '/admin/badge/EditBadgeTemplate',
+					'parameters' => array(
+						'id' => $template['id']
+					),
 					'title' => 'Edit Badge Template'
 				)) ?>
 				<?php echo $this->HTML->link(array(
