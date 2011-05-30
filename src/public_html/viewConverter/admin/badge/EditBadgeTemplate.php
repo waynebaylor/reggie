@@ -17,6 +17,12 @@ class viewConverter_admin_badge_EditBadgeTemplate extends viewConverter_admin_Ad
 	protected function getBreadcrumbs() {
 		return '';
 	}
+	
+	public function getAddBadgeCell($properties) {
+		$this->setProperties($properties);
+		
+		return new template_TemplateWrapper($this->getFileContents('page_admin_badge_TemplateCells'));
+	}
 }
 
 ?>

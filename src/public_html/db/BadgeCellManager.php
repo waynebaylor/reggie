@@ -16,6 +16,15 @@ class db_BadgeCellManager extends db_Manager
 		return self::$instance;
 	}
 	
+	protected function populate(&$obj, $arr) {
+		parent::populate($obj, $arr);
+
+		$obj['content'] = $this->findBadgeCellContentById($obj['id']);
+		$obj['barcodeFields'] = db_BadgeBarcodeFieldManager::getInstance()->findByBadgeCellId($obj['id']);
+		
+		return $obj;
+	}
+	
 	public function find($id) {
 		return $this->selectUnique(
 			'BadgeCell', 
@@ -126,6 +135,22 @@ class db_BadgeCellManager extends db_Manager
 		);
 		
 		return max(1, $n[0]['maxOrder']+1);
+	}
+	
+	public function findBadgeCellContentById($id) {
+		return $this->rawSelect(
+			'BadgeCell_TextContent', 
+			array(
+				'id',
+				'badgeCellId',
+				'displayOrder',
+				'text',
+				'contactFieldId'	
+			), 
+			array(
+				'badgeCellId' => $id
+			)
+		);
 	}
 }
 

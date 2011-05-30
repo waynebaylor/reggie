@@ -21,6 +21,7 @@ class db_BadgeTemplateManager extends db_Manager
 		
 		$obj['appliesToAll'] = $this->isAppliedToAll($obj);
 		$obj['appliesTo'] = db_RegTypeManager::getInstance()->findForBadgeTemplate($obj);
+		$obj['cells'] = db_BadgeCellManager::getInstance()->findByBadgeTemplateId($obj['id']);
 		
 		return $obj;
 	}
