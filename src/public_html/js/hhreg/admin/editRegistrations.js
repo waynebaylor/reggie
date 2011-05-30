@@ -52,6 +52,28 @@ dojo.require("hhreg.util");
 			});
 		});
 		
+		// print badge links
+		dojo.query(".print-badge-link").forEach(function(item){
+			var linksNode = hhreg.util.parentNode(item, ["registrant-links"]);
+			var dialogNode = dojo.query(".print-badge-dialog", linksNode)[0];
+			
+			var dialog = hhreg.dialog.create({
+				title: "Print Badge",
+				trigger: item,
+				content: dialogNode
+			});
+			
+			var button = dojo.query(".print-badge-button", dialog.domNode)[0];
+			var form = button.form;
+			new dijit.form.Button({
+				label: button.value,
+				onClick: function() {
+					form.submit();
+					dialog.hide();
+				}
+			}, button).startup();
+		});
+		
 		// cancel registrant links
 		dojo.query(".cancel-registrant").connect("onclick", function(event) {
 			if(!confirm("Are you sure?")) {

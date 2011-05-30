@@ -159,6 +159,14 @@ _;
 				));
 			}
 			
+			$printBadgeLink = '';
+			$badgeTemplates = db_BadgeTemplateManager::getInstance()->findByRegTypeId($this->event['id'], $r['regTypeId']);
+			if(!empty($badgeTemplates)) {
+				$printBadgeLink = '<span class="print-badge-link link" title="Print badge for this registrant">Print Badge</span>';
+			}
+			
+			$printBadgeDialog = $this->getPrintBadgeDialog($this->event['id'], $r['id'], $badgeTemplates);
+			
 			// must cancel registration before you can delete it.
 			$deleteLink = '';
 			if(!empty($r['dateCancelled'])) {
@@ -181,7 +189,9 @@ _;
 						Registrant {$numDisplayed} {$cancelDate}
 					</div>	
 					<div class="registrant-links">
-						{$sendEmailLink} {$cancelLink} {$deleteLink}
+						{$sendEmailLink} {$printBadgeLink} {$cancelLink} {$deleteLink}
+						
+						{$printBadgeDialog}
 					</div>
 					
 					<div class="sub-divider"></div>
@@ -256,6 +266,45 @@ _;
 					))}
 				</td>
 			</tr>
+_;
+	}
+	
+	private function getPrintBadgeDialog($eventId, $registrationId, $templates) {
+		$items = array();
+		foreach($templates as $template) {
+			$items[] = array(
+				'label' => $template['name'],
+				'value' => $template['id']
+			);
+		}
+		
+		$templateSelect = $this->HTML->select(array(
+			'name' => 'badgeTemplateId',
+			'items' => $items
+		));
+		
+		return <<<_
+			<div class="print-badge-dialog hide">
+				<form method="post" action="{$this->contextUrl('/admin/badge/PrintBadge')}" target="_blank">
+					{$this->HTML->hidden(array(
+						'name' => 'a',
+						'value' => 'singleBadge'
+					))}
+					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $eventId
+					))}
+					{$this->HTML->hidden(array(
+						'name' => 'registrationId',
+						'value' => $registrationId
+					))}
+					
+					<span class="label">Badge Template</span>
+					{$templateSelect}
+					<br><br>
+					<input type="button" class="print-badge-button" value="Print">
+				</form>
+			</div>
 _;
 	}
 }

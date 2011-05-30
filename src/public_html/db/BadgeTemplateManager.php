@@ -54,6 +54,35 @@ class db_BadgeTemplateManager extends db_Manager
 		);
 	}
 	
+	public function findByRegTypeId($eventId, $regTypeId) {
+		$sql = '
+			SELECT
+				BadgeTemplate.id,
+				BadgeTemplate.eventId,
+				BadgeTemplate.name
+			FROM
+				BadgeTemplate
+			INNER JOIN
+				BadgeTemplate_RegType
+			ON
+				BadgeTemplate.id = BadgeTemplate_RegType.badgeTemplateId
+			WHERE
+				BadgeTemplate.eventId = :eventId
+			AND (
+				BadgeTemplate_RegType.regTypeId is NULL
+				OR
+				BadgeTemplate_RegType.regTypeId = :regTypeId
+			)
+		';
+		
+		$params = array(
+			'eventId' => $eventId,
+			'regTypeId' => $regTypeId
+		);
+		
+		return $this->query($sql, $params, 'Find badge template by reg type id.');
+	}
+	
 	public function createBadgeTemplate($data) { 
 		$this->insert(
 			'BadgeTemplate', 
