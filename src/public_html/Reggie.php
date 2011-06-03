@@ -114,7 +114,7 @@ class Reggie
 		
 		// add external libs.
 		$libsPath = $currPath.'/libs';
-		$libraryDirs = array('html_purifier', 'css_tidy');
+		$libraryDirs = array('html_purifier', 'tcpdf');
 
 		foreach($libraryDirs as $dir) {
 			if(strpos(get_include_path(), $libsPath.'/'.$dir) === false) {
