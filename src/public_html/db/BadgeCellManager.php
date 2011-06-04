@@ -138,19 +138,24 @@ class db_BadgeCellManager extends db_Manager
 	}
 	
 	public function findBadgeCellContentById($id) {
-		return $this->rawSelect(
-			'BadgeCell_TextContent', 
-			array(
-				'id',
-				'badgeCellId',
-				'displayOrder',
-				'text',
-				'contactFieldId'	
-			), 
-			array(
-				'badgeCellId' => $id
-			)
-		);
+		$sql = '
+			SELECT
+				id,
+				badgeCellId,
+				displayOrder,
+				text,
+				contactFieldId
+			FROM
+				BadgeCell_TextContent
+			WHERE
+				badgeCellId = :badgeCellId
+			ORDER BY
+				displayOrder
+		';
+		
+		$params = array('badgeCellId' => $id);
+		
+		return $this->rawQuery($sql, $params, 'Find badge cell content.');
 	}
 }
 

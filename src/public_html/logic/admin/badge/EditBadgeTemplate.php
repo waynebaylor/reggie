@@ -25,7 +25,7 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		foreach($template['cells'] as $cell) {
 			$summary = '';
 			
-			if($cell['hasBarcode']) {
+			if($cell['hasBarcode'] === 'T') {
 				$summary .= 'Barcode';
 			}
 			else {
@@ -54,9 +54,9 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 			'xCoord' => 0, // inches
 			'yCoord' => 0, // inches
 			'width' => 4, // inches
-			'font' => 'Arial',
+			'font' => 'helvetica',
 			'fontSize' => 12, // pt
-			'horizontalAlign' => 'center',
+			'horizontalAlign' => 'C',
 			'hasBarcode' => ($params['contentType'] === 'barcode')? 'T' : 'F'
 		));
 		

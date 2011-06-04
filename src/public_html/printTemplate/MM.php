@@ -27,10 +27,18 @@ class printTemplate_MM
 		$pdf->setPrintFooter(false);
 		
 		$pdf->SetMargins($this->marginLeft, $this->marginTop, $this->marginRight);
+	
+		$pdf->AddPage();
 		
 		foreach($data as $cellData) {
-			$pdf->SetFont(/*font family*/ $cellData['font'], /*font style*/ '', /*font size*/ $cellData['fontSize']);
+			$pdf->SetFont(
+				/*font family*/ $cellData['font'], 
+				/*font style*/ '', 
+				/*font size*/ $cellData['fontSize']
+			);
+			
 			$pdf->SetXY($cellData['xCoord'], $cellData['yCoord']);
+			
 			$pdf->Cell(
 				/*width*/ $cellData['width'], 
 				/*height*/ 0, 

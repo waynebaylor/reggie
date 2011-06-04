@@ -27,6 +27,20 @@
 #template-layout td#badge-preview {
 	background-color: #ccc;
 }
+
+#template-layout .badge-cell {
+	padding: 5px;
+	cursor: pointer;
+}
+
+#template-layout .badge-cell-selected {
+	background-color: #b7dcff;
+	border: 1px solid #769DC0;
+}
+
+#template-layout .badge-cell:hover {
+	background-color: #dddee3;
+}
 </style>
 
 <script type="text/javascript">
@@ -52,6 +66,10 @@
 				dojo.query(".fragment-add .content-specifics").addClass("hide");
 				dojo.removeClass(dojo.byId("content-barcode"), "hide");
 			});
+		});
+
+		dojo.query(".badge-cell").forEach(function(item) {
+			
 		});
 	});
 </script>
@@ -85,12 +103,16 @@
 					<div id="badge-canvas"></div>
 				</td>
 				<td class="layout" rowspan="2">
-					<h3>Cell Details</h3>
+					<div>
+						<?php echo $this->getFileContents('page_admin_badge_CellDetails') ?>
+					</div>
 				</td>
 			</tr>
 			<tr>
 				<td class="layout">
-					<h3>Current Cell</h3>
+					<div>
+						<?php echo $this->getFileContents('page_admin_badge_CurrentCell') ?>
+					</div>
 				</td>
 			</tr>
 		</table>		
