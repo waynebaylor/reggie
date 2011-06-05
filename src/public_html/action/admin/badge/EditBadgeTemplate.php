@@ -11,7 +11,8 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 	
 	public function view() {
 		$params = RequestUtil::getValues(array(
-			'id' => 0
+			'id' => 0,
+			'selectedCellId' => 0
 		));
 		
 		$info = $this->logic->view($params);
@@ -48,6 +49,21 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 		
 		$info = $this->logic->saveTemplate($params);
 		return $this->converter->getSaveTemplate($info);
+	}
+	
+	public function saveCellDetails() {
+		$params = RequestUtil::getValues(array(
+			'id' => 0,
+			'xCoord' => 0,
+			'yCoord' => 0,
+			'width' => 4,
+			'font' => 'helvetica',
+			'fontSize' => 12,
+			'horizontalAlign' => 'C'
+		));
+		
+		$info = $this->logic->saveCellDetails($params);
+		return $this->converter->getSaveCellDetails($info);
 	}
 }
 

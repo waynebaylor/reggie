@@ -138,11 +138,13 @@ _;
 			}
 		}
 		$url = trim($url, '&');
+		$url .= empty($config['fragment'])? '' : "#{$config['fragment']}";
 		$url = Reggie::contextUrl($url);
 		
 		unset($config['label']);
 		unset($config['href']);
 		unset($config['parameters']);
+		unset($config['fragment']);
 		
 		return <<<_
 			<a href="{$url}" {$this->getAttributeString($config)}>{$label}</a>	

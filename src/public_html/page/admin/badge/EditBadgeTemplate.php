@@ -30,7 +30,10 @@
 
 #template-layout .badge-cell {
 	padding: 5px;
-	cursor: pointer;
+}
+
+#template-layout .badge-cell a {
+	text-decoration: none;
 }
 
 #template-layout .badge-cell-selected {
@@ -41,6 +44,14 @@
 #template-layout .badge-cell:hover {
 	background-color: #dddee3;
 }
+
+#template-layout #current-cell {
+	background-color: #fff;
+}
+
+#template-layout .fragment-current-cell {
+	padding-left: 10px;
+}
 </style>
 
 <script type="text/javascript">
@@ -49,6 +60,9 @@
 
 	dojo.addOnLoad(function() {
 		dojo.query(".fragment-edit-general form").forEach(function(item) {
+			hhreg.xhrTableForm.bind(item);
+		});
+		dojo.query(".fragment-current-cell form").forEach(function(item) {
 			hhreg.xhrTableForm.bind(item);
 		});
 		
@@ -123,9 +137,17 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="layout">
-				<div>
-					<?php echo $this->getFileContents('page_admin_badge_CurrentCell') ?>
+			<td id="current-cell" class="layout">
+				<h3>Current Cell</h3>
+				
+				<div class="fragment-current-cell">
+					<?php if(!empty($this->selectedCell)): ?>
+					<?php echo $this->xhrTableForm(
+						'/admin/badge/EditBadgeTemplate',
+						'saveCellDetails',
+						$this->getFileContents('page_admin_badge_CurrentCell')
+					) ?>				
+					<?php endif; ?>
 				</div>
 			</td>
 		</tr>

@@ -29,6 +29,12 @@ class viewConverter_admin_badge_EditBadgeTemplate extends viewConverter_admin_Ad
 		
 		return new fragment_Success();
 	}
+	
+	public function getSaveCellDetails($properties) {
+		$this->setProperties($properties);
+		
+		return new fragment_Success();
+	}
 }
 
 ?>

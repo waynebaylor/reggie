@@ -598,12 +598,12 @@ create table if not exists `BadgeTemplate_RegType` (
 create table if not exists `BadgeCell` (
     `id`                integer         not null auto_increment,
     `badgeTemplateId`   integer         not null,
-    `xCoord`            integer         not null,
-    `yCoord`            integer         not null,
-    `width`             decimal(10,2)   not null,
+    `xCoord`            decimal(10,3)   not null,
+    `yCoord`            decimal(10,3)   not null,
+    `width`             decimal(10,3)   not null,
     `font`              varchar(255)    not null,
-    `fontSize`          integer         not null,
-    `horizontalAlign`   varchar(6)      not null,
+    `fontSize`          decimal(10,1)   not null,
+    `horizontalAlign`   char(1)         not null,
     `hasBarcode`        char(1)         not null,
     primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;

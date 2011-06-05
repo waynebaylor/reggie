@@ -8,7 +8,8 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	
 	public function view($params) {
 		$badgeTemplate = $this->strictFindById(db_BadgeTemplateManager::getInstance(), $params['id']);
-		$badgeCells = $this->badgeCellSummaries($badgeTemplate);
+		$selectedCell = $this->getSelectedCell($badgeTemplate, $params['selectedCellId']);
+		$badgeCells = $this->badgeCellSummaries($badgeTemplate, $selectedCell['id']);
 		$eventInfo = db_EventManager::getInstance()->findInfoById($badgeTemplate['eventId']);
 		
 		$appliesToIds = array();
@@ -26,27 +27,36 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 			'eventId' => $eventInfo['id'],
 			'eventCode' => $eventInfo['code'],
 			'badgeCells' => $badgeCells,
-			'appliesToRegTypeIds' => $appliesToIds
+			'appliesToRegTypeIds' => $appliesToIds,
+			'selectedCell' => $selectedCell
 		);
 	}
 	
-	private function badgeCellSummaries($template) {
+	private function badgeCellSummaries($template, $selectedCellId) {
 		$summaries = array();
-		
+				
 		foreach($template['cells'] as $cell) {
-			$summary = '';
-			
+			$summary = array(
+				'id' => $cell['id'],
+				'text' => '',
+				'selected' => false
+			);
+
+			if($selectedCellId === $cell['id']) {
+				$summary['selected'] = true;	
+			}
+					
 			if($cell['hasBarcode'] === 'T') {
-				$summary .= 'Barcode';
+				$summary['text'] = 'Barcode';
 			}
 			else {
 				foreach($cell['content'] as $content) {
 					if(empty($content['contactFieldId'])) {
-						$summary .= $content['text'];
+						$summary['text'] .= $content['text'];
 					}
 					else {
 						$field = db_ContactFieldManager::getInstance()->find($content['contactFieldId']);
-						$summary .= "<{$field['displayName']}>";
+						$summary['text'] .= "<{$field['displayName']}>";
 					}
 				}
 			}
@@ -95,6 +105,25 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	public function saveTemplate($params) {
 		$badgeTemplate = $this->strictFindById(db_BadgeTemplateManager::getInstance(), $params['id']);
 		db_BadgeTemplateManager::getInstance()->save($params);
+		
+		return array();
+	}
+	
+	private function getSelectedCell($template, $cellId) {
+		$selectedCell = null;
+		
+		foreach($template['cells'] as $index => $cell) {
+			if($index === 0 || $cell['id'] === $cellId) {
+				$selectedCell = $cell;
+			}
+		}
+		
+		return $selectedCell;
+	}
+	
+	public function saveCellDetails($params) {
+		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $params['id']);
+		db_BadgeCellManager::getInstance()->saveBadgeCell($params);
 		
 		return array();
 	}
