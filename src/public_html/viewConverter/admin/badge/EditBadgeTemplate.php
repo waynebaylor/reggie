@@ -23,6 +23,12 @@ class viewConverter_admin_badge_EditBadgeTemplate extends viewConverter_admin_Ad
 		
 		return new template_TemplateWrapper($this->getFileContents('page_admin_badge_TemplateCells'));
 	}
+	
+	public function getSaveTemplate($properties) {
+		$this->setProperties($properties);
+		
+		return new fragment_Success();
+	}
 }
 
 ?>

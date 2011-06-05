@@ -29,6 +29,26 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 		$info = $this->logic->addBadgeCell($params); 
 		return $this->converter->getAddBadgeCell($info);
 	}
+	
+	public function saveTemplate() {
+		$errors = validation_Validator::validate(validation_admin_BadgeTemplate::getConfig(), array(
+			'name' => RequestUtil::getValue('name', ''),
+			'regTypeIds' => RequestUtil::getValueAsArray('regTypeIds', array(-1))
+		));
+		
+		if(!empty($errors)) {
+			return new fragment_validation_ValidationErrors($errors);
+		}
+		
+		$params = RequestUtil::getValues(array(
+			'id' => 0,
+			'name' => '',
+			'regTypeIds' => array(-1)
+		));
+		
+		$info = $this->logic->saveTemplate($params);
+		return $this->converter->getSaveTemplate($info);
+	}
 }
 
 ?>

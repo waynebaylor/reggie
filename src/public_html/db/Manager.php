@@ -228,7 +228,7 @@ abstract class db_Manager
 			$sql .= " WHERE {$conditions}";
 		}
 		
-		$this->execute($sql, $values, "Update {$table}.");
+		$this->execute($sql, array_merge($values, $restrictions), "Update {$table}.");
 	}
 	
 	/**

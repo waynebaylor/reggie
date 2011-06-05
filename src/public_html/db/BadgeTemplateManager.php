@@ -140,6 +140,23 @@ class db_BadgeTemplateManager extends db_Manager
 		
 		return !empty($r);
 	}
+	
+	public function save($template) { 
+		$this->update(
+			'BadgeTemplate', 
+			array('name' => $template['name']), 
+			array('id' => $template['id'])
+		);
+		
+		$this->setBadgeTemplateRegTypes($template['id'], $template['regTypeIds']);
+	}
+	
+	public function delete($id) {
+		$this->del('BadgeTemplate_RegType', array('badgeTemplateId' => $id));
+		db_BadgeCellManager::getInstance()->deleteByTemplateId($id);
+		
+		$this->del('BadgeTemplate', array('id' => $id));
+	}
 }
 
 ?>

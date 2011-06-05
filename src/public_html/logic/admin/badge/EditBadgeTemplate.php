@@ -11,11 +11,22 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		$badgeCells = $this->badgeCellSummaries($badgeTemplate);
 		$eventInfo = db_EventManager::getInstance()->findInfoById($badgeTemplate['eventId']);
 		
+		$appliesToIds = array();
+		if($badgeTemplate['appliesToAll']) {
+			$appliesToIds[] = -1;
+		}
+		else {
+			foreach($badgeTemplate['appliesTo'] as $regType) {
+				$appliesToIds[] = $regType['id'];
+			}
+		}
+		
 		return array(
 			'template' => $badgeTemplate,
 			'eventId' => $eventInfo['id'],
 			'eventCode' => $eventInfo['code'],
-			'badgeCells' => $badgeCells
+			'badgeCells' => $badgeCells,
+			'appliesToRegTypeIds' => $appliesToIds
 		);
 	}
 	
@@ -79,6 +90,13 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		return $this->view(array(
 			'id' => $badgeTemplate['id']
 		));
+	}
+	
+	public function saveTemplate($params) {
+		$badgeTemplate = $this->strictFindById(db_BadgeTemplateManager::getInstance(), $params['id']);
+		db_BadgeTemplateManager::getInstance()->save($params);
+		
+		return array();
 	}
 }
 

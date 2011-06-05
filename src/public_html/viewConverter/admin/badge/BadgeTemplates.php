@@ -23,6 +23,12 @@ class viewConverter_admin_badge_BadgeTemplates extends viewConverter_admin_Admin
 		
 		return new template_TemplateWrapper($this->getFileContents('page_admin_badge_TemplateList'));
 	}
+	
+	public function getRemoveTemplate($properties) {
+		$this->setProperties($properties);
+		
+		return new template_TemplateWrapper($this->getFileContents('page_admin_badge_TemplateList'));
+	}
 }
 
 ?>

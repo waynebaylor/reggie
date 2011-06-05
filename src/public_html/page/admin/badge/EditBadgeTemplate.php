@@ -10,7 +10,7 @@
 }
 
 #template-layout td.layout {
-	border: 1px solid #999;
+	border: 1px solid #555;
 	padding: 0  5px 5px;
 	vertical-align: top;
 	background-color: #eee;
@@ -45,8 +45,13 @@
 
 <script type="text/javascript">
 	dojo.require("hhreg.xhrAddList");
+	dojo.require("hhreg.xhrTableForm");
 
 	dojo.addOnLoad(function() {
+		dojo.query(".fragment-edit-general form").forEach(function(item) {
+			hhreg.xhrTableForm.bind(item);
+		});
+		
 		dojo.query(".fragment-cells").forEach(function(item) {
 			hhreg.xhrAddList.bind(item);
 		});
@@ -75,46 +80,54 @@
 </script>
 
 <div id="content">
-	<div id="edit-badge-workarea">
+	<div class="fragment-edit-general">
 		<h3><?php echo $this->title ?></h3>
 		
-		<table id="template-layout">
-			<tr>
-				<td class="layout" rowspan="2">
-					<div class="fragment-cells">
-						<div>
-							<?php echo $this->getFileContents('page_admin_badge_TemplateCells') ?>
-						</div>
-						
-						<div class="sub-divider"></div>
-					
-						<div class="fragment-add">
-							<?php echo $this->xhrAddForm(
-								'Add Cell',
-								'/admin/badge/EditBadgeTemplate',
-								'addBadgeCell',
-								$this->getFileContents('page_admin_badge_AddCell')
-							) ?>
-						</div>
-					</div>
-				</td>
-				<td id="badge-preview" class="layout">
-					<h3>Preview</h3>
-					<div id="badge-canvas"></div>
-				</td>
-				<td class="layout" rowspan="2">
-					<div>
-						<?php echo $this->getFileContents('page_admin_badge_CellDetails') ?>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td class="layout">
-					<div>
-						<?php echo $this->getFileContents('page_admin_badge_CurrentCell') ?>
-					</div>
-				</td>
-			</tr>
-		</table>		
+		<?php echo $this->xhrTableForm(
+			'/admin/badge/EditBadgeTemplate',
+			'saveTemplate',
+			$this->getFileContents('page_admin_badge_EditTemplateInfo')
+		) ?>
 	</div>
+	
+	<div class="divider"></div>
+	
+	<table id="template-layout">
+		<tr>
+			<td class="layout" rowspan="2">
+				<div class="fragment-cells">
+					<div>
+						<?php echo $this->getFileContents('page_admin_badge_TemplateCells') ?>
+					</div>
+					
+					<div class="sub-divider"></div>
+				
+					<div class="fragment-add">
+						<?php echo $this->xhrAddForm(
+							'Add Cell',
+							'/admin/badge/EditBadgeTemplate',
+							'addBadgeCell',
+							$this->getFileContents('page_admin_badge_AddCell')
+						) ?>
+					</div>
+				</div>
+			</td>
+			<td id="badge-preview" class="layout">
+				<h3>Preview</h3>
+				<div id="badge-canvas"></div>
+			</td>
+			<td class="layout" rowspan="2">
+				<div>
+					<?php echo $this->getFileContents('page_admin_badge_CellDetails') ?>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="layout">
+				<div>
+					<?php echo $this->getFileContents('page_admin_badge_CurrentCell') ?>
+				</div>
+			</td>
+		</tr>
+	</table>		
 </div>

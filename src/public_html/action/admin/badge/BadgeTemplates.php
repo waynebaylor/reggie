@@ -37,6 +37,15 @@ class action_admin_badge_BadgeTemplates extends action_ValidatorAction
 		$info = $this->logic->addTemplate($params);
 		return $this->converter->getAddTemplate($info);
 	}
+	
+	public function removeTemplate() {
+		$params = array(
+			'id' => RequestUtil::getValue('id', 0)
+		);
+		
+		$info = $this->logic->removeTemplate($params);
+		return $this->converter->getRemoveTemplate($info);
+	}
 }
 
 ?>

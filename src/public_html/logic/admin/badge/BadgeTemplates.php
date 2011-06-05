@@ -22,6 +22,15 @@ class logic_admin_badge_BadgeTemplates extends logic_Performer
 			'eventId' => $params['eventId']
 		));
 	}
+	
+	public function removeTemplate($params) {
+		$template = $this->strictFindById(db_BadgeTemplateManager::getInstance(), $params['id']);
+		db_BadgeTemplateManager::getInstance()->delete($template['id']);
+		
+		return $this->view(array(
+			'eventId' => $template['eventId']
+		));
+	}
 }
 
 ?>

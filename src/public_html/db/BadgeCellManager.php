@@ -140,13 +140,18 @@ class db_BadgeCellManager extends db_Manager
 	public function findBadgeCellContentById($id) {
 		$sql = '
 			SELECT
-				id,
-				badgeCellId,
-				displayOrder,
-				text,
-				contactFieldId
+				BadgeCell_TextContent.id,
+				BadgeCell_TextContent.badgeCellId,
+				BadgeCell_TextContent.displayOrder,
+				BadgeCell_TextContent.text,
+				BadgeCell_TextContent.contactFieldId,
+				ContactField.displayName as contactFieldName
 			FROM
 				BadgeCell_TextContent
+			LEFT JOIN
+				ContactField
+			ON
+				BadgeCell_TextContent.contactFieldId = ContactField.id
 			WHERE
 				badgeCellId = :badgeCellId
 			ORDER BY
@@ -156,6 +161,14 @@ class db_BadgeCellManager extends db_Manager
 		$params = array('badgeCellId' => $id);
 		
 		return $this->rawQuery($sql, $params, 'Find badge cell content.');
+	}
+	
+	public function deleteByTemplateId($templateId) {
+		$cells = $this->findByBadgeTemplateId($templateId);
+		
+		foreach($cells as $cell) {
+			$this->deleteBadgeCell($cell['id']);
+		}
 	}
 }
 

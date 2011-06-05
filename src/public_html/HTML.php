@@ -123,7 +123,7 @@ _;
 		$label = $config['label'];
 		
 		$url = $config['href'];
-		if(isset($config['parameters'])) {
+		if(!empty($config['parameters'])) {
 			// check if there is already a query in the URL. if not, then add the '?'.
 			// if there is, then make sure the URL ends with an '&'.
 			if(strpos($url, '?') === false) {

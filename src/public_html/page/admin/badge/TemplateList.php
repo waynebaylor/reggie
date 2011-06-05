@@ -30,8 +30,11 @@
 				)) ?>
 				<?php echo $this->HTML->link(array(
 					'label' => 'Remove',
-					'href' => '',
-					'parameters' => array(),
+					'href' => '/admin/badge/BadgeTemplates',
+					'parameters' => array(
+						'a' => 'removeTemplate',
+						'id' => $template['id']
+					),
 					'title' => 'Delete Badge Template',
 					'class' => 'remove'
 				)) ?>				
