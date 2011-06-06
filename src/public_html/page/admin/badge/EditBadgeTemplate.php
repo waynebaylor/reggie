@@ -52,6 +52,10 @@
 #template-layout .fragment-current-cell {
 	padding-left: 10px;
 }
+
+#template-layout .cell-details {
+	padding: 5px;
+}
 </style>
 
 <script type="text/javascript">
@@ -67,6 +71,9 @@
 		});
 		
 		dojo.query(".fragment-cells").forEach(function(item) {
+			hhreg.xhrAddList.bind(item);
+		});
+		dojo.query(".fragment-cell-details").forEach(function(item) {
 			hhreg.xhrAddList.bind(item);
 		});
 
@@ -131,14 +138,27 @@
 				<div id="badge-canvas"></div>
 			</td>
 			<td class="layout" rowspan="2">
-				<div>
-					<?php echo $this->getFileContents('page_admin_badge_CellDetails') ?>
+				<div class="fragment-cell-details">
+					<div>
+						<?php echo $this->getFileContents('page_admin_badge_CellDetails') ?>
+					</div>
+					
+					<div class="sub-divider"></div>
+					
+					<div class="fragment-add">
+						<?php echo $this->xhrAddForm(
+							'Add Content',
+							'/admin/badge/EditBadgeTemplate',
+							'addCellContent',
+							$this->getFileContents('page_admin_badge_AddCellContent')
+						) ?>
+					</div>
 				</div>
 			</td>
 		</tr>
 		<tr>
 			<td id="current-cell" class="layout">
-				<h3>Current Cell</h3>
+				<h3>Position/Alignment</h3>
 				
 				<div class="fragment-current-cell">
 					<?php if(!empty($this->selectedCell)): ?>

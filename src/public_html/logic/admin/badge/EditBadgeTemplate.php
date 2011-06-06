@@ -127,6 +127,18 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		
 		return array();
 	}
+	
+	public function addCellContent() {
+		
+	}
+	
+	public function moveCellContentUp() {
+		
+	}
+	
+	public function moveCellContentDown() {
+		
+	}
 }
 
 ?>

@@ -65,6 +65,18 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 		$info = $this->logic->saveCellDetails($params);
 		return $this->converter->getSaveCellDetails($info);
 	}
+	
+	public function addCellContent() {
+		
+	}
+	
+	public function moveCellContentUp() {
+		
+	}
+	
+	public function moveCellContentDown() {
+		
+	}
 }
 
 ?>
