@@ -98,7 +98,8 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		}
 		
 		return $this->view(array(
-			'id' => $badgeTemplate['id']
+			'id' => $badgeTemplate['id'],
+			'selectedCellId' => 0
 		));
 	}
 	
@@ -128,8 +129,26 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		return array();
 	}
 	
-	public function addCellContent() {
+	public function addCellContent($params) {
+		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $params['cellId']);
 		
+		if($params['contentType'] === 'text') {
+			db_BadgeCellManager::getInstance()->addText(array(
+				'badgeCellId' => $cell['id'],
+				'text' => $params['text']
+			));
+		} 	
+		else if($params['contentType'] === 'field') {
+			db_BadgeCellManager::getInstance()->addInformationField(array(
+				'badgeCellId' => $cell['id'],
+				'contactFieldId' => $params['contactFieldId']
+			));
+		}	
+		
+		return $this->view(array(
+			'id' => $cell['badgeTemplateId'],
+			'selectedCellId' => $cell['id']
+		));
 	}
 	
 	public function moveCellContentUp() {
@@ -138,6 +157,17 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	
 	public function moveCellContentDown() {
 		
+	}
+	
+	public function removeCellContent($params) {
+		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $params['cellId']);
+		
+		db_BadgeCellManager::getInstance()->deleteBadgeCellContent($params['id']);
+		
+		return $this->view(array(
+			'id' => $cell['badgeTemplateId'],
+			'selectedCellId' => $cell['id']
+		));
 	}
 }
 

@@ -67,7 +67,15 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 	}
 	
 	public function addCellContent() {
+		$params = RequestUtil::getValues(array(
+			'cellId' => 0,
+			'contentType' => 'text',
+			'contactFieldId' => 0,
+			'text' => ''
+		));
 		
+		$info = $this->logic->addCellContent($params);
+		return $this->converter->getAddCellContent($info);
 	}
 	
 	public function moveCellContentUp() {
@@ -76,6 +84,16 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 	
 	public function moveCellContentDown() {
 		
+	}
+	
+	public function removeCellContent() {
+		$params = RequestUtil::getValues(array(
+			'cellId' => 0,
+			'id' => 0
+		));
+		
+		$info = $this->logic->removeCellContent($params);
+		return $this->converter->getRemoveCellContent($info);
 	}
 }
 

@@ -28,9 +28,9 @@
 			</td>
 			<td>
 				<?php if(empty($content['contactFieldId'])): ?>
-					<?php echo $content['text'] ?>
+					<?php echo $this->escapeHtml($content['text']) ?>
 				<?php else: ?>
-					<<?php echo $content['contactFieldName'] ?>>
+					<?php echo $this->escapeHtml("<{$content['contactFieldName']}>") ?>
 				<?php endif; ?>
 			</td>
 			<td>
@@ -39,9 +39,10 @@
 					'href' => '/admin/badge/EditBadgeTemplate',
 					'parameters' => array(
 						'a' => 'removeCellContent',
+						'cellId' => $this->selectedCell['id'],
 						'id' => $content['id']
 					),
-					'clas' => 'remove'
+					'class' => 'remove'
 				)) ?>
 			</td>
 		</tr>

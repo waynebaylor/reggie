@@ -153,9 +153,9 @@ class db_BadgeCellManager extends db_Manager
 			ON
 				BadgeCell_TextContent.contactFieldId = ContactField.id
 			WHERE
-				badgeCellId = :badgeCellId
+				BadgeCell_TextContent.badgeCellId = :badgeCellId
 			ORDER BY
-				displayOrder
+				BadgeCell_TextContent.displayOrder
 		';
 		
 		$params = array('badgeCellId' => $id);

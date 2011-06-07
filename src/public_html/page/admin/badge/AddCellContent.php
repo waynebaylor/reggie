@@ -13,12 +13,12 @@
 			'name' => 'contentType',
 			'items' => array(
 				array(
-					'id' => 'contentType_field',
+					'id' => 'contentType_field_cell_content',
 					'label' => 'Information Field',
 					'value' => 'field'
 				),
 				array(
-					'id' => 'contentType_text',
+					'id' => 'contentType_text_cell_content',
 					'label' => 'Text',
 					'value' => 'text'
 				)
@@ -26,13 +26,13 @@
 		)) ?>
 	</td>
 </tr>
-<tr id="content-field" class="content-specifics hide">
+<tr id="content-field-cell-content" class="content-specifics hide">
 	<td class="label required">Field</td>
 	<td>
 		<?php echo fragment_contactField_HTML::selectByEventId($this->eventId) ?>
 	</td>
 </tr>
-<tr id="content-text" class="content-specifics hide">
+<tr id="content-text-cell-content" class="content-specifics hide">
 	<td class="label required">Text</td>
 	<td>
 		<?php echo $this->HTML->text(array(

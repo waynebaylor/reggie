@@ -77,25 +77,35 @@
 			hhreg.xhrAddList.bind(item);
 		});
 
-		dojo.query(".fragment-add input[name=contentType]").forEach(function(item) {
+		// add template cell form.
+		dojo.query("#badge-cells .fragment-add input[name=contentType]").forEach(function(item) {
 			dojo.connect(dojo.byId("contentType_field"), "onclick", function() {
-				dojo.query(".fragment-add .content-specifics").addClass("hide");
+				dojo.query("#badge-cells .fragment-add .content-specifics").addClass("hide");
 				dojo.removeClass(dojo.byId("content-field"), "hide");
 			});
 
 			dojo.connect(dojo.byId("contentType_text"), "onclick", function() {
-				dojo.query(".fragment-add .content-specifics").addClass("hide");
+				dojo.query("#badge-cells .fragment-add .content-specifics").addClass("hide");
 				dojo.removeClass(dojo.byId("content-text"), "hide");
 			});
 
 			dojo.connect(dojo.byId("contentType_barcode"), "onclick", function() {
-				dojo.query(".fragment-add .content-specifics").addClass("hide");
+				dojo.query("#badge-cells .fragment-add .content-specifics").addClass("hide");
 				dojo.removeClass(dojo.byId("content-barcode"), "hide");
 			});
 		});
 
-		dojo.query(".badge-cell").forEach(function(item) {
-			
+		// add cell content form.
+		dojo.query("#cell-content .fragment-add input[name=contentType]").forEach(function(item) {
+			dojo.connect(dojo.byId("contentType_field_cell_content"), "onclick", function() {
+				dojo.query("#cell-content .fragment-add .content-specifics").addClass("hide");
+				dojo.removeClass(dojo.byId("content-field-cell-content"), "hide");
+			});
+
+			dojo.connect(dojo.byId("contentType_text_cell_content"), "onclick", function() {
+				dojo.query("#cell-content .fragment-add .content-specifics").addClass("hide");
+				dojo.removeClass(dojo.byId("content-text-cell-content"), "hide");
+			});
 		});
 	});
 </script>
@@ -115,7 +125,7 @@
 	
 	<table id="template-layout">
 		<tr>
-			<td class="layout" rowspan="2">
+			<td id="badge-cells" class="layout" rowspan="2">
 				<div class="fragment-cells">
 					<div>
 						<?php echo $this->getFileContents('page_admin_badge_TemplateCells') ?>
@@ -137,7 +147,7 @@
 				<h3>Preview</h3>
 				<div id="badge-canvas"></div>
 			</td>
-			<td class="layout" rowspan="2">
+			<td id="cell-content" class="layout" rowspan="2">
 				<div class="fragment-cell-details">
 					<div>
 						<?php echo $this->getFileContents('page_admin_badge_CellDetails') ?>
