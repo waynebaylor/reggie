@@ -1,11 +1,18 @@
 <?php
 
-class db_BadgeCellManager extends db_Manager
+class db_BadgeCellManager extends db_OrderableManager
 {
 	private static $instance;
 	
 	protected function __construct() {
 		parent::__construct();
+	}
+	
+	public function getTableName() {
+		// this manager manages badge cells and cell content. only
+		// the cell content is orderable, so we can use the cell
+		// content table name here.
+		return 'BadgeCell_TextContent';	
 	}
 	
 	public static function getInstance() {
@@ -19,7 +26,7 @@ class db_BadgeCellManager extends db_Manager
 	protected function populate(&$obj, $arr) {
 		parent::populate($obj, $arr);
 
-		$obj['content'] = $this->findBadgeCellContentById($obj['id']);
+		$obj['content'] = $this->findBadgeCellContentByCellId($obj['id']);
 		$obj['barcodeFields'] = db_BadgeBarcodeFieldManager::getInstance()->findByBadgeCellId($obj['id']);
 		
 		return $obj;
@@ -125,19 +132,7 @@ class db_BadgeCellManager extends db_Manager
 		$this->del('BadgeCell', array('id' => $id));
 	}
 	
-	private function getNextOrder() {
-		$n = $this->rawSelect(
-			'BadgeCell_TextContent', 
-			array(
-				'MAX(displayOrder) as maxOrder'
-			), 
-			array()
-		);
-		
-		return max(1, $n[0]['maxOrder']+1);
-	}
-	
-	public function findBadgeCellContentById($id) {
+	public function findBadgeCellContentByCellId($id) {
 		$sql = '
 			SELECT
 				BadgeCell_TextContent.id,
@@ -163,12 +158,44 @@ class db_BadgeCellManager extends db_Manager
 		return $this->rawQuery($sql, $params, 'Find badge cell content.');
 	}
 	
+	public function findBadgeCellContentById($id) {
+		$sql = '
+			SELECT
+				BadgeCell_TextContent.id,
+				BadgeCell_TextContent.badgeCellId,
+				BadgeCell_TextContent.displayOrder,
+				BadgeCell_TextContent.text,
+				BadgeCell_TextContent.contactFieldId,
+				ContactField.displayName as contactFieldName
+			FROM
+				BadgeCell_TextContent
+			LEFT JOIN
+				ContactField
+			ON
+				BadgeCell_TextContent.contactFieldId = ContactField.id
+			WHERE
+				BadgeCell_TextContent.id = :id
+		';
+		
+		$params = array('id' => $id);
+		
+		return $this->rawQueryUnique($sql, $params, 'Find badge cell content by id.');
+	}
+	
 	public function deleteByTemplateId($templateId) {
 		$cells = $this->findByBadgeTemplateId($templateId);
 		
 		foreach($cells as $cell) {
 			$this->deleteBadgeCell($cell['id']);
 		}
+	}
+	
+	public function moveCellContentUp($cellContent) {
+		$this->moveUp($cellContent, 'badgeCellId', $cellContent['badgeCellId']);
+	}
+	
+	public function moveCellContentDown($cellContent) {
+		$this->moveDown($cellContent, 'badgeCellId', $cellContent['badgeCellId']);
 	}
 }
 

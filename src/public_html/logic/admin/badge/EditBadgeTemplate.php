@@ -151,12 +151,28 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		));
 	}
 	
-	public function moveCellContentUp() {
+	public function moveCellContentUp($params) {
+		$cellContent = db_BadgeCellManager::getInstance()->findBadgeCellContentById($params['id']);
+		db_BadgeCellManager::getInstance()->moveCellContentUp($cellContent);
 		
+		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $cellContent['badgeCellId']);
+		
+		return $this->view(array(
+			'id' => $cell['badgeTemplateId'],
+			'selectedCellId' => $cell['id']
+		));
 	}
 	
-	public function moveCellContentDown() {
+	public function moveCellContentDown($params) {
+		$cellContent = db_BadgeCellManager::getInstance()->findBadgeCellContentById($params['id']);
+		db_BadgeCellManager::getInstance()->moveCellContentDown($cellContent);
 		
+		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $cellContent['badgeCellId']);
+		
+		return $this->view(array(
+			'id' => $cell['badgeTemplateId'],
+			'selectedCellId' => $cell['id']
+		));
 	}
 	
 	public function removeCellContent($params) {

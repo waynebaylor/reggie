@@ -47,6 +47,18 @@ class viewConverter_admin_badge_EditBadgeTemplate extends viewConverter_admin_Ad
 		
 		return new template_TemplateWrapper($this->getFileContents('page_admin_badge_CellDetails'));
 	}
+	
+	public function getMoveCellContentUp($properties) {
+		$this->setProperties($properties);
+		
+		return new template_TemplateWrapper($this->getFileContents('page_admin_badge_CellDetails'));
+	}
+	
+	public function getMoveCellContentDown($properties) {
+		$this->setProperties($properties);
+		
+		return new template_TemplateWrapper($this->getFileContents('page_admin_badge_CellDetails'));
+	}
 }
 
 ?>

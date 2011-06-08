@@ -79,11 +79,21 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 	}
 	
 	public function moveCellContentUp() {
+		$params = RequestUtil::getValues(array(
+			'id' => 0	
+		));
 		
+		$info = $this->logic->moveCellContentUp($params);
+		return $this->converter->getMoveCellContentUp($info);
 	}
 	
 	public function moveCellContentDown() {
+		$params = RequestUtil::getValues(array(
+			'id' => 0		
+		));
 		
+		$info = $this->logic->moveCellContentDown($params);
+		return $this->converter->getMoveCellContentDown($info);
 	}
 	
 	public function removeCellContent() {
