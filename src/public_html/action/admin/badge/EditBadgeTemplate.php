@@ -105,6 +105,15 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 		$info = $this->logic->removeCellContent($params);
 		return $this->converter->getRemoveCellContent($info);
 	}
+	
+	public function removeBadgeCell() {
+		$params = RequestUtil::getValues(array(
+			'id' => 0
+		));
+		
+		$info = $this->logic->removeBadgeCell($params);
+		return $this->converter->getRemoveBadgeCell($info);
+	}
 }
 
 ?>

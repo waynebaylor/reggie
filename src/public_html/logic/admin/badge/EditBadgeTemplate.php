@@ -185,6 +185,16 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 			'selectedCellId' => $cell['id']
 		));
 	}
+	
+	public function removeBadgeCell($params) {
+		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $params['id']);
+		db_BadgeCellManager::getInstance()->deleteBadgeCell($cell['id']);
+		
+		return $this->view(array(
+			'id' => $cell['badgeTemplateId'],
+			'selectedCellId' => 0
+		));
+	}
 }
 
 ?>

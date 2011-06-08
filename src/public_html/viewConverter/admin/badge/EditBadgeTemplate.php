@@ -39,25 +39,43 @@ class viewConverter_admin_badge_EditBadgeTemplate extends viewConverter_admin_Ad
 	public function getAddCellContent($properties) {
 		$this->setProperties($properties);
 		
-		return new template_TemplateWrapper($this->getFileContents('page_admin_badge_CellDetails'));
+		$detailsHtml = $this->getFileContents('page_admin_badge_CellDetails');
+		$cellsHtml = $this->getFileContents('page_admin_badge_TemplateCells');
+		
+		return new template_TemplateWrapper($detailsHtml.'<div id="add-content-template-cells" class="hide">'.$cellsHtml.'</div>');
 	}
 	
 	public function getRemoveCellContent($properties) {
 		$this->setProperties($properties);
 		
-		return new template_TemplateWrapper($this->getFileContents('page_admin_badge_CellDetails'));
+		$detailsHtml = $this->getFileContents('page_admin_badge_CellDetails');
+		$cellsHtml = $this->getFileContents('page_admin_badge_TemplateCells');
+		
+		return new template_TemplateWrapper($detailsHtml.'<div id="add-content-template-cells" class="hide">'.$cellsHtml.'</div>');
 	}
 	
 	public function getMoveCellContentUp($properties) {
 		$this->setProperties($properties);
 		
-		return new template_TemplateWrapper($this->getFileContents('page_admin_badge_CellDetails'));
+		$detailsHtml = $this->getFileContents('page_admin_badge_CellDetails');
+		$cellsHtml = $this->getFileContents('page_admin_badge_TemplateCells');
+		
+		return new template_TemplateWrapper($detailsHtml.'<div id="add-content-template-cells" class="hide">'.$cellsHtml.'</div>');
 	}
 	
 	public function getMoveCellContentDown($properties) {
 		$this->setProperties($properties);
 		
-		return new template_TemplateWrapper($this->getFileContents('page_admin_badge_CellDetails'));
+		$detailsHtml = $this->getFileContents('page_admin_badge_CellDetails');
+		$cellsHtml = $this->getFileContents('page_admin_badge_TemplateCells');
+		
+		return new template_TemplateWrapper($detailsHtml.'<div id="add-content-template-cells" class="hide">'.$cellsHtml.'</div>');
+	}
+	
+	public function getRemoveBadgeCell($properties) {
+		$this->setProperties($properties);
+		
+		return new template_Redirect("/admin/badge/EditBadgeTemplate?id={$this->template['id']}#template-layout");
 	}
 }
 

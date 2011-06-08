@@ -62,19 +62,40 @@
 	dojo.require("hhreg.xhrAddList");
 	dojo.require("hhreg.xhrTableForm");
 
+	var removeCellConfirmation = function() {
+		// confirmation for remove cell links.
+		dojo.query("a.remove-cell-link").connect("onclick", function(event) {
+			if(!confirm("Are you sure?")) {
+				dojo.stopEvent(event);
+			}
+		});
+	};
+	
 	dojo.addOnLoad(function() {
 		dojo.query(".fragment-edit-general form").forEach(function(item) {
 			hhreg.xhrTableForm.bind(item);
 		});
+		
 		dojo.query(".fragment-current-cell form").forEach(function(item) {
 			hhreg.xhrTableForm.bind(item);
 		});
 		
 		dojo.query(".fragment-cells").forEach(function(item) {
-			hhreg.xhrAddList.bind(item);
+			hhreg.xhrAddList.bind(item, function() {
+				removeCellConfirmation();
+			});
 		});
+		
 		dojo.query(".fragment-cell-details").forEach(function(item) {
-			hhreg.xhrAddList.bind(item);
+			hhreg.xhrAddList.bind(item, function() { 
+				var cellsDiv = dojo.query("#badge-cells .fragment-list")[0].parentNode;
+
+				// replace the template cells list with the new list included in the response. also need to 
+				// remove the id attribute so we won't interfere with subsequent user actions.
+				dojo.query("#add-content-template-cells").place(cellsDiv, "replace").removeClass("hide").attr("id", "");
+
+				removeCellConfirmation();
+			});
 		});
 
 		// add template cell form.
@@ -107,6 +128,8 @@
 				dojo.removeClass(dojo.byId("content-text-cell-content"), "hide");
 			});
 		});
+
+		removeCellConfirmation();
 	});
 </script>
 
@@ -168,7 +191,7 @@
 		</tr>
 		<tr>
 			<td id="current-cell" class="layout">
-				<h3>Position/Alignment</h3>
+				<h3>Cell Position/Alignment</h3>
 				
 				<div class="fragment-current-cell">
 					<?php if(!empty($this->selectedCell)): ?>
