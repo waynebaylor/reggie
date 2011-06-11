@@ -9,7 +9,7 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	public function view($params) {
 		$badgeTemplate = $this->strictFindById(db_BadgeTemplateManager::getInstance(), $params['id']);
 		$selectedCell = $this->getSelectedCell($badgeTemplate, $params['selectedCellId']);
-		$badgeCells = $this->badgeCellSummaries($badgeTemplate, $selectedCell['id']);
+		$badgeCells = page_admin_badge_Helper::badgeCellSummaries($badgeTemplate, $selectedCell['id']);
 		$eventInfo = db_EventManager::getInstance()->findInfoById($badgeTemplate['eventId']);
 		
 		$appliesToIds = array();
@@ -28,43 +28,9 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 			'eventCode' => $eventInfo['code'],
 			'badgeCells' => $badgeCells,
 			'appliesToRegTypeIds' => $appliesToIds,
-			'selectedCell' => $selectedCell
+			'selectedCell' => $selectedCell,
+			'templateType' => new badgeTemplateType_ThreeByFourDouble()
 		);
-	}
-	
-	private function badgeCellSummaries($template, $selectedCellId) {
-		$summaries = array();
-				
-		foreach($template['cells'] as $cell) {
-			$summary = array(
-				'id' => $cell['id'],
-				'text' => '',
-				'selected' => false
-			);
-
-			if($selectedCellId === $cell['id']) {
-				$summary['selected'] = true;	
-			}
-					
-			if($cell['hasBarcode'] === 'T') {
-				$summary['text'] = 'Barcode';
-			}
-			else {
-				foreach($cell['content'] as $content) {
-					if(empty($content['contactFieldId'])) {
-						$summary['text'] .= $content['text'];
-					}
-					else {
-						$field = db_ContactFieldManager::getInstance()->find($content['contactFieldId']);
-						$summary['text'] .= "<{$field['displayName']}>";
-					}
-				}
-			}
-			
-			$summaries[] = $summary;
-		}
-		
-		return $summaries;
 	}
 	
 	public function addBadgeCell($params) {
@@ -126,7 +92,10 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $params['id']);
 		db_BadgeCellManager::getInstance()->saveBadgeCell($params);
 		
-		return array();
+		return $this->view(array(
+			'id' => $cell['badgeTemplateId'],
+			'selectedCellId' => $cell['id']
+		));
 	}
 	
 	public function addCellContent($params) {

@@ -27,14 +27,8 @@ abstract class viewConverter_ViewConverter
 		}
 	}
 		
-	/**
-	 * Utility method for escaping text. This should be used to sanitize any
-	 * text content entered by the user.
-	 * @param string $text the text
-	 * @return string
-	 */
 	protected function escapeHtml($text) {
-		return htmlentities($text, ENT_QUOTES, 'UTF-8');		
+		return HTML::escapeHtml($text);		
 	}
 	
 	/**

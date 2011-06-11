@@ -33,7 +33,18 @@ class viewConverter_admin_badge_EditBadgeTemplate extends viewConverter_admin_Ad
 	public function getSaveCellDetails($properties) {
 		$this->setProperties($properties);
 		
-		return new fragment_Success();
+		$success = new fragment_Success();
+		$preview = $this->templateType->getHtml($this->template, $this->selectedCell['id']);
+		
+		$response = <<<_
+			{$success->html()}
+			<div id="save-cell-preview">
+				<h3>Preview</h3>
+				{$preview}
+			</div>
+_;
+
+		return new template_TemplateWrapper($response);
 	}
 	
 	public function getAddCellContent($properties) {

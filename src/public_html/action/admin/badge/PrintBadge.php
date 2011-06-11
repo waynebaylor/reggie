@@ -32,8 +32,8 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 			);
 		}
 		
-		$printTemplate = new printTemplate_MM();
-		$printTemplate->getPdf($user, $eventInfo, $data);
+		$printTemplate = new badgeTemplateType_ThreeByFourDouble();
+		$printTemplate->getPdfSingle($user, $eventInfo, $data);
 		
 		return new fragment_Empty();
 	}
@@ -41,12 +41,23 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 	private function getCellText($registrationId, $badgeTemplate, $cell) {
 		$text = '';
 		
+		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $registrationId);
+		
 		foreach($cell['content'] as $subCell) {
 			if(empty($subCell['contactFieldId'])) {
 				$text .= $subCell['text'];
 			}
 			else {
 				// get registrant value for contact field.
+				$field = $this->strictFindById(db_ContactFieldManager::getInstance(), $subCell['contactFieldId']);
+				$value = model_Registrant::getInformationValue($registration, $field);
+			
+				// option fields may have multiple values selected.
+				if(model_FormInput::isOptionInput($field['formInput']['id'])) {
+					$value = $this->getOptionFieldValue($field, $value);
+				}
+				
+				$text .= $value;
 			}
 		}
 		

@@ -17,11 +17,25 @@
 }
 
 #badge-canvas {
-	height: 3in;
-	width: 4in;
 	border: 1px solid black;
 	margin: 0 auto 10px;
 	background-color: white;
+	overflow: hidden;
+	position: relative;
+}
+
+#badge-canvas .cell {
+	border: 1px solid #999;
+	color: #999;
+	overflow: hidden;
+	position: absolute;
+}
+
+#badge-canvas .selected-cell {
+	border: 1px solid #333;
+	color: #333;
+	overflow: hidden;
+	position: absolute;
 }
 
 #template-layout td#badge-preview {
@@ -77,7 +91,18 @@
 		});
 		
 		dojo.query(".fragment-current-cell form").forEach(function(item) {
-			hhreg.xhrTableForm.bind(item);
+			hhreg.xhrTableForm.bind(item, function(response) {
+				var div = dojo.create("div", {innerHTML: response});
+				dojo.addClass(div, "hide");
+				dojo.body().appendChild(div);
+
+				var preview = dojo.byId("save-cell-preview");
+				preview = dojo.place(preview, dojo.byId("badge-preview"), "only");
+				dojo.attr(preview, "id", "");
+				dojo.removeClass(preview, "hide");
+
+				div.parentNode.removeChild(div);
+			});
 		});
 		
 		dojo.query(".fragment-cells").forEach(function(item) {
@@ -167,8 +192,10 @@
 				</div>
 			</td>
 			<td id="badge-preview" class="layout">
-				<h3>Preview</h3>
-				<div id="badge-canvas"></div>
+				<div>
+					<h3>Preview</h3>
+					<?php echo $this->templateType->getHtml($this->template, $this->selectedCell['id']) ?>
+				</div>
 			</td>
 			<td id="cell-content" class="layout" rowspan="2">
 				<div class="fragment-cell-details">
