@@ -34,6 +34,7 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 	public function saveTemplate() {
 		$errors = validation_Validator::validate(validation_admin_BadgeTemplate::getConfig(), array(
 			'name' => RequestUtil::getValue('name', ''),
+			'badgeTemplateType' => RequestUtil::getValue('badgeTemplateType', ''),
 			'regTypeIds' => RequestUtil::getValueAsArray('regTypeIds', array(-1))
 		));
 		
@@ -44,6 +45,7 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 		$params = RequestUtil::getValues(array(
 			'id' => 0,
 			'name' => '',
+			'badgeTemplateType' => '',
 			'regTypeIds' => array(-1)
 		));
 		

@@ -205,6 +205,7 @@
 					
 					<div class="sub-divider"></div>
 					
+					<?php if(!empty($this->selectedCell)): ?>
 					<div class="fragment-add">
 						<?php echo $this->xhrAddForm(
 							'Add Content',
@@ -213,6 +214,7 @@
 							$this->getFileContents('page_admin_badge_AddCellContent')
 						) ?>
 					</div>
+					<?php endif; ?>
 				</div>
 			</td>
 		</tr>

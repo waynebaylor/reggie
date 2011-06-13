@@ -581,6 +581,7 @@ create table if not exists `BadgeTemplate` (
     `id`            integer         not null auto_increment,
     `eventId`       integer         not null,
     `name`          varchar(255)    not null,
+    `type`          varchar(255)    not null,
     primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 

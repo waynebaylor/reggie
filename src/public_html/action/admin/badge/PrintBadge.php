@@ -32,7 +32,7 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 			);
 		}
 		
-		$printTemplate = new badgeTemplateType_ThreeByFourDouble();
+		$printTemplate = model_BadgeTemplateType::newTemplate($badgeTemplate['type']);
 		$printTemplate->getPdfSingle($user, $eventInfo, $data);
 		
 		return new fragment_Empty();

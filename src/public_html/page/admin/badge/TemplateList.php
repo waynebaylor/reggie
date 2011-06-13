@@ -5,6 +5,7 @@
 	<table class="admin">
 		<tr>
 			<th>Name</th>
+			<th>Type</th>
 			<th>Registration Types</th>
 			<th>Options</th>
 		</tr>
@@ -15,6 +16,9 @@
 		<tr>
 			<td>
 				<?php echo $template['name'] ?>
+			</td>
+			<td>
+				<?php $view_templateType = model_BadgeTemplateType::valueOf($template['type']); echo $view_templateType['name'] ?>
 			</td>
 			<td>
 				<?php echo page_admin_badge_Helper::getRegTypes($template) ?>

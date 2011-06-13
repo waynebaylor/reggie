@@ -8,6 +8,11 @@
 			<th>Content</th>
 			<th>Options</th>
 		</tr>
+		<?php if(empty($this->selectedCell)): ?>
+		<tr>
+			<td colspan="3">No Details</td>
+		</tr>
+		<?php else: ?>
 		<?php foreach($this->selectedCell['content'] as $content): ?>
 		<tr>
 			<td>
@@ -47,5 +52,6 @@
 			</td>
 		</tr>
 		<?php endforeach; ?>
+		<?php endif; ?>
 	</table>
 </div>

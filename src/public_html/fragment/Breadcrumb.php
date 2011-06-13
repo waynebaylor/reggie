@@ -29,6 +29,16 @@ class fragment_Breadcrumb extends template_Template
 		$html = '';
 		
 		switch($this->config['location']) {
+			case 'EditBadgeTemplate':
+				$html = $this->editBadgeTemplate();
+				$html .= $this->SEPARATOR;
+				$html .= 'Edit Badge Template';
+				break;
+			case 'BadgeTemplates':
+				$html = $this->badgeTemplates();
+				$html .= $this->SEPARATOR;
+				$html .= 'Badge Templates';
+				break;
 			case 'EditStaticPage':
 				$html = $this->editStaticPage();
 				$html .= $this->SEPARATOR;
@@ -523,6 +533,25 @@ _;
 					'eventId' => $this->config['eventId']
 				)
 			))}	
+_;
+	}
+	
+	private function badgeTemplates() {
+		return $this->event();
+	}
+	
+	private function editBadgeTemplate() {
+		return <<<_
+		{$this->badgeTemplates()}
+		{$this->SEPARATOR}
+		{$this->HTML->link(array(
+			'label' => 'Badge Templates',
+			'href' => '/admin/badge/BadgeTemplates',
+			'parameters' => array(
+				'a' => 'view',
+				'eventId' => $this->config['eventId']
+			)
+		))}
 _;
 	}
 }

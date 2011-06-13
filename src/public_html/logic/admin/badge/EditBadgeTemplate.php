@@ -29,7 +29,7 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 			'badgeCells' => $badgeCells,
 			'appliesToRegTypeIds' => $appliesToIds,
 			'selectedCell' => $selectedCell,
-			'templateType' => new badgeTemplateType_ThreeByFourDouble()
+			'templateType' => model_BadgeTemplateType::newTemplate($badgeTemplate['type'])
 		);
 	}
 	
@@ -70,6 +70,9 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	}
 	
 	public function saveTemplate($params) {
+		$params['type'] = $params['badgeTemplateType'];
+		unset($params['badgeTemplateType']);
+		
 		$badgeTemplate = $this->strictFindById(db_BadgeTemplateManager::getInstance(), $params['id']);
 		db_BadgeTemplateManager::getInstance()->save($params);
 		

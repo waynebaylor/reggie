@@ -32,7 +32,8 @@ class db_BadgeTemplateManager extends db_Manager
 			array(
 				'id',
 				'eventId',
-				'name'
+				'name',
+				'type'
 			), 
 			array(
 				'id' => $id
@@ -46,7 +47,8 @@ class db_BadgeTemplateManager extends db_Manager
 			array(
 				'id',
 				'eventId',
-				'name'
+				'name',
+				'type'
 			), 
 			array(
 				'eventId' => $eventId
@@ -59,7 +61,8 @@ class db_BadgeTemplateManager extends db_Manager
 			SELECT
 				BadgeTemplate.id,
 				BadgeTemplate.eventId,
-				BadgeTemplate.name
+				BadgeTemplate.name,
+				BadgeTemplate.type
 			FROM
 				BadgeTemplate
 			INNER JOIN
@@ -86,7 +89,7 @@ class db_BadgeTemplateManager extends db_Manager
 	public function createBadgeTemplate($data) { 
 		$this->insert(
 			'BadgeTemplate', 
-			ArrayUtil::keyIntersect($data, array('eventId', 'name'))
+			ArrayUtil::keyIntersect($data, array('eventId', 'name', 'type'))
 		);
 		
 		$newId = $this->lastInsertId();
@@ -144,7 +147,10 @@ class db_BadgeTemplateManager extends db_Manager
 	public function save($template) { 
 		$this->update(
 			'BadgeTemplate', 
-			array('name' => $template['name']), 
+			array(
+				'name' => $template['name'],
+				'type' => $template['type']
+			), 
 			array('id' => $template['id'])
 		);
 		

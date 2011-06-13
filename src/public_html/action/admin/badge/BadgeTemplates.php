@@ -21,6 +21,7 @@ class action_admin_badge_BadgeTemplates extends action_ValidatorAction
 	public function addTemplate() {
 		$errors = validation_Validator::validate(validation_admin_BadgeTemplate::getConfig(), array(
 			'name' => RequestUtil::getValue('name', ''),
+			'badgeTemplateType' => RequestUtil::getValue('badgeTemplateType', ''),
 			'regTypeIds' => RequestUtil::getValueAsArray('regTypeIds', array(-1))
 		));
 		
@@ -31,6 +32,7 @@ class action_admin_badge_BadgeTemplates extends action_ValidatorAction
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0,
 			'name' => '',
+			'badgeTemplateType' => '',
 			'regTypeIds' => array(-1)
 		));
 		

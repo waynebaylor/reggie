@@ -15,7 +15,12 @@ class viewConverter_admin_badge_BadgeTemplates extends viewConverter_admin_Admin
 	}
 	
 	protected function getBreadcrumbs() {
-		return '';
+		$b = new fragment_Breadcrumb(array(
+			'location' => 'BadgeTemplates',
+			'eventCode' => $this->eventCode
+		));
+		
+		return $b->html();		
 	}
 	
 	public function getAddTemplate($properties) {

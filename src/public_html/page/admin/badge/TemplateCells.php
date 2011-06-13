@@ -4,6 +4,12 @@
 <div class="fragment-list">
 	<div class="badge-template-cells">
 		<table style="width:100%;">
+			<?php if(empty($this->badgeCells)): ?>
+			<tr>
+				<td colspan="2">No Cells</td>
+			</tr>	
+			<?php endif; ?>
+			
 			<?php foreach($this->badgeCells as $cell): ?>
 			<tr>
 				<td style="text-align:left;">
