@@ -1,6 +1,6 @@
 <?php
 
-class badgeTemplateType_ThreeByFourDouble
+class badgeTemplateType_ThreeByFourDouble extends badgeTemplateType_BaseTemplate
 {
 	function __construct() {}
 	
@@ -47,24 +47,18 @@ _;
 	}
 	
 	public function getPdfSingle($user, $event, $data) {
-		require_once 'config/lang/eng.php';
-		require_once 'tcpdf.php';
-
 		$sideMargin = 0.25; // inches
 		$topMargin = 1.0; // inches
 		
-		$pdf = new TCPDF('P', 'in', 'A4', true, 'UTF-8', false);
+		$pdf = $this->createTcpdf(array(
+			'creator' => $user['email'],
+			'author' => $user['email'],
+			'title' => $event['code'],
+			'subject' => $event['code'],
+			'sideMargin' => $sideMargin,
+			'topMargin' => $topMargin
+		));
 		
-		$pdf->SetCreator($user['email']);
-		$pdf->SetAuthor($user['email']);
-		$pdf->SetTitle($event['code']);
-		$pdf->SetSubject($event['code']);
-		
-		$pdf->setPrintHeader(false);
-		$pdf->setPrintFooter(false);
-		
-		$pdf->SetMargins($sideMargin, $topMargin, $sideMargin);
-	
 		$pdf->AddPage();
 		
 		foreach($data as $cellData) {
@@ -92,7 +86,7 @@ _;
 			);
 		}
 		
-		$pdf->Output('/tmp/reggie_badge.pdf', 'F');
+		$pdf->Output('badge.pdf', 'I');
 	}
 }
 
