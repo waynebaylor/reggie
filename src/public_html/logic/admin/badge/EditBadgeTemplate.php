@@ -59,9 +59,6 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 				'text' => $params['text']
 			));
 		}
-		else if($params['contentType'] === 'barcode') {
-			// TODO add barcode
-		}
 		
 		return $this->view(array(
 			'id' => $badgeTemplate['id'],
@@ -103,19 +100,27 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	
 	public function addCellContent($params) {
 		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $params['cellId']);
-		
-		if($params['contentType'] === 'text') {
-			db_BadgeCellManager::getInstance()->addText(array(
-				'badgeCellId' => $cell['id'],
-				'text' => $params['text']
-			));
-		} 	
-		else if($params['contentType'] === 'field') {
-			db_BadgeCellManager::getInstance()->addInformationField(array(
+
+		if($cell['hasBarcode'] === 'T') {
+			db_BadgeBarcodeFieldManager::getInstance()->addInformationField(array(
 				'badgeCellId' => $cell['id'],
 				'contactFieldId' => $params['contactFieldId']
 			));
-		}	
+		}
+		else {
+			if($params['contentType'] === 'text') {
+				db_BadgeCellManager::getInstance()->addText(array(
+					'badgeCellId' => $cell['id'],
+					'text' => $params['text']
+				));
+			} 	
+			else if($params['contentType'] === 'field') {
+				db_BadgeCellManager::getInstance()->addInformationField(array(
+					'badgeCellId' => $cell['id'],
+					'contactFieldId' => $params['contactFieldId']
+				));
+			}	
+		}
 		
 		return $this->view(array(
 			'id' => $cell['badgeTemplateId'],
@@ -150,7 +155,12 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	public function removeCellContent($params) {
 		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $params['cellId']);
 		
-		db_BadgeCellManager::getInstance()->deleteBadgeCellContent($params['id']);
+		if($cell['hasBarcode'] === 'T') {
+			db_BadgeBarcodeFieldManager::getInstance()->deleteBadgeBarcodeField($params['id']);	
+		}
+		else {
+			db_BadgeCellManager::getInstance()->deleteBadgeCellContent($params['id']);
+		}
 		
 		return $this->view(array(
 			'id' => $cell['badgeTemplateId'],

@@ -24,18 +24,35 @@ class badgeTemplateType_ThreeByFourDouble extends badgeTemplateType_BaseTemplate
 			$text = HTML::escapeHtml($summary['text']);
 			
 			$cssClass = $summary['selected']? 'selected-cell' : 'cell';
-			$cellsHtml .= <<<_
-				<div class="{$cssClass}" style="
-					top:{$cell['yCoord']}in; 
-					left:{$cell['xCoord']}in;
-					width:{$cell['width']}in;
-					font-family:{$font};
-					font-size:{$cell['fontSize']}pt;
-					text-align:{$textAlign}
-				">
-					{$text}
-				</div>
+			
+			if($cell['hasBarcode'] === 'T') {
+				$barcodeUrl = Reggie::contextUrl('/images/barcode.gif');
+				
+				$cellsHtml .= <<<_
+					<div class="{$cssClass}" style="
+						top:{$cell['yCoord']}in; 
+						left:{$cell['xCoord']}in;
+						width:{$cell['width']}in;
+						font-family:{$font};
+						font-size:{$cell['fontSize']}pt;
+						text-align:{$textAlign}
+					">
+						<img class="barcode-placeholder" src="{$barcodeUrl}">
+					</div>			
 _;
+			}
+			else {
+				$cellsHtml .= <<<_
+					<div class="{$cssClass}" style="
+						top:{$cell['yCoord']}in; 
+						left:{$cell['xCoord']}in;
+						width:{$cell['width']}in;
+						font-family:{$font};
+						font-size:{$cell['fontSize']}pt;
+						text-align:{$textAlign}
+					">{$text}</div>
+_;
+			}
 		}
 		
 		return <<<_
@@ -62,28 +79,10 @@ _;
 		$pdf->AddPage();
 		
 		foreach($data as $cellData) {
-			$pdf->SetFont(
-				/*font family*/ $cellData['font'], 
-				/*font style*/ '', 
-				/*font size*/ $cellData['fontSize']
-			);
+			$cellData['sideMargin'] = $sideMargin;
+			$cellData['topMargin'] = $topMargin;
 			
-			// set xy position and account for margins.
-			$pdf->SetXY($sideMargin+$cellData['xCoord'], $topMargin+$cellData['yCoord']);
-			
-			$pdf->Cell(
-				/*width*/ $cellData['width'], 
-				/*height*/ 0, 
-				/*text content*/ $cellData['text'], 
-				/*border*/ 0,
-				/*position after drawing cell*/ 0,
-				/*alignment*/ $cellData['align'],
-				/*fill background*/ false,
-				/*link*/ '',
-				/*stretch*/ 1,
-				/*cell vertical align*/ 'T',
-				/*text content vertical align*/ 'M' 
-			);
+			$this->addCell($pdf, $cellData);
 		}
 		
 		$pdf->Output('badge.pdf', 'I');

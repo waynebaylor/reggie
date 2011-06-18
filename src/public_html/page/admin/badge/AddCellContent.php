@@ -1,6 +1,15 @@
 
 <?php if($this->selectedCell['hasBarcode'] === 'T'): ?>
-	<!-- TODO: add support for barcode fields -->
+<tr>
+	<td class="label required">Field</td>
+	<td>
+		<?php echo $this->HTML->hidden(array(
+			'name' => 'cellId',
+			'value' => $this->selectedCell['id']
+		)) ?>
+		<?php echo fragment_contactField_HTML::selectByEventId($this->eventId) ?>
+	</td>
+</tr>
 <?php else: ?>
 <tr>
 	<td class="label required">Content</td>

@@ -21,15 +21,29 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 		
 		$data = array();
 		foreach($badgeTemplate['cells'] as $cell) {
-			$data[] = array(
-				'font' => $cell['font'],
-				'fontSize' => $cell['fontSize'],
-				'xCoord' => $cell['xCoord'],
-				'yCoord' => $cell['yCoord'],
-				'width' => $cell['width'],
-				'text' => $this->getCellText($params['registrationId'], $badgeTemplate, $cell),
-				'align' => $cell['horizontalAlign']
-			);
+			if($cell['hasBarcode'] === 'T') {
+				$data[] = array(
+					'isBarcode' => true,
+					'xCoord' => $cell['xCoord'],
+					'yCoord' => $cell['yCoord'],
+					'width' => $cell['width'],
+					'height' => min(array(1, $cell['width']/3)), // 1in or 1/3 the width,
+					'text' => $this->getBarcodeText($params['registrationId'], $cell),
+					'align' => $cell['horizontalAlign']
+				);
+			}
+			else {
+				$data[] = array(
+					'isBarcode' => false,
+					'font' => $cell['font'],
+					'fontSize' => $cell['fontSize'],
+					'xCoord' => $cell['xCoord'],
+					'yCoord' => $cell['yCoord'],
+					'width' => $cell['width'],
+					'text' => $this->getCellText($params['registrationId'], $cell),
+					'align' => $cell['horizontalAlign']
+				);
+			}
 		}
 		
 		$printTemplate = model_BadgeTemplateType::newTemplate($badgeTemplate['type']);
@@ -38,7 +52,7 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 		return new fragment_Empty();
 	}
 	
-	private function getCellText($registrationId, $badgeTemplate, $cell) {
+	private function getCellText($registrationId, $cell) {
 		$text = '';
 		
 		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $registrationId);
@@ -61,6 +75,26 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 			}
 		}
 		
+		return $text;
+	}
+	
+	private function getBarcodeText($registrationId, $cell) {
+		$text = '';
+		
+		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $registrationId);
+		
+		foreach($cell['barcodeFields'] as $barcodeField) {
+			$field = $this->strictFindById(db_ContactFieldManager::getInstance(), $barcodeField['contactFieldId']);
+			$value = model_Registrant::getInformationValue($registration, $field);
+			
+			// option fields may have multiple values selected.
+			if(model_FormInput::isOptionInput($field['formInput']['id'])) {
+				$value = $this->getOptionFieldValue($field, $value);
+			}
+			
+			$text .= '['.$field['displayName'].':'.$value.']';
+		}
+ 		
 		return $text;
 	}
 }

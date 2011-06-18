@@ -70,6 +70,12 @@
 #template-layout .cell-details {
 	padding: 5px;
 }
+
+#template-layout .barcode-placeholder {
+	width: 100%;
+	height: 1in;
+	display: block;
+}
 </style>
 
 <script type="text/javascript">
