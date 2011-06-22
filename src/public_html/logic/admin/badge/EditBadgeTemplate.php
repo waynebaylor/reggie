@@ -40,7 +40,7 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 			'badgeTemplateId' => $badgeTemplate['id'],
 			'xCoord' => 0, // inches
 			'yCoord' => 0, // inches
-			'width' => 4, // inches
+			'width' => ($params['contentType'] === 'barcode')? badgeTemplateType_BaseTemplate::$BARCODE_WIDTH : 4, // inches
 			'font' => 'helvetica',
 			'fontSize' => 12, // pt
 			'horizontalAlign' => 'C',
@@ -90,6 +90,15 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	
 	public function saveCellDetails($params) {
 		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $params['id']);
+		
+		// these columns are not used for barcodes, so no need to ever update them. 
+		if($cell['hasBarcode'] === 'T') {
+			unset($params['width']);
+			unset($params['font']);
+			unset($params['fontSize']);
+			unset($params['horizontalAlign']);	
+		}
+		
 		db_BadgeCellManager::getInstance()->saveBadgeCell($params);
 		
 		return $this->view(array(

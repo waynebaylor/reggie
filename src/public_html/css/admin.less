@@ -263,3 +263,86 @@ tr.reg-option-cancelled td {
 	margin-top: 10px;
 	border: 10px solid red;
  }
+ 
+ /******************************************
+ * Edit Badge Template
+ ******************************************/
+ 
+#template-layout {
+	width: 100%;
+	border-collapse: collapse;
+	
+ 	h3 {
+		margin-top: 10px;
+	}
+
+	td.layout {
+		border: 1px solid #555;
+		padding: 0  5px 5px;
+		vertical-align: top;
+		background-color: #eee;
+	}
+	
+	#badge-canvas {
+		border: 1px solid black;
+		margin: 0 auto 10px;
+		background-color: white;
+		overflow: hidden;
+		position: relative;
+		
+		.cell {
+			border: 1px solid #999;
+			color: #999;
+			overflow: hidden;
+			position: absolute;
+		}
+		
+		.selected-cell {
+			border: 1px solid #333;
+			color: #333;
+			overflow: hidden;
+			position: absolute;
+		}
+	}
+	
+	td#badge-preview {
+		background-color: #ccc;
+	}
+	
+	.badge-cell {
+		padding: 5px;
+		
+		a {
+			text-decoration: none;
+		}
+		
+		&:hover {
+			background-color: #dddee3;
+		}
+	}
+	
+	.badge-cell-selected {
+		background-color: #b7dcff;
+		border: 1px solid #769DC0;
+	}
+	
+	#current-cell {
+		background-color: #fff;
+	}
+	
+	.fragment-current-cell {
+		padding-left: 10px;
+	}
+	
+	.cell-details {
+		padding: 5px;
+	}
+	
+	.barcode-placeholder {
+		width: 3in;
+		height: 0.5in;
+		vertical-align: middle;
+	}
+}	
+
+

@@ -2,6 +2,9 @@
 
 abstract class badgeTemplateType_BaseTemplate
 {
+	public static $BARCODE_WIDTH = 3;    // inches
+	public static $BARCODE_HEIGHT = 0.5; // inches
+	
 	public abstract function getHtml($template, $selectedCellId);
 	
 	public abstract function getPdfSingle($user, $event, $data);
@@ -29,14 +32,14 @@ abstract class badgeTemplateType_BaseTemplate
 		// set xy position and account for margins.
 		$pdf->SetXY($config['sideMargin']+$config['xCoord'], $config['topMargin']+$config['yCoord']);
 			
-		if($config['isBarcode']) {
+		if($config['isBarcode']) { 
 			$pdf->write2DBarcode(
 				/*barcode content*/ $config['text'], 
 				/*barcode type*/ 'PDF417', 
 				/*x position*/ '', 
 				/*y position*/ '',
-				/*width*/ $config['width'],
-				/*height*/ $config['height'],
+				/*width*/ self::$BARCODE_WIDTH,
+				/*height*/ self::$BARCODE_HEIGHT,
 				/*style*/ array(),
 				/*position after drawing*/ 'N',
 				/*distort to fit*/ true

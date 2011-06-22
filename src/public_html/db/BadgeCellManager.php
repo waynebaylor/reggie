@@ -72,7 +72,7 @@ class db_BadgeCellManager extends db_OrderableManager
 		);
 	}
 	
-	public function createBadgeCell($data) {
+	public function createBadgeCell($data) { 
 		$this->insert(
 			'BadgeCell', 
 			ArrayUtil::keyIntersect($data, array(
@@ -129,6 +129,7 @@ class db_BadgeCellManager extends db_OrderableManager
 	
 	public function deleteBadgeCell($id) {
 		$this->del('BadgeCell_TextContent', array('badgeCellId' => $id));
+		$this->del('BadgeBarcodeField', array('badgeCellId' => $id));
 		$this->del('BadgeCell', array('id' => $id));
 	}
 	

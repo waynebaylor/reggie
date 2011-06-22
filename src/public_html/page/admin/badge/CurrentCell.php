@@ -33,17 +33,22 @@
 					<tr>
 						<td class="label required">Width</td>
 						<td>
-							<?php echo $this->HTML->text(array(
-								'name' => 'width',
-								'value' => $this->selectedCell['width'],
-								'size' => 5
-							)) ?>
+							<?php if($this->selectedCell['hasBarcode'] === 'T'): ?>
+								<?php echo $this->selectedCell['width'] ?>
+							<?php else: ?>
+								<?php echo $this->HTML->text(array(
+									'name' => 'width',
+									'value' => $this->selectedCell['width'],
+									'size' => 5
+								)) ?>							
+							<?php endif; ?>
 							in
 						</td>
 					</tr>	
 				</table>					
 			</td>
 			<td style="padding-left: 75px;">
+				<?php if($this->selectedCell['hasBarcode'] !== 'T'): ?>
 				<table>
 					<tr>
 						<td class="label required">Font</td>
@@ -84,6 +89,7 @@
 						</td>
 					</tr>			
 				</table>		
+				<?php endif; ?>
 			</td>
 		</tr></table>
 	</td>
