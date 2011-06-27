@@ -63,9 +63,18 @@ _;
 _;
 	}
 	
-	public function getPdfSingle($user, $event, $data) {
-		$sideMargin = 0.25; // inches
-		$topMargin = 1.0; // inches
+	public function getPdfSingle($config) {
+		$user = $config['user'];
+		$event = $config['event'];
+		$data = $config['data'];
+		
+		// calculate margins based on user's input and template dimensions.
+		$sideMargin = $config['shiftRight'];
+		$topMargin = $config['shiftDown'];
+		if($config['margins'] === 'T') {
+			$sideMargin += 0.25; // inches
+			$topMargin += 1.0; // inches
+		}
 		
 		$pdf = $this->createTcpdf(array(
 			'creator' => $user['email'],

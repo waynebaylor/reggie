@@ -299,10 +299,53 @@ _;
 						'value' => $registrationId
 					))}
 					
-					<span class="label">Badge Template</span>
-					{$templateSelect}
-					<br><br>
-					<input type="button" class="print-badge-button" value="Print">
+					<table style="border-collapse:separate; border-spacing:10px;">
+						<tr>
+							<td class="label">Badge Template</td>
+							<td>
+								{$templateSelect}
+							</td>
+						</tr>
+						<tr>
+							<td class="label">Margins</td>
+							<td>
+								{$this->HTML->radios(array(
+									'name' => 'margins',
+									'value' => 'true',
+									'items' => array(
+										array('label' => 'Standard', 'value' => 'T'),
+										array('label' => 'None', 'value' => 'F')
+									)
+								))}
+							</td>
+						</tr>
+						<tr>
+							<td class="label">Shift Right</td>
+							<td>
+								{$this->HTML->text(array(
+									'name' => 'shiftRight',
+									'value' => '0.0',
+									'size' => 5
+								))} in
+							</td>
+						</tr>
+						<tr>
+							<td class="label">Shift Down</td>
+							<td>
+								{$this->HTML->text(array(
+									'name' => 'shiftDown',
+									'value' => '0.0',
+									'size' => 5
+								))} in
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<input type="button" class="print-badge-button" value="Print">
+							</td>
+						</tr>
+					</table>
 				</form>
 			</div>
 _;

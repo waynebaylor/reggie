@@ -13,7 +13,10 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0, 
 			'registrationId' => 0,
-			'badgeTemplateId' => 0
+			'badgeTemplateId' => 0,
+			'margins' => 'T',
+			'shiftRight' => 0,
+			'shiftDown' => 0
 		));
 		
 		$info = $this->logic->singleBadge($params);

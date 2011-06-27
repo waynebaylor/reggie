@@ -7,7 +7,7 @@ abstract class badgeTemplateType_BaseTemplate
 	
 	public abstract function getHtml($template, $selectedCellId);
 	
-	public abstract function getPdfSingle($user, $event, $data);
+	public abstract function getPdfSingle($config);
 	
 	protected function createTcpdf($config) {
 		require_once 'config/lang/eng.php';
@@ -23,16 +23,19 @@ abstract class badgeTemplateType_BaseTemplate
 		$pdf->setPrintHeader(false);
 		$pdf->setPrintFooter(false);
 		
-		$pdf->SetMargins($config['sideMargin'], $config['topMargin'], $config['sideMargin']);
+		$pdf->SetMargins(0, 0, 0);
 		
 		return $pdf;
 	}
 	
 	protected function addCell($pdf, $config) {
 		// set xy position and account for margins.
-		$pdf->SetXY($config['sideMargin']+$config['xCoord'], $config['topMargin']+$config['yCoord']);
-			
+		$x = $config['sideMargin']+$config['xCoord'];
+		$y = $config['topMargin']+$config['yCoord'];
+		
 		if($config['isBarcode']) { 
+			$pdf->SetXY($x, $y);
+			
 			$pdf->write2DBarcode(
 				/*barcode content*/ $config['text'], 
 				/*barcode type*/ 'PDF417', 
@@ -52,9 +55,17 @@ abstract class badgeTemplateType_BaseTemplate
 				/*font size*/ $config['fontSize']
 			);
 			
+			$height = $pdf->getStringHeight($config['width'], $config['text']);
+			
+			// cell mid-point is y, so we need to move it down 1/2 height 
+			// so upper left cell corder is at (x, y).
+			$adjustedY = $y + 0.5*$height;
+			
+			$pdf->SetXY($x, $adjustedY); 
+			
 			$pdf->Cell(
 				/*width*/ $config['width'], 
-				/*height*/ 0, 
+				/*height*/ $height, 
 				/*text content*/ $config['text'], 
 				/*border*/ 0,
 				/*position after drawing cell*/ 0,
@@ -63,7 +74,7 @@ abstract class badgeTemplateType_BaseTemplate
 				/*link*/ '',
 				/*stretch*/ 1,
 				/*cell vertical align*/ 'T',
-				/*text content vertical align*/ 'M' 
+				/*text content vertical align*/ 'C' 
 			);
 		}
 		return $pdf;

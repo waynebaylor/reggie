@@ -10,7 +10,14 @@ class viewConverter_admin_badge_PrintBadge extends viewConverter_admin_AdminConv
 		$this->setProperties($properties);
 		
 		$printTemplate = model_BadgeTemplateType::newTemplate($this->badgeTemplate['type']);
-		$printTemplate->getPdfSingle($this->user, $this->eventInfo, $this->data);
+		$printTemplate->getPdfSingle(array(
+			'user' => $this->user, 
+			'event' => $this->eventInfo, 
+			'data' => $this->data,
+			'margins' => $this->margins,
+			'shiftRight' => $this->shiftRight,
+			'shiftDown' => $this->shiftDown
+		));
 		
 		return new fragment_Empty();
 	}
