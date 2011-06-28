@@ -1,6 +1,11 @@
 
 set foreign_key_checks = 0;
 
+drop table if exists BadgeBarcodeField;
+drop table if exists BadgeCell_TextContent;
+drop table if exists BadgeCell;
+drop table if exists BadgeTemplate_RegType;
+drop table if exists BadgeTemplate;
 drop table if exists StaticPage;
 drop table if exists RegType_EmailTemplate;
 drop table if exists GroupRegistration_ContactField;
