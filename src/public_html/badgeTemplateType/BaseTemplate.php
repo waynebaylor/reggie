@@ -49,10 +49,16 @@ abstract class badgeTemplateType_BaseTemplate
 			);
 		}
 		else {
+			// adjust font size if text width is greater than cell width.
+			$fontSize = $config['fontSize'];
+			while(($fontSize > 0) && ($config['width'] < $pdf->getStringWidth($config['text'], $config['font'], '', $fontSize))) {
+				$fontSize -= 0.1;
+			}
+			
 			$pdf->SetFont(
 				/*font family*/ $config['font'], 
 				/*font style*/ '', 
-				/*font size*/ $config['fontSize']
+				/*font size*/ $fontSize
 			);
 			
 			$height = $pdf->getStringHeight($config['width'], $config['text']);
