@@ -11,15 +11,15 @@ class ArrayUtil
 	 * @param array $arr the key/value pairs
 	 * @param array $keys the keys to keep
 	 */
-	public static function keyIntersect($arr, $keys) {
+	public static function keyIntersect($arr, $keys) { 
 		$params = array();
 
 		foreach($arr as $key => $value) {
-			if(in_array($key, $keys)) {
+			if(in_array($key, $keys, true)) {  
 				$params[$key] = $value; 
 			}	
 		}
-		
+
 		return $params;
 	}
 	

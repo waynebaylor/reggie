@@ -34,6 +34,12 @@ class viewConverter_admin_badge_BadgeTemplates extends viewConverter_admin_Admin
 		
 		return new template_TemplateWrapper($this->getFileContents('page_admin_badge_TemplateList'));
 	}
+	
+	public function getCopyTemplate($properties) {
+		$this->setProperties($properties);
+		
+		return new template_Redirect('/admin/badge/BadgeTemplates?a=view&eventId='.$this->eventId);
+	}
 }
 
 ?>

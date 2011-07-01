@@ -97,7 +97,7 @@ class db_BadgeCellManager extends db_OrderableManager
 		$this->update('BadgeCell', $data, array('id' => $id));
 	}
 	
-	public function addText($data) {
+	public function addText($data) { 
 		$data['displayOrder'] = $this->getNextOrder();
 
 		$this->insert(

@@ -33,6 +33,15 @@
 					'title' => 'Edit Badge Template'
 				)) ?>
 				<?php echo $this->HTML->link(array(
+					'label' => 'Copy',
+					'href' => '/admin/badge/BadgeTemplates',
+					'parameters' => array(
+						'a' => 'copyTemplate',
+						'id' => $template['id']
+					),
+					'title' => 'Copy Badge Template'
+				)) ?>
+				<?php echo $this->HTML->link(array(
 					'label' => 'Remove',
 					'href' => '/admin/badge/BadgeTemplates',
 					'parameters' => array(

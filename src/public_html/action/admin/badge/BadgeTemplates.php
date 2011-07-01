@@ -48,6 +48,13 @@ class action_admin_badge_BadgeTemplates extends action_ValidatorAction
 		$info = $this->logic->removeTemplate($params);
 		return $this->converter->getRemoveTemplate($info);
 	}
+	
+	public function copyTemplate() {
+		$params = RequestUtil::getValues(array('id' => 0));
+		
+		$info = $this->logic->copyTemplate($params);
+		return $this->converter->getCopyTemplate($info);
+	}
 }
 
 ?>
