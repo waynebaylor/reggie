@@ -23,7 +23,7 @@
 			'items' => array(
 				array(
 					'id' => 'contentType_field_cell_content',
-					'label' => 'Information Field',
+					'label' => 'Field',
 					'value' => 'field'
 				),
 				array(
@@ -38,7 +38,7 @@
 <tr id="content-field-cell-content" class="content-specifics hide">
 	<td class="label required">Field</td>
 	<td>
-		<?php echo fragment_contactField_HTML::selectByEventId($this->eventId) ?>
+		<?php echo page_admin_badge_Helper::selectFields($this->event) ?>
 	</td>
 </tr>
 <tr id="content-text-cell-content" class="content-specifics hide">

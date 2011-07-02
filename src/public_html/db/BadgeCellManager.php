@@ -113,14 +113,30 @@ class db_BadgeCellManager extends db_OrderableManager
 	public function addInformationField($data) {
 		$data['displayOrder'] = $this->getNextOrder();
 
-		$this->insert(
-			'BadgeCell_TextContent',
-			ArrayUtil::keyIntersect($data, array(
-				'badgeCellId',
-				'displayOrder',
-				'contactFieldId'
-			))		
-		);
+		$data['showRegType'] = ($data['templateField'] === 'registration_type')? 'T' : 'F';
+		
+		if($data['templateField'] === 'registration_type') {
+			$this->insert(
+				'BadgeCell_TextContent',
+				ArrayUtil::keyIntersect($data, array(
+					'badgeCellId',
+					'displayOrder',
+					'showRegType'
+				))
+			);
+		}
+		else {
+			$data['contactFieldId'] = $data['templateField'];
+			
+			$this->insert(
+				'BadgeCell_TextContent',
+				ArrayUtil::keyIntersect($data, array(
+					'badgeCellId',
+					'displayOrder',
+					'contactFieldId'
+				))		
+			);
+		}
 	}
 	
 	public function deleteBadgeCellContent($id) {
@@ -139,6 +155,7 @@ class db_BadgeCellManager extends db_OrderableManager
 				BadgeCell_TextContent.id,
 				BadgeCell_TextContent.badgeCellId,
 				BadgeCell_TextContent.displayOrder,
+				BadgeCell_TextContent.showRegType,
 				BadgeCell_TextContent.text,
 				BadgeCell_TextContent.contactFieldId,
 				ContactField.displayName as contactFieldName
@@ -165,6 +182,7 @@ class db_BadgeCellManager extends db_OrderableManager
 				BadgeCell_TextContent.id,
 				BadgeCell_TextContent.badgeCellId,
 				BadgeCell_TextContent.displayOrder,
+				BadgeCell_TextContent.showRegType,
 				BadgeCell_TextContent.text,
 				BadgeCell_TextContent.contactFieldId,
 				ContactField.displayName as contactFieldName

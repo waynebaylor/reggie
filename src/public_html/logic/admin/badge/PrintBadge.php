@@ -53,7 +53,11 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $registrationId);
 		
 		foreach($cell['content'] as $subCell) {
-			if(empty($subCell['contactFieldId'])) {
+			if($subCell['showRegType'] === 'T') {
+				$regType = db_RegTypeManager::getInstance()->find($registration['regTypeId']);
+				$text .= $regType['description'];
+			}
+			else if(empty($subCell['contactFieldId'])) {
 				$text .= $subCell['text'];
 			}
 			else {

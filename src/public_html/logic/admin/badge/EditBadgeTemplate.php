@@ -10,7 +10,7 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		$badgeTemplate = $this->strictFindById(db_BadgeTemplateManager::getInstance(), $params['id']);
 		$selectedCell = $this->getSelectedCell($badgeTemplate, $params['selectedCellId']);
 		$badgeCells = page_admin_badge_Helper::badgeCellSummaries($badgeTemplate, $selectedCell['id']);
-		$eventInfo = db_EventManager::getInstance()->findInfoById($badgeTemplate['eventId']);
+		$event = db_EventManager::getInstance()->find($badgeTemplate['eventId']);
 		
 		$appliesToIds = array();
 		if($badgeTemplate['appliesToAll']) {
@@ -24,8 +24,9 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		
 		return array(
 			'template' => $badgeTemplate,
-			'eventId' => $eventInfo['id'],
-			'eventCode' => $eventInfo['code'],
+			'eventId' => $event['id'],
+			'eventCode' => $event['code'],
+			'event' => $event,
 			'badgeCells' => $badgeCells,
 			'appliesToRegTypeIds' => $appliesToIds,
 			'selectedCell' => $selectedCell,
@@ -50,7 +51,7 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		if($params['contentType'] === 'field') {
 			db_BadgeCellManager::getInstance()->addInformationField(array(
 				'badgeCellId' => $newCellId,
-				'contactFieldId' => $params['contactFieldId']
+				'templateField' => $params['templateField']
 			));
 		}
 		else if($params['contentType'] === 'text') {

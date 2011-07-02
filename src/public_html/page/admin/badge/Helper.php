@@ -36,7 +36,10 @@ class page_admin_badge_Helper
 			}
 			else {
 				foreach($cell['content'] as $content) {
-					if(empty($content['contactFieldId'])) {
+					if($content['showRegType'] === 'T') {
+						$summary['text'] = '<Registration Type>';
+					}
+					else if(empty($content['contactFieldId'])) {
 						$summary['text'] .= $content['text'];
 					}
 					else {
@@ -49,5 +52,51 @@ class page_admin_badge_Helper
 		}
 		
 		return $summaries;
+	}
+	
+	public static function selectFields($event) {
+		$opts = array();
+		
+		$opts[] = array(
+			'label' => 'General',
+			'value' => array(
+				array(
+					'label' => 'Registration Type',
+					'value' => 'registration_type'
+				)
+			)
+		);
+		
+		// group all the information fields by section id.
+		$sectionFields = array();
+		
+		$fields = model_Event::getInformationFields($event);
+		foreach($fields as $field) {
+			$section = model_Event::getSectionById($event, $field['sectionId']);
+			
+			if(empty($sectionFields[$section['id']])) {
+				$sectionFields[$section['id']] = array();
+			}
+			
+			$sectionFields[$section['id']][] = array(
+				'label' => $field['displayName'],
+				'value' => $field['id']
+			);
+		}
+		
+		foreach($sectionFields as $sectionId => $fields) {
+			$section = model_Event::getSectionById($event, $sectionId);
+			$opts[] = array(
+				'label' => $section['name'],
+				'value' => $fields
+			);
+		}
+		
+		$html = new HTML();
+		return $html->select(array(
+			'name' => 'templateField',
+			'value' => '',
+			'items' => $opts
+		));		
 	}
 }

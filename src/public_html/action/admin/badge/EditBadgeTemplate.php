@@ -23,7 +23,7 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 		$params = RequestUtil::getValues(array(
 			'badgeTemplateId' => 0,
 			'contentType' => 'text',
-			'contactFieldId' => 0,
+			'templateField' => '',
 			'text' => '',
 		));
 		

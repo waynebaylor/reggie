@@ -63,7 +63,9 @@
 					)) ?>
 				</td>
 				<td>
-					<?php if(empty($content['contactFieldId'])): ?>
+					<?php if($content['showRegType'] === 'T'): ?>
+						<?php echo $this->escapeHtml('<Registration Type>') ?>
+					<?php elseif(empty($content['contactFieldId'])): ?>
 						<?php echo $this->escapeHtml($content['text']) ?>
 					<?php else: ?>
 						<?php echo $this->escapeHtml("<{$content['contactFieldName']}>") ?>
