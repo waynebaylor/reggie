@@ -114,6 +114,7 @@ class db_BadgeCellManager extends db_OrderableManager
 		$data['displayOrder'] = $this->getNextOrder();
 
 		$data['showRegType'] = ($data['templateField'] === 'registration_type')? 'T' : 'F';
+		$data['showLeadNumber'] = ($data['templateField'] === 'lead_number')? 'T' : 'F';
 		
 		if($data['templateField'] === 'registration_type') {
 			$this->insert(
@@ -122,6 +123,16 @@ class db_BadgeCellManager extends db_OrderableManager
 					'badgeCellId',
 					'displayOrder',
 					'showRegType'
+				))
+			);
+		}
+		else if($data['templateField'] === 'lead_number') {
+			$this->insert(
+				'BadgeCell_TextContent',
+				ArrayUtil::keyIntersect($data, array(
+					'badgeCellId',
+					'displayOrder',
+					'showLeadNumber'
 				))
 			);
 		}
@@ -156,6 +167,7 @@ class db_BadgeCellManager extends db_OrderableManager
 				BadgeCell_TextContent.badgeCellId,
 				BadgeCell_TextContent.displayOrder,
 				BadgeCell_TextContent.showRegType,
+				BadgeCell_TextContent.showLeadNumber,
 				BadgeCell_TextContent.text,
 				BadgeCell_TextContent.contactFieldId,
 				ContactField.displayName as contactFieldName
@@ -183,6 +195,7 @@ class db_BadgeCellManager extends db_OrderableManager
 				BadgeCell_TextContent.badgeCellId,
 				BadgeCell_TextContent.displayOrder,
 				BadgeCell_TextContent.showRegType,
+				BadgeCell_TextContent.showLeadNumber,
 				BadgeCell_TextContent.text,
 				BadgeCell_TextContent.contactFieldId,
 				ContactField.displayName as contactFieldName

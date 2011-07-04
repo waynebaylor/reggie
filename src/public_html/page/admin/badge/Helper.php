@@ -39,6 +39,9 @@ class page_admin_badge_Helper
 					if($content['showRegType'] === 'T') {
 						$summary['text'] = '<Registration Type>';
 					}
+					else if($content['showLeadNumber'] === 'T') {
+						$summary['text'] = '<Lead Number>';
+					}
 					else if(empty($content['contactFieldId'])) {
 						$summary['text'] .= $content['text'];
 					}
@@ -63,6 +66,10 @@ class page_admin_badge_Helper
 				array(
 					'label' => 'Registration Type',
 					'value' => 'registration_type'
+				),
+				array(
+					'label' => 'Lead Number',
+					'value' => 'lead_number'
 				)
 			)
 		);

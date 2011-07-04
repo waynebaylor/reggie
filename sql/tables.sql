@@ -624,6 +624,7 @@ create table if not exists `BadgeCell_TextContent` (
     `text`              varchar(255),
     `contactFieldId`    integer,
     `showRegType`       char(1)         not null default 'F',
+    `showLeadNumber`    char(1)         not null default 'F',
     primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
