@@ -37,7 +37,8 @@ class db_reg_RegistrationManager extends db_Manager
 				categoryId,
 				eventId,
 				regTypeId,
-				confirmationNumber
+				confirmationNumber,
+				leadNumber
 			FROM
 				Registration
 			WHERE
@@ -62,7 +63,8 @@ class db_reg_RegistrationManager extends db_Manager
 				categoryId,
 				eventId,
 				regTypeId,
-				confirmationNumber
+				confirmationNumber,
+				leadNumber
 			FROM
 				Registration
 			WHERE
@@ -251,7 +253,8 @@ class db_reg_RegistrationManager extends db_Manager
 				categoryId,
 				eventId,
 				regTypeId,
-				confirmationNumber
+				confirmationNumber,
+				leadNumber
 			FROM
 				Registration
 			WHERE
@@ -441,6 +444,75 @@ class db_reg_RegistrationManager extends db_Manager
 		foreach($regs as $r) {
 			$this->delete($r);
 		}
+	}
+	
+	/**
+	 * Create a lead number for the given registration--WARNING: this will
+	 * commit any existing transaction and begin a new transaction.  
+	 * 
+	 * @param integer $registrationId
+	 */
+	public function createLeadNumber($eventId, $registrationId) {
+		// explicitly commit the work that has already been done. the 'lock tables'
+		// statements below will implicitly commit the current transaction, but we 
+		// want PDO to be aware of the current transaction state. 
+		$this->commitTransaction();
+		
+		// lock the Registration table.
+		$this->execute('SET autocommit = 0', array(), 'Turn autocommit off.');
+		$this->execute('LOCK TABLES Registration WRITE', array(), 'Lock Registration table.');
+
+		do {
+			// get a random number.
+			$leadNumber = $this->rawQueryUnique('SELECT FLOOR(1 + (RAND()*99999)) as randNumber', array(), 'Get random lead number.');
+			$leadNumber = $leadNumber['randNumber'];
+			
+			// check if it's unique for this event.
+			$sql = '
+				SELECT 
+					COUNT(*) as isUnique
+				FROM 
+					Registration 
+				WHERE 
+					eventId = :eventId
+				AND
+					leadNumber = :leadNumber
+			';
+			
+			$params = array(
+				'eventId' => $eventId,
+				'leadNumber' => $leadNumber
+			);
+			
+			$isUnique = $this->rawQueryUnique($sql, $params, 'Check if lead number is unique');
+			$isUnique = intval($isUnique['isUnique'], 10); 	
+		} while($isUnique !== 0);
+				
+		// update registration with the lead number.
+		$sql = '
+			UPDATE
+				Registration
+			SET
+				leadNumber = :leadNumber
+			WHERE
+				id = :id
+		';
+		
+		$params = array(
+			'id' => $registrationId,
+			'leadNumber' => $leadNumber	
+		);
+		
+		$this->execute($sql, $params, 'Set lead number.');
+
+		// unlock the Registration table. this also commits the lead number update.
+		$this->execute('COMMIT', array(), 'Commit.');
+		$this->execute('UNLOCK TABLES', array(), 'Unlock tables.');
+		
+		// start a new transaction because we committed the existing one at the 
+		// beginning of this method.
+		$this->beginTransaction(); 
+		
 	}
 }
 

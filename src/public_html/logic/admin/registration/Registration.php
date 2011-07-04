@@ -30,7 +30,9 @@ class logic_admin_registration_Registration extends logic_Performer
 			'variableQuantity' => array()
 		);
 		
-		db_reg_RegistrationManager::getInstance()->createRegistration($params['regGroupId'], $newReg);
+		$newRegId = db_reg_RegistrationManager::getInstance()->createRegistration($params['regGroupId'], $newReg);
+		
+		db_reg_RegistrationManager::getInstance()->createLeadNumber($params['eventId'], $newRegId);
 		
 		$group = db_reg_GroupManager::getInstance()->find($params['regGroupId']);
 		$count = count($group['registrations']);
@@ -65,7 +67,9 @@ class logic_admin_registration_Registration extends logic_Performer
 			'variableQuantity' => array()
 		);
 		
-		db_reg_RegistrationManager::getInstance()->createRegistration($regGroupId, $newReg);
+		$newRegId = db_reg_RegistrationManager::getInstance()->createRegistration($regGroupId, $newReg);
+		
+		db_reg_RegistrationManager::getInstance()->createLeadNumber($eventId, $newRegId);
 	}
 	
 	public function sendConfirmation($registrationId) {

@@ -377,19 +377,20 @@ create table if not exists `RegistrationGroup` (
 -- --------------------------------------------------
 
 create table if not exists `Registration` (
-	`id`			integer		not null auto_increment,
-	`dateRegistered`	datetime	not null,
-	`comments`		text		not null,
-	`dateCancelled`		datetime,
-	`regGroupId`		integer		not null, 
-	`categoryId`		integer		not null,
-	`eventId`		integer		not null,
-	`regTypeId`		integer		not null,
+	`id`			        integer		    not null auto_increment,
+	`dateRegistered`	    datetime	    not null,
+	`comments`		        text		    not null,
+	`dateCancelled`		    datetime,
+	`regGroupId`		    integer		    not null, 
+	`categoryId`		    integer		    not null,
+	`eventId`		        integer		    not null,
+	`regTypeId`		        integer		    not null,
 	`confirmationNumber`	varchar(255)	not null,
+	`leadNumber`            integer(5),
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
--- --------------------------------------------------
+-- ---------------$params-----------------------------------
 
 create table if not exists `Registration_Information` (
 	`id`			integer		not null auto_increment,
@@ -989,6 +990,10 @@ alter table Registration
 alter table Registration
 	add constraint registraion_confNum_uni
 	unique (confirmationNumber);
+	
+alter table Registration
+    add constraint registration_eventid_leadNum_uni
+    unique (eventId, leadNumber);
 
 -- --------------------------------------------------
 

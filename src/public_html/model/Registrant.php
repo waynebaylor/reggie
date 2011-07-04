@@ -76,6 +76,12 @@ class model_Registrant
 		
 		return implode('-', str_split($num, 4)); // formatted like 0000-0000
 	}
+	
+	public static function getLeadNumber($registrant) {
+		// pad the front of the lead number with zeros.
+		$num = '00000'.$registrant['leadNumber'];
+		return substr($num, -5);
+	}
 }
 
 ?>

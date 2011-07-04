@@ -223,6 +223,7 @@ _;
 	private function getRegistrantRow($r) {
 		$registeredDate = substr($r['dateRegistered'], 0, 10);
 		$confirmationNumber = model_Registrant::getConfirmationNumber($r);
+		$leadNumber = model_Registrant::getLeadNumber($r);
 		
 		$cancelledRow = '';
 		if(!empty($r['dateCancelled'])) {
@@ -243,6 +244,10 @@ _;
 			<tr>
 				<td class="label">Confirmation Number&nbsp;</td>
 				<td>{$confirmationNumber}</td>
+			</tr>
+			<tr>
+				<td class="label">Lead Number</td>
+				<td>{$leadNumber}</td>
 			</tr>
 			{$cancelledRow}
 			<tr>
