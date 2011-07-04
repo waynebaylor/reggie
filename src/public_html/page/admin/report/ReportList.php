@@ -44,6 +44,14 @@
 						)
 					))?>
 					
+					<span class="search-form-link">
+						<span class="link">Search</span>
+						<?php echo $this->HTML->hidden(array(
+							'name' => 'reportId',
+							'value' => $report['id']
+						)) ?>
+					</span>
+					
 					<?php echo $this->HTML->link(array(
 						'label' => 'Remove',
 						'href' => '/admin/report/Reports',

@@ -6,12 +6,12 @@
 	<td>
 		<?php echo $this->HTML->hidden(array(
 			'name' => 'reportId',
-			'value' => $this->info['reportId']
+			'value' => $this->searchFormInfo['reportId']
 		)) ?>
 		
 		<?php echo $this->HTML->hidden(array(
 			'name' => 'eventId',
-			'value' => $this->info['eventId']
+			'value' => $this->searchFormInfo['eventId']
 		)) ?>
 		
 		<?php echo $this->HTML->text(array(
@@ -26,7 +26,7 @@
 		Column
 	</td>
 	<td>
-		<?php echo fragment_reportField_HTML::select($this->info['event'], false) ?>
+		<?php echo fragment_reportField_HTML::select($this->searchFormInfo['event'], false) ?>
 	</td>
 </tr>
 

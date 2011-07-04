@@ -31,7 +31,17 @@ class logic_admin_report_GenerateReport extends logic_Performer
 			$info['showSearchLink'] = false;
 		}
 		
-		return $info;
+		$searchFormInfo = array(
+			'reportId' => $info['reportId'],
+			'eventId' => $info['eventId'],
+			'event' => $info['event']
+		);
+		
+		return array( 
+			'info' => $info,
+			'title' => $info['reportName'],
+			'searchFormInfo' => $searchFormInfo
+		);
 	}
 	
 	public function getBaseInfo($report, $searchTerm, $searchFieldId) {

@@ -9,9 +9,16 @@ class logic_admin_report_Reports extends logic_Performer
 	public function view($eventId) {
 		$event = $this->strictFindById(db_EventManager::getInstance(), $eventId);
 		
+		$searchFormInfo = array(
+			'reportId' => 0, // this is set dynamically with javascript.
+			'eventId' => $event['id'],
+			'event' => $event
+		);
+		
 		return array(
 			'title' => 'Reports',
-			'event' => $event
+			'event' => $event,
+			'searchFormInfo' => $searchFormInfo
 		);
 	}
 	

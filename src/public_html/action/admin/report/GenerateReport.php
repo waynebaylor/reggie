@@ -12,22 +12,17 @@ class action_admin_report_GenerateReport extends action_ValidatorAction
 	public function view() {
 		$reportId = RequestUtil::getValue('id', 0);
 		
-		$reportInfo = $this->logic->view($reportId);
+		$info = $this->logic->view($reportId);
 		
-		return $this->converter->getView(array(
-			'title' => $reportInfo['reportName'],
-			'info' => $reportInfo
-		));
+		return $this->converter->getView($info);
 	}
 	
 	public function csv() {
 		$reportId = RequestUtil::getValue('id', 0);
 		
-		$reportInfo = $this->logic->csv($reportId);
+		$info = $this->logic->csv($reportId);
 		
-		return $this->converter->getCsv(array(
-			'info' => $reportInfo
-		));
+		return $this->converter->getCsv($info);
 	}
 	
 	public function search() {
@@ -40,10 +35,7 @@ class action_admin_report_GenerateReport extends action_ValidatorAction
 		
 		$info = $this->logic->search($params);
 		
-		return $this->converter->getSearch(array(
-			'title' => $info['reportName'],
-			'info' => $info
-		));
+		return $this->converter->getSearch($info);
 	}
 }
 
