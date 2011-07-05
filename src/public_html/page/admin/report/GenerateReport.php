@@ -64,6 +64,19 @@
 		<?php echo $this->title ?>
 	</h3>
 	
+	<?php if(!empty($this->isSearch)): ?>
+	<div>
+		<strong>Search Results For:</strong> 
+		'<?php echo $this->searchField ?>' 
+		<strong>containing</strong>
+		'<?php echo $this->searchTerm ?>'.
+		<br>
+		<em><?php echo count($this->info['rows']) ?> records found.</em>
+	</div>
+	<?php endif; ?>
+
+	<div class="sub-divider"></div>
+	
 	<?php if(ArrayUtil::getValue($this->info, 'showSearchLink', true)): ?>
 	<span id="search-form-link" class="link">Search</span>
 	<div id="search-form-content" class="hide">

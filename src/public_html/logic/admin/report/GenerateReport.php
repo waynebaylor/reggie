@@ -14,22 +14,19 @@ class logic_admin_report_GenerateReport extends logic_Performer
 		
 		if($report['isPaymentsToDate'] === 'T') {
 			$info = logic_admin_report_PaymentsToDateHelper::addSpecialInfo($report, $info);
-			$info['showSearchLink'] = false;
 		}
 		else if($report['isAllRegToDate'] === 'T') { 
 			$info = logic_admin_report_AllRegToDateHelper::addSpecialInfo($report, $info);
-			$info['showCreateRegLink'] = false;
 		}
 		else if($report['isOptionCount'] === 'T') {
 			$info = logic_admin_report_OptionCountHelper::addSpecialInfo($report, $info);
-			$info['showCreateRegLink'] = false;
-			$info['showSearchLink']	= false;
 		}
 		else if($report['isRegTypeBreakdown'] === 'T') {
 			$info = logic_admin_report_RegTypeBreakdownHelper::addSpecialInfo($report, $info);
-			$info['showCreateRegLink'] = false;
-			$info['showSearchLink'] = false;
 		}
+		
+		$info['showCreateRegLink'] = model_Report::hasCreateReg($report);
+		$info['showSearchLink'] = model_Report::hasSearch($report);
 		
 		$searchFormInfo = array(
 			'reportId' => $info['reportId'],
@@ -86,7 +83,15 @@ class logic_admin_report_GenerateReport extends logic_Performer
 	}
 	
 	public function search($params) {
-		return $this->view($params['reportId'], $params['term'], $params['contactFieldId']);
+		$field = db_ContactFieldManager::getInstance()->find($params['contactFieldId']);
+		
+		$info = $this->view($params['reportId'], $params['term'], $params['contactFieldId']);
+		
+		$info['isSearch'] = true;
+		$info['searchTerm'] = $params['term'];
+		$info['searchField'] = $field['displayName'];
+		
+		return $info;
 	}
 	
 	private function getValues($params) { 

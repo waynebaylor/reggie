@@ -44,6 +44,7 @@
 						)
 					))?>
 					
+					<?php if(model_Report::hasSearch($report)): ?>
 					<span class="search-form-link">
 						<span class="link">Search</span>
 						<?php echo $this->HTML->hidden(array(
@@ -51,6 +52,9 @@
 							'value' => $report['id']
 						)) ?>
 					</span>
+					<?php else: ?>
+					<span style="visibility:hidden;">Search</span>
+					<?php endif; ?>
 					
 					<?php echo $this->HTML->link(array(
 						'label' => 'Remove',
