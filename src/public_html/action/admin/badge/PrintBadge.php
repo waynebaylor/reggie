@@ -22,6 +22,10 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 		$info = $this->logic->singleBadge($params);
 		return $this->converter->getSingleBadge($info);		
 	}
+	
+	public function allBadges() {
+		
+	}
 }
 
 ?>

@@ -1,6 +1,18 @@
 
 <h3>Badge Templates</h3>
 
+<span id="print-badges-link" class="link">Print Badges</span>
+<div id="print-badges-form" class="hide">
+	<?php echo $this->tableForm(
+		'/admin/badge/PrintBadge',
+		'allBadges',
+		$this->getFileContents('page_admin_badge_PrintBadgeForm'),
+		'Print Badges'
+	) ?>
+</div>
+
+<div class="sub-divider"></div>
+
 <div class="fragment-list">
 	<table class="admin">
 		<tr>
