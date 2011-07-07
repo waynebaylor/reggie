@@ -12,6 +12,7 @@ dependencies = {
 	version: "1.5.0",
 	releaseName: "js",
 	releaseDir: "../../../build-output",
+	cssOptimized: "comments",
 	layers: [{
 			name: "reggie_admin.js",
 			dependencies: [
