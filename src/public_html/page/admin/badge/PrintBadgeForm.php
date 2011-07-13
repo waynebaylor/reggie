@@ -4,7 +4,7 @@
 			'name' => 'eventId',
 			'value' => $this->eventId
 		)) ?>
-		<p>Select template(s) to use for this print job.</p>
+		<p>Select template(s) to use for this print job</p>
 		<table class="admin">
 			<tr>
 				<th></th>
@@ -31,5 +31,13 @@
 			</tr>
 			<?php endforeach; ?>
 		</table>
+		
+		<div class="sub-divider"></div>
+	</td>
+</tr>
+<tr>
+	<td>Sort By</td>
+	<td>
+		<?php echo page_admin_badge_Helper::selectFields($this->event, 'sortByFieldId') ?>
 	</td>
 </tr>

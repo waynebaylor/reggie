@@ -24,7 +24,14 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 	}
 	
 	public function allBadges() {
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'sortByFieldId' => 0,
+			'templateIds' => array()
+		));
 		
+		$info = $this->logic->allBadges($params);
+		return $this->converter->getAllBadges($info);
 	}
 }
 

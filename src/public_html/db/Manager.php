@@ -20,20 +20,15 @@ abstract class db_Manager
 	 * @param string $desc description of SQL
 	 */
 	protected function rawQuery($sql, $params, $desc) {
-		// prefix parameters with colons if they aren't already.
-		foreach($params as $key => $value) {
-			if(strpos($key, ':') === false) {
-				$newKey = ':'.$key;
-				$params[$newKey] = $value;
-				unset($params[$key]);
-			}
-		}
+		$params = $this->prefixParametersWithColon($params);
 		
-		$ps = self::$conn->prepare($sql);
+		$adjustedQuery = $this->adjustForMultivalueParameters($sql, $params);
 
-		$success = $ps->execute($params);
+		$ps = self::$conn->prepare($adjustedQuery['sql']);
 
-		Logger::logSql($ps->queryString, $params, $desc, $success);
+		$success = $ps->execute($adjustedQuery['params']);
+
+		Logger::logSql($ps->queryString, $adjustedQuery['params'], $desc, $success);
 
 		if($success) {
 			return $ps->fetchAll();
@@ -107,20 +102,15 @@ abstract class db_Manager
 	 * @param string $desc description of SQL
 	 */
 	protected function execute( $sql, $params, $desc) {
-		// prefix parameters with colons if they aren't already.
-		foreach($params as $key => $value) {
-			if(strpos($key, ':') === false) {
-				$newKey = ':'.$key;
-				$params[$newKey] = $value;
-				unset($params[$key]);
-			}
-		}
+		$params = $this->prefixParametersWithColon($params);
 		
-		$ps = self::$conn->prepare($sql);
+		$adjustedStatement = $this->adjustForMultivalueParameters($sql, $params);
+		
+		$ps = self::$conn->prepare($adjustedStatement['sql']);
 
-		$success = $ps->execute($params);
+		$success = $ps->execute($adjustedStatement['params']);
 
-		Logger::logSql($ps->queryString, $params, $desc, $success);
+		Logger::logSql($ps->queryString, $adjustedStatement['params'], $desc, $success);
 		
 		if(!$success) {
 			throw new Exception('Error executing SQL: '.$ps->queryString);
@@ -312,6 +302,77 @@ abstract class db_Manager
 		else {
 			return $r[0];
 		}
+	}
+	
+	private function prefixParametersWithColon($params) {
+		// prefix parameters with colons if they aren't already.
+		foreach($params as $key => $value) {
+			if(strpos($key, ':') === false) {
+				$newKey = ':'.$key;
+				$params[$newKey] = $value;
+				unset($params[$key]);
+			}
+		}
+		
+		return $params;
+	}
+	
+	/**
+	 * Update the given SQL string with additional parameters to account for any multivalue
+	 * parameters.
+	 *
+	 * @param string $sql the SQL string
+	 * @param array $params the bind parameters
+	 */
+	private function adjustForMultivalueParameters($sql, $params) {
+		$adjustedParams = array();
+
+		foreach($params as $key => $value) {
+			if(is_array($value)) {
+				$replacement = $this->replaceArrayParameter($sql, $key, $value);
+				$sql = $replacement['sql'];
+				$adjustedParams = array_merge($adjustedParams, $replacement['params']);
+			}
+			else {
+				$adjustedParams[$key] = $value;
+			}
+		}
+		
+		return array(
+			'sql' => $sql,
+			'params' => $adjustedParams
+		);
+	}
+	
+	/**
+	 * Rewrite strings like 'where in (:[values])' with 'where in (:values1, :values2, ...)'.
+	 * This allows you to use SQL bind parameters and arrays.
+	 * 
+	 * @param string $sql the string to rewrite
+	 * @param string $name the parameter name
+	 * @param array $arr the array of values
+	 */
+	private function replaceArrayParameter($sql, $name, $arr) { 
+		// strip off leading colon since regex doesn't need it.
+		$name = ltrim($name, ':');
+		
+		$paramNames = array();
+		$paramValues = array();
+		
+		foreach($arr as $index => $value) {
+			$pName = ':'.$name.$index;
+			$paramNames[] = $pName;
+			$paramValues[$pName] = $value;
+		}
+		
+		$regex = '/:\['.$name.'\]/';
+	
+		$sql = preg_replace($regex, join(',', $paramNames), $sql);
+		
+		return array(
+			'sql' => $sql,
+			'params' => $paramValues
+		);
 	}
 }
 

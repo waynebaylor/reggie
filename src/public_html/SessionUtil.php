@@ -9,5 +9,9 @@ class SessionUtil
 	public static function setUser($user) { 
 		$_SESSION['admin_user'] = $user;
 	}
+	
+	public static function getRequestStartTime() {
+		return $_SERVER['REQUEST_TIME'];
+	}
 }
 ?>

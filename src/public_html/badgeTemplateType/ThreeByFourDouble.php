@@ -2,7 +2,15 @@
 
 class badgeTemplateType_ThreeByFourDouble extends badgeTemplateType_BaseTemplate
 {
-	function __construct() {}
+	function __construct() {
+		parent::__construct();
+		
+		$this->badgeWidth = 8.0; 	// inches
+		$this->badgeHeight = 3.0;	// inches
+		
+		$this->topMargin = 1.0;		// inches
+		$this->sideMargin = 0.25;	// inches
+	}
 	
 	public function getHtml($template, $selectedCellId) {
 		$cellsHtml = '';
@@ -56,8 +64,8 @@ _;
 		}
 		
 		return <<<_
-			<div id="badge-canvas" style="width:8in;">
-				<div style="width:4in; height:3in; border-right:1px dotted #777;"></div>
+			<div id="badge-canvas" style="width:{$this->badgeWidth}in;">
+				<div style="width:4in; height:{$this->badgeHeight}in; border-right:1px dotted #777;"></div>
 				{$cellsHtml}
 			</div>
 _;
@@ -68,33 +76,29 @@ _;
 		$event = $config['event'];
 		$data = $config['data'];
 		
-		// calculate margins based on user's input and template dimensions.
-		$sideMargin = $config['shiftRight'];
-		$topMargin = $config['shiftDown'];
-		if($config['margins'] === 'T') {
-			$sideMargin += 0.25; // inches
-			$topMargin += 1.0; // inches
-		}
+		$useMargins = $config['margins'] === 'T';
+		$margins = $this->getMargins($useMargins, $config['shiftDown'], $config['shiftRight']);
 		
 		$pdf = $this->createTcpdf(array(
 			'creator' => $user['email'],
 			'author' => $user['email'],
 			'title' => $event['code'],
 			'subject' => $event['code'],
-			'sideMargin' => $sideMargin,
-			'topMargin' => $topMargin
+			'sideMargin' => $margins['side'],
+			'topMargin' => $margins['top']
 		));
-		
+
 		$pdf->AddPage();
 		
-		foreach($data as $cellData) {
-			$cellData['sideMargin'] = $sideMargin;
-			$cellData['topMargin'] = $topMargin;
-			
-			$this->addCell($pdf, $cellData);
-		}
+		$position = array('x' => 0, 'y' => 0);
 		
-		$pdf->Output('badge.pdf', 'I');
+		$this->writeData($pdf, $position, $margins, $data);
+		
+		return array(
+			'pdf' => $pdf,
+			'mode' => 'I',
+			'name' => 'single_badge'
+		);
 	}
 }
 

@@ -512,7 +512,37 @@ class db_reg_RegistrationManager extends db_Manager
 		// start a new transaction because we committed the existing one at the 
 		// beginning of this method.
 		$this->beginTransaction(); 
+	}
+	
+	public function findInfoOrderedByField($eventId, $fieldId) {
+		$sql = '
+			SELECT
+				Registration.id,
+				Registration.dateRegistered,
+				Registration.dateCancelled,
+				Registration.categoryId,
+				Registration.eventId,
+				Registration.regTypeId
+			FROM
+				Registration
+			INNER JOIN
+				Registration_Information
+			ON
+				Registration.id = Registration_Information.registrationId
+			WHERE
+				Registration.eventId = :eventId
+			AND
+				Registration_Information.contactFieldId = :contactFieldId
+			ORDER BY
+				Registration_Information.value ASC
+		';
 		
+		$params = array(
+			'eventId' => $eventId,
+			'contactFieldId' => $fieldId
+		);
+		
+		return $this->rawQuery($sql, $params, 'Find registration info ordered by field.');
 	}
 }
 

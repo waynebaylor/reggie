@@ -11,30 +11,7 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
 		$user = SessionUtil::getUser();
 		
-		$data = array();
-		foreach($badgeTemplate['cells'] as $cell) {
-			if($cell['hasBarcode'] === 'T') {
-				$data[] = array(
-					'isBarcode' => true,
-					'xCoord' => $cell['xCoord'],
-					'yCoord' => $cell['yCoord'],
-					'text' => $this->getBarcodeText($params['registrationId'], $cell),
-					'align' => $cell['horizontalAlign']
-				);
-			}
-			else {
-				$data[] = array(
-					'isBarcode' => false,
-					'font' => $cell['font'],
-					'fontSize' => $cell['fontSize'],
-					'xCoord' => $cell['xCoord'],
-					'yCoord' => $cell['yCoord'],
-					'width' => $cell['width'],
-					'text' => $this->getCellText($params['registrationId'], $cell),
-					'align' => $cell['horizontalAlign']
-				);
-			}
-		}
+		$data = $this->getRegistrationBadgeData($params['registrationId'], $badgeTemplate);
 		
 		return array(
 			'badgeTemplate' => $badgeTemplate,
@@ -44,6 +21,32 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 			'eventInfo' => $eventInfo,
 			'user' => $user,
 			'data' => $data
+		);
+	}
+	
+	public function allBadges($params) {
+		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
+		$regInfos = db_reg_RegistrationManager::getInstance()->findInfoOrderedByField($params['eventId'], $params['sortByFieldId']);
+		
+		$allData = array();
+		
+		foreach($regInfos as $regInfo) { 
+			$badgeTemplate = db_BadgeTemplateManager::getInstance()->findPrintBadgeTemplate($regInfo['eventId'], $regInfo['regTypeId'], $params['templateIds']);
+			
+			if(!empty($badgeTemplate)) {
+				$regData = $this->getRegistrationBadgeData($regInfo['id'], $badgeTemplate);
+				
+				$allData[] = array(
+					'template' => $badgeTemplate,
+					'data' => $regData
+				);
+			}
+		}
+		
+		return array(
+			'user' => SessionUtil::getUser(),
+			'eventInfo' => $eventInfo,
+			'data' => $allData
 		);
 	}
 	
@@ -98,6 +101,36 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 		}
  		
 		return $text;
+	}
+	
+	private function getRegistrationBadgeData($registrationId, $badgeTemplate) {
+		$data = array();
+		
+		foreach($badgeTemplate['cells'] as $cell) {
+			if($cell['hasBarcode'] === 'T') {
+				$data[] = array(
+					'isBarcode' => true,
+					'xCoord' => $cell['xCoord'],
+					'yCoord' => $cell['yCoord'],
+					'text' => $this->getBarcodeText($registrationId, $cell),
+					'align' => $cell['horizontalAlign']
+				);
+			}
+			else {
+				$data[] = array(
+					'isBarcode' => false,
+					'font' => $cell['font'],
+					'fontSize' => $cell['fontSize'],
+					'xCoord' => $cell['xCoord'],
+					'yCoord' => $cell['yCoord'],
+					'width' => $cell['width'],
+					'text' => $this->getCellText($registrationId, $cell),
+					'align' => $cell['horizontalAlign']
+				);
+			}
+		}
+
+		return $data;
 	}
 }
 

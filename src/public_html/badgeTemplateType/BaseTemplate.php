@@ -5,6 +5,14 @@ abstract class badgeTemplateType_BaseTemplate
 	public static $BARCODE_WIDTH = 3;    // inches
 	public static $BARCODE_HEIGHT = 0.5; // inches
 	
+	function __construct() {
+		$this->badgeWidth = 0;
+		$this->badgeHeight = 0;
+		
+		$this->topMargin = 0;
+		$this->sideMargin = 0;
+	}
+	
 	public abstract function getHtml($template, $selectedCellId);
 	
 	public abstract function getPdfSingle($config);
@@ -84,6 +92,36 @@ abstract class badgeTemplateType_BaseTemplate
 			);
 		}
 		return $pdf;
+	}
+	
+	public function writeData($pdf, $position, $margins, $data) {
+		foreach($data as $cellData) {
+			$cellData['sideMargin'] = $margins['side'];
+			$cellData['topMargin'] = $margins['top'];
+			
+			$cellData['xCoord'] += $position['x'];
+			$cellData['yCoord'] += $position['y'];
+			
+			$this->addCell($pdf, $cellData);
+		}
+		
+		return $pdf;
+	}
+	
+	public function getMargins($useMargins = true, $shiftDown = 0, $shiftRight = 0) {
+		// calculate margins based on user's input and template dimensions.
+		$sideMargin = $shiftRight;
+		$topMargin = $shiftDown;
+		
+		if($useMargins) {
+			$sideMargin += $this->sideMargin; 
+			$topMargin += $this->topMargin; 
+		}
+		
+		return array(
+			'top' => $topMargin,
+			'side' => $sideMargin
+		);
 	}
 }
 

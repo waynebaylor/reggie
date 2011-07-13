@@ -7,12 +7,13 @@ class logic_admin_badge_BadgeTemplates extends logic_Performer
 	}
 	
 	public function view($params) {
-		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
+		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
-			'eventId' => $eventInfo['id'],
-			'eventCode' => $eventInfo['code'],
-			'templates' => db_BadgeTemplateManager::getInstance()->findByEventId($eventInfo['id'])
+			'event' => $event,
+			'eventId' => $event['id'],
+			'eventCode' => $event['code'],
+			'templates' => db_BadgeTemplateManager::getInstance()->findByEventId($event['id'])
 		);
 	}
 	

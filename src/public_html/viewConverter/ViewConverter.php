@@ -202,11 +202,17 @@ abstract class viewConverter_ViewConverter
 						
 						<div class="divider"></div>
 					</div>
+					
+					<div style="position:fixed;bottom:0;background-color:#333;color:#aaa;">Page Rendered in {$this->pageRenderTime()}s</div>
 				</body>
 			</html>
 _;
 
 		return new template_TemplateWrapper($html);
+	}
+	
+	private function pageRenderTime() {
+		return time() - SessionUtil::getRequestStartTime();
 	}
 }
 

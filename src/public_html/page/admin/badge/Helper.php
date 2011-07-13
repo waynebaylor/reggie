@@ -57,7 +57,7 @@ class page_admin_badge_Helper
 		return $summaries;
 	}
 	
-	public static function selectFields($event) {
+	public static function selectFields($event, $name = 'templateField') {
 		$opts = array();
 		
 		$opts[] = array(
@@ -85,8 +85,11 @@ class page_admin_badge_Helper
 				$sectionFields[$section['id']] = array();
 			}
 			
+			// truncate to 50 chars if too long.
+			$label = (strlen($field['displayName']) > 50)? substr($field['displayName'], 0, 50).'...' : $field['displayName'];
+			
 			$sectionFields[$section['id']][] = array(
-				'label' => $field['displayName'],
+				'label' => $label,
 				'value' => $field['id']
 			);
 		}
@@ -101,8 +104,8 @@ class page_admin_badge_Helper
 		
 		$html = new HTML();
 		return $html->select(array(
-			'name' => 'templateField',
-			'value' => '',
+			'name' => $name,
+			'value' => 'registration_type',
 			'items' => $opts
 		));		
 	}

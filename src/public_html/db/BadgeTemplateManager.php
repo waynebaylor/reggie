@@ -163,6 +163,39 @@ class db_BadgeTemplateManager extends db_Manager
 		
 		$this->del('BadgeTemplate', array('id' => $id));
 	}
+	
+	public function findPrintBadgeTemplate($eventId, $regTypeId, $templateIds) {
+		$sql = '
+			SELECT
+				BadgeTemplate.id,
+				BadgeTemplate.eventId,
+				BadgeTemplate.name,
+				BadgeTemplate.type
+			FROM
+				BadgeTemplate
+			INNER JOIN
+				BadgeTemplate_RegType
+			ON
+				BadgeTemplate.id = BadgeTemplate_RegType.badgeTemplateId
+			WHERE
+				BadgeTemplate.eventId = :eventId
+			AND (
+				BadgeTemplate_RegType.regTypeId is NULL
+			OR
+				BadgeTemplate_RegType.regTypeId = :regTypeId
+			)
+			AND
+				BadgeTemplate.id in (:[templateIds])
+		';
+		
+		$params = array(
+			'eventId' => $eventId,
+			'regTypeId' => $regTypeId,
+			'templateIds' => $templateIds
+		);
+		
+		return $this->queryUnique($sql, $params, 'Find badge template from list.');
+	}
 }
 
 ?>
