@@ -97,7 +97,7 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 				$value = $this->getOptionFieldValue($field, $value);
 			}
 			
-			$text .= '['.$field['displayName'].':'.$value.']';
+			$text .= $value.'\r\n';
 		}
  		
 		return $text;
