@@ -37,9 +37,8 @@ abstract class badgeTemplateType_BaseTemplate
 	}
 	
 	protected function addCell($pdf, $config) {
-		// set xy position and account for margins.
-		$x = $config['sideMargin']+$config['xCoord'];
-		$y = $config['topMargin']+$config['yCoord'];
+		$x = $config['x'];
+		$y = $config['y'];
 		
 		if($config['isBarcode']) { 
 			$pdf->SetXY($x, $y);
@@ -96,11 +95,9 @@ abstract class badgeTemplateType_BaseTemplate
 	
 	public function writeData($pdf, $position, $margins, $data) {
 		foreach($data as $cellData) {
-			$cellData['sideMargin'] = $margins['side'];
-			$cellData['topMargin'] = $margins['top'];
-			
-			$cellData['xCoord'] += $position['x'];
-			$cellData['yCoord'] += $position['y'];
+			// set xy position and account for margins and offset.
+			$cellData['x'] = $margins['side'] + $position['x'] + $cellData['xCoord'];
+			$cellData['y'] = $margins['top'] + $position['y'] + $cellData['yCoord'];
 			
 			$this->addCell($pdf, $cellData);
 		}

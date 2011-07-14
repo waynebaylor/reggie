@@ -96,7 +96,6 @@ _;
 		
 		return array(
 			'pdf' => $pdf,
-			'mode' => 'I',
 			'name' => 'single_badge'
 		);
 	}

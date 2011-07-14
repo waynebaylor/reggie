@@ -45,21 +45,22 @@ class badgeTemplateType_MultiBadge extends badgeTemplateType_BaseTemplate
 		foreach($config['data'] as $index => $badgeData) {
 			$template = model_BadgeTemplateType::newTemplate($badgeData['template']['type']);
 			$data = $badgeData['data'];
-			
-			$this->writeData($pdf, $position, $template->getMargins(), $data);
-			
-			$position['x'] += $template->badgeWidth;
-			$position['y'] += $template->badgeHeight;
-			
-			if($position['y'] > $pageHeight) {
+
+			if($index > 0 && ($index % 3) === 0) {
 				$pdf->AddPage();
 				$position = array('x' => 0, 'y' => 0);
 			}
-
-			$template->writeData($pdf, $position, $template->getMargins(), $data);
+			else {
+				$position['y'] = (($index%3)*$template->badgeHeight);
+			}			
+			
+			$this->writeData($pdf, $position, $template->getMargins(), $data);
 		}
 		
-		$pdf->Output('all_badges.pdf', 'I');
+		return array(
+			'pdf' => $pdf, 
+			'name' => 'badges'
+		);
 	}
 }
 
