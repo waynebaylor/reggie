@@ -386,11 +386,11 @@ create table if not exists `Registration` (
 	`eventId`		        integer		    not null,
 	`regTypeId`		        integer		    not null,
 	`confirmationNumber`	varchar(255)	not null,
-	`leadNumber`            integer(5),
+	`leadNumber`            integer(5)      not null,
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
--- ---------------$params-----------------------------------
+-- --------------------------------------------------
 
 create table if not exists `Registration_Information` (
 	`id`			integer		not null auto_increment,

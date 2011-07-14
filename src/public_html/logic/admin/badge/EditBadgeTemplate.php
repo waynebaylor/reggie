@@ -127,7 +127,7 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 			else if($params['contentType'] === 'field') {
 				db_BadgeCellManager::getInstance()->addInformationField(array(
 					'badgeCellId' => $cell['id'],
-					'contactFieldId' => $params['contactFieldId']
+					'templateField' => $params['templateField']
 				));
 			}	
 		}

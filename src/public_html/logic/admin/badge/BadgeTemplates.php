@@ -85,6 +85,16 @@ class logic_admin_badge_BadgeTemplates extends logic_Performer
 				db_BadgeCellManager::getInstance()->addText($cellContent);
 			}
 			else {
+				if($cellContent['showRegType'] === 'T') {
+					$cellContent['templateField'] = 'registration_type';
+				}
+				else if($cellContent['showLeadNumber'] === 'T') {
+					$cellContent['templateField'] = 'lead_number';
+				}
+				else {
+					$cellContent['templateField'] = $cellContent['contactFieldId'];
+				}
+				
 				db_BadgeCellManager::getInstance()->addInformationField($cellContent);
 			}
 		}

@@ -73,6 +73,7 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 			'cellId' => 0,
 			'contentType' => 'text',
 			'contactFieldId' => 0,
+			'templateField' => 0,
 			'text' => ''
 		));
 		

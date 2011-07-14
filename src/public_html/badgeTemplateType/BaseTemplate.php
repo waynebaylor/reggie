@@ -71,7 +71,7 @@ abstract class badgeTemplateType_BaseTemplate
 			$height = $pdf->getStringHeight($config['width'], $config['text']);
 			
 			// cell mid-point is y, so we need to move it down 1/2 height 
-			// so upper left cell corder is at (x, y).
+			// so upper left cell coord is at (x, y).
 			$adjustedY = $y + 0.5*$height;
 			
 			$pdf->SetXY($x, $adjustedY); 

@@ -463,8 +463,8 @@ class db_reg_RegistrationManager extends db_Manager
 		$this->execute('LOCK TABLES Registration WRITE', array(), 'Lock Registration table.');
 
 		do {
-			// get a random number.
-			$leadNumber = $this->rawQueryUnique('SELECT FLOOR(1 + (RAND()*99999)) as randNumber', array(), 'Get random lead number.');
+			// get a random number in range 5000-99999.
+			$leadNumber = $this->rawQueryUnique('SELECT FLOOR(5000 + (RAND()*94999)) as randNumber', array(), 'Get random lead number.');
 			$leadNumber = $leadNumber['randNumber'];
 			
 			// check if it's unique for this event.
