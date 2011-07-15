@@ -65,7 +65,7 @@ class FileUtil
 		return $files;
 	}
 	
-	private static function getEventFilesDir($event) {
+	public static function getEventFilesDir($event) {
 		return Reggie::$PATH.'/files/'.$event['code'];
 	}
 }

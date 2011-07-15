@@ -514,7 +514,7 @@ class db_reg_RegistrationManager extends db_Manager
 		$this->beginTransaction(); 
 	}
 	
-	public function findInfoOrderedByField($eventId, $fieldId) {
+	public function findInfoOrderedByField($eventId, $fieldId, $templateIds) {
 		$sql = '
 			SELECT
 				Registration.id,
@@ -532,14 +532,26 @@ class db_reg_RegistrationManager extends db_Manager
 			WHERE
 				Registration.eventId = :eventId
 			AND
+				Registration.dateCancelled is NULL
+			AND
 				Registration_Information.contactFieldId = :contactFieldId
+			AND
+				Registration.regTypeId IN (
+					SELECT 
+						BadgeTemplate_RegType.regTypeId 
+					FROM
+						BadgeTemplate_RegType
+					WHERE
+						BadgeTemplate_RegType.badgeTemplateId IN (:[templateIds])
+				)
 			ORDER BY
 				Registration_Information.value ASC
 		';
 		
 		$params = array(
 			'eventId' => $eventId,
-			'contactFieldId' => $fieldId
+			'contactFieldId' => $fieldId,
+			'templateIds' => $templateIds
 		);
 		
 		return $this->rawQuery($sql, $params, 'Find registration info ordered by field.');

@@ -26,7 +26,13 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 	
 	public function allBadges($params) {
 		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
-		$regInfos = db_reg_RegistrationManager::getInstance()->findInfoOrderedByField($params['eventId'], $params['sortByFieldId']);
+		$regInfos = db_reg_RegistrationManager::getInstance()->findInfoOrderedByField($params['eventId'], $params['sortByFieldId'], $params['templateIds']);
+		
+		// get the reg infos for the requested batch.
+		$BATCH_SIZE = 48; // divisible by 3 to fill full pages. testing shows this size can be done before timeout.
+		if($params['batchNumber'] > 0) {
+			$regInfos = array_slice($regInfos, $BATCH_SIZE*($params['batchNumber']-1), $BATCH_SIZE);
+		}
 		
 		$allData = array();
 		
@@ -46,7 +52,8 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 		return array(
 			'user' => SessionUtil::getUser(),
 			'eventInfo' => $eventInfo,
-			'data' => $allData
+			'data' => $allData,
+			'batchNumber' => $params['batchNumber']
 		);
 	}
 	

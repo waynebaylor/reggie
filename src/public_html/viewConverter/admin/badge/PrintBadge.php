@@ -32,7 +32,10 @@ class viewConverter_admin_badge_PrintBadge extends viewConverter_admin_AdminConv
 			'data' => $this->data
 		));
 		
-		return new template_TcpdfWrapper($pdfInfo['pdf'], $pdfInfo['name'].'_'.time().'.pdf', 'I');
+		$fileName = "{$pdfInfo['name']}_{$this->batchNumber}.pdf";
+		$file = FileUtil::getEventFilesDir($this->eventInfo).'/'.$fileName;
+		
+		return new template_TcpdfWrapper($pdfInfo['pdf'], $file, 'F');
 	}
 }
 

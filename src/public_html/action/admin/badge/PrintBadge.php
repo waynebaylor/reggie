@@ -27,7 +27,8 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0,
 			'sortByFieldId' => 0,
-			'templateIds' => array()
+			'templateIds' => array(),
+			'batchNumber' => 1
 		));
 		
 		$info = $this->logic->allBadges($params);
