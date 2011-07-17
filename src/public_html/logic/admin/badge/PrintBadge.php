@@ -2,6 +2,9 @@
 
 class logic_admin_badge_PrintBadge extends logic_Performer
 {
+	// divisible by 3 to fill full pages. testing shows this size can be done before timeout.
+	public static $BATCH_SIZE = 48;
+	
 	function __construct() {
 		parent::__construct();
 	}
@@ -24,15 +27,17 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 		);
 	}
 	
-	public function allBadges($params) {
-		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
+	public function allBadges($params) { 
+		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']); 
 		$regInfos = db_reg_RegistrationManager::getInstance()->findInfoOrderedByField($params['eventId'], $params['sortByFieldId'], $params['templateIds']);
 		
 		// get the reg infos for the requested batch.
-		$BATCH_SIZE = 48; // divisible by 3 to fill full pages. testing shows this size can be done before timeout.
-		if($params['batchNumber'] > 0) {
-			$regInfos = array_slice($regInfos, $BATCH_SIZE*($params['batchNumber']-1), $BATCH_SIZE);
-		}
+		if($params['batchNumber'] >= 0) {
+			$start = self::$BATCH_SIZE*($params['batchNumber']);
+			$count = self::$BATCH_SIZE;
+			
+			$regInfos = array_slice($regInfos, $start, $count);
+		}    
 		
 		$allData = array();
 		
@@ -54,6 +59,21 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 			'eventInfo' => $eventInfo,
 			'data' => $allData,
 			'batchNumber' => $params['batchNumber']
+		);
+	}
+	
+	public function batchCount($params) {
+		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
+		$regInfos = db_reg_RegistrationManager::getInstance()->findInfoOrderedByField($params['eventId'], $params['sortByFieldId'], $params['templateIds']);
+
+		$fullBatchCount = floor(count($regInfos)/self::$BATCH_SIZE);
+		$partialBatch = (count($regInfos)%self::$BATCH_SIZE) > 0;
+		
+		return array(
+			'eventId' => $params['eventId'],
+			'sortByFieldId' => $params['sortByFieldId'],
+			'templateIds' => $params['templateIds'],
+			'batchCount' => $fullBatchCount + ($partialBatch? 1 : 0)
 		);
 	}
 	

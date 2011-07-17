@@ -28,11 +28,22 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 			'eventId' => 0,
 			'sortByFieldId' => 0,
 			'templateIds' => array(),
-			'batchNumber' => 1
+			'batchNumber' => -1
 		));
-		
+
 		$info = $this->logic->allBadges($params);
 		return $this->converter->getAllBadges($info);
+	}
+	
+	public function batchCount() {
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'sortByFieldId' => 0,
+			'templateIds' => array()
+		));	
+		
+		$info = $this->logic->batchCount($params);
+		return $this->converter->getBatchCount($info);
 	}
 }
 

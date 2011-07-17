@@ -13,7 +13,8 @@ class template_TcpdfWrapper extends template_Template
 	public function html() {
 		$this->pdf->Output($this->name, $this->mode);
 		
-		return '';
+		$t = new fragment_Success();
+		return $t->html();
 	}
 }
 ?>

@@ -9,9 +9,9 @@ dojo.require("dijit.Dialog");
 		//          create a popup dialog.
 		// spec:
 		//          title: dialog title
-		//          trigger: DOM Node to which the show dialog onclick event will be attached
+		//          trigger: (optional) DOM Node to which the show dialog onclick event will be attached
 		//          content: DOM Node containing the content of the dialog
-		//          onClose: function to execute when user cancels dialog
+		//          onClose: (optional) function to execute when user cancels dialog
 		//
 		
 		var d = new dijit.Dialog({
@@ -31,9 +31,11 @@ dojo.require("dijit.Dialog");
 		dojo.removeClass(spec.content, "hide");
 		
 		// show dialog when user clicks link.
-		dojo.connect(spec.trigger, "onclick", function() {
-			d.show();
-		});
+		if(spec.trigger) {
+			dojo.connect(spec.trigger, "onclick", function() {
+				d.show();
+			});
+		}
 		
 		return d;
 	};

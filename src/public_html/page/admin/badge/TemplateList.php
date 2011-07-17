@@ -5,7 +5,7 @@
 <div id="print-badges-form" class="hide">
 	<?php echo $this->tableForm(
 		'/admin/badge/PrintBadge',
-		'allBadges',
+		'batchCount',
 		$this->getFileContents('page_admin_badge_PrintBadgeForm'),
 		'Print Badges'
 	) ?>

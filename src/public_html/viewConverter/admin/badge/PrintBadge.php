@@ -37,6 +37,12 @@ class viewConverter_admin_badge_PrintBadge extends viewConverter_admin_AdminConv
 		
 		return new template_TcpdfWrapper($pdfInfo['pdf'], $file, 'F');
 	}
+	
+	public function getBatchCount($properties) {
+		$this->setProperties($properties);
+		
+		return new template_TemplateWrapper($this->getFileContents('page_admin_badge_BatchCount'));
+	}
 }
 
 ?>
