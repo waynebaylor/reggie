@@ -86,7 +86,7 @@ _;
 		$rows = <<<_
 			<tr>
 				<td colspan="2">
-					<span style="font-weight:bold;">WARNING:</span> Changing the registration type will cancel all registraion options.
+					<span style="font-weight:bold;">WARNING:</span> Changing the registration type will cancel all registration options.
 					<div class="sub-divider"></div>
 				</td>
 			</tr>

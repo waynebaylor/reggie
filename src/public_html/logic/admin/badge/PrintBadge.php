@@ -82,7 +82,11 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 		
 		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $registrationId);
 		
-		foreach($cell['content'] as $subCell) {
+		// don't print text after an empty field. for example, <City>, <State>, <Country> should 
+		// look like: "Paris, France" if no <State> is given.
+		$prevFieldInfo = array('index' => '', 'value' => '');
+		
+		foreach($cell['content'] as $index => $subCell) {
 			if($subCell['showRegType'] === 'T') {
 				$regType = db_RegTypeManager::getInstance()->find($registration['regTypeId']);
 				$text .= $regType['description'];
@@ -91,7 +95,9 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 				$text .= model_Registrant::getLeadNumber($registration);
 			}
 			else if(empty($subCell['contactFieldId'])) {
-				$text .= $subCell['text'];
+				if($prevFieldInfo['index'] !== ($index-1) || !StringUtil::isBlank($prevFieldInfo['value'])) {
+					$text .= $subCell['text'];
+				}
 			}
 			else {
 				// get registrant value for contact field.
@@ -102,6 +108,8 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 				if(model_FormInput::isOptionInput($field['formInput']['id'])) {
 					$value = $this->getOptionFieldValue($field, $value);
 				}
+				
+				$prevFieldInfo = array('index' => $index, 'value' => $value);
 				
 				$text .= $value;
 			}
@@ -124,7 +132,7 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 				$value = $this->getOptionFieldValue($field, $value);
 			}
 			
-			$text .= $value.'\r\n';
+			$text .= $value.'^';
 		}
  		
 		return $text;
@@ -158,6 +166,25 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 		}
 
 		return $data;
+	}
+	
+	private function getOptionFieldValue($field, $value) {
+		// the value for fields that can have multiple values 
+		// (select and checkbox) will be an array.
+		if(is_array($value)) {
+			$optionNames = array();
+			foreach($value as $optionId) {
+				$option = db_ContactFieldOptionManager::getInstance()->find($optionId);
+				$optionNames[] = $option['displayName'];
+			}
+			$value = implode(', ', $optionNames);
+		}
+		else if(!StringUtil::isBlank($value)) {
+			$option = db_ContactFieldOptionManager::getInstance()->find($value);
+			$value = $option['displayName'];
+		}
+		
+		return '';
 	}
 }
 

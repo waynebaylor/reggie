@@ -160,12 +160,12 @@ _;
 			}
 			
 			$printBadgeLink = '';
+			$printBadgeDialog = '';
 			$badgeTemplates = db_BadgeTemplateManager::getInstance()->findByRegTypeId($this->event['id'], $r['regTypeId']);
-			if(!empty($badgeTemplates)) {
+			if(!empty($badgeTemplates) && empty($r['dateCancelled'])) {
 				$printBadgeLink = '<span class="print-badge-link link" title="Print badge for this registrant">Print Badge</span>';
+				$printBadgeDialog = $this->getPrintBadgeDialog($this->event['id'], $r['id'], $badgeTemplates);
 			}
-			
-			$printBadgeDialog = $this->getPrintBadgeDialog($this->event['id'], $r['id'], $badgeTemplates);
 			
 			// must cancel registration before you can delete it.
 			$deleteLink = '';

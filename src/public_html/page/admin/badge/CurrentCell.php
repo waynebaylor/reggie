@@ -57,6 +57,7 @@
 								'name' => 'font',
 								'value' => $this->selectedCell['font'],
 								'items' => array(
+									array('label' => 'Arial', 'value' => 'arial'),
 									array('label' => 'Courier', 'value' => 'courier'),
 									array('label' => 'Helvetica', 'value' => 'helvetica'),
 									array('label' => 'Times Roman', 'value' => 'times')
