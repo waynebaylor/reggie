@@ -32,7 +32,7 @@
 			form: form,
 			handleAs: "json",
 			load: function(response) { 
-				var contentString = '<div><div>Printing badges in <strong>${batchCount}</strong> batches.</div><div style="text-align:center;margin-top:10px;">Completed <span id="batches-completed" style="font-size:18pt; color:#579; font-weight:bold;">0</span> of <span style="font-size:18pt; color:#579; font-weight:bold;">${batchCount}</span></div></div>';
+				var contentString = '<div style="margin:20px;"><div>Printing badges in <strong>${batchCount}</strong> batches.</div><div style="text-align:center;margin-top:20px;">Completed <span id="batches-completed" style="font-size:18pt; color:#579; font-weight:bold;">0</span> of <span style="font-size:18pt; color:#579; font-weight:bold;">${batchCount}</span></div></div>';
 				var content = dojo.place(
 					dojo.string.substitute(contentString, {batchCount: response.batches.length}),
 					dojo.body()
