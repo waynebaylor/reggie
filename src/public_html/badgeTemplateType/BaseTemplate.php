@@ -70,7 +70,7 @@ abstract class badgeTemplateType_BaseTemplate
 				/*font size*/ $fontSize
 			);
 			
-			$height = $pdf->getStringHeight($config['width'], $config['text']);
+			$height = 0.0138*$fontSize; // (in. per pt.)*(font size in pt.)
 			
 			// cell mid-point is y, so we need to move it down 1/2 height 
 			// so upper left cell coord is at (x, y).

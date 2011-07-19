@@ -24,7 +24,7 @@
 				},
 				timeout: 1*60*1000 // millisecs
 			});
-		}, 15000*batch.batchNumber);
+		}, 60*1000*batch.batchNumber);
 	};
 	
 	var processBadgePrinting = function(form, dialog) {
@@ -32,7 +32,7 @@
 			form: form,
 			handleAs: "json",
 			load: function(response) { 
-				var contentString = '<div style="margin:20px;"><div>Printing badges in <strong>${batchCount}</strong> batches.</div><div style="text-align:center;margin-top:20px;">Completed <span id="batches-completed" style="font-size:18pt; color:#579; font-weight:bold;">0</span> of <span style="font-size:18pt; color:#579; font-weight:bold;">${batchCount}</span></div></div>';
+				var contentString = '<div style="margin:30px;"><div>Printing badges in <strong>${batchCount}</strong> batches.</div><div style="text-align:center;margin-top:20px;">Completed <span id="batches-completed" style="font-size:18pt; color:#579; font-weight:bold;">0</span> of <span style="font-size:18pt; color:#579; font-weight:bold;">${batchCount}</span></div></div>';
 				var content = dojo.place(
 					dojo.string.substitute(contentString, {batchCount: response.batches.length}),
 					dojo.body()
@@ -55,7 +55,7 @@
 				});
 			},
 			error: function(response) {
-				dialog.set('content', 'Error');
+				dialog.set('content', '<div style="padding:30px;">Error</div>');
 			}
 		});
 	};

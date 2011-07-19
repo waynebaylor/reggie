@@ -3,7 +3,7 @@
 class logic_admin_badge_PrintBadge extends logic_Performer
 {
 	// divisible by 3 to fill full pages. testing shows this size can be done before timeout.
-	public static $BATCH_SIZE = 48;
+	public static $BATCH_SIZE = 24;
 	
 	function __construct() {
 		parent::__construct();
