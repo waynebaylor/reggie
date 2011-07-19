@@ -95,6 +95,34 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 			else if($subCell['showLeadNumber'] === 'T') {
 				$text .= model_Registrant::getLeadNumber($registration);
 			}
+			// -------------------------------------------------
+			// hard coded text customization for MM
+			// -------------------------------------------------
+			else if($cell['id'] == 4) {
+				$sdo = array();
+				
+				$singleDayOnlyText = array(
+					'54' => 'MON',
+					'55' => 'TUE',
+					'56' => 'WED',
+					'57' => 'THU',
+					'173' => 'MON EXHO',
+					'174' => 'TUE EXHO',
+					'175' => 'WED EXHO',
+					'176' => 'THU EXHO'
+				);
+				
+				$optIds = model_Registrant::getRegOptionIds($registration);
+				foreach($optIds as $optId) {
+					if(in_array($optId, array_keys($singleDayOnlyText))) {
+						$sdo[] = $singleDayOnlyText[$optId];
+					}
+				}
+				
+				$text .= $subCell['text'].join('/', $sdo);
+				
+			}
+			// ------------------------------------------------
 			else if(empty($subCell['contactFieldId'])) {
 				if($prevFieldInfo['index'] !== ($index-1) || !StringUtil::isBlank($prevFieldInfo['value'])) {
 					$text .= $subCell['text'];
