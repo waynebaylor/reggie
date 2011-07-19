@@ -130,12 +130,12 @@ class action_reg_Summary extends action_ValidatorAction
 		$regGroupId = db_reg_RegistrationManager::getInstance()->createRegistrations($registrations, $payment);
 		$regGroup = db_reg_GroupManager::getInstance()->find($regGroupId);
 		
-		$this->sendConfirmationEmail($regGroup);
-
 		// assign lead numbers to each registrant in group.
 		foreach($regGroup['registrations'] as $reg) {
 			db_reg_RegistrationManager::getInstance()->createLeadNumber($reg['eventId'], $reg['id']);
 		}
+
+		$this->sendConfirmationEmail($regGroup);
 		
 		return $regGroup;
 	}
