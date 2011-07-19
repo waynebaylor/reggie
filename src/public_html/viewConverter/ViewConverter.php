@@ -173,6 +173,10 @@ abstract class viewConverter_ViewConverter
 					
 					<script type="text/javascript">
 						dojo.addOnLoad(function() {
+							setTimeout(function() {
+								dojo.query(dojo.byId("page-render-time")).orphan();
+							}, 3000);
+						
 							var messages = dojo.byId("xhr-response");
 							if(messages) {
 								dojo.require("hhreg.validation");
@@ -201,9 +205,9 @@ abstract class viewConverter_ViewConverter
 						{$this->body()}
 						
 						<div class="divider"></div>
+				
+						<div id="page-render-time" style="position:fixed;bottom:0;background-color:#333;color:#aaa;">Page Rendered in {$this->pageRenderTime()}s</div>
 					</div>
-					
-					<div style="position:fixed;bottom:0;background-color:#333;color:#aaa;">Page Rendered in {$this->pageRenderTime()}s</div>
 				</body>
 			</html>
 _;
