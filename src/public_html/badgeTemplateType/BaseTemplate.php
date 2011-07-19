@@ -21,7 +21,9 @@ abstract class badgeTemplateType_BaseTemplate
 		require_once 'config/lang/eng.php';
 		require_once 'tcpdf.php';
 		
-		$pdf = new TCPDF('P', 'in', 'A4', true, 'UTF-8', false);
+		$orientation = ArrayUtil::getValue($config, 'orientation', 'P');
+		
+		$pdf = new TCPDF($orientation, 'in', 'A4', true, 'UTF-8', false);
 		
 		$pdf->SetCreator($config['creator']);
 		$pdf->SetAuthor($config['author']);

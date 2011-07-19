@@ -11,6 +11,7 @@ class viewConverter_admin_badge_PrintBadge extends viewConverter_admin_AdminConv
 		
 		$printTemplate = model_BadgeTemplateType::newTemplate($this->badgeTemplate['type']);
 		$pdfInfo = $printTemplate->getPdfSingle(array(
+			'orientation' => $this->orientation,
 			'user' => $this->user, 
 			'event' => $this->eventInfo, 
 			'data' => $this->data,

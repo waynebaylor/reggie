@@ -59,7 +59,7 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 			'xCoord' => 0,
 			'yCoord' => 0,
 			'width' => 4,
-			'font' => 'helvetica',
+			'font' => 'arial',
 			'fontSize' => 12,
 			'horizontalAlign' => 'C'
 		));

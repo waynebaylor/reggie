@@ -18,6 +18,7 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 		
 		return array(
 			'badgeTemplate' => $badgeTemplate,
+			'orientation' => $params['orientation'],
 			'margins' => $params['margins'],
 			'shiftRight' => $params['shiftRight'],
 			'shiftDown' => $params['shiftDown'],

@@ -42,7 +42,7 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 			'xCoord' => 0, // inches
 			'yCoord' => 0, // inches
 			'width' => ($params['contentType'] === 'barcode')? badgeTemplateType_BaseTemplate::$BARCODE_WIDTH : 4, // inches
-			'font' => 'helvetica',
+			'font' => 'arial',
 			'fontSize' => 12, // pt
 			'horizontalAlign' => 'C',
 			'hasBarcode' => ($params['contentType'] === 'barcode')? 'T' : 'F'

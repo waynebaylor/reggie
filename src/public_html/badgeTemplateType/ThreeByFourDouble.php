@@ -80,6 +80,7 @@ _;
 		$margins = $this->getMargins($useMargins, $config['shiftDown'], $config['shiftRight']);
 		
 		$pdf = $this->createTcpdf(array(
+			'orientation' => $config['orientation'],
 			'creator' => $user['email'],
 			'author' => $user['email'],
 			'title' => $event['code'],
