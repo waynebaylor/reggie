@@ -25,10 +25,7 @@ class template_reg_BasePage extends template_Page
 			<title>{$this->event['displayName']} - {$this->title}</title>
 	
 			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/reg.less'))}
-			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/summary.less'))}
-			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/informationField.less'))}
-			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/html.less'))}
-			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/paymentChooser.less'))}
+			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/shared.less'))}
 			
 			{$this->HTML->script(array('src' => '/js/less.js'))}
 			

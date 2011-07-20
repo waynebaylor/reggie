@@ -27,10 +27,7 @@ abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConv
 	protected function head() {
 		return <<<_
 			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/admin.less'))}
-			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/summary.less'))}
-			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/informationField.less'))}
-			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/html.less'))}
-			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/paymentChooser.less'))}
+			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/shared.less'))}
 			
 			{$this->HTML->script(array('src' => '/js/less.js'))}
 			
