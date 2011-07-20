@@ -639,7 +639,7 @@ class db_ReportManager extends db_Manager
 			AND
 				Registration_Information.value 
 			LIKE
-				CONCAT('%', :searchTerm, '%')
+				CONCAT(:searchTerm, '%')
 		";
 		
 		$params = array(
