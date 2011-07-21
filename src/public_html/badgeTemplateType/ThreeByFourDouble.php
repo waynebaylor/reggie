@@ -76,11 +76,10 @@ _;
 		$event = $config['event'];
 		$data = $config['data'];
 		
-		$useMargins = $config['margins'] === 'T';
-		$margins = $this->getMargins($useMargins, $config['shiftDown'], $config['shiftRight']);
+		$margins = $this->getMargins(false, $config['shiftDown'], $config['shiftRight']);
 		
 		$pdf = $this->createTcpdf(array(
-			'orientation' => $config['orientation'],
+			'orientation' => 'L',
 			'creator' => $user['email'],
 			'author' => $user['email'],
 			'title' => $event['code'],
@@ -91,7 +90,7 @@ _;
 
 		$pdf->AddPage();
 		
-		$position = array('x' => 0, 'y' => 0);
+		$position = array('x' => 3.0, 'y' => 2.75);
 		
 		$this->writeData($pdf, $position, $margins, $data);
 		

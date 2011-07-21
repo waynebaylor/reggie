@@ -312,32 +312,6 @@ _;
 							</td>
 						</tr>
 						<tr>
-							<td class="label">Orientation</td>
-							<td>
-								{$this->HTML->radios(array(
-									'name' => 'orientation',
-									'value' => 'L',
-									'items' => array(
-										array('label' => 'Landscape', 'value' => 'L'),
-										array('label' => 'Portrait', 'value' => 'P')
-									)
-								))}
-							</td>
-						</tr>
-						<tr>
-							<td class="label">Margins</td>
-							<td>
-								{$this->HTML->radios(array(
-									'name' => 'margins',
-									'value' => 'T',
-									'items' => array(
-										array('label' => 'Standard', 'value' => 'T'),
-										array('label' => 'None', 'value' => 'F')
-									)
-								))}
-							</td>
-						</tr>
-						<tr>
 							<td class="label">Shift Right</td>
 							<td>
 								{$this->HTML->text(array(
