@@ -39,5 +39,25 @@
 	<td>Sort By</td>
 	<td>
 		<?php echo page_admin_badge_Helper::selectFields($this->event, 'sortByFieldId') ?>
+		
+		<div class="sub-divider"></div>
 	</td>
 </tr>
+<tr>
+	<td class="label">Date Range</td>
+	<td>
+		<?php echo $this->HTML->text(array(
+			'name' => 'startDate',
+			'value' => '',
+			'size' => 8
+		)) ?>
+		-		
+		<?php echo $this->HTML->text(array(
+			'name' => 'endDate',
+			'value' => '',	
+			'size' => 8
+		)) ?>
+		&nbsp; <span style="color:gray;">yyyy-mm-dd hh:mm</span>
+	</td>
+</tr>
+

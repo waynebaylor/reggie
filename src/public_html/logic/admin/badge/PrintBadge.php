@@ -30,7 +30,8 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 	
 	public function allBadges($params) { 
 		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']); 
-		$regInfos = db_reg_RegistrationManager::getInstance()->findInfoOrderedByField($params['eventId'], $params['sortByFieldId'], $params['templateIds']);
+		$regInfos = db_reg_RegistrationManager::getInstance()->findInfoOrderedByField(
+			$params['eventId'], $params['sortByFieldId'], $params['templateIds'], $params['startDate'], $params['endDate']);
 		
 		// get the reg infos for the requested batch.
 		if($params['batchNumber'] >= 0) {
@@ -65,7 +66,8 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 	
 	public function batchCount($params) {
 		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
-		$regInfos = db_reg_RegistrationManager::getInstance()->findInfoOrderedByField($params['eventId'], $params['sortByFieldId'], $params['templateIds']);
+		$regInfos = db_reg_RegistrationManager::getInstance()->findInfoOrderedByField(
+			$params['eventId'], $params['sortByFieldId'], $params['templateIds'], $params['startDate'], $params['endDate']);
 
 		$fullBatchCount = floor(count($regInfos)/self::$BATCH_SIZE);
 		$partialBatch = (count($regInfos)%self::$BATCH_SIZE) > 0;
@@ -74,6 +76,9 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 			'eventId' => $params['eventId'],
 			'sortByFieldId' => $params['sortByFieldId'],
 			'templateIds' => $params['templateIds'],
+			'startDate' => $params['startDate'],
+			'endDate' => $params['endDate'],
+			'totalBadges' => count($regInfos),
 			'batchCount' => $fullBatchCount + ($partialBatch? 1 : 0)
 		);
 	}

@@ -514,8 +514,25 @@ class db_reg_RegistrationManager extends db_Manager
 		$this->beginTransaction(); 
 	}
 	
-	public function findInfoOrderedByField($eventId, $fieldId, $templateIds) {
-		$sql = '
+	public function findInfoOrderedByField($eventId, $fieldId, $templateIds, $startDate, $endDate) {
+		$params = array(
+			'eventId' => $eventId,
+			'contactFieldId' => $fieldId,
+			'templateIds' => $templateIds
+		);
+		
+		$startDateRestriction = '';
+		$endDateRestriction = '';
+		if(!empty($startDate)) {
+			$startDateRestriction = 'Registration.dateRegistered >= :startDate AND ';
+			$params['startDate'] = $startDate;
+		}
+		if(!empty($endDate)) {
+			$endDateRestriction = 'Registration.dateRegistered < :endDate AND ';
+			$params['endDate'] = $endDate;
+		}
+		
+		$sql = "
 			SELECT
 				Registration.id,
 				Registration.dateRegistered,
@@ -532,6 +549,9 @@ class db_reg_RegistrationManager extends db_Manager
 			WHERE
 				Registration.eventId = :eventId
 			AND
+				{$startDateRestriction}
+				{$endDateRestriction}
+
 				Registration.dateCancelled is NULL
 			AND
 				Registration_Information.contactFieldId = :contactFieldId
@@ -546,13 +566,7 @@ class db_reg_RegistrationManager extends db_Manager
 				)
 			ORDER BY
 				Registration_Information.value ASC
-		';
-		
-		$params = array(
-			'eventId' => $eventId,
-			'contactFieldId' => $fieldId,
-			'templateIds' => $templateIds
-		);
+		";
 		
 		return $this->rawQuery($sql, $params, 'Find registration info ordered by field.');
 	}

@@ -29,7 +29,9 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 			'eventId' => 0,
 			'sortByFieldId' => 0,
 			'templateIds' => array(),
-			'batchNumber' => -1
+			'batchNumber' => -1,
+			'startDate' => '',
+			'endDate' => ''
 		));
 
 		$info = $this->logic->allBadges($params);
@@ -40,7 +42,9 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0,
 			'sortByFieldId' => 0,
-			'templateIds' => array()
+			'templateIds' => array(),
+			'startDate' => '',
+			'endDate' => ''
 		));	
 		
 		$info = $this->logic->batchCount($params);
