@@ -27,10 +27,7 @@ abstract class template_AdminPage extends template_Page
 			<title>{$this->title}</title>
 	
 			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/admin.less'))}
-			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/summary.less'))}
-			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/informationField.less'))}
-			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/html.less'))}
-			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/paymentChooser.less'))}
+			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/shared.less'))}
 			
 			{$this->HTML->script(array('src' => '/js/less.js'))}
 			
