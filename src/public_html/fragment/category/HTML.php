@@ -15,16 +15,17 @@ class fragment_category_HTML
 	private static function getConfig($config) {
 		$config['name'] = ArrayUtil::getValue($config, 'name', 'categoryId');
 		
-		if(empty($config['value'])) {
-			$config['value'] = array();
-		}
-		
 		$categoryItems = array();
 		foreach(model_Category::values() as $cat) {
 			$categoryItems[] = array(
 				'label' => $cat['displayName'],
 				'value' => $cat['id']
 			);
+		}
+
+		if(empty($config['value'])) {
+			$firstCategory = reset($categoryItems);
+			$config['value'] = $firstCategory['value'];
 		}
 		
 		$config['items'] = $categoryItems;

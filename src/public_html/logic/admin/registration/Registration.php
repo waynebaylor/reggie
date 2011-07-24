@@ -70,6 +70,11 @@ class logic_admin_registration_Registration extends logic_Performer
 		$newRegId = db_reg_RegistrationManager::getInstance()->createRegistration($regGroupId, $newReg);
 		
 		db_reg_RegistrationManager::getInstance()->createLeadNumber($eventId, $newRegId);
+		
+		return array(
+			'regGroupId' => $regGroupId,
+			'registrationId' => $newRegId
+		);
 	}
 	
 	public function sendConfirmation($registrationId) {

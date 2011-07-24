@@ -1,5 +1,50 @@
 
+<script type="text/javascript">
+	dojo.require("hhreg.dialog");
+	dojo.require("hhreg.xhrTableForm");
+	dojo.require("hhreg.util");
+
+	dojo.addOnLoad(function() {
+		var dialog = hhreg.dialog.create({
+			title: 'Create Registration',
+			content: dojo.byId("create-reg-content"),
+			onClose: function() {
+				hhreg.xhrTableForm.hideIcons(createRegForm)
+			}
+		});
+
+		var createRegForm = dojo.query("form", dialog.domNode)[0];
+		hhreg.xhrTableForm.bind(createRegForm);
+		
+		// create registration links and form dialog.
+		dojo.query(".create-reg-link").forEach(function(createRegLink) {
+			dojo.connect(createRegLink, "onclick", function() {
+				// remove any existing eventId values.
+				dojo.query("input[name=eventId]", createRegForm).orphan();
+	
+				// add the desired eventId to the dialog form.
+				var eventId = dojo.query("input[name=eventId]", createRegLink.parentNode)[0].value;
+				var eventIdHtml = dojo.string.substitute('<input type="hidden" name="eventId" value="${eventId}">', {eventId: eventId});
+				dojo.place(eventIdHtml, createRegForm);
+	
+				dialog.show();
+			});
+		});
+	});
+</script>
+
 <h3>Events</h3>
+
+<div id="create-reg-content" class="hide" style="padding:0px;">
+	<?php echo $this->xhrTableForm(
+		'/admin/dashboard/MainMenu',
+		'createRegistration',
+		$this->getFileContents('page_admin_dashboard_CreateRegistrationForm'),
+		'Continue',
+		'There was a problem saving. Please try again.',
+		false
+	) ?>
+</div>
 
 <div class="fragment-list">
 	<table class="admin">
@@ -47,6 +92,14 @@
 					),
 					'title' => 'Event Reports'
 				)) ?>
+				
+				<span>
+					<span class="create-reg-link link">Create Registration</span>
+					<?php echo $this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $eventInfo['event']['id']
+					)) ?>
+				</span>
 				
 				<?php echo $this->HTML->link(array(
 					'label' => 'Files',

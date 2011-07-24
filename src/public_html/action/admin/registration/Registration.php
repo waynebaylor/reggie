@@ -10,13 +10,22 @@ class action_admin_registration_Registration extends action_ValidatorAction
 	}
 	
 	public function view() {
-		$reportId = RequestUtil::getValue('reportId', 0);
+		$reportId = RequestUtil::getValue('reportId', 0); // reportId is not required.
 		$groupId = RequestUtil::getValue('groupId', 0);
+		$eventId = RequestUtil::getValue('eventId', 0);
 		
-		$report = $this->strictFindById(db_ReportManager::getInstance(), $reportId);
+		$eventInfo = db_reg_GroupManager::getInstance()->findEventInfoByGroupId($groupId);
+		
 		$group = $this->strictFindById(db_reg_GroupManager::getInstance(), $groupId);
 		
-		$event = $this->strictFindById(db_EventManager::getInstance(), $report['eventId']);
+		$event = $this->strictFindById(db_EventManager::getInstance(), $eventInfo['id']);
+
+		if(empty($reportId)) {
+			$report = reset($event['reports']); 
+		}
+		else {
+			$report = db_ReportManager::getInstance()->find($reportId);
+		}
 		
 		return new template_admin_EditRegistrations($event, $report, $group);	
 	}

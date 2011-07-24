@@ -94,6 +94,20 @@ class logic_admin_dashboard_MainMenu extends logic_Performer
 		
 		return $this->view($currentUser);
 	}
+	
+	public function createRegistration($params) {
+		$eventInfo  = db_EventManager::getInstance()->findInfoById($params['eventId']);
+		$category = model_Category::valueOf($params['categoryId']);
+		
+		$regLogic = new logic_admin_registration_Registration();
+		$info = $regLogic->createNewRegistration($eventInfo['id'], $category['id']);
+		
+		return array(
+			'eventId' => $eventInfo['id'],
+			'regGroupId' => $info['regGroupId'],
+			'registrationId' => $info['registrationId']
+		);
+	}
 }
 
 ?>

@@ -36,6 +36,12 @@ class viewConverter_admin_dashboard_MainMenu extends viewConverter_admin_AdminCo
 		
 		return new template_TemplateWrapper($this->getFileContents('page_admin_dashboard_UserList'));
 	}
+	
+	public function getCreateRegistration($properties) {
+		$this->setProperties($properties);
+		
+		return new template_Redirect("/admin/registration/Registration?groupId={$this->regGroupId}&eventId={$this->eventId}");
+	}
 }
 
 ?>

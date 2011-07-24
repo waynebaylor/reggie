@@ -67,8 +67,9 @@ abstract class viewConverter_ViewConverter
 	 * @param string $buttonText the text to display in the submit button
 	 * @return string
 	 */
-	protected function xhrTableForm($url, $action, $rows, $buttonText = 'Save') {
-		$form = new fragment_XhrTableForm($url, $action, $rows, $buttonText);
+	protected function xhrTableForm($url, $action, $rows, $buttonText = 'Save', 
+									$errorText = 'There was a problem saving. Please try again.', $useAjax = true) {
+		$form = new fragment_XhrTableForm($url, $action, $rows, $buttonText, $errorText, $useAjax);
 		return $form->html();
 	}
 	
