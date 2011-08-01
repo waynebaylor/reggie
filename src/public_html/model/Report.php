@@ -9,14 +9,6 @@ class model_Report
 			($report['isRegTypeBreakdown'] === 'T')
 		);
 	}
-	
-	public static function hasCreateReg($report) {
-		return !(
-			($report['isAllRegToDate'] === 'T') || 
-			($report['isOptionCount'] === 'T') || 
-			($report['isRegTypeBreakdown'] === 'T')
-		);
-	}
 }
 
 ?>

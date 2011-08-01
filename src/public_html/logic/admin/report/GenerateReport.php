@@ -25,7 +25,6 @@ class logic_admin_report_GenerateReport extends logic_Performer
 			$info = logic_admin_report_RegTypeBreakdownHelper::addSpecialInfo($report, $info);
 		}
 		
-		$info['showCreateRegLink'] = model_Report::hasCreateReg($report);
 		$info['showSearchLink'] = model_Report::hasSearch($report);
 		
 		$searchFormInfo = array(

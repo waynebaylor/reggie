@@ -6,28 +6,6 @@
 	dojo.require("dijit.form.Button");
 
 	dojo.addOnLoad(function() {
-		// create registration link and form dialog.
-		var createRegLink = dojo.byId("create-reg-link");
-		if(createRegLink) {
-			var createRegContent = dojo.byId("create-reg-content");
-			var createRegForm = dojo.query("form", createRegContent)[0];
-			var redirectUrl = dojo.byId("create-reg-redirect").value;
-			
-			var createRegDialog = hhreg.dialog.create({
-				title: "Create New Registration",
-				trigger: createRegLink,
-				content: createRegContent,
-				onClose: function() {
-					hhreg.xhrTableForm.hideIcons(createRegForm)
-				}
-			});
-			
-			hhreg.xhrTableForm.bind(createRegForm, function() { 
-				createRegDialog.hide();
-				document.location = hhreg.util.contextUrl(redirectUrl);
-			});
-		}
-
 		// search link and form dialog.
 		var searchLink = dojo.byId("search-form-link");
 		if(searchLink) {
@@ -68,7 +46,7 @@
 	<div>
 		<strong>Search Results For:</strong> 
 		'<?php echo $this->searchField ?>' 
-		<strong>containing</strong>
+		<strong>starting with</strong>
 		'<?php echo $this->searchTerm ?>'.
 		<br>
 		<em><?php echo count($this->info['rows']) ?> records found.</em>
@@ -85,19 +63,6 @@
 			'search',
 			$this->getFileContents('page_admin_report_SearchForm'),
 			'Search'
-		) ?>
-	</div>
-	&nbsp;
-	<?php endif; ?>
-	
-	<?php if(ArrayUtil::getValue($this->info, 'showCreateRegLink', true)): ?>
-	<span id="create-reg-link" class="link">Create New Registration</span>
-	<div id="create-reg-content" class="hide">
-		<?php echo $this->xhrTableForm(
-			'/admin/registration/Registration',
-			'createNewRegistration',
-			$this->getFileContents('page_admin_report_AddRegistrationForm'),
-			'Continue'
 		) ?>
 	</div>
 	<?php endif; ?>
