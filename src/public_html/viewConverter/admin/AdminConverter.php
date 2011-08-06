@@ -15,11 +15,11 @@ abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConv
 		$this->showLogoutLink = true;
 		$this->bannerLinkActive = true;
 		
-		$this->showUsers = model_Role::userHasRole(SessionUtil::getUser(), array(
+		$this->showUsersMenu = model_Role::userHasRole(SessionUtil::getUser(), array(
 			model_Role::$SYSTEM_ADMIN, 
 			model_Role::$USER_ADMIN
 		));
-		$this->showEvents = model_Role::userHasRole(SessionUtil::getUser(), array(
+		$this->showEventsMenu = model_Role::userHasRole(SessionUtil::getUser(), array(
 			model_Role::$SYSTEM_ADMIN,
 			model_Role::$EVENT_ADMIN
 		));
@@ -59,9 +59,20 @@ _;
 						
 						dojo.require("hhreg.admin.widget.ActionMenuBar");
 						new hhreg.admin.widget.ActionMenuBar({
-							showUsers: {$this->showUsers},
-							showEvents: {$this->showEvents}
+							showUsers: {$this->showUsersMenu},
+							showEvents: {$this->showEventsMenu}
 						}, dojo.place("<div></div>", dojo.byId("general-menu"), "replace")).startup();
+						
+						dojo.query("#user-menu").forEach(function(item) {
+							var m = new dijit.MenuBar({}, dojo.byId("user-menu"));
+							m.addChild(new dijit.MenuBarItem({
+								label:"Logout",
+								onClick: function() {
+									window.location.href = hhreg.util.contextUrl('/admin/Login?a=logout');
+								}
+							}));
+							m.startup();	
+						});
 					});
 				</script>
 		
@@ -69,31 +80,11 @@ _;
 					{$this->getBanner()}
 				</div>	
 				
-				<div id="general-menu"></div>
+				<table style="border-collapse:collapse;"><tr>
+					<td style="width:100%;"><div id="general-menu"></div></td>
+					<td><div id="user-menu"></div></td>
+				</tr></table>
 _;
-	}
-	
-	/**
-	 * Returns the HTML for the Logout Link.  
-	 * @return string
-	 */
-	private function getLogout() {
-		$logoutLink = '';
-		
-		$user = SessionUtil::getUser();
-		
-		if(!empty($user) && $this->showLogoutLink) { 
-			$logoutLink = $this->HTML->link(array(
-				'label' => "Logout",
-				'href' => '/admin/Login',
-				'parameters' => array(
-					'a' => 'logout'
-				),
-				'title' => "Logout {$user['email']}"
-			));
-		}
-		
-		return $logoutLink;
 	}
 	
 	/**
