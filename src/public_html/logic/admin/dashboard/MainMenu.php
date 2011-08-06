@@ -3,7 +3,7 @@
 class logic_admin_dashboard_MainMenu extends logic_Performer
 {
 	function __construct() {
-		parent::__construct();
+		parent::__construct(); 
 	}
 	
 	public function view($user) {

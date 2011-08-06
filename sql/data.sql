@@ -84,9 +84,34 @@ values
 -- --------------------------------------------	
 
 insert into
-	User(email, password, isAdmin)
+	User(id, email, password)
 values
-	('wade.taylor@baylorsc.com', '400e999ddb50b048dff711856116871d09b7ff55', 'T');
+	(1, 'wade.taylor@baylorsc.com', '400e999ddb50b048dff711856116871d09b7ff55');
 
 -- --------------------------------------------	
+
+insert into
+    Role(id, description)
+values
+    (1, 'System administrator'),
+    (2, 'User administrator'),
+    (3, 'Event administrator'),
+    (4, 'Event registrar'),
+    (5, 'View event'),
+    (6, 'Event Manager');
+    
+    
+-- --------------------------------------------	
+
+insert into
+    User_Role(userId, roleId)
+values
+    (1, 1);     -- make wade system admin
+    
+-- --------------------------------------------	
+-- --------------------------------------------	
+
+
+
+
 	

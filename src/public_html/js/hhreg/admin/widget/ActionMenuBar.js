@@ -4,6 +4,7 @@ dojo.require("dijit.Menu");
 dojo.require("dijit.MenuBar");
 dojo.require("dijit.MenuItem");
 dojo.require("dijit.PopupMenuBarItem");
+dojo.require("dijit.MenuBarItem");
 
 dojo.provide("hhreg.admin.widget.ActionMenuBar");
 
@@ -19,13 +20,30 @@ dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Template
 
 		var menu = new dijit.MenuBar({}, _this.menuNode);
 		
-		var userMenu;
+		menu.addChild(new dijit.MenuBarItem({label: ""})); // spacer for when there are no menu items.
+		
+		var usersMenu;
 		if(_this.showUsers) {
-			userMenu = new dijit.Menu({});
-			userMenu.addChild(new dijit.MenuItem({label: "Create"}));
-			userMenu.addChild(new dijit.MenuItem({label: "Edit"}));
+			usersMenu = new dijit.Menu({});
+			usersMenu.addChild(new dijit.MenuItem({label: "Create User"}));
+			usersMenu.addChild(new dijit.MenuItem({label: "Edit Users"}));
 			
-			menu.addChild(new dijit.PopupMenuBarItem({label: "Users", popup: userMenu}));
+			menu.addChild(new dijit.PopupMenuBarItem({
+				label: '<span class="general-item">Users</span>', 
+				popup: usersMenu
+			}));
+		}
+		
+		var eventsMenu
+		if(_this.showEvents) {
+			eventsMenu = new dijit.Menu({});
+			eventsMenu.addChild(new dijit.MenuItem({label: "Create Event"}));
+			eventsMenu.addChild(new dijit.MenuItem({label: "Edit Events"}));
+			
+			menu.addChild(new dijit.PopupMenuBarItem({
+				label: '<span class="general-item">Events</span>', 
+				popup: eventsMenu
+			}));
 		}
 
 		menu.startup();

@@ -15,8 +15,6 @@ abstract class action_BaseAction
 	public function execute() {
 		$action = $_REQUEST['action'];
 		
-		$this->performSecurityCheck($action);
-		
 		$this->performAction($action);
 	}
 	
@@ -40,13 +38,6 @@ abstract class action_BaseAction
 		
 		return $contents;
 	}
-	
-	/**
-	 * Performs any security related tasks. This method is called before the
-	 * action is performed, and should throw an exception if any security 
-	 * requirements are not met.
-	 */
-	protected function performSecurityCheck($action) {}
 	
 	/**
 	 * Invokes the method named by the 'action' request parameter.

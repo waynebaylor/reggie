@@ -14,6 +14,15 @@ abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConv
 		
 		$this->showLogoutLink = true;
 		$this->bannerLinkActive = true;
+		
+		$this->showUsers = model_Role::userHasRole(SessionUtil::getUser(), array(
+			model_Role::$SYSTEM_ADMIN, 
+			model_Role::$USER_ADMIN
+		));
+		$this->showEvents = model_Role::userHasRole(SessionUtil::getUser(), array(
+			model_Role::$SYSTEM_ADMIN,
+			model_Role::$EVENT_ADMIN
+		));
 	}
 	
 	/**
@@ -47,6 +56,12 @@ _;
 							}, item);
 							ta.startup();
 						});
+						
+						dojo.require("hhreg.admin.widget.ActionMenuBar");
+						new hhreg.admin.widget.ActionMenuBar({
+							showUsers: {$this->showUsers},
+							showEvents: {$this->showEvents}
+						}, dojo.place("<div></div>", dojo.byId("general-menu"), "replace")).startup();
 					});
 				</script>
 		
@@ -54,16 +69,7 @@ _;
 					{$this->getBanner()}
 				</div>	
 				
-				<table class="sub-header-links">
-					<tr>
-						<td>
-							{$this->getBreadcrumbs()}
-						</td>
-						<td style="text-align:right;">
-							{$this->getLogout()}
-						</td>
-					</tr>	
-				</table>	
+				<div id="general-menu"></div>
 _;
 	}
 	

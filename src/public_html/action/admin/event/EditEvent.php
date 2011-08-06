@@ -97,17 +97,6 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 		
 		return $this->converter->getSaveEvent();
 	}
-	
-	protected function performSecurityCheck($action) {
-		if(in_array($action, array('view', 'saveEvent'))) {
-			$user = SessionUtil::getUser();
-			security_Restriction::check(array(
-				'type' => security_Restriction::$EVENT,
-				'user' => $user,
-				'eventId' => RequestUtil::getValue('id', 0)
-			));
-		}
-	}
 }
 
 ?>

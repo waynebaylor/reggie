@@ -1,6 +1,8 @@
 
 set foreign_key_checks = 0;
 
+drop table if exists User_Role;
+drop table if exists Role;
 drop table if exists BadgeBarcodeField;
 drop table if exists BadgeCell_TextContent;
 drop table if exists BadgeCell;
@@ -10,7 +12,6 @@ drop table if exists StaticPage;
 drop table if exists RegType_EmailTemplate;
 drop table if exists GroupRegistration_ContactField;
 drop table if exists GroupRegistration;
-drop table if exists User_Event;
 drop table if exists `User`;
 drop table if exists Report_ContactField;
 drop table if exists Report;
@@ -529,16 +530,6 @@ create table if not exists `User` (
 	`id`		integer		not null auto_increment,
 	`email`		varchar(255)	not null,
 	`password`	varchar(40) 	not null,
-	`isAdmin`	char(1)		not null,
-	primary key(`id`)
-) ENGINE=InnoDB default CHARSET=utf8;
-
--- --------------------------------------------------
-
-create table if not exists `User_Event` (
-	`id`		integer 	not null auto_increment,
-	`userId`	integer		not null,
-	`eventId`	integer		not null,
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
@@ -636,6 +627,37 @@ create table if not exists `BadgeBarcodeField` (
     `contactFieldId`    integer         not null,  
     primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
+
+-- --------------------------------------------------
+
+create table if not exists `Role` (
+    `id`            integer         not null auto_increment,
+    `description`   varchar(255)    not null,
+    primary key(`id`)
+) ENGINE=InnoDB default CHARSET=utf8;
+
+-- --------------------------------------------------
+
+create table if not exists `User_Role` (
+    `id`            integer         not null auto_increment,
+    `userId`        integer         not null,
+    `roleId`        integer         not null,
+    `eventId`       integer,
+    primary key(`id`)
+) ENGINE=InnoDB default CHARSET=utf8;
+
+alter table User_Role
+    add constraint user_role_userId_fk
+    foreign key (userId) references User(id);
+    
+alter table User_Role
+    add constraint user_role_roleId_fk
+    foreign key (roleId) references Role(id);
+    
+alter table User_Role
+    add constraint user_role_eventId_fk
+    foreign key (eventId) references Event(id);
+    
 
 -- -----------------------------------------
 -- ADD TABLE CONSTRAINTS
@@ -1126,20 +1148,6 @@ alter table Report_ContactField
 
 alter table `User`
 	add constraint user_email_uni unique	(email);
-
--- --------------------------------------------------
-
-alter table User_Event
-	add constraint userEvent_userId_fk
-	foreign key (userId) references `User`(id);
-
-alter table User_Event
-	add constraint userEvent_eventId_fk
-	foreign key (eventId) references Event(id);
-
-alter table User_Event
-	add constraint userEvent_userId_eventId_uni
-	unique (userId, eventId);
 
 -- --------------------------------------------------
 

@@ -8,6 +8,14 @@ class db_UserManager extends db_Manager
 		parent::__construct();
 	}
 	
+	protected function populate(&$obj, $arr) {
+		parent::populate($obj, $arr);
+	
+		$obj['roles'] = db_RoleManager::getInstance()->findRolesByUserId($obj['id']);
+		
+		return $obj;
+	}
+	
 	public static function getInstance() {
 		if(empty(self::$instance)) {
 			self::$instance = new db_UserManager();
@@ -109,7 +117,7 @@ class db_UserManager extends db_Manager
 			'hash' => $this->hash($user)
 		);
 		
-		return $this->rawQueryUnique($sql, $params, 'Authenticate user.');
+		return $this->queryUnique($sql, $params, 'Authenticate user.');
 	}
 	
 	public function createUser($user) {
