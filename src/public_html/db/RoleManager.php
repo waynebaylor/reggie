@@ -29,13 +29,19 @@ class db_RoleManager extends db_Manager
 			SELECT 
 				Role.id,
 				Role.description,
-				User_Role.eventId
+				Event.id as eventId,
+				Event.code as eventCode,
+				Event.displayName as eventDisplayName
 			FROM
 				Role
 			INNER JOIN
 				User_Role
 			ON 
 				Role.id = User_Role.roleId
+			LEFT JOIN
+				Event
+			ON
+				User_Role.eventId = Event.id
 			WHERE
 				User_Role.userId = :userId
 		';

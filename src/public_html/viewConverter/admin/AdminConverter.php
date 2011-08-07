@@ -35,6 +35,8 @@ abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConv
 	
 	protected function head() {
 		return <<<_
+			{$this->HTML->css(array('rel' => 'stylesheet', 'href' => '/js/dojox/grid/enhanced/resources/EnhancedGrid.css'))}
+			{$this->HTML->css(array('rel' => 'stylesheet', 'href' => '/js/dojox/grid/enhanced/resources/claro/EnhancedGrid.css'))}
 			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/admin.less'))}
 			{$this->HTML->css(array('rel' => 'stylesheet/less', 'href' => '/css/shared.less'))}
 			
@@ -48,7 +50,12 @@ _;
 		return <<<_
 				<script type="text/javascript">
 					dojo.addOnLoad(function() { 
+						dojo.require("dijit.MenuBar");
+						dojo.require("dijit.MenuBarItem");
+						dojo.require("hhreg.util");
+						dojo.require("hhreg.admin.widget.ActionMenuBar");
 						dojo.require("dijit.form.Textarea");
+						
 						dojo.query("textarea.expanding").forEach(function(item) {
 							var ta = new dijit.form.Textarea({
 								name: item.name, 
@@ -57,7 +64,6 @@ _;
 							ta.startup();
 						});
 						
-						dojo.require("hhreg.admin.widget.ActionMenuBar");
 						new hhreg.admin.widget.ActionMenuBar({
 							showUsers: {$this->showUsersMenu},
 							showEvents: {$this->showEventsMenu}

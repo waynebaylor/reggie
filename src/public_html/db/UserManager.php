@@ -28,8 +28,7 @@ class db_UserManager extends db_Manager
 		$sql = '
 			SELECT
 				id,
-				email,
-				isAdmin
+				email
 			FROM
 				User
 			WHERE
@@ -47,8 +46,7 @@ class db_UserManager extends db_Manager
 		$sql = '
 			SELECT
 				id,
-				email,
-				isAdmin
+				email
 			FROM
 				User
 			WHERE
@@ -66,8 +64,7 @@ class db_UserManager extends db_Manager
 		$sql = '
 			SELECT
 				id,
-				email,
-				isAdmin
+				email
 			FROM
 				User
 		';
@@ -75,35 +72,11 @@ class db_UserManager extends db_Manager
 		return $this->query($sql, array(), 'Find all users.');
 	}
 	
-	public function findByEvent($event) {
-		$sql = '
-			SELECT
-				User.id,
-				User.email,
-				User.isAdmin
-			FROM
-				User
-			INNER JOIN
-				User_Event
-			ON
-				User.id = User_Event.userId
-			WHERE
-				User_Event.eventId = :eventId
-		';
-		
-		$params = array(
-			'eventId' => $event['id']
-		);
-		
-		return $this->query($sql, $params, 'Find users by event.');
-	}
-	
 	public function authenticate($user) {
 		$sql = '
 			SELECT
 				id,
-				email,
-				isAdmin
+				email
 			FROM
 				User
 			WHERE
@@ -125,42 +98,50 @@ class db_UserManager extends db_Manager
 			INSERT INTO
 				User (
 					email,
-					password,
-					isAdmin
+					password
 				)
 			VALUES (
 				:email,
-				:password,
-				:isAdmin
+				:password
 			)
 		';
 		
 		$params = array(
 			'email' => $user['email'],
-			'password' => $this->hash($user),
-			'isAdmin' => $user['isAdmin']
+			'password' => $this->hash($user)
 		);
 		
 		$this->execute($sql, $params, 'Create user.');
 	}
 	
-	public function deleteUser($user) {
-		// remove permissions before deleting user.
-		$this->removeAllEvents($user);
+	public function deleteUsersById($ids) {
+		if(!is_array($ids)) {
+			$ids = array($ids);
+		}
+
+		// delete all user roles.
+		$sql = '
+			DELETE FROM
+				User_Role
+			WHERE
+				userId in (:[ids])
+		';
+
+		$params = array(
+			'ids' => $ids
+		);
 		
-		// delete the user.
+		$this->execute($sql, $params, 'Delete user roles.');
+		
+		// delete from user table.
 		$sql = '
 			DELETE FROM
 				User
 			WHERE
-				id = :id
+				id in (:[ids])
 		';
 		
-		$params = array(
-			'id' => $user['id']
-		);
-		
-		$this->execute($sql, $params, 'Delete user.');
+		$this->execute($sql, $params, 'Delete users.');
 	}
 	
 	public function saveUser($user) {
@@ -173,15 +154,13 @@ class db_UserManager extends db_Manager
 			SET
 				email = :email,
 				{$password}
-				isAdmin = :isAdmin
 			WHERE
 				id = :id
 		";
 		
 		$params = array(
 			'id' => $user['id'],
-			'email' => $user['email'],
-			'isAdmin' => $user['isAdmin']
+			'email' => $user['email']
 		);
 		
 		if(!empty($user['password'])) {
@@ -191,86 +170,8 @@ class db_UserManager extends db_Manager
 		$this->execute($sql, $params, 'Save user.');
 	}
 	
-	public function findEventIds($user) {
-		$sql = '
-			SELECT
-				User_Event.eventId
-			FROM
-				User_Event
-			WHERE
-				userId = :userId
-		';
-		
-		$params = array(
-			'userId' => $user['id'],
-		);
-		
-		$results = $this->rawQuery($sql, $params, 'Find user event ids.');
-		
-		$eventIds = array();
-		foreach($results as $result) {
-			$eventIds[] = $result['eventId'];
-		}
-		
-		return $eventIds;
-	}
-	
-	public function setEvent($user, $event) {
-		$sql = '
-			INSERT INTO
-				User_Event (
-					userId,
-					eventId
-				)
-			VALUES (
-				:userId,
-				:eventId
-			)
-		'; 
-		
-		$params = array(
-			'userId' => $user['id'],
-			'eventId' => $event['id']
-		);
-		
-		$this->execute($sql, $params, 'Give user access to event.');
-	}
-	
 	private function hash($user) {
 		return sha1(sha1($user['email'].$user['password']));
-	}
-	
-	private function removeEvent($user, $event) {
-		$sql = '
-			DELETE FROM
-				User_Event
-			WHERE
-				userId = :userId
-			AND
-				eventId = :eventId
-		';
-		
-		$params = array(
-			'userId' => $user['id'],
-			'eventId' => $event['id']
-		);
-		
-		$this->execute($sql, $params, 'Delete user event access.');
-	}
-	
-	private function removeAllEvents($user) {
-		$sql = '
-			DELETE FROM
-				User_Event
-			WHERE
-				userId = :userId
-		';
-		
-		$params = array(
-			'userId' => $user['id'],
-		);
-		
-		$this->execute($sql, $params, 'Delete all user event access.');
 	}
 }
 

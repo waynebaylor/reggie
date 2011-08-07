@@ -1,5 +1,6 @@
 
 <script type="text/javascript">
+	dojo.require("hhreg.util");
 	dojo.require("hhreg.calendar");
 	dojo.require("hhreg.xhrAddList");
 	dojo.require("dijit.form.Button");
@@ -17,7 +18,9 @@
 		dojo.query("#users-button").forEach(function(item) {
 			new dijit.form.Button({
 				label: '<div class="button-wrapper"><div class="button-title">Users</div><div class="button-subtext">Create, Delete, and Manage Users</div></div>',
-				onClick: function() {}
+				onClick: function() {
+					window.location.href = hhreg.util.contextUrl("/admin/dashboard/Users");
+				}
 			}, item).startup();
 		});
 		dojo.query("#events-button").forEach(function(item) {
