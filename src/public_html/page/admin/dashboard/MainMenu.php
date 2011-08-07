@@ -89,27 +89,7 @@
 			) ?>
 		</div>
 	</div>
-		
-	<div class="divider"></div>	
-		
-	<?php if($this->userIsAdmin): ?>
-	<div class="fragment-users">
-		<div>
-			<?php echo $this->getFileContents('page_admin_dashboard_UserList') ?>
-		</div>
-		
-		<div class="sub-divider"></div>
-		
-		<div class="fragment-add">
-			<?php echo $this->xhrAddForm(
-				'Add User',
-				'/admin/dashboard/MainMenu',
-				'addUser',
-				$this->getFileContents('page_admin_dashboard_AddUser')
-			) ?>
-		</div>
-	</div>
-	<?php endif; ?>
+	
 </div>
 
 

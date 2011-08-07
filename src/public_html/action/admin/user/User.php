@@ -11,18 +11,33 @@ class action_admin_user_User extends action_ValidatorAction
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->logic = new logic_admin_user_User();
+		$this->converter = new viewConverter_admin_user_User();
 	}
 	
+	private function checkRole($user) {
+		$hasRole = model_Role::userHasRole($user, array(
+			model_Role::$SYSTEM_ADMIN, 
+			model_Role::$USER_ADMIN
+		));
+		
+		if(!$hasRole) {
+			throw new Exception('User does not have required role.');	
+		}
+	}
+
 	/**
 	 * View the Edit User page.
 	 * @return template_Template
 	 */
 	public function view() {
-		$this->checkRole();
+		$user = SessionUtil::getUser();
+		$this->checkRole($user);
 		
-		$user = $this->strictFindById(db_UserManager::getInstance(), RequestUtil::getValue('id', 0));
+		$editUser = $this->strictFindById(db_UserManager::getInstance(), RequestUtil::getValue('id', 0));
 		
-		return new template_admin_EditUser($user);
+		return new template_admin_EditUser($editUser);
 	}
 	
 	/**
@@ -96,17 +111,6 @@ class action_admin_user_User extends action_ValidatorAction
 				)
 			)
 		);
-	}
-	
-	/**
-	 * Check if the current user is an administrator. 
-	 * @throws Exception if user is not administrator
-	 */
-	private function checkRole() {
-		$user = SessionUtil::getUser();
-		if(!SecurityUtil::isAdmin($user)) {
-			throw new Exception("User: {$user['email']} does not have 'Admin' role.");
-		}
 	}
 }
 

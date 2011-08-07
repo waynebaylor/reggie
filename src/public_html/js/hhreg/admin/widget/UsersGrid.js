@@ -71,6 +71,8 @@ dojo.declare("hhreg.admin.widget.UsersGrid", [dijit._Widget, dijit._Templated], 
 		var deleteButton = new dijit.form.Button({
 			label: "Delete Selected Users",
 			onClick: function() {
+				if(!confirm("Are you sure?")) { return;}
+				
 				var grid = dijit.byNode(_this.gridNode);
 				var selectedItems = grid.selection.getSelected();
 

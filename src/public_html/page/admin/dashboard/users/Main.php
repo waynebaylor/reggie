@@ -10,6 +10,7 @@
 
 <div id="content">
 
+	<h3>Users</h3>
 	<div id="user-list"></div>
 	
 </div>

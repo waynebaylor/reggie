@@ -91,14 +91,14 @@ values
 -- --------------------------------------------	
 
 insert into
-    Role(id, description)
+    Role(id, name, scope, description)
 values
-    (1, 'System administrator'),
-    (2, 'User administrator'),
-    (3, 'Event administrator'),
-    (4, 'Event registrar'),
-    (5, 'View event'),
-    (6, 'Event Manager');
+    (1, 'System Administrator', 'GENERAL',  'Create, edit, and delete users and events. Full access to all existing event features.'),
+    (2, 'User Administrator',   'GENERAL',  'Create, edit, and delete users.'),
+    (3, 'Event Administrator',  'GENERAL',  'Create, edit, and delete events. Full access to all existing event features.'),
+    (4, 'Event Manager',        'EVENT',    'Edit and delete event. Full access to event features.'),
+    (5, 'Event Registrar',      'EVENT',    'Create, edit, and cancel registrations. View, create, edit, and delete event reports. View attendee summaries.'),
+    (6, 'View Event',           'EVENT',    'View event reports and attendee summaries.');
     
     
 -- --------------------------------------------	

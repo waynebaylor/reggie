@@ -8,11 +8,9 @@ class logic_admin_dashboard_MainMenu extends logic_Performer
 	
 	public function view($user) {
 		$info = array(
-			'userIsAdmin' => SecurityUtil::isAdmin($user),
 			'events' => array()
 		);		
 		
-		if($info['userIsAdmin']) {
 			foreach(db_EventManager::getInstance()->getAllActive() as $event) {
 				$info['events'][] = array(
 					'status' => 'active',
@@ -35,29 +33,6 @@ class logic_admin_dashboard_MainMenu extends logic_Performer
 			}
 			
 			$info['users'] = db_UserManager::getInstance()->findAll();
-		}
-		else {
-			foreach(db_EventManager::getInstance()->getUserActive($user) as $event) {
-				$info['events'][] = array(
-					'status' => 'active',
-					'event' => $event
-				);
-			}
-			
-			foreach(db_EventManager::getInstance()->getUserUpcoming($user) as $event) {
-				$info['events'][] = array(
-					'status' => 'upcoming',
-					'event' => $event
-				);
-			}
-			
-			foreach(db_EventManager::getInstance()->getUserInactive($user) as $event) {
-				$info['events'][] = array(
-					'status' => 'inactive',
-					'event' => $event
-				);
-			}
-		}
 		
 		return $info;
 	}
@@ -71,28 +46,6 @@ class logic_admin_dashboard_MainMenu extends logic_Performer
 		FileUtil::createEventDir($event);
 		
 		return $this->view($user);
-	}
-	
-	public function addUser($currentUser, $user) {
-		if(!SecurityUtil::isAdmin($currentUser)) {
-			throw new Exception("User: {$currentUser['email']} does not have 'Admin' role.");
-		}
-		
-		db_UserManager::getInstance()->createUser($user);
-		
-		return $this->view($currentUser);
-	}
-	
-	public function removeUser($currentUser, $userId) {
-		if(!SecurityUtil::isAdmin($currentUser)) {
-			throw new Exception("User: {$currentUser['email']} does not have 'Admin' role.");
-		}
-		
-		$user = $this->strictFindById(db_UserManager::getInstance(), $userId);
-		
-		db_UserManager::getInstance()->deleteUser($user);
-		
-		return $this->view($currentUser);
 	}
 	
 	public function createRegistration($params) {

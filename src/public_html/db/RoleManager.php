@@ -19,8 +19,24 @@ class db_RoleManager extends db_Manager
 	public function findAll() {
 		return $this->select(
 			'Role', 
-			array('id', 'description'), 
+			array('id', 'name', 'scope', 'description'), 
 			array()
+		);
+	}
+	
+	public function findGeneralRoles() {
+		return $this->select(
+			'Role', 
+			array('id', 'name', 'scope', 'description'), 
+			array('scope' => 'GENERAL')
+		);
+	}
+	
+	public function findEventRoles() {
+		return $this->select(
+			'Role', 
+			array('id', 'name', 'scope', 'description'), 
+			array('scope' => 'EVENT')
 		);
 	}
 	
@@ -28,6 +44,8 @@ class db_RoleManager extends db_Manager
 		$sql = '
 			SELECT 
 				Role.id,
+				Role.name,
+				Role.scope,
 				Role.description,
 				Event.id as eventId,
 				Event.code as eventCode,

@@ -447,6 +447,26 @@ class db_EventManager extends db_Manager
 		
 		return $this->rawQueryUnique($sql, $params, 'Find event info by id.');
 	}
+	
+	public function findAllInfo() {
+		$sql = '
+			SELECT
+				id,
+				code,
+				displayName,
+				regOpen,
+				regClosed,
+				capacity,
+				confirmationText,
+				cancellationPolicy,
+				regClosedText,
+				paymentInstructions
+			FROM
+				Event
+		';
+		
+		return $this->rawQuery($sql, array(), 'Find all event infos.');
+	}
 }
 
 ?>

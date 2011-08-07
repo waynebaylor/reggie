@@ -25,18 +25,6 @@ class viewConverter_admin_dashboard_MainMenu extends viewConverter_admin_AdminCo
 		return new template_TemplateWrapper($this->getFileContents('page_admin_dashboard_EventList'));
 	}
 	
-	public function getAddUser($properties) {
-		$this->setProperties($properties);
-		
-		return new template_TemplateWrapper($this->getFileContents('page_admin_dashboard_UserList'));
-	}
-	
-	public function getRemoveUser($properties) {
-		$this->setProperties($properties);
-		
-		return new template_TemplateWrapper($this->getFileContents('page_admin_dashboard_UserList'));
-	}
-	
 	public function getCreateRegistration($properties) {
 		$this->setProperties($properties);
 		

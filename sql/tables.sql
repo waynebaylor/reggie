@@ -632,7 +632,9 @@ create table if not exists `BadgeBarcodeField` (
 
 create table if not exists `Role` (
     `id`            integer         not null auto_increment,
-    `description`   varchar(255)    not null,
+    `name`          varchar(255)    not null,
+    `description`   text            not null,
+    `scope`         varchar(255)    not null,
     primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 

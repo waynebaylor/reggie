@@ -25,7 +25,12 @@ dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Template
 		var usersMenu;
 		if(_this.showUsers) {
 			usersMenu = new dijit.Menu({});
-			usersMenu.addChild(new dijit.MenuItem({label: "Create User"}));
+			usersMenu.addChild(new dijit.MenuItem({
+				label: "Create User",
+				onClick: function() {
+					window.location.href = hhreg.util.contextUrl("/admin/user/User?a=createUserForm");
+				}
+			}));
 			usersMenu.addChild(new dijit.MenuItem({
 				label: "Edit Users",
 				onClick: function() {

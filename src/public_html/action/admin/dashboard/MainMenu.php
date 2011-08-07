@@ -52,12 +52,6 @@ class action_admin_dashboard_MainMenu extends action_ValidatorAction
 		return $this->converter->getAddUser($info);
 	}
 	
-	public function removeUser() {
-		$info = $this->logic->removeUser(SessionUtil::getUser(), RequestUtil::getValue('id', 0));
-
-		return $this->converter->getRemoveUser($info);
-	}
-	
 	public function createRegistration() {
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0,
