@@ -44,7 +44,7 @@ dojo.declare("hhreg.admin.widget.UsersGrid", [dijit._Widget, dijit._Templated], 
 			    	if(storeItem) {
 				    	var roles = grid.store.getValues(storeItem, "roles");
 				    	return dojo.map(roles, function(r) {
-				    		return dojo.string.substitute("${eventCode} ${description}", r);
+				    		return dojo.string.substitute("${eventCode} ${name}", r);
 				    	}).join("<br>");
 			    	}
 			    }},

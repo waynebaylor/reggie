@@ -13,6 +13,12 @@ class logic_admin_user_CreateUser extends logic_Performer
 			'eventRoles' => db_RoleManager::getInstance()->findEventRoles()
 		);
 	}
+	
+	public function createUser($params) {
+		
+		
+		return array();
+	}
 }
 
 ?>

@@ -32,7 +32,26 @@ class action_admin_user_CreateUser extends action_ValidatorAction
 		$user = SessionUtil::getUser();
 		$this->checkRole($user);
 		
+		$errors = validation_admin_User::validate(array(
+			'email' => RequestUtil::getValue('email', ''), 
+			'password' => RequestUtil::getValue('password', '')
+		));
 		
+		if(!empty($errors)) {
+			return new fragment_validation_ValidationErrors($errors);
+		}
+		
+		$params = RequestUtil::getParameters(array(
+			'email',
+			'password',
+			'generalRoles',
+			'eventRoles'
+		));
+		
+		$params['user'] = $user;
+		
+		$info = $this->logic->createUser($params);
+		return $this->converter->getCreateUser($info);
 	}
 }
 

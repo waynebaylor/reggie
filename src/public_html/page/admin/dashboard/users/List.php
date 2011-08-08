@@ -10,7 +10,7 @@
 				<?php foreach($u['roles'] as $roleIndex => $role): ?>
 				{
 					"roleId": <?php echo $role['id'] ?>,
-					"description": "<?php echo $role['description'] ?>",
+					"name": "<?php echo $role['name'] ?>",
 					"eventId": <?php echo empty($role['eventId'])? 'null' : $role['eventId'] ?>,
 					"eventCode": "<?php echo $role['eventCode'] ?>",
 					"eventDisplayName": "<?php echo $role['eventDisplayName'] ?>"
