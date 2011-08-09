@@ -2,9 +2,14 @@
 <tr>
 	<td class="required label">Email</td>
 	<td>
+		<?php echo $this->HTML->hidden(array(
+			'name' => 'id',
+			'value' => $this->user['id']
+		)) ?>
+		
 		<?php echo $this->HTML->text(array(
 			'name' => 'email',
-			'value' => '',
+			'value' => $this->escapeHtml($this->user['email']),
 			'maxlength' => 255
 		)) ?>
 	</td>
@@ -28,7 +33,8 @@
 			<?php echo $this->HTML->checkbox(array(
 				'label' => $role['name'].'<br><span style="color: #aaa;">'.$role['description'].'</span>',
 				'name' => 'generalRoles[]',
-				'value' => $role['id']
+				'value' => $role['id'],
+				'checked' => model_Role::userHasRole($this->user, $role['id'])
 			)) ?>
 		</div>
 		<?php endforeach; ?>
@@ -56,7 +62,8 @@
 					<?php echo $this->HTML->checkbox(array(
 						'label' => $role['name'].'<br><span style="color: #aaa;">'.$role['description'].'</span>',
 						'name' => 'eventRoles[]',
-						'value' => $event['id'].'_'.$role['id']
+						'value' => $event['id'].'_'.$role['id'],
+						'checked' => model_Role::userHasRoleForEvent($this->user, $role['id'], $event['id'])
 					)) ?>
 				</div>
 			<?php endforeach; ?>

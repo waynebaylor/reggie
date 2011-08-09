@@ -112,6 +112,8 @@ class db_UserManager extends db_Manager
 		);
 		
 		$this->execute($sql, $params, 'Create user.');
+		
+		return $this->lastInsertId();
 	}
 	
 	public function deleteUsersById($ids) {
@@ -146,13 +148,13 @@ class db_UserManager extends db_Manager
 	
 	public function saveUser($user) {
 		// this is only if they change their password.
-		$password = empty($user['password'])? '' : 'password = :password,';
+		$password = ','.empty($user['password'])? '' : 'password = :password';
 		
 		$sql = "
 			UPDATE 
 				User
 			SET
-				email = :email,
+				email = :email
 				{$password}
 			WHERE
 				id = :id
@@ -172,6 +174,36 @@ class db_UserManager extends db_Manager
 	
 	private function hash($user) {
 		return sha1(sha1($user['email'].$user['password']));
+	}
+	
+	public function assignUserGeneralRole($userId, $roleId) {
+		$this->insert(
+			'User_Role', 
+			array(
+				'userId' => $userId,
+				'roleId' => $roleId
+			)
+		);
+	}
+	
+	public function assignUserEventRole($userId, $roleId, $eventId) {
+		$this->insert(
+			'User_Role', 
+			array(
+				'userId' => $userId,
+				'roleId' => $roleId,
+				'eventId' => $eventId	
+			)
+		);
+	}
+	
+	public function removeAllRoles($userId) {
+		$this->del(
+			'User_Role', 
+			array(
+				'userId' => $userId	
+			)
+		);
 	}
 }
 

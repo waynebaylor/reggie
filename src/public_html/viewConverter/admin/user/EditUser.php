@@ -1,19 +1,19 @@
 <?php
 
-class viewConverter_admin_user_CreateUser extends viewConverter_admin_AdminConverter
+class viewConverter_admin_user_EditUser extends viewConverter_admin_AdminConverter
 {
 	function __construct() {
 		parent::__construct();
 		
-		$this->title = 'Create User';
+		$this->title = 'Edit User';
 	}
 	
 	protected function body() {
 		$body = parent::body();
 		
 		$formHtml = $this->xhrTableForm(array(
-			'url' => '/admin/user/CreateUser', 
-			'action' => 'createUser', 
+			'url' => '/admin/user/EditUser', 
+			'action' => 'saveUser', 
 			'rows' => $this->getFileContents('page_admin_user_CreateUserForm'),
 			'useAjax' => false
 		));
@@ -30,11 +30,11 @@ class viewConverter_admin_user_CreateUser extends viewConverter_admin_AdminConve
 				</div>
 			</div>		
 _;
-
+		
 		return $body;
 	}
 	
-	public function getCreateUser($properties) {
+	public function getSaveUser($properties) {
 		$this->setProperties($properties);
 		
 		return new template_Redirect('/admin/dashboard/Users');

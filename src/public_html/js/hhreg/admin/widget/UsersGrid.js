@@ -44,6 +44,7 @@ dojo.declare("hhreg.admin.widget.UsersGrid", [dijit._Widget, dijit._Templated], 
 			    	if(storeItem) {
 				    	var roles = grid.store.getValues(storeItem, "roles");
 				    	return dojo.map(roles, function(r) {
+				    		r.eventCode = r.eventCode? "("+r.eventCode+")" : "";
 				    		return dojo.string.substitute("${eventCode} ${name}", r);
 				    	}).join("<br>");
 			    	}
@@ -51,7 +52,7 @@ dojo.declare("hhreg.admin.widget.UsersGrid", [dijit._Widget, dijit._Templated], 
 			    {field: "options", name: "Options", width: "100%", get: function(rowIndex, storeItem) {
 			    	if(storeItem) {
 				    	var userId = grid.store.getValue(storeItem, "userId");
-				    	var editUrl = hhreg.util.contextUrl("/admin/user/User?")+dojo.objectToQuery({a: "edit", id: userId});
+				    	var editUrl = hhreg.util.contextUrl("/admin/user/EditUser?")+dojo.objectToQuery({id: userId});
 				    	return dojo.string.substitute('<a href="${url}">Edit</a>', {url: editUrl});
 			    	}
 			    }}
