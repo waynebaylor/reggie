@@ -148,7 +148,7 @@ class db_UserManager extends db_Manager
 	
 	public function saveUser($user) {
 		// this is only if they change their password.
-		$password = ','.empty($user['password'])? '' : 'password = :password';
+		$password = empty($user['password'])? '' : ',password = :password';
 		
 		$sql = "
 			UPDATE 

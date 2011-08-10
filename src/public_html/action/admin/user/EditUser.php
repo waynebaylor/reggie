@@ -36,10 +36,15 @@ class action_admin_user_EditUser extends action_ValidatorAction
 		$user = SessionUtil::getUser();
 		$this->checkRole($user);
 		
-		$errors = validation_admin_User::validate(array(
+		$validateFields = array(
 			'id' => RequestUtil::getValue('id', 0),
 			'email' => RequestUtil::getValue('email', '')
-		));
+		);
+		$password = RequestUtil::getValue('password', '');
+		if(!empty($password)) {
+			$validateFields['password'] = $password;
+		}
+		$errors = validation_admin_User::validate($validateFields);
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);

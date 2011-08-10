@@ -50,11 +50,19 @@ dojo.require("dijit.form.Button");
 		
 		post.addCallback(function(response) { 
 			var success = handleResponse(form, response);
-
+			var redirectUrl;
+			
 			button.cancel();
 			
-			if(success && callback) {
-				callback(response);
+			if(success) {
+				if(callback) {
+					callback(response);
+				}
+				
+				redirectUrl = dojo.query("input[name=redirectUrl]", form)[0].value;
+				if(redirectUrl) {
+					window.location.href = redirectUrl;
+				}
 			}
 		});
 		

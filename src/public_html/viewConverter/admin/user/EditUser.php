@@ -15,7 +15,7 @@ class viewConverter_admin_user_EditUser extends viewConverter_admin_AdminConvert
 			'url' => '/admin/user/EditUser', 
 			'action' => 'saveUser', 
 			'rows' => $this->getFileContents('page_admin_user_CreateUserForm'),
-			'useAjax' => false
+			'redirectUrl' => '/admin/dashboard/Users'
 		));
 		
 		$body .= <<<_
@@ -37,7 +37,7 @@ _;
 	public function getSaveUser($properties) {
 		$this->setProperties($properties);
 		
-		return new template_Redirect('/admin/dashboard/Users');
+		return new fragment_Success();
 	}
 }
 

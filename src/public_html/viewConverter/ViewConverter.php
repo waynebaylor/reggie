@@ -67,29 +67,17 @@ abstract class viewConverter_ViewConverter
 	 * @param string $buttonText the text to display in the submit button
 	 * @return string
 	 */
-	protected function xhrTableForm($config) {
-		if(func_num_args() > 1) {
-			$url = func_get_arg(0);
-			$action = func_get_arg(1);
-			$rows = func_get_arg(2);
-			$buttonText = func_get_arg(3);
-			$errorText = func_get_arg(4);
-			$useAjax = func_get_arg(5);
-			
-			$buttonText = $buttonText? 'Save' : $buttonText;
-			$errorText = $errorText? 'There was a problem saving. Please try again.' : $errorText;
-			$useAjax = $useAjax? true : $useAjax;   
+	protected function xhrTableForm($urlOrConfig, $action = '', $rows = '', 
+								    $buttonText = 'Save', $errorText = 'There was a problem saving. Please try again.', 
+								    $useAjax = true, $redirectUrl = '') 
+	{
+		if(is_array($urlOrConfig)) {
+			$form = new fragment_XhrTableForm($urlOrConfig);
 		}
 		else {
-			$url = $config['url'];
-			$action = $config['action'];
-			$rows = $config['rows'];
-			$buttonText = !isset($config['buttonText'])? 'Save' : $config['buttonText'];
-			$errorText = !isset($config['errorText'])? 'There was a problem saving. Please try again.' : $config['errorText'];
-			$useAjax = !isset($config['useAjax'])? true : $config['useAjax'];
+			$form = new fragment_XhrTableForm($url, $action, $rows, $buttonText, $errorText, $useAjax, $redirectUrl);	
 		}
 			
-		$form = new fragment_XhrTableForm($url, $action, $rows, $buttonText, $errorText, $useAjax);
 		return $form->html();
 	}
 	

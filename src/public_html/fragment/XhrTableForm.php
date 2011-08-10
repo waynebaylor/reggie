@@ -9,9 +9,32 @@ class fragment_XhrTableForm extends template_Template
 	private $errorText;
 	private $useAjax;
 	
-	function __construct($url, $action, $rows, $buttonText = 'Save', 
-		$errorText = 'There was a problem saving. Please try again.', $useAjax = true) {
+	function __construct($urlOrConfig, $action = '', $rows = '', 
+						 $buttonText = 'Save', $errorText = 'There was a problem saving. Please try again.', 
+						 $useAjax = true, $redirectUrl = '') 
+	{
 		parent::__construct();
+
+		$url = $urlOrConfig;
+		
+		if(is_array($urlOrConfig)) {
+			$url = $urlOrConfig['url'];
+			$action = $urlOrConfig['action'];
+			$rows = $urlOrConfig['rows'];
+			
+			if(isset($urlOrConfig['buttonText'])) {
+				$buttonText = $urlOrConfig['buttonText'];
+			} 
+			if(isset($urlOrConfig['errorText'])) {
+				$errorText = $urlOrConfig['errorText'];
+			}
+			if(isset($urlOrConfig['useAjax'])) {
+				$useAjax = $urlOrConfig['useAjax'];
+			}
+			if(isset($urlOrConfig['redirectUrl'])) {
+				$redirectUrl = $urlOrConfig['redirectUrl'];
+			}
+		}
 		
 		$this->url = $url;
 		$this->action = $action;
@@ -19,6 +42,7 @@ class fragment_XhrTableForm extends template_Template
 		$this->buttonText = $buttonText;
 		$this->errorText = $errorText;
 		$this->useAjax = $useAjax;
+		$this->redirectUrl = $redirectUrl;
 	}
 	
 	public function html() {
@@ -31,6 +55,10 @@ class fragment_XhrTableForm extends template_Template
 				{$this->HTML->hidden(array(
 					'name' => 'useAjax',
 					'value' => $this->useAjax? 'true' : 'false'
+				))}
+				{$this->HTML->hidden(array(
+					'name' => 'redirectUrl',
+					'value' => $this->contextUrl($this->redirectUrl)
 				))}
 				
 				<table class="xhr-table-form">

@@ -43,10 +43,10 @@ class action_admin_user_CreateUser extends action_ValidatorAction
 		
 		$params = RequestUtil::getParameters(array(
 			'email',
-			'password',
-			'generalRoles',
-			'eventRoles'
+			'password'
 		));
+		$params['generalRoles'] = RequestUtil::getValueAsArray('generalRoles', array());
+		$params['eventRoles'] = RequestUtil::getValueAsArray('eventRoles', array());
 		
 		$params['user'] = $user;
 		
