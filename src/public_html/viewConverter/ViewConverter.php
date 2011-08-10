@@ -75,7 +75,7 @@ abstract class viewConverter_ViewConverter
 			$form = new fragment_XhrTableForm($urlOrConfig);
 		}
 		else {
-			$form = new fragment_XhrTableForm($url, $action, $rows, $buttonText, $errorText, $useAjax, $redirectUrl);	
+			$form = new fragment_XhrTableForm($urlOrConfig, $action, $rows, $buttonText, $errorText, $useAjax, $redirectUrl);	
 		}
 			
 		return $form->html();
