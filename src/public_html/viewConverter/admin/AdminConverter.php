@@ -18,11 +18,14 @@ abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConv
 		$this->showUsersMenu = model_Role::userHasRole(SessionUtil::getUser(), array(
 			model_Role::$SYSTEM_ADMIN, 
 			model_Role::$USER_ADMIN
-		));
+		))? 'true' : 'false';
 		$this->showEventsMenu = model_Role::userHasRole(SessionUtil::getUser(), array(
 			model_Role::$SYSTEM_ADMIN,
-			model_Role::$EVENT_ADMIN
-		));
+			model_Role::$EVENT_ADMIN,
+			model_Role::$EVENT_MANAGER,		
+	   		model_Role::$EVENT_REGISTRAR,	
+	   		model_Role::$VIEW_EVENT	
+		))? 'true' : 'false';
 	}
 	
 	/**

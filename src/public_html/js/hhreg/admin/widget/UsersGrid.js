@@ -7,7 +7,6 @@ dojo.require("dojox.grid.EnhancedGrid");
 dojo.require("dojox.grid.enhanced.plugins.IndirectSelection");
 dojo.require("dojox.grid.enhanced.plugins.Pagination");
 dojo.require("dojo.data.ItemFileReadStore");
-dojo.require("dojox.lang.functional.fold");
 dojo.require("dojo.string");
 
 dojo.provide("hhreg.admin.widget.UsersGrid");
@@ -42,10 +41,10 @@ dojo.declare("hhreg.admin.widget.UsersGrid", [dijit._Widget, dijit._Templated], 
 			    {field: "email", name: "Email", width: "100%"},
 			    {field: "roles", name: "Roles", width: "100%", get: function(rowIndex, storeItem) {
 			    	if(storeItem) {
-				    	var roles = grid.store.getValues(storeItem, "roles");
+				    	var roles = grid.store.getValues(storeItem, "roles"); console.log(roles);
 				    	return dojo.map(roles, function(r) {
-				    		r.eventCode = r.eventCode? "("+r.eventCode+")" : "";
-				    		return dojo.string.substitute("${eventCode} ${name}", r);
+				    		var code = r.eventCode? "("+r.eventCode+")" : "";
+				    		return dojo.string.substitute("${eventCode} ${name}", {eventCode: code, name: r.name});
 				    	}).join("<br>");
 			    	}
 			    }},

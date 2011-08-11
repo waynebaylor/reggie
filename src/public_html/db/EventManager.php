@@ -463,9 +463,49 @@ class db_EventManager extends db_Manager
 				paymentInstructions
 			FROM
 				Event
+			ORDER BY
+				displayName
 		';
 		
 		return $this->rawQuery($sql, array(), 'Find all event infos.');
+	}
+	
+	public function findInfoByUserId($userId) {
+		$user = db_UserManager::getInstance()->find($userId);
+		if(model_Role::userHasRole($user, array(model_Role::$SYSTEM_ADMIN, model_Role::$EVENT_ADMIN))) {
+			return $this->findAllInfo();
+		}
+		else {
+			$sql = '
+				SELECT
+					Event.id,
+					Event.code,
+					Event.displayName,
+					Event.regOpen,
+					Event.regClosed,
+					Event.capacity,
+					Event.confirmationText,
+					Event.cancellationPolicy,
+					Event.regClosedText,
+					Event.paymentInstructions
+				FROM
+					Event
+				INNER JOIN
+					User_Role
+				ON
+					Event.id = User_Role.eventId
+				WHERE
+					User_Role.userId = :userId
+				ORDER BY
+					Event.displayName
+			';
+			
+			$params = array(
+				'userId' => $userId
+			);
+			
+			return $this->rawQuery($sql, $params, 'Find event info accessible to user.');
+		}
 	}
 }
 

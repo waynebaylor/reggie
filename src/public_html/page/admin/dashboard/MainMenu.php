@@ -26,7 +26,9 @@
 		dojo.query("#events-button").forEach(function(item) {
 			new dijit.form.Button({
 				label: '<div class="button-wrapper"><div class="button-title">Events</div><div class="button-subtext">Create, Delete, and Manage Events</div></div>',
-				onClick: function() {}
+				onClick: function() {
+					window.location.href = hhreg.util.contextUrl("/admin/dashboard/Events");
+				}
 			}, item).startup();
 		});
 	});

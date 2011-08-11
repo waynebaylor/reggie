@@ -32,7 +32,7 @@ dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Template
 				}
 			}));
 			usersMenu.addChild(new dijit.MenuItem({
-				label: "Edit Users",
+				label: "Manage Users",
 				onClick: function() {
 					window.location.href = hhreg.util.contextUrl("/admin/dashboard/Users");
 				}
@@ -48,7 +48,12 @@ dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Template
 		if(_this.showEvents) {
 			eventsMenu = new dijit.Menu({});
 			eventsMenu.addChild(new dijit.MenuItem({label: "Create Event"}));
-			eventsMenu.addChild(new dijit.MenuItem({label: "Edit Events"}));
+			eventsMenu.addChild(new dijit.MenuItem({
+				label: "Manage Events",
+				onClick: function() {
+					window.location.href = hhreg.util.contextUrl("/admin/dashboard/Events");
+				}
+			}));
 			
 			menu.addChild(new dijit.PopupMenuBarItem({
 				label: '<span class="general-item">Events</span>', 
