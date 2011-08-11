@@ -37,11 +37,11 @@ dojo.declare("hhreg.admin.widget.EventsGrid", [dijit._Widget, dijit._Templated],
 			    	if(storeItem) {
 			    		var open = dojo.date.locale.parse(
 		    				grid.store.getValue(storeItem, "regOpen"), 
-		    				{datePattern: "yyyy-MM-dd", timePattern: "HH:mm:ss"}
+		    				{datePattern: "yyyy-MM-dd", timePattern: "HH:mm"}
 			    		);
 			    		var closed = dojo.date.locale.parse(
 			    			grid.store.getValue(storeItem, "regClosed"),
-			    			{datePattern: "yyyy-MM-dd", timePattern: "HH:mm:ss"}
+			    			{datePattern: "yyyy-MM-dd", timePattern: "HH:mm"}
 			    		);
 			    		
 			    		var current = new Date();
@@ -57,20 +57,24 @@ dojo.declare("hhreg.admin.widget.EventsGrid", [dijit._Widget, dijit._Templated],
 			    		}
 			    	}
 			    }},
-			    {field: "regOpen", name: "Registration Open", width: "100%"},
-			    {field: "regClosed", name: "Registration Closed", width: "100%"},
-			    {name: "Options", width: "100%", get: function(rowIndex, storeItem) {
-			    	return dojo.string.substitute(
-			    		'<a href="${url}?id=${eventId}">Manage</a>', 
-			    		{
-			    			url: hhreg.util.contextUrl("/admin/event/Manage"), 
-			    			eventId: grid.store.getValue(storeItem, "eventId")
-			    		}
-			    	);
+			    {field: "regOpen", name: "Registration Open", width: "100%", formatter: function(value) {
+			    	return value && value.replace(/00:00/, "");
+			    }},
+			    {field: "regClosed", name: "Registration Closed", width: "100%", formatter: function(value) {
+		    		return value && value.replace(/00:00/, "");
+			    }},
+			    {field: "manageUrl", name: "Options", width: "100%", get: function(rowIndex, storeItem) {
+			    	if(storeItem) {
+				    	return dojo.string.substitute(
+				    			'<a href="${url}">Manage</a>', 
+				    			{url: grid.store.getValue(storeItem, "manageUrl")}
+				    	);
+			    	}
 			    }}
 			],
 			canSort: function(columnIndex) {
-				return Math.abs(columnIndex) != 3; // can't sort on status column.
+				return Math.abs(columnIndex) != 3 &&  	// can't sort on status column.
+					   Math.abs(columnIndex) != 6;		// can't sort on options column.
 			}
 		}, _this.gridNode);
 		
