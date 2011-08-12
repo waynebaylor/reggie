@@ -247,17 +247,8 @@ class db_EventManager extends db_Manager
 			)
 		';
 
-		$params = array(
-			'code' => $event['code'],
-			'displayName' => $event['displayName'],
-			'regOpen' => $event['regOpen'],
-			'regClosed' => $event['regClosed'],
-			'capacity' => 0,
-			'confirmationText' => 'Thank you for registering!',
-			'cancellationPolicy' => '',
-			'regClosedText' => '',
-			'paymentInstructions' => ''
-		);
+		unset($event['id']);
+		$params = $event;
 		
 		$this->execute($sql, $params, 'Create event.');
 		

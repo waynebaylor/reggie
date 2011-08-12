@@ -47,7 +47,12 @@ dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Template
 		var eventsMenu
 		if(_this.showEvents) {
 			eventsMenu = new dijit.Menu({});
-			eventsMenu.addChild(new dijit.MenuItem({label: "Create Event"}));
+			eventsMenu.addChild(new dijit.MenuItem({
+				label: "Create Event",
+				onClick: function() {
+					window.location.href = hhreg.util.contextUrl("/admin/event/CreateEvent");
+				}
+			}));
 			eventsMenu.addChild(new dijit.MenuItem({
 				label: "Manage Events",
 				onClick: function() {
