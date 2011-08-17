@@ -1,0 +1,24 @@
+
+<div>
+	<form method="post" action="${uploadAction}" data-dojo-attach-point="uploadFormNode">
+		<input type="hidden" name="eventId" value="${eventId}">
+		
+		<table>
+			<tr>
+				<td class="label required" style="vertical-align:middle;">Upload File</td>
+				<td>
+					<input type="file" name="file">
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<div data-dojo-attach-point="uploadButtonNode"></div>
+				</td>
+			</tr>
+		</table>
+	</form>
+	<div class="divider"></div>
+	
+	<div data-dojo-attach-point="gridNode"></div>
+</div>

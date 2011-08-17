@@ -16,25 +16,34 @@ class model_Role
 	 * @param array $user 
 	 * @param number $roleId
 	 */
-	public static function userHasRole($user, $roleId) {
-		if(!is_array($roleId)) {
-			$roleId = array($roleId);
+	public static function userHasRole($user, $roleIds) {
+		if(!is_array($roleIds)) {
+			$roleIds = array($roleIds);
 		}
 		
-		foreach($roleId as $id) {
-			foreach($user['roles'] as $role) {
-				if($id == $role['id']) {
-					return true;
-				}
+		foreach($user['roles'] as $role) {
+			if(in_array($role['id'], $roleIds)) {
+				return true;
 			}
 		}
 		
 		return false;
 	}
 	
-	public static function userHasRoleForEvent($user, $roleId, $eventId) {
+	/**
+	 * Check if user has at least one of the given roles for the given event.
+	 *
+	 * @param array $user
+	 * @param array $roleIds
+	 * @param number $eventId
+	 */
+	public static function userHasRoleForEvent($user, $roleIds, $eventId) {
+		if(!is_array($roleIds)) {
+			$roleIds = array($roleIds);
+		}
+		
 		foreach($user['roles'] as $role) {
-			if($roleId == $role['id'] && $eventId == $role['eventId']) {
+			if(in_array($role['id'], $roleIds) && $eventId == $role['eventId']) {
 				return true;
 			}
 		}

@@ -1,20 +1,27 @@
 <?php
 
-class action_admin_fileUpload_FileUpload extends action_BaseAction
+class action_admin_fileUpload_FileUpload extends action_ValidatorAction
 {
 	function __construct() {
 		parent::__construct();
 	}
 
 	public function view() {
-		$eventId = $_REQUEST['id'];
-		$event = db_EventManager::getInstance()->find($eventId);
+		$eventId = RequestUtil::getValue('id', 0);
+		$event = $this->strictFindById(db_EventManager::getInstance(), $eventId);
 		
-		if(empty($event)) {
-			return new template_ErrorPage();
-		}
+		$html = <<<_
+			<script type="text/javascript">
+				dojo.require("hhreg.admin.widget.FileUploadGrid");
+				
+				new hhreg.admin.widget.FileUploadGrid({
+					eventId: {$event['id']}
+				}, dojo.place("<div></div>", dojo.byId("upload-grid"), "replace")).startup();
+			</script>
+			<div id="upload-grid"></div>
+_;
 
-		return new template_admin_FileUpload($event);
+		return new template_TemplateWrapper($html);
 	}
 	
 	public function saveFile() {

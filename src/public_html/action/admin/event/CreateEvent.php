@@ -15,6 +15,10 @@ class action_admin_event_CreateEvent extends action_ValidatorAction
 			model_Role::$EVENT_ADMIN,
 			model_Role::$EVENT_MANAGER
 		));	
+		
+		if(!$hasRole) {
+			throw new Exception('User does not have required role.');
+		}
 	}
 	
 	public function view() {
