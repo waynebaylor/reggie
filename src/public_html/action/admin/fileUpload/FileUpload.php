@@ -4,63 +4,40 @@ class action_admin_fileUpload_FileUpload extends action_ValidatorAction
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->logic = new logic_admin_fileUpload_FileUpload();
+		$this->converter = new viewConverter_admin_fileUpload_FileUpload();
 	}
 
 	public function view() {
-		$eventId = RequestUtil::getValue('id', 0);
-		$event = $this->strictFindById(db_EventManager::getInstance(), $eventId);
-		
-		$html = <<<_
-			<script type="text/javascript">
-				dojo.require("hhreg.admin.widget.FileUploadGrid");
-				
-				new hhreg.admin.widget.FileUploadGrid({
-					eventId: {$event['id']}
-				}, dojo.place("<div></div>", dojo.byId("upload-grid"), "replace")).startup();
-			</script>
-			<div id="upload-grid"></div>
-_;
-
-		return new template_TemplateWrapper($html);
+		$eventId = RequestUtil::getValue('eventId', 0);
+		$info = $this->logic->view(array('eventId' => $eventId));
+		return $this->converter->getView($info);
 	}
 	
-	public function saveFile() {
-		$eventId = $_REQUEST['id'];
-		$event = db_EventManager::getInstance()->find($eventId);
-		
-		if(empty($event)) {
-			return new template_ErrorPage();
-		}
-		
-		$file = $_FILES['file'];
-		
-		// check the uploaded file extension.
-		$fileInfo = pathinfo($file['name']);
-		$extension = $fileInfo['extension'];
-		if(in_array($extension, $this->getAllowedExtensions())) {
-			FileUtil::saveEventFile($event, $file);
-		}
-		
-		return new template_Redirect('/admin/fileUpload/FileUpload?action=view&id='.$eventId);
+	public function listFiles() {
+		$eventId = RequestUtil::getValue('eventId', 0);
+		$info = $this->logic->listFiles(array('eventId' => $eventId));
+		return $this->converter->getListFiles($info);
 	}
 	
-	public function deleteFile() {
-		$eventId = $_REQUEST['id'];
-		$event = db_EventManager::getInstance()->find($eventId);
-		
-		if(empty($event)) {
-			return new template_ErrorPage();
-		}
-		
-		FileUtil::deleteEventFile($event, $_REQUEST['fileName']);
-		
-		return new template_Redirect('/admin/fileUpload/FileUpload?action=view&id='.$eventId);
+	public function deleteFiles() {
+		$eventId = RequestUtil::getValue('eventId', 0);
+		$fileNames = RequestUtil::getValueAsArray('fileNames', array());
+		$info = $this->logic->deleteFiles(array(
+			'eventId' => $eventId,
+			'fileNames' => $fileNames
+		));
+		return $this->converter->getDeleteFiles($info);
 	}
 	
-	private function getAllowedExtensions() {
-		return array(
-			'pdf', 'png', 'jpg', 'gif', 'jpeg', 'doc', 'txt', 'xls', 'tif'
-		); 
+	public function saveFile() { 
+		$info = $this->logic->saveFile(array(
+			'eventId' => RequestUtil::getValue('eventId', 0),
+			'file' => $_FILES['file']
+		));
+		
+		return $this->converter->getSaveFile($info);
 	}
 }
 

@@ -31,14 +31,14 @@ class action_admin_event_Manage extends action_ValidatorAction
 	}
 		
 	public function view() {
-		$eventId = RequestUtil::getValue('id', 0);
+		$eventId = RequestUtil::getValue('eventId', 0);
 		
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $eventId);
 		
 		$info = $this->logic->view(array(
 			'user' => $user,
-			'id' => $eventId
+			'eventId' => $eventId
 		));
 		return $this->converter->getView($info);
 	}

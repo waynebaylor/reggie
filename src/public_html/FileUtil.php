@@ -66,6 +66,10 @@ class FileUtil
 	}
 	
 	public static function getEventFilesDir($event) {
+		if(empty($event)) {
+			throw new Exception('Error getting event files dir.');
+		}
+		
 		return Reggie::$PATH.'/files/'.$event['code'];
 	}
 }

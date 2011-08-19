@@ -9,7 +9,7 @@
 			"code": "<?php echo $event['code'] ?>",
 			"regOpen": "<?php echo substr($event['regOpen'], 0, -3) ?>",
 			"regClosed": "<?php echo substr($event['regClosed'], 0, -3) ?>",
-			"manageUrl": "<?php echo $this->contextUrl("/admin/event/Manage?id={$event['id']}") ?>"
+			"manageUrl": "<?php echo $this->contextUrl("/admin/event/Manage?eventId={$event['id']}") ?>"
 		}
 		<?php echo ($eventIndex < count($this->events)-1)? ',' : '' ?>
 		<?php endforeach; ?>

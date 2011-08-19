@@ -7,7 +7,7 @@ class logic_admin_event_Manage extends logic_Performer
 	}
 	
 	public function view($params) {
-		$event = $this->strictFindById(db_EventManager::getInstance(), $params['id']);
+		$event = $this->strictFindById(db_EventManager::getInstance(), $params['eventId']);
 		
 		return array(
 			'user' => $params['user'],

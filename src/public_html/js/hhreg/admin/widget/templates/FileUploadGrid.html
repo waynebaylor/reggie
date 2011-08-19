@@ -1,6 +1,7 @@
 
-<div>
-	<form method="post" action="${uploadAction}" data-dojo-attach-point="uploadFormNode">
+<div style="margin:15px;">
+	<form method="post" enctype="multipart/form-data" action="${uploadAction}" data-dojo-attach-point="uploadFormNode">
+		<input type="hidden" name="a" value="${actionMethod}">
 		<input type="hidden" name="eventId" value="${eventId}">
 		
 		<table>
@@ -21,4 +22,8 @@
 	<div class="divider"></div>
 	
 	<div data-dojo-attach-point="gridNode"></div>
+	
+	<div class="sub-divider"></div>
+	
+	<div data-dojo-attach-point="deleteButtonNode"></div>
 </div>

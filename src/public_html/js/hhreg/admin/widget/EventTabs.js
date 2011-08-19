@@ -28,13 +28,13 @@ dojo.declare("hhreg.admin.widget.EventTabs", [dijit._Widget, dijit._Templated], 
 			doLayout: false
 		}, _this.tabsNode);
 		
+		tabs.startup();
+		
 		_this.setupRegFormTab(tabs)
 		_this.setupReportsTab(tabs);
 		_this.setupBadgeTab(tabs);
 		_this.setupFilesTab(tabs);
 		_this.setupPagesTab(tabs);
-		
-		tabs.startup();
 		
 		_this.tabsNode = tabs.domNode;
 	},
@@ -81,13 +81,16 @@ dojo.declare("hhreg.admin.widget.EventTabs", [dijit._Widget, dijit._Templated], 
  		var content;
  		if(showTab) {
  			content = new dojox.layout.ContentPane({
+ 				preload: false,
  				title: "Files",
- 				href: hhreg.util.contextUrl("/admin/fileUpload/FileUpload?")+dojo.objectToQuery({id: _this.eventId})
+ 				content: ""
  			}, dojo.place("<div></div>", dojo.body()));
  			
  			content.startup();
  			
  			tabContainer.addChild(content);
+ 			
+ 			content.set('href', hhreg.util.contextUrl("/admin/fileUpload/FileUpload?")+dojo.objectToQuery({eventId: _this.eventId}));
  		}
 	},
 	setupPagesTab: function(tabContainer) {}
