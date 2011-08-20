@@ -90,8 +90,34 @@ dojo.declare("hhreg.admin.widget.EventTabs", [dijit._Widget, dijit._Templated], 
  			
  			tabContainer.addChild(content);
  			
- 			content.set('href', hhreg.util.contextUrl("/admin/fileUpload/FileUpload?")+dojo.objectToQuery({eventId: _this.eventId}));
+ 			content.set("href", hhreg.util.contextUrl("/admin/fileUpload/FileUpload?")+dojo.objectToQuery({eventId: _this.eventId}));
  		}
 	},
-	setupPagesTab: function(tabContainer) {}
+	setupPagesTab: function(tabContainer) {
+		var _this = this;
+		
+		var showTab = hhreg.admin.data.role.userHasRole(_this.user, [
+  		    hhreg.admin.data.role.SYSTEM_ADMIN,
+  		    hhreg.admin.data.role.EVENT_ADMIN
+  		]);
+  		
+  		showTab = showTab || hhreg.admin.data.role.userHasRoleForEvent(_this.user, [
+  		    hhreg.admin.data.role.EVENT_MANAGER
+  	    ], _this.eventId);
+  		
+  		var content;
+  		if(showTab) {
+  			content = new dojox.layout.ContentPane({
+  				preload: false,
+  				title: "Pages",
+  				content: ""
+  			}, dojo.place("<div></div>", dojo.body()));
+  			
+  			content.startup();
+  			
+  			tabContainer.addChild(content);
+  		
+  			content.set("href", hhreg.util.contextUrl("/admin/staticPage/PageList?")+dojo.objectToQuery({eventId: _this.eventId}));
+  		}
+	}
 });

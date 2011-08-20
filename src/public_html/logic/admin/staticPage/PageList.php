@@ -7,6 +7,10 @@ class logic_admin_staticPage_PageList extends logic_Performer
 	}
 	
 	public function view($params) {
+		return array('eventId' => $params['eventId']);
+	}
+	
+	public function listPages($params) {
 		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
 		$pages = db_StaticPageManager::getInstance()->findByEventId($params['eventId']);
 		
@@ -30,26 +34,14 @@ class logic_admin_staticPage_PageList extends logic_Performer
 		);
 	}
 	
-	public function addPage($params) {
-		db_StaticPageManager::getInstance()->createPage(array(
-			'eventId' => $params['eventId'],
-			'name' => $params['name'],
-			'title' => $params['title']
-		));
-		
-		return $this->view(array(
+	public function deletePages($params) {
+		foreach($params['pageIds'] as $pageId) {
+			db_StaticPageManager::getInstance()->deletePage($pageId);
+		}
+
+		return array(
 			'eventId' => $params['eventId']
-		));
-	}
-	
-	public function removePage($params) {
-		$page = db_StaticPageManager::getInstance()->find($params['id']);
-		
-		db_StaticPageManager::getInstance()->deletePage($params['id']);
-		
-		return $this->view(array(
-			'eventId' => $page['eventId']
-		));
+		);
 	}
 }
 
