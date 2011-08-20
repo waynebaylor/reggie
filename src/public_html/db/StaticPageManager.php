@@ -105,12 +105,14 @@ class db_StaticPageManager extends db_Manager
 				StaticPage(
 					eventId,
 					name,
-					title
+					title,
+					content
 				)
 			VALUES(
 				:eventId,
 				:name,
-				:title
+				:title,
+				:content
 			)
 		';
 		
