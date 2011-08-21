@@ -9,26 +9,53 @@ class action_admin_staticPage_PageList extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_staticPage_PageList();
 	}
 	
+	private function checkRole($user, $eventId) {
+		$hasRole = model_Role::userHasRole($user, array(
+			model_Role::$SYSTEM_ADMIN,
+			model_Role::$EVENT_ADMIN
+		));	
+		
+		$hasRole = $hasRole || model_Role::userHasRoleForEvent($user, model_Role::$EVENT_MANAGER, $eventId);
+		
+		if(!$hasRole) {
+			throw new Exception('User does not have required role.');
+		}
+	}
+	
 	public function view() {
-		$info = $this->logic->view(array(
+		$params = array(
 			'eventId' => RequestUtil::getValue('eventId', 0)
-		));
+		);
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->view($params);
 		return $this->converter->getView($info);
 	}
 	
 	public function listPages() {
-		$info = $this->logic->listPages(array(
+		$params = array(
 			'eventId' => RequestUtil::getValue('eventId', 0)
-		));
+		);
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->listPages($params);
 		return $this->converter->getListPages($info);
 	}
 	
 	public function deletePages() {
-		$info = $this->logic->deletePages(array(
+		$params = array(
 			'eventId' => RequestUtil::getValue('eventId', 0),
 			'pageIds' => RequestUtil::getValueAsArray('pageIds', array())
-		));
+		);
 		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->deletePages($params);
 		return $this->converter->getDeletePages($info);
 	}
 }

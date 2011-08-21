@@ -6,13 +6,15 @@ class logic_admin_staticPage_EditPage extends logic_Performer
 		parent::__construct();
 	}
 	
-	public function view($params) {
-		$page = db_StaticPageManager::getInstance()->find($params['id']);
-		$eventInfo = db_EventManager::getInstance()->findInfoById($page['eventId']);
+	public function view($params) { 
+		$page = db_StaticPageManager::getInstance()->findByIdAndEvent(array(
+			'eventId' => $params['eventId'],
+			'pageId' => $params['pageId']
+		));
 		
 		return array(
-			'page' => $page,
-			'eventCode' => $eventInfo['code']
+			'eventId' => $page['eventId'],
+			'page' => $page
 		);
 	}
 	

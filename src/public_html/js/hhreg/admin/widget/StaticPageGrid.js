@@ -56,7 +56,9 @@ dojo.declare("hhreg.admin.widget.StaticPageGrid", [dijit._Widget, dijit._Templat
 		    		return dojo.string.substitute('<a target="_blank" href="${href}">${label}</a>', {href: value, label: value});
 			    }},
 			    {name: "Options", width: "100%", get: function(rowIndex, storeItem) {
-			    	return '<a href="">Edit</a>';
+			    	var pageId = grid.store.getValue(storeItem, "id");
+			    	var url = hhreg.util.contextUrl("/admin/staticPage/EditPage")+"?"+dojo.objectToQuery({eventId: _this.eventId, pageId: pageId});
+			    	return dojo.string.substitute('<a href="${url}">Edit</a>', {url: url});
 			    }}
 			]
 		}, _this.gridNode);

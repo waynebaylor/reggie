@@ -119,17 +119,15 @@ class db_StaticPageManager extends db_Manager
 		$this->execute($sql, $params, 'Create static event page.');
 	}
 	
-	public function deletePage($id) {
+	public function deletePage($params) {
 		$sql = '
 			DELETE FROM
 				StaticPage
 			WHERE
-				id = :id
+				id in (:[pageIds])
+			AND
+				eventId = :eventId
 		';
-		
-		$params = array(
-			'id' => $id
-		);
 		
 		$this->execute($sql, $params, 'Delete static event page.');
 	}
@@ -162,5 +160,29 @@ class db_StaticPageManager extends db_Manager
 		);
 		
 		$this->execute($sql, $params, 'Delete static pages by event ID.');
+	}
+	
+	public function findByIdAndEvent($params) {
+		$sql = '
+			SELECT
+				StaticPage.id,
+				StaticPage.eventId,
+				Event.code as eventCode,
+				StaticPage.name,
+				StaticPage.title,
+				StaticPage.content
+			FROM
+				StaticPage
+			INNER JOIN
+				Event
+			ON
+				StaticPage.eventId = Event.id
+			WHERE
+				StaticPage.id = :pageId
+			AND
+				Event.id = :eventId				
+		';
+		
+		return $this->queryUnique($sql, $params, 'Find static page.');
 	}
 }

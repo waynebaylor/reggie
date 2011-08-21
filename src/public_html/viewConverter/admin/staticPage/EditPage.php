@@ -9,19 +9,29 @@ class viewConverter_admin_staticPage_EditPage extends viewConverter_admin_AdminC
 	
 	protected function body() {
 		$body = parent::body();
-		$body .= $this->getFileContents('page_admin_staticPage_EditPage');
 		
-		return $body;
-	}
-	
-	protected function getBreadcrumbs() {
-		$b = new fragment_Breadcrumb(array(
-			'location' => 'EditStaticPage',
-			'eventId' => $this->page['eventId'],
-			'eventCode' => $this->eventCode
+		$formHtml = $this->xhrTableForm(array(
+			'url' => '/admin/staticPage/EditPage',
+			'action' => 'savePage',
+			'rows' => $this->getFileContents('page_admin_staticPage_CreatePageForm'),
+			'redirectUrl' => "/admin/event/Manage?eventId={$this->eventId}"
 		));
 		
-		return $b->html();
+		$body .= <<<_
+			<script type="text/javascript">
+				dojo.require("hhreg.xhrEditForm");
+				dojo.require("hhreg.admin.staticPage");
+			</script>
+
+			<div id="content">
+				<div class="fragment-edit">
+					<h3>{$this->title}</h3>
+					{$formHtml}
+				</div>
+			</div>
+_;
+		
+		return $body;
 	}
 	
 	public function getSavePage($properties) {

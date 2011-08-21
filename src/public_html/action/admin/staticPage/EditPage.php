@@ -9,25 +9,33 @@ class action_admin_staticPage_EditPage extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_staticPage_EditPage();
 	}
 	
-	public function view() {
-		$id = RequestUtil::getValue('id', 0);
+	private function checkRole($user, $eventId) {
+		$hasRole = model_Role::userHasRole($user, array(
+			model_Role::$SYSTEM_ADMIN,
+			model_Role::$EVENT_ADMIN
+		));	
 		
-		$info = $this->logic->view(array(
-			'id' => $id
+		$hasRole = $hasRole || model_Role::userHasRoleForEvent($user, model_Role::$EVENT_MANAGER, $eventId);
+		
+		if(!$hasRole) {
+			throw new Exception('User does not have required role.');
+		}
+	}
+	
+	public function view() {
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'pageId' => 0
 		));
 		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->view($params);
 		return $this->converter->getView($info);
 	}
 	
 	public function savePage() {
-		$errors = validation_Validator::validate(validation_admin_StaticPage::getConfig(), array(
-			'name' => RequestUtil::getValue('name', '')
-		));
-		
-		if(!empty($errors)) {
-			return new fragment_validation_ValidationErrors($errors);
-		}
-		
 		$params = RequestUtil::getValues(array(
 			'id' => 0,
 			'eventId' => 0,
@@ -36,8 +44,18 @@ class action_admin_staticPage_EditPage extends action_ValidatorAction
 			'content' => ''
 		));
 		
-		$info = $this->logic->savePage($params);
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
+		$errors = validation_Validator::validate(validation_admin_StaticPage::getConfig(), array(
+			'name' => $params['name']
+		));
+		
+		if(!empty($errors)) {
+			return new fragment_validation_ValidationErrors($errors);
+		}
+		
+		$info = $this->logic->savePage($params);
 		return $this->converter->getSavePage($info);
 	}
 }

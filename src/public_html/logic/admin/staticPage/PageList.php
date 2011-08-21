@@ -36,7 +36,10 @@ class logic_admin_staticPage_PageList extends logic_Performer
 	
 	public function deletePages($params) {
 		foreach($params['pageIds'] as $pageId) {
-			db_StaticPageManager::getInstance()->deletePage($pageId);
+			db_StaticPageManager::getInstance()->deletePage(array(
+				'eventId' => $params['eventId'],
+				'pageIds' => $params['pageIds']	
+			));
 		}
 
 		return array(
