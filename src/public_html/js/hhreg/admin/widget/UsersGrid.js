@@ -2,7 +2,7 @@
 dojo.require("hhreg.util");
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
-dojo.require("dijit.form.Button");
+dojo.require("dojox.form.BusyButton");
 dojo.require("dojox.grid.EnhancedGrid");
 dojo.require("dojox.grid.enhanced.plugins.IndirectSelection");
 dojo.require("dojox.grid.enhanced.plugins.Pagination");
@@ -68,14 +68,23 @@ dojo.declare("hhreg.admin.widget.UsersGrid", [dijit._Widget, dijit._Templated], 
 	setupDeleteButton: function() {
 		var _this = this;
 		
-		var deleteButton = new dijit.form.Button({
+		var deleteButton = new dojox.form.BusyButton({
 			label: "Delete Selected Users",
 			onClick: function() {
-				if(!confirm("Are you sure?")) { return;}
-				
 				var grid = dijit.byNode(_this.gridNode);
 				var selectedItems = grid.selection.getSelected();
 
+				// don't do anything if nothing is selected.
+				if(!selectedItems || selectedItems.length == 0) { 
+					deleteButton.cancel();
+					return; 
+				}
+				
+				if(!confirm("Are you sure?")) { 
+					deleteButton.cancel();
+					return;
+				}
+				
 				dojo.xhrPost({
 					url: hhreg.util.contextUrl("/admin/dashboard/Users"),
 					content: {
@@ -86,6 +95,8 @@ dojo.declare("hhreg.admin.widget.UsersGrid", [dijit._Widget, dijit._Templated], 
 					},
 					handleAs: "json",
 					handle: function(response) {
+						deleteButton.cancel();
+						
 						grid.store.close();
 						grid.setStore(new dojo.data.ItemFileReadStore({url: _this.storeUrl, hierarchical: false, clearOnClose: true}), {userId: "*"});
 						grid.rowSelectCell.toggleAllSelection(false);

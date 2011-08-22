@@ -10,17 +10,17 @@ dojo.require("dojox.grid.enhanced.plugins.IndirectSelection");
 dojo.require("dojox.grid.enhanced.plugins.Pagination");
 dojo.require("dojo.data.ItemFileReadStore");
 
-dojo.provide("hhreg.admin.widget.StaticPageGrid");
+dojo.provide("hhreg.admin.widget.ReportGrid");
 
-dojo.declare("hhreg.admin.widget.StaticPageGrid", [dijit._Widget, dijit._Templated], {
-	storeUrl: hhreg.util.contextUrl("/admin/staticPage/PageList"),
+dojo.declare("hhreg.admin.widget.ReportGrid", [dijit._Widget, dijit._Templated], {
+	storeUrl: hhreg.util.contextUrl("/admin/report/ReportList"),
 	eventId: 0,
-	baseClass: "hhreg-admin-StaticPageGrid",
-	templateString: dojo.cache("hhreg.admin.widget", "templates/StaticPageGrid.html"),
+	baseClass: "hhreg-admin-ReportGrid",
+	templateString: dojo.cache("hhreg.admin.widget", "templates/ReportGrid.html"),
 	postCreate: function() {
 		var _this = this;
 		
-		_this.storeUrl = _this.storeUrl+"?"+dojo.objectToQuery({a: "listPages", eventId: _this.eventId});
+		_this.storeUrl = _this.storeUrl+"?"+dojo.objectToQuery({a: "listReports", eventId: _this.eventId});
 		
 		_this.setupCreateLink();
 		_this.setupGrid();
@@ -51,19 +51,19 @@ dojo.declare("hhreg.admin.widget.StaticPageGrid", [dijit._Widget, dijit._Templat
 			},
 			structure: [
 			    {field: "name", name: "Name", width: "100%"},
-			    {field: "title", name: "Title", width: "100%"},
-			    {field: "url", name: "URL", width: "100%", get: function(rowIndex, storeItem) {
-			    	if(storeItem) {
-				    	var value = grid.store.getValue(storeItem, "url");
-			    		return dojo.string.substitute('<a target="_blank" href="${href}">${label}</a>', {href: value, label: value});
-			    	}
+			    {name: "Export", width: "100%", get: function(rowIndex, storeItem) {
+			    	if(!storeItem) { return; }
+			    	
+			    	var reportId = grid.store.getValue(storeItem, "id");
+			    	var csvUrl = hhreg.util.contextUrl("/admin/report/GenerateReport?")+dojo.objectToQuery({a: "csv", id: reportId});
+			    	return dojo.string.substitute('<a href="${csv}">csv</a>', {csv: csvUrl});
 			    }},
 			    {name: "Options", width: "100%", get: function(rowIndex, storeItem) {
-			    	if(storeItem) {
-				    	var pageId = grid.store.getValue(storeItem, "id");
-				    	var url = hhreg.util.contextUrl("/admin/staticPage/EditPage")+"?"+dojo.objectToQuery({eventId: _this.eventId, pageId: pageId});
-				    	return dojo.string.substitute('<a href="${url}">Edit</a>', {url: url});
-			    	}
+			    	if(!storeItem) { return; }
+			    	
+			    	var reportId = grid.store.getValue(storeItem, "id");
+			    	var url = hhreg.util.contextUrl("/admin/report/EditReport?")+dojo.objectToQuery({eventId: _this.eventId, reportId: reportId});
+			    	return dojo.string.substitute('<a href="${url}">Edit</a>', {url: url});
 			    }}
 			]
 		}, _this.gridNode);
@@ -76,7 +76,7 @@ dojo.declare("hhreg.admin.widget.StaticPageGrid", [dijit._Widget, dijit._Templat
 		var _this = this;
 		
 		var b = new dojox.form.BusyButton({
-			label: "Delete Selected Pages",
+			label: "Delete Selected Reports",
 			timeout: 60*1000,
 			onClick: function() {
 				var grid = dijit.byNode(_this.gridNode);
@@ -95,11 +95,11 @@ dojo.declare("hhreg.admin.widget.StaticPageGrid", [dijit._Widget, dijit._Templat
 				}
 				
 				dojo.xhrPost({
-					url: hhreg.util.contextUrl("/admin/staticPage/PageList"),
+					url: hhreg.util.contextUrl("/admin/report/ReportList"),
 					content: {
-						a: "deletePages",
+						a: "deleteReports",
 						eventId: _this.eventId,
-						"pageIds[]": dojo.map(selectedItems, function(storeItem) {
+						"reportIds[]": dojo.map(selectedItems, function(storeItem) {
 							return grid.store.getValue(storeItem, "id");
 						})
 					},

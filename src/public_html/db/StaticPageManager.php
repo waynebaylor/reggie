@@ -119,7 +119,7 @@ class db_StaticPageManager extends db_Manager
 		$this->execute($sql, $params, 'Create static event page.');
 	}
 	
-	public function deletePage($params) {
+	public function deletePages($params) {
 		$sql = '
 			DELETE FROM
 				StaticPage

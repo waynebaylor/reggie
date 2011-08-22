@@ -64,7 +64,34 @@ dojo.declare("hhreg.admin.widget.EventTabs", [dijit._Widget, dijit._Templated], 
 			tabContainer.addChild(content);
 		}
 	},
-	setupReportsTab: function(tabContainer) {},
+	setupReportsTab: function(tabContainer) {
+		var _this = this;
+		
+		var showTab = hhreg.admin.data.role.userHasRole(_this.user, [
+		    hhreg.admin.data.role.SYSTEM_ADMIN,
+		    hhreg.admin.data.role.EVENT_ADMIN
+		]);
+		
+		showTab = showTab || hhreg.admin.data.role.userHasRoleForEvent(_this.user, [
+		    hhreg.admin.data.role.EVENT_MANAGER,
+		    hhreg.admin.data.role.EVENT_REGISTRAR,
+		    hhreg.admin.data.role.VIEW_EVENT
+	    ], _this.eventId);
+		
+		var content;
+		if(showTab) {
+			content = new dojox.layout.ContentPane({
+				title: "Reports",
+				content: ""
+			}, dojo.place("<div></div>", dojo.body()));
+			
+			content.startup();
+			
+			tabContainer.addChild(content);
+			
+			content.set("href", hhreg.util.contextUrl("/admin/report/ReportList?")+dojo.objectToQuery({eventId: _this.eventId}));
+		}
+	},
 	setupBadgeTab: function(tabContainer) {},
 	setupFilesTab: function(tabContainer) {
 		var _this = this;

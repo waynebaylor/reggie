@@ -881,6 +881,33 @@ class db_ReportManager extends db_Manager
 			$this->deleteReport($r);
 		}
 	}
+	
+	public function findInfoByEventId($eventId) {
+		return $this->select(
+			'Report', 
+			array(
+				'id', 
+				'eventId', 
+				'name'
+			), 
+			array(
+				'eventId' => $eventId
+			)
+		);
+	}
+	
+	public function deleteReports($params) {
+		$sql = '
+			DELETE FROM
+				Report
+			WHERE
+				id in (:[reportIds])
+			AND
+				eventId = :eventId
+		';
+		
+		$this->execute($sql, $params, 'Delete reports.');
+	}
 }
 
 ?>
