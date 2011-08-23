@@ -4,6 +4,8 @@ class viewConverter_admin_report_EditReport extends viewConverter_admin_AdminCon
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->title = 'Edit Report';
 	}
 	
 	protected function body() {
@@ -12,16 +14,6 @@ class viewConverter_admin_report_EditReport extends viewConverter_admin_AdminCon
 		$body .= $this->getFileContents('page_admin_report_EditReport');
 		
 		return $body;
-	}
-	
-	protected function getBreadcrumbs() {
-		$b = new fragment_Breadcrumb(array(
-			'location' => 'Report',
-			'eventId' => $this->event['id'],
-			'eventCode' => $this->event['code']
-		));
-		
-		return $b->html();
 	}
 	
 	public function getSaveReport($properties) {

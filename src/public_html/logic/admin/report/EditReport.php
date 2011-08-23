@@ -16,12 +16,11 @@ class logic_admin_report_EditReport extends logic_Performer
 		);
 	}
 	
-	public function view($reportId) {
-		$report = $this->strictFindById(db_ReportManager::getInstance(), $reportId);
-		$event = db_EventManager::getInstance()->find($report['eventId']);
+	public function view($params) {
+		$report = $this->strictFindById(db_ReportManager::getInstance(), $params['reportId']);
+		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
-			'title' => 'Edit Report',
 			'event' => $event,
 			'report' => $report
 		);

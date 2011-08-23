@@ -56,14 +56,14 @@ dojo.declare("hhreg.admin.widget.ReportGrid", [dijit._Widget, dijit._Templated],
 			    	
 			    	var reportId = grid.store.getValue(storeItem, "id");
 			    	var csvUrl = hhreg.util.contextUrl("/admin/report/GenerateReport?")+dojo.objectToQuery({a: "csv", id: reportId});
-			    	return dojo.string.substitute('<a href="${csv}">csv</a>', {csv: csvUrl});
+			    	return dojo.string.substitute('<a target="_blank" href="${csv}">csv</a>', {csv: csvUrl});
 			    }},
 			    {name: "Options", width: "100%", get: function(rowIndex, storeItem) {
 			    	if(!storeItem) { return; }
 			    	
 			    	var reportId = grid.store.getValue(storeItem, "id");
-			    	var url = hhreg.util.contextUrl("/admin/report/EditReport?")+dojo.objectToQuery({eventId: _this.eventId, reportId: reportId});
-			    	return dojo.string.substitute('<a href="${url}">Edit</a>', {url: url});
+			    	var editUrl = hhreg.util.contextUrl("/admin/report/EditReport?")+dojo.objectToQuery({eventId: _this.eventId, reportId: reportId});
+			    	return dojo.string.substitute('<a href="${editUrl}">Edit</a>', {editUrl: editUrl});
 			    }}
 			]
 		}, _this.gridNode);
