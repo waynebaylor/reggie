@@ -14,6 +14,18 @@ abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConv
 		
 		$this->showLogoutLink = true;
 		$this->bannerLinkActive = true;
+	}
+	
+	/**
+	 * Returns the HTML for displaying the breadcrumbs associated with this page.
+	 * @return string
+	 */
+	protected function getBreadcrumbs() {
+		return '';	
+	}
+	
+	public function getView($properties) {
+		$this->setProperties($properties);
 		
 		$this->showUsersMenu = model_Role::userHasRole(SessionUtil::getUser(), array(
 			model_Role::$SYSTEM_ADMIN, 
@@ -26,16 +38,27 @@ abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConv
 	   		model_Role::$EVENT_REGISTRAR,	
 	   		model_Role::$VIEW_EVENT	
 		))? 'true' : 'false';
+		
+		$this->showEventMenu = 'false';
+		$this->actionMenuEventLabel = '';
+		$this->showReportMenu = 'false';
+		$this->showRegFormMenu = 'false';
+		$this->showBadgeTemplateMenu = 'false';
+		$this->showFileMenu = 'false';
+		$this->showPageMenu = 'false';
+
+		if(!empty($this->eventId)) {
+			$this->showEventMenu = 'true';
+			$this->actionMenuEventLabel = $properties['actionMenuEventLabel'];
+			$this->showReportMenu = $this->getShowReportMenu(SessionUtil::getUser(), $this->eventId);
+			$this->showRegFormMenu = $this->getShowRegFormMenu(SessionUtil::getUser(), $this->eventId);
+			$this->showBadgeTemplateMenu = $this->getShowBadgeTemplateMenu(SessionUtil::getUser(), $this->eventId);
+			$this->showFileMenu = $this->getShowFileMenu(SessionUtil::getUser(), $this->eventId);
+			$this->showPageMenu = $this->getShowPageMenu(SessionUtil::getUser(), $this->eventId);
+		}
+		
+		return parent::getView($properties);
 	}
-	
-	/**
-	 * Returns the HTML for displaying the breadcrumbs associated with this page.
-	 * @return string
-	 */
-	protected function getBreadcrumbs() {
-		return '';	
-	}
-	
 	protected function head() {
 		return <<<_
 			{$this->HTML->css(array('rel' => 'stylesheet', 'href' => '/js/dojox/grid/enhanced/resources/EnhancedGrid.css'))}
@@ -69,19 +92,15 @@ _;
 						
 						new hhreg.admin.widget.ActionMenuBar({
 							showUsers: {$this->showUsersMenu},
-							showEvents: {$this->showEventsMenu}
-						}, dojo.place("<div></div>", dojo.byId("general-menu"), "replace")).startup();
-						
-						dojo.query("#user-menu").forEach(function(item) {
-							var m = new dijit.MenuBar({}, dojo.byId("user-menu"));
-							m.addChild(new dijit.MenuBarItem({
-								label:"Logout",
-								onClick: function() {
-									window.location.href = hhreg.util.contextUrl('/admin/Login?a=logout');
-								}
-							}));
-							m.startup();	
-						});
+							showEvents: {$this->showEventsMenu},
+							showEventMenu: {$this->showEventMenu},
+							eventLabel: "{$this->actionMenuEventLabel}",
+							showReports: {$this->showReportMenu},
+							showRegForm: {$this->showRegFormMenu},
+							showBadgeTemplates: {$this->showBadgeTemplateMenu},
+							showFiles: {$this->showFileMenu},
+							showPages: {$this->showPageMenu}
+						}, dojo.place("<div></div>", dojo.byId("action-menu-bar"), "replace")).startup();
 					});
 				</script>
 		
@@ -89,10 +108,7 @@ _;
 					{$this->getBanner()}
 				</div>	
 				
-				<table style="border-collapse:collapse;"><tr>
-					<td style="width:100%;"><div id="general-menu"></div></td>
-					<td><div id="user-menu"></div></td>
-				</tr></table>
+				<div id="action-menu-bar"></div>
 _;
 	}
 	
@@ -114,6 +130,74 @@ _;
 		}
 		
 		return $banner;
+	}
+	
+	private function getShowReportMenu($user, $eventId) {
+		$showMenu = model_Role::userHasRole($user, array(
+			model_Role::$SYSTEM_ADMIN,
+			model_Role::$EVENT_ADMIN
+		));
+		
+		$showMenu = $showMenu || model_Role::userHasRoleForEvent($user, array(
+			model_Role::$EVENT_MANAGER,
+			model_Role::$EVENT_REGISTRAR,
+			model_Role::$VIEW_EVENT
+		), $eventId);
+		
+		return $showMenu;
+	}
+
+	private function getShowRegFormMenu($user, $eventId) {
+		$showMenu = model_Role::userHasRole($user, array(
+			model_Role::$SYSTEM_ADMIN,
+			model_Role::$EVENT_ADMIN
+		));
+		
+		$showMenu = $showMenu || model_Role::userHasRoleForEvent($user, array(
+			model_Role::$EVENT_MANAGER
+		), $eventId);
+		
+		return $showMenu;
+	}
+
+	private function getShowBadgeTemplateMenu($user, $eventId) {
+		$showMenu = model_Role::userHasRole($user, array(
+			model_Role::$SYSTEM_ADMIN,
+			model_Role::$EVENT_ADMIN
+		));
+		
+		$showMenu = $showMenu || model_Role::userHasRoleForEvent($user, array(
+			model_Role::$EVENT_MANAGER,
+			model_Role::$EVENT_REGISTRAR
+		), $eventId);
+		
+		return $showMenu;
+	}
+
+	private function getShowFileMenu($user, $eventId) {
+		$showMenu = model_Role::userHasRole($user, array(
+			model_Role::$SYSTEM_ADMIN,
+			model_Role::$EVENT_ADMIN
+		));
+		
+		$showMenu = $showMenu || model_Role::userHasRoleForEvent($user, array(
+			model_Role::$EVENT_MANAGER
+		), $eventId);
+		
+		return $showMenu;
+	}
+
+	private function getShowPageMenu($user, $eventId) {
+		$showMenu = model_Role::userHasRole($user, array(
+			model_Role::$SYSTEM_ADMIN,
+			model_Role::$EVENT_ADMIN
+		));
+		
+		$showMenu = $showMenu || model_Role::userHasRoleForEvent($user, array(
+			model_Role::$EVENT_MANAGER
+		), $eventId);
+		
+		return $showMenu;
 	}
 } 
 

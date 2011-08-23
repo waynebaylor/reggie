@@ -10,6 +10,8 @@ class logic_admin_event_Manage extends logic_Performer
 		$event = $this->strictFindById(db_EventManager::getInstance(), $params['eventId']);
 		
 		return array(
+			'eventId' => $event['id'],
+			'actionMenuEventLabel' => $event['code'],
 			'user' => $params['user'],
 			'event' => $event
 		);
