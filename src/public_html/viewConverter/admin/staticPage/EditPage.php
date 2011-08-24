@@ -14,7 +14,7 @@ class viewConverter_admin_staticPage_EditPage extends viewConverter_admin_AdminC
 			'url' => '/admin/staticPage/EditPage',
 			'action' => 'savePage',
 			'rows' => $this->getFileContents('page_admin_staticPage_CreatePageForm'),
-			'redirectUrl' => "/admin/event/Manage?eventId={$this->eventId}"
+			'redirectUrl' => "/admin/staticPage/PageList?eventId={$this->eventId}"
 		));
 		
 		$body .= <<<_

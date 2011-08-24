@@ -25,12 +25,22 @@ abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConv
 	}
 	
 	public function getView($properties) {
+		$this->eventId = 0;
+		$this->showEventMenu = 'false';
+		$this->actionMenuEventLabel = '';
+		$this->showReportMenu = 'false';
+		$this->showRegFormMenu = 'false';
+		$this->showBadgeTemplateMenu = 'false';
+		$this->showFileMenu = 'false';
+		$this->showPageMenu = 'false';
+		
 		$this->setProperties($properties);
 		
 		$this->showUsersMenu = model_Role::userHasRole(SessionUtil::getUser(), array(
 			model_Role::$SYSTEM_ADMIN, 
 			model_Role::$USER_ADMIN
 		))? 'true' : 'false';
+		
 		$this->showEventsMenu = model_Role::userHasRole(SessionUtil::getUser(), array(
 			model_Role::$SYSTEM_ADMIN,
 			model_Role::$EVENT_ADMIN,
@@ -39,17 +49,8 @@ abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConv
 	   		model_Role::$VIEW_EVENT	
 		))? 'true' : 'false';
 		
-		$this->showEventMenu = 'false';
-		$this->actionMenuEventLabel = '';
-		$this->showReportMenu = 'false';
-		$this->showRegFormMenu = 'false';
-		$this->showBadgeTemplateMenu = 'false';
-		$this->showFileMenu = 'false';
-		$this->showPageMenu = 'false';
-
 		if(!empty($this->eventId)) {
 			$this->showEventMenu = 'true';
-			$this->actionMenuEventLabel = $properties['actionMenuEventLabel'];
 			$this->showReportMenu = $this->getShowReportMenu(SessionUtil::getUser(), $this->eventId);
 			$this->showRegFormMenu = $this->getShowRegFormMenu(SessionUtil::getUser(), $this->eventId);
 			$this->showBadgeTemplateMenu = $this->getShowBadgeTemplateMenu(SessionUtil::getUser(), $this->eventId);
@@ -59,6 +60,7 @@ abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConv
 		
 		return parent::getView($properties);
 	}
+	
 	protected function head() {
 		return <<<_
 			{$this->HTML->css(array('rel' => 'stylesheet', 'href' => '/js/dojox/grid/enhanced/resources/EnhancedGrid.css'))}
@@ -99,7 +101,8 @@ _;
 							showRegForm: {$this->showRegFormMenu},
 							showBadgeTemplates: {$this->showBadgeTemplateMenu},
 							showFiles: {$this->showFileMenu},
-							showPages: {$this->showPageMenu}
+							showPages: {$this->showPageMenu},
+							eventId: {$this->eventId}
 						}, dojo.place("<div></div>", dojo.byId("action-menu-bar"), "replace")).startup();
 					});
 				</script>

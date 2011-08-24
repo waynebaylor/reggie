@@ -4,23 +4,34 @@ class viewConverter_admin_fileUpload_FileUpload extends viewConverter_admin_Admi
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->title = 'Event Files';
 	}
 	
-	public function getView($properties) {
-		$this->setProperties($properties);
+	protected function body() {
+		$body = parent::body();
 		
-		$html = <<<_
-			<div id="upload-grid"></div>
+		$body .= <<<_
 			<script type="text/javascript">
 				dojo.require("hhreg.admin.widget.FileUploadGrid");
 				
-				new hhreg.admin.widget.FileUploadGrid({
-					eventId: {$this->eventId}
-				}, dojo.place("<div></div>", dojo.byId("upload-grid"), "replace")).startup();
+				dojo.addOnLoad(function() {
+					new hhreg.admin.widget.FileUploadGrid({
+						eventId: {$this->eventId}
+					}, dojo.place("<div></div>", dojo.byId("upload-grid"), "replace")).startup();
+				});
 			</script>
+			
+			<div id="content">
+				<div class="fragment-edit">
+					<h3>{$this->title}</h3>
+					
+					<div id="upload-grid"></div>
+				</div>
+			</div>
 _;
 
-		return new template_TemplateWrapper($html);
+		return $body;
 	}
 	
 	public function getListFiles($properties) {

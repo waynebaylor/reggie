@@ -15,7 +15,7 @@ class viewConverter_admin_report_CreateReport extends viewConverter_admin_AdminC
 			'url' => '/admin/report/CreateReport',
 			'action' => 'createReport',
 			'rows' => $this->getFileContents('page_admin_report_Edit'),
-			'redirectUrl' => "/admin/event/Manage?eventId={$this->eventId}"
+			'redirectUrl' => "/admin/report/ReportList?eventId={$this->eventId}"
 		));
 		
 		$body .= <<<_

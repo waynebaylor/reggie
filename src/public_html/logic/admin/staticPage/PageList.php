@@ -7,7 +7,12 @@ class logic_admin_staticPage_PageList extends logic_Performer
 	}
 	
 	public function view($params) {
-		return array('eventId' => $params['eventId']);
+		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
+		
+		return array(
+			'eventId' => $eventInfo['id'],
+			'actionMenuEventLabel' => $eventInfo['code']
+		);
 	}
 	
 	public function listPages($params) {

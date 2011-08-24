@@ -4,23 +4,34 @@ class viewConverter_admin_report_ReportList extends viewConverter_admin_AdminCon
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->title = 'Reports';
 	}
 	
-	public function getView($properties) {
-		$this->setProperties($properties);
+	protected function body() {
+		$body = parent::body();
 		
-		$html = <<<_
-			<div id="report-grid"></div>
+		$body .= <<<_
 			<script type="text/javascript">
 				dojo.require("hhreg.admin.widget.ReportGrid");
 				
-				new hhreg.admin.widget.ReportGrid({
-					eventId: {$this->eventId}
-				}, dojo.place("<div></div>", dojo.byId("report-grid"), "replace")).startup();
+				dojo.addOnLoad(function() {
+					new hhreg.admin.widget.ReportGrid({
+						eventId: {$this->eventId}
+					}, dojo.place("<div></div>", dojo.byId("report-grid"), "replace")).startup();
+				});
 			</script>
+			
+			<div id="content">
+				<div class="fragment-edit">
+					<h3>{$this->title}</h3>
+					
+					<div id="report-grid"></div>
+				</div>
+			</div>
 _;
 
-		return new template_TemplateWrapper($html);
+		return $body;
 	}
 	
 	public function getListReports($properties) {

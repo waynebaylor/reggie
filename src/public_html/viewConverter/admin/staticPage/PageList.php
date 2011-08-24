@@ -4,23 +4,34 @@ class viewConverter_admin_staticPage_PageList extends viewConverter_admin_AdminC
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->title = 'Event Pages';
 	}
 	
-	public function getView($properties) {
-		$this->setProperties($properties);
+	protected function body() {
+		$body = parent::body();
 		
-		$html = <<<_
-			<div id="page-grid"></div>
+		$body .= <<<_
 			<script type="text/javascript">
 				dojo.require("hhreg.admin.widget.StaticPageGrid");
 				
-				new hhreg.admin.widget.StaticPageGrid({
-					eventId: {$this->eventId}
-				}, dojo.place("<div></div>", dojo.byId("page-grid"), "replace")).startup();
+				dojo.addOnLoad(function() {
+					new hhreg.admin.widget.StaticPageGrid({
+						eventId: {$this->eventId}
+					}, dojo.place("<div></div>", dojo.byId("page-grid"), "replace")).startup();
+				});
 			</script>
+			
+			<div id="content">
+				<div class="fragment-edit">
+					<h3>{$this->title}</h3>
+					
+					<div id="page-grid"></div>
+				</div>
+			</div>
 _;
 
-		return new template_TemplateWrapper($html);
+		return $body;
 	}
 	
 	public function getListPages($properties) {
