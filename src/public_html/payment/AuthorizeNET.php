@@ -42,14 +42,6 @@ class payment_AuthorizeNET
 	}
 	
 	public function makePayment() {
-		// try $0.00 AVS authorization first. this will catch AVS
-		// errors without putting a hold on any funds.
-		$avsCheckResult = $this->avsCheck();
-		if(!$avsCheckResult['success']) {
-			return $avsCheckResult;
-		}
-		
-		// if AVS is okay, then submit the charge.
 		$fields = $this->paymentFields('AUTH_CAPTURE', $this->amount);
 		$response = $this->submitTransaction($fields);
 
