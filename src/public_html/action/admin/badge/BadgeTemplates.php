@@ -9,13 +9,48 @@ class action_admin_badge_BadgeTemplates extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_badge_BadgeTemplates();
 	}
 	
+	private function checkRole($user, $eventId) {
+		$hasRole = model_Role::userHasRole($user, array(
+			model_Role::$SYSTEM_ADMIN,
+			model_Role::$EVENT_ADMIN
+		));	
+		
+		$hasRole = $hasRole || model_Role::userHasRoleForEvent(
+			$user, 
+			array(
+				model_Role::$EVENT_MANAGER,
+				model_Role::$EVENT_REGISTRAR
+			), 
+			$eventId
+		);
+		
+		if(!$hasRole) {
+			throw new Exception('User does not have required role.');
+		}
+	}
+	
 	public function view() {
 		$params = array(
 			'eventId' => RequestUtil::getValue('eventId', 0)
 		);
 		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
 		$info = $this->logic->view($params);
 		return $this->converter->getView($info);
+	}
+	
+	public function listTemplates() {
+		$params = array(
+			'eventId' => RequestUtil::getValue('eventId', 0)
+		);
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->listTemplates($params);
+		return $this->converter->getListTemplates($info);
 	}
 	
 	public function addTemplate() {

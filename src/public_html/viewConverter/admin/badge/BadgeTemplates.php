@@ -9,18 +9,33 @@ class viewConverter_admin_badge_BadgeTemplates extends viewConverter_admin_Admin
 	
 	protected function body() {
 		$body = parent::body();
-		$body .= $this->getFileContents('page_admin_badge_BadgeTemplates');
+		$body .= <<<_
+			<script type="text/javascript">
+				dojo.require("hhreg.admin.widget.BadgeTemplateGrid");
+				
+				dojo.addOnLoad(function() {
+					new hhreg.admin.widget.BadgeTemplateGrid({
+						eventId: {$this->eventId}
+					}, dojo.place("<div></div>", dojo.byId("badge-template-grid"), "replace")).startup();
+				});
+			</script>
+			
+			<div id="content">
+				<div class="fragment-edit">
+					<h3>{$this->title}</h3>
+					
+					<div id="badge-template-grid"></div>
+				</div>
+			</div>
+_;
 		
 		return $body;
 	}
 	
-	protected function getBreadcrumbs() {
-		$b = new fragment_Breadcrumb(array(
-			'location' => 'BadgeTemplates',
-			'eventCode' => $this->eventCode
-		));
+	public function getListTemplates($properties) {
+		$this->setProperties($properties);
 		
-		return $b->html();		
+		return new template_TemplateWrapper($this->getFileContents('page_admin_data_BadgeTemplates'));
 	}
 	
 	public function getAddTemplate($properties) {

@@ -117,7 +117,7 @@ dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Template
 				eventMenu.addChild(new dijit.MenuBarItem({
 					label: "Badge Templates",
 					onClick: function() {
-						window.location.href = hhreg.util.contextUrl(""); 
+						window.location.href = hhreg.util.contextUrl("/admin/badge/BadgeTemplates?")+dojo.objectToQuery({eventId: _this.eventId}); 
 					}
 				}));
 			}
