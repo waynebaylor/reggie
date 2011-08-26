@@ -91,11 +91,14 @@ dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Template
 		if(_this.showEventMenu) {
 			var eventMenu = new dijit.MenuBar({}, _this.eventMenuNode);
 		
-			eventMenu.addChild(new dijit.MenuBarItem({
+			var eventLabelItem = new dijit.MenuBarItem({
+				style: {color: "orange", opacity: "1.0", fontWeight: "bold"},
 				disabled: true,
 				label: _this.eventLabel,
 				onClick: function() {}
-			}));
+			});
+			dojo.query("*", eventLabelItem.domNode).style("opacity", "1.0");
+			eventMenu.addChild(eventLabelItem);
 			
 			if(_this.showReports) {
 				eventMenu.addChild(new dijit.MenuBarItem({

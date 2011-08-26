@@ -7,7 +7,7 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	}
 	
 	public function view($params) {
-		$badgeTemplate = $this->strictFindById(db_BadgeTemplateManager::getInstance(), $params['id']);
+		$badgeTemplate = db_BadgeTemplateManager::getInstance()->findTemplate(ArrayUtil::keyIntersect($params, array('eventId', 'id')));
 		$selectedCell = $this->getSelectedCell($badgeTemplate, $params['selectedCellId']);
 		$badgeCells = page_admin_badge_Helper::badgeCellSummaries($badgeTemplate, $selectedCell['id']);
 		$event = db_EventManager::getInstance()->find($badgeTemplate['eventId']);
@@ -23,6 +23,7 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		}
 		
 		return array(
+			'actionMenuEventLabel' => $event['code'],
 			'template' => $badgeTemplate,
 			'eventId' => $event['id'],
 			'eventCode' => $event['code'],

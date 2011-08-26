@@ -58,7 +58,7 @@ class fragment_XhrTableForm extends template_Template
 				))}
 				{$this->HTML->hidden(array(
 					'name' => 'redirectUrl',
-					'value' => $this->contextUrl($this->redirectUrl)
+					'value' => empty($this->redirectUrl)? '' : $this->contextUrl($this->redirectUrl)
 				))}
 				
 				<table class="xhr-table-form">

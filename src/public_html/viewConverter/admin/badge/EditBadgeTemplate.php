@@ -14,16 +14,6 @@ class viewConverter_admin_badge_EditBadgeTemplate extends viewConverter_admin_Ad
 		return $body;
 	}
 	
-	protected function getBreadcrumbs() {
-		$b = new fragment_Breadcrumb(array(
-			'location' => 'EditBadgeTemplate',
-			'eventCode' => $this->eventCode,
-			'eventId' => $this->eventId
-		));
-		
-		return $b->html();
-	}
-	
 	public function getAddBadgeCell($properties) {
 		$this->setProperties($properties);
 		
