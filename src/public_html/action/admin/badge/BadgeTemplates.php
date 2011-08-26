@@ -53,6 +53,25 @@ class action_admin_badge_BadgeTemplates extends action_ValidatorAction
 		return $this->converter->getListTemplates($info);
 	}
 	
+	public function deleteTemplates() {
+		$params = array(
+			'eventId' => RequestUtil::getValue('eventId', 0),
+			'templateIds' => RequestUtil::getValueAsArray('templateIds', array())
+		);
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->deleteTemplates($params);
+		return $this->converter->getDeleteTemplates($info);
+	}
+	
+	
+	
+	
+	
+	
+	
 	public function addTemplate() {
 		$errors = validation_Validator::validate(validation_admin_BadgeTemplate::getConfig(), array(
 			'name' => RequestUtil::getValue('name', ''),

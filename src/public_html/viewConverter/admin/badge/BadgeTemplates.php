@@ -38,6 +38,17 @@ _;
 		return new template_TemplateWrapper($this->getFileContents('page_admin_data_BadgeTemplates'));
 	}
 	
+	public function getDeleteTemplates($properties) {
+		$this->setProperties($properties);
+		return new fragment_Success();
+	}
+	
+	
+	
+	
+	
+	
+	
 	public function getAddTemplate($properties) {
 		$this->setProperties($properties);
 		

@@ -1,12 +1,12 @@
 <?php
 
-class action_admin_report_CreateReport extends action_ValidatorAction
+class action_admin_badge_CreateBadgeTemplate extends action_ValidatorAction
 {
 	function __construct() {
 		parent::__construct();
 		
-		$this->logic = new logic_admin_report_CreateReport();
-		$this->converter = new viewConverter_admin_report_CreateReport();
+		$this->logic = new logic_admin_badge_CreateBadgeTemplate();
+		$this->converter = new viewConverter_admin_badge_CreateBadgeTemplate();
 	}
 	
 	private function checkRole($user, $eventId) {
@@ -41,25 +41,29 @@ class action_admin_report_CreateReport extends action_ValidatorAction
 		return $this->converter->getView($info);
 	}
 	
-	public function createReport() {
+	public function createTemplate() {
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0,
-			'name' => ''
+			'name' => '',
+			'badgeTemplateType' => '',
+			'regTypeIds' => array(-1)
 		));
 		
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $params['eventId']);
 		
-		$errors = validation_Validator::validate(validation_admin_Report::getConfig(), array(
-			'name' => $params['name']
+		$errors = validation_Validator::validate(validation_admin_BadgeTemplate::getConfig(), array(
+			'name' => $params['name'],
+			'badgeTemplateType' => $params['badgeTemplateType'],
+			'regTypeIds' => $params['regTypeIds']
 		));
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);
 		}
 		
-		$info = $this->logic->createReport($params);
-		return $this->converter->getCreateReport($info);
+		$info = $this->logic->createTemplate($params);
+		return $this->converter->getCreateTemplate($info);
 	}
 }
 

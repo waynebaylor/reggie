@@ -22,6 +22,23 @@ class logic_admin_badge_BadgeTemplates extends logic_Performer
 		);
 	}
 	
+	public function deleteTemplates($params) {
+		db_BadgeTemplateManager::getInstance()->deleteTemplates($params);
+		
+		return array('eventId' => $params['eventId']);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public function addTemplate($params) {
 		$values = ArrayUtil::keyIntersect($params, array('eventId', 'name', 'regTypeIds'));
 		$values['type'] = $params['badgeTemplateType'];

@@ -229,6 +229,89 @@ class db_BadgeCellManager extends db_OrderableManager
 	public function moveCellContentDown($cellContent) {
 		$this->moveDown($cellContent, 'badgeCellId', $cellContent['badgeCellId']);
 	}
+	
+	/**
+	 * Delete badge cell text content for the given badge templates.
+	 * @param array $params ['eventId', 'templateIds'] 
+	 */
+	private function deleteBadgeCellTextContentByTemplate($params) {
+		$sql = '
+			DELETE FROM
+				BadgeCell_TextContent
+			WHERE
+				BadgeCell_TextContent.badgeCellId IN (
+					SELECT
+						BadgeCell.id 
+					FROM
+						BadgeCell
+					INNER JOIN
+						BadgeTemplate
+					ON
+						BadgeCell.badgeTemplateId = BadgeTemplate.id
+					WHERE
+						BadgeTemplate.eventId = :eventId
+					AND
+						BadgeTemplate.id IN (:[templateIds])
+				)
+		';
+		
+		$this->execute($sql, $params, 'Delete badge cell text content.');
+	}
+	
+	/**
+	 * Delete badge barcode fields for the given badge templates.
+	 * @param array $params ['eventId', 'templateIds'] 
+	 */
+	private function deleteBadgeBarcodeFieldByTemplate($params) {
+		$sql = '
+			DELETE FROM
+				BadgeBarcodeField
+			WHERE
+				BadgeBarcodeField.badgeCellId IN (
+					SELECT
+						BadgeCell.id 
+					FROM
+						BadgeCell
+					INNER JOIN
+						BadgeTemplate
+					ON
+						BadgeCell.badgeTemplateId = BadgeTemplate.id
+					WHERE
+						BadgeTemplate.eventId = :eventId
+					AND
+						BadgeTemplate.id IN (:[templateIds])
+				)
+		';
+		
+		$this->execute($sql, $params, 'Delete badge barcode fields.');
+	}
+
+	/**
+	 * Delete all the badge cells for the given badge templates.
+	 * @param array $params ['eventId', 'templateIds'] 
+	 */
+	public function deleteBadgeCellsByTemplate($params) {
+		$this->deleteBadgeCellTextContentByTemplate($params);
+		$this->deleteBadgeBarcodeFieldByTemplate($params);
+		
+		$sql = '
+			DELETE FROM
+				BadgeCell
+			WHERE
+				BadgeCell.badgeTemplateId IN (
+					SELECT
+						BadgeTemplate.id
+					FROM
+						BadgeTemplate
+					WHERE
+						BadgeTemplate.eventId = :eventId
+					AND
+						BadgeTemplate.id IN (:[templateIds])
+				)
+		';
+		
+		$this->execute($sql, $params, 'Delete badge template cells.');
+	}
 }
 
 ?>

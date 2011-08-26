@@ -180,12 +180,12 @@ class db_BadgeTemplateManager extends db_Manager
 			WHERE
 				BadgeTemplate.eventId = :eventId
 			AND (
-				BadgeTemplate_RegType.regTypeId is NULL
+				BadgeTemplate_RegType.regTypeId IS NULL
 			OR
 				BadgeTemplate_RegType.regTypeId = :regTypeId
 			)
 			AND
-				BadgeTemplate.id in (:[templateIds])
+				BadgeTemplate.id IN (:[templateIds])
 		';
 		
 		$params = array(
@@ -195,6 +195,51 @@ class db_BadgeTemplateManager extends db_Manager
 		);
 		
 		return $this->queryUnique($sql, $params, 'Find badge template from list.');
+	}
+	
+	/**
+	 * Delete reg type relations for the given badge templates.
+	 * @param array $params ['eventId', 'templateIds'] 
+	 */
+	private function deleteBadgeTemplateRegTypes($params) {
+		$sql = '
+			DELETE FROM
+				BadgeTemplate_RegType
+			WHERE
+				BadgeTemplate_RegType.badgeTemplateId IN (
+					SELECT 
+						BadgeTemplate.id
+					FROM
+						BadgeTemplate
+					WHERE
+						BadgeTemplate.eventId = :eventId
+					AND
+						BadgeTemplate.id IN (:[templateIds])
+				)
+		';
+		
+		$this->execute($sql, $params, 'Delete badge template reg types.');
+	}
+	
+	/**
+	 * Delete the given badge templates.
+	 * @param array $params ['eventId', 'templateIds'] 
+	 */
+	public function deleteTemplates($params) {
+		$this->deleteBadgeTemplateRegTypes($params);	
+		
+		db_BadgeCellManager::getInstance()->deleteBadgeCellsByTemplate($params);
+		
+		$sql = '
+			DELETE FROM
+				BadgeTemplate
+			WHERE
+				eventId = :eventId
+			AND
+				id IN (:[templateIds])
+		';
+		
+		$this->execute($sql, $params, 'Delete badge templates.');
 	}
 }
 
