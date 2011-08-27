@@ -92,7 +92,7 @@ dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Template
 			var eventMenu = new dijit.MenuBar({}, _this.eventMenuNode);
 		
 			var eventLabelItem = new dijit.MenuBarItem({
-				style: {color: "orange", opacity: "1.0", fontWeight: "bold"},
+				style: {color: "darkorange", opacity: "1.0", fontWeight: "bold"},
 				disabled: true,
 				label: _this.eventLabel,
 				onClick: function() {}
@@ -112,7 +112,7 @@ dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Template
 				eventMenu.addChild(new dijit.MenuBarItem({
 					label: "Registration Form",
 					onClick: function() {
-						window.location.href = hhreg.util.contextUrl(""); 
+						window.location.href = hhreg.util.contextUrl("/admin/event/EditEvent?")+dojo.objectToQuery({eventId: _this.eventId}); 
 					}
 				}));
 			}

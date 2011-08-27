@@ -16,15 +16,6 @@ class viewConverter_admin_event_EditEvent extends viewConverter_admin_AdminConve
 		return $body;
 	}
 	
-	protected function getBreadcrumbs() {
-		$bc = new fragment_Breadcrumb(array(
-			'location' => 'Event',
-			'event' => $this->event
-		));
-		
-		return $bc->html();
-	}
-	
 	public function getSaveEvent($properties = array()) {
 		return new fragment_Success();
 	}

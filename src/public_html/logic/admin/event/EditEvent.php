@@ -6,8 +6,14 @@ class logic_admin_event_EditEvent extends logic_Performer
 		parent::__construct();
 	}
 	
-	public function view($id) {
-		return $this->strictFindById(db_EventManager::getInstance(), $id);
+	public function view($params) {
+		$event = $this->strictFindById(db_EventManager::getInstance(), $params['eventId']);
+		
+		return array(
+			'actionMenuEventLabel' => $event['code'],
+			'eventId' => $event['id'],
+			'event' => $event
+		);
 	}
 	
 	public function saveEvent($info) {

@@ -9,14 +9,35 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_event_EditEvent();
 	}
 	
+	private function checkRole($user, $eventId) {
+		$hasRole = model_Role::userHasRole($user, array(
+			model_Role::$SYSTEM_ADMIN,
+			model_Role::$EVENT_ADMIN
+		));	
+		
+		$hasRole = $hasRole || model_Role::userHasRoleForEvent(
+			$user, 
+			array(
+				model_Role::$EVENT_MANAGER
+			), 
+			$eventId
+		);
+		
+		if(!$hasRole) {
+			throw new Exception('User does not have required role.');
+		}
+	}
+	
 	public function view() {
-		$id = RequestUtil::getValue('id', 0);
-		
-		$event = $this->logic->view($id);
-		
-		return $this->converter->getView(array(
-			'event' => $event
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0
 		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->view($params);
+		return $this->converter->getView($info);
 	}
 	
 	public function addPage() {

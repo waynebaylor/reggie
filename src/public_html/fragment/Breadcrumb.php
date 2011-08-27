@@ -192,7 +192,7 @@ _;
 				'href' => '/admin/event/EditEvent',
 				'parameters' => array(
 					'a' => 'view',
-					'id' => $this->config['eventId']
+					'eventId' => $this->config['eventId']
 				)
 			))}
 _;
@@ -383,7 +383,7 @@ _;
 				'href' => '/admin/event/EditEvent',
 				'parameters' => array(
 					'a' => 'view',
-					'id' => $this->config['eventId']
+					'eventId' => $this->config['eventId']
 				)
 			))}	
 _;
@@ -398,7 +398,7 @@ _;
 				'href' => '/admin/event/EditEvent',
 				'parameters' => array(
 					'a' => 'view',
-					'id' => $this->config['eventId']
+					'eventId' => $this->config['eventId']
 				)
 			))}	
 _;
@@ -413,7 +413,7 @@ _;
 				'href' => '/admin/event/EditEvent',
 				'parameters' => array(
 					'a' => 'view',
-					'id' => $this->config['eventId']
+					'eventId' => $this->config['eventId']
 				)
 			))}	
 _;
@@ -436,7 +436,7 @@ _;
 				'href' => '/admin/event/EditEvent',
 				'parameters' => array(
 					'a' => 'view',
-					'id' => $this->config['eventId']
+					'eventId' => $this->config['eventId']
 				)
 			))}	
 _;
