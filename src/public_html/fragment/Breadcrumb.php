@@ -175,7 +175,7 @@ _;
 		return <<<_
 			{$this->HTML->link(array(
 				'label' => 'Main Menu',
-				'href' => '/admin/dashboard/MainMenu',
+				'href' => '/admin/Login',
 				'parameters' => array(
 					'a' => 'view'
 				)

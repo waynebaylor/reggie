@@ -53,7 +53,7 @@ _;
 		if($this->bannerLinkActive) {
 			$banner = $this->HTML->link(array(
 				'label' => $banner,
-				'href' => '/admin/dashboard/MainMenu',
+				'href' => '/admin/Login',
 				'parameters' => array(
 					'a' => 'view'
 				)

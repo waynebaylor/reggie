@@ -22,7 +22,7 @@ class viewConverter_admin_dashboard_ConfirmDeleteEvent extends viewConverter_adm
 	public function getDeleteEvent($properties) {
 		$this->setProperties($properties);
 		
-		return new template_Redirect('/admin/dashboard/MainMenu');
+		return new template_Redirect('/admin/Login');
 	}
 }
 

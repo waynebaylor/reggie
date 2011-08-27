@@ -41,7 +41,7 @@
 			
 			<?php echo $this->HTML->link(array(
 				'label' => 'Cancel',
-				'href' => '/admin/dashboard/MainMenu'
+				'href' => '/admin/Login'
 			)) ?>
 			
 			<div class="sub-divider"></div>
