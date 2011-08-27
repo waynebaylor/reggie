@@ -13,7 +13,25 @@ class action_admin_Login extends action_ValidatorAction
 			return new template_admin_Login();			
 		}
 		else {
-			return new template_Redirect('/admin/dashboard/MainMenu?a=view');
+			if(model_Role::userHasRole($user, array(
+				model_Role::$SYSTEM_ADMIN,
+				model_Role::$EVENT_ADMIN,
+				model_Role::$EVENT_MANAGER,
+				model_Role::$EVENT_REGISTRAR,
+				model_Role::$VIEW_EVENT
+			))) {
+				$url = '/admin/dashboard/Events';
+			}
+			else if(model_Role::userHasRole($user, array(model_Role::$USER_ADMIN))) {
+				$url = '/admin/dashboard/Users';
+			}
+			else {
+				// no roles, so can't do anything.
+				session_destroy();
+				$url = '/admin/Login';
+			}
+			
+			return new template_Redirect($url);
 		}
 	}
 	

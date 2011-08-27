@@ -11,20 +11,26 @@ class template_admin_Login extends template_AdminPage
 	}
 	
 	protected function getContent() {
-		$form = new fragment_XhrTableForm(
-			'/admin/Login', 
-			'login', 
-			$this->getFormRows(),
-			'Submit',
-			'There was a problem. Please try again.');
+		$form = new fragment_XhrTableForm(array(
+			'url' => '/admin/Login', 
+			'action' => 'login', 
+			'rows' => $this->getFormRows(),
+			'buttonText' => 'Submit',
+			'errorText' => 'There was a problem. Please try again.',
+			'redirectUrl' => '/admin/Login'
+		));
 		
 		return <<<_
 			<script type="text/javascript">
-				dojo.require("hhreg.admin.login");
+				dojo.require("hhreg.xhrEditForm");
+				
+				dojo.addOnLoad(function() {
+					document.getElementsByName("email")[0].focus();
+				});				
 			</script>
 			
 			<div id="content">
-				<div class="fragment-login">
+				<div class="fragment-edit">
 					<h3>Please Log In</h3>
 		
 					{$form->html()}
