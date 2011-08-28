@@ -9,22 +9,38 @@ class viewConverter_admin_report_GenerateReport extends viewConverter_admin_Admi
 	protected function body() {
 		$body = parent::body();
 		
-		$body .= $this->getFileContents('page_admin_report_GenerateReport');
+		$fieldSelect = fragment_reportField_HTML::select($this->event, false);
+		
+		$body .= <<<_
+			<script type="text/javascript">
+				dojo.require("hhreg.admin.widget.ReportResultsGrid");
+				
+				dojo.addOnLoad(function() {
+					var fieldSelect = dojo.query("#search-fields select")[0];
+					
+					new hhreg.admin.widget.ReportResultsGrid({
+						reportId: {$this->reportId},
+						eventId: {$this->eventId},
+						isSearch: {$this->isSearch},
+						showSearchLink: {$this->showSearchLink},
+						searchFieldSelectNode: fieldSelect
+					}, dojo.place("<div></div>", dojo.byId("results-grid"), "replace")).startup();
+				});
+			</script>
+			
+			<div id="content">
+				<div class="fragment-edit">
+					<h3>{$this->title}</h3>
+					
+					<div id="results-grid"></div>
+					<div id="search-fields">
+						{$fieldSelect}
+					</div>
+				</div>
+			</div>	
+_;
 		
 		return $body;
-	}
-	
-	protected function getBreadcrumbs() {
-		$info = db_BreadcrumbManager::getInstance()->findGenerateReportCrumbs($this->info['reportId']);
-		
-		$crumbs = new fragment_Breadcrumb(array(
-			'location' => 'GenerateReport', 
-			'eventCode' => $info['code'],
-			'eventId' => $this->info['eventId'],
-			'reportName' => $this->info['reportName']
-		));
-		
-		return $crumbs->html();
 	}
 	
 	public function getCsv($properties) {

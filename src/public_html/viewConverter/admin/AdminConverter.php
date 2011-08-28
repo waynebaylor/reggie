@@ -77,12 +77,16 @@ _;
 	protected function body() {
 		return <<<_
 				<script type="text/javascript">
+					dojo.require("dijit.MenuBar");
+					dojo.require("dijit.MenuBarItem");
+					dojo.require("hhreg.util");
+					dojo.require("hhreg.admin.widget.ActionMenuBar");
+					dojo.require("dijit.form.Textarea");
+					
 					dojo.addOnLoad(function() { 
-						dojo.require("dijit.MenuBar");
-						dojo.require("dijit.MenuBarItem");
-						dojo.require("hhreg.util");
-						dojo.require("hhreg.admin.widget.ActionMenuBar");
-						dojo.require("dijit.form.Textarea");
+						setTimeout(function() {
+							dojo.query(dojo.byId("page-render-time")).orphan();
+						}, 3000);
 						
 						dojo.query("textarea.expanding").forEach(function(item) {
 							var ta = new dijit.form.Textarea({
@@ -112,6 +116,8 @@ _;
 				</div>	
 				
 				<div id="action-menu-bar"></div>
+				
+				<div id="page-render-time" style="position:fixed;bottom:0;background-color:#333;color:#aaa;">Page Rendered in {$this->pageRenderTime()}s</div>
 _;
 	}
 	

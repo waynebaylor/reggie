@@ -4,13 +4,17 @@ class action_admin_Login extends action_ValidatorAction
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->logic = new logic_admin_Login();
+		$this->converter = new viewConverter_admin_Login();
 	}
 	
 	public function view() {
 		$user = SessionUtil::getUser();
 		
 		if(empty($user)) {
-			return new template_admin_Login();			
+			$info = $this->logic->view(array());
+			return $this->converter->getView($info);			
 		}
 		else {
 			if(model_Role::userHasRole($user, array(
@@ -67,6 +71,7 @@ class action_admin_Login extends action_ValidatorAction
 		
 		return $errors;
 	}
+	
 	protected function getValidationConfig() {
 		return array(
 			array(

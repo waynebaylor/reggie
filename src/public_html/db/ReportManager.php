@@ -896,6 +896,10 @@ class db_ReportManager extends db_Manager
 		);
 	}
 	
+	/**
+	 * Delete reports.
+	 * @param array $params ['eventId', 'reportIds']
+	 */
 	public function deleteReports($params) {
 		$sql = '
 			DELETE FROM
@@ -907,6 +911,38 @@ class db_ReportManager extends db_Manager
 		';
 		
 		$this->execute($sql, $params, 'Delete reports.');
+	}
+	
+	/**
+	 * Find report. 
+	 * @param array $params ['eventId', 'id']
+	 */
+	public function findReport($params) {
+		$sql = '
+			SELECT 
+				id,
+				eventId,
+				name,
+				showDateRegistered,
+				showDateCancelled,
+				showCategory,
+				showRegType,
+				showTotalCost,
+				showTotalPaid,
+				showRemainingBalance,
+				isPaymentsToDate,
+				isAllRegToDate,
+				isOptionCount,
+				isRegTypeBreakdown
+			FROM
+				Report
+			WHERE
+				eventId = :eventId
+			AND
+				id = :id
+		';
+		
+		return $this->queryUnique($sql, $params, 'Find report.');
 	}
 }
 

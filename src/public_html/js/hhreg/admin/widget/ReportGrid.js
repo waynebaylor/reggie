@@ -50,12 +50,17 @@ dojo.declare("hhreg.admin.widget.ReportGrid", [dijit._Widget, dijit._Templated],
 				pagination: {}
 			},
 			structure: [
-			    {field: "name", name: "Name", width: "100%"},
+			    {field: "name", name: "Name", width: "100%", get: function(rowIndex, storeItem) {
+			    	if(!storeItem) { return; }
+			    	
+			    	var name = grid.store.getValue(storeItem, "name");
+			    	var htmlUrl = grid.store.getValue(storeItem, "htmlResultsUrl");
+			    	return dojo.string.substitute('<a href="${html}">${name}</a>', {name: name, html: htmlUrl});
+			    }},
 			    {name: "Export", width: "100%", get: function(rowIndex, storeItem) {
 			    	if(!storeItem) { return; }
 			    	
-			    	var reportId = grid.store.getValue(storeItem, "id");
-			    	var csvUrl = hhreg.util.contextUrl("/admin/report/GenerateReport?")+dojo.objectToQuery({a: "csv", id: reportId});
+			    	var csvUrl = grid.store.getValue(storeItem, "csvResultsUrl");
 			    	return dojo.string.substitute('<a target="_blank" href="${csv}">csv</a>', {csv: csvUrl});
 			    }},
 			    {name: "Options", width: "100%", get: function(rowIndex, storeItem) {

@@ -10,7 +10,7 @@
 
 <div id="content">
 
-	<h3>Users</h3>
+	<h3>Manage Users</h3>
 	<div id="user-list"></div>
 	
 </div>

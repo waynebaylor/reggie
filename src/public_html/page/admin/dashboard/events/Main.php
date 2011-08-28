@@ -10,7 +10,7 @@
 
 <div id="content">
 
-	<h3>Events</h3>
+	<h3>Manage Events</h3>
 	<div id="event-list"></div>
 	
 </div>

@@ -9,11 +9,20 @@
 
 dependencies = {
 	action: "release",
-	version: "1.5.0",
+	version: "1.6.1",
 	releaseName: "js",
 	releaseDir: "../../../build-output",
 	cssOptimize: "comments",
-	layers: [{
+	layers: [
+	    {
+	    	name: "reggie_login.js",
+	    	dependencies: [
+	    	    "dijit.MenuBar",
+	    	    "dijit.MenuBarItem",
+	    	    "hhreg.xhrEditForm"
+	    	]
+	    },
+	    {
 			name: "reggie_admin.js",
 			dependencies: [
 				"dijit.Calendar",
@@ -37,7 +46,8 @@ dependencies = {
 				"hhreg.util",
 				"hhreg.validation"
 			]
-	}],
+		}
+	],
 	prefixes: [
 		["dijit", "../dijit"],
 		["dojox", "../dojox"],
