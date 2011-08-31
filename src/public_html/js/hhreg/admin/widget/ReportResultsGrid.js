@@ -36,7 +36,7 @@ dojo.declare("hhreg.admin.widget.ReportResultsGrid", [dijit._Widget, dijit._Temp
 			plugins: {
 				pagination: {}
 			},
-			structure: [{name: "Options", width: "100%"}],
+			structure: [{name: "_", width: "100%"}],
 			get: function(rowIndex, storeItem) {
 				if(!storeItem) { return; }
 				
@@ -47,6 +47,9 @@ dojo.declare("hhreg.admin.widget.ReportResultsGrid", [dijit._Widget, dijit._Temp
 		}, _this.gridNode);
 		
 		grid.startup();
+		
+		// manually show loading message until xhr is completed.
+		grid.showMessage(grid.loadingMessage);
 
 		_this.gridNode = grid.domNode;
 	},
