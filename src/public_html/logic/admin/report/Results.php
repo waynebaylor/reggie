@@ -45,14 +45,6 @@ class logic_admin_report_Results extends logic_Performer
 	private function getBaseInfo($report, $searchTerm, $searchFieldId) {
 		$fieldHeadings = db_ReportManager::getInstance()->findReportFieldHeadings($report['id']);
 		
-		// null regIds indicates that we should return all values.
-		if(empty($searchTerm) || empty($searchFieldId)) {
-			$regIds = null;
-		}
-		else {
-			$regIds = db_ReportManager::getInstance()->findRegIdsMatchingSearch($report['eventId'], $searchTerm, $searchFieldId);
-		}
-		
 		$fieldValues = db_ReportManager::getInstance()->findReportFieldValues($report['id']); 
 		$registrationValues = db_ReportManager::getInstance()->findReportRegistrationValues($report['id']); 
 		$paymentValues = db_ReportManager::getInstance()->findReportPaymentValues($report['id']); 
@@ -60,7 +52,6 @@ class logic_admin_report_Results extends logic_Performer
 		$headings = $this->getHeadings($report, $fieldHeadings); 
 		$values = $this->getValues(array(
 			'report' => $report,
-			'registrationIds' => $regIds,
 			'registrationValues' => $registrationValues,
 			'fieldHeadings' => $fieldHeadings,
 			'fieldValues' => $fieldValues,
@@ -72,8 +63,7 @@ class logic_admin_report_Results extends logic_Performer
 			'reportId' => $report['id'],
 			'reportName' => $report['name'],
 			'headings' => $headings,
-			'rows' => $values,
-			'registrationIds' => $regIds
+			'rows' => $values
 		);
 			
 		return $info;
@@ -117,11 +107,6 @@ class logic_admin_report_Results extends logic_Performer
 		$processedGroupIds = array();
 		
 		foreach($params['registrationValues'] as $reg) {
-			// if we're doing a search, then skip this reg if they're not in the search results.
-			if(isset($params['registrationIds']) && !in_array($reg['registrationId'], $params['registrationIds'])) {
-				continue;
-			}
-			
 			$value = array();
 			// registration values.
 			if($params['report']['showDateRegistered'] === 'T') {

@@ -23,7 +23,8 @@ class logic_admin_report_GenerateReport extends logic_Performer
 	}
 	
 	public function csv($params) {
-		return $this->view($params);
+		$resultsLogic = new logic_admin_report_Results();
+		return $resultsLogic->view($params);
 	}
 }
 
