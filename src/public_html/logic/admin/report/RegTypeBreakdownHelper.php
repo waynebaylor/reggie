@@ -18,9 +18,6 @@ class logic_admin_report_RegTypeBreakdownHelper
 		}
 		
 		$newRows[] = array(
-			'data' => array('', '', '')
-		);
-		$newRows[] = array(
 			'data' => array('Total', '', $totalCount)
 		);
 		

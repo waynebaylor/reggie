@@ -55,21 +55,6 @@ class action_admin_report_GenerateReport extends action_ValidatorAction
 		$info = $this->logic->csv($params);
 		return $this->converter->getCsv($info);
 	}
-	
-	public function search() {
-		$params = RequestUtil::getValues(array(
-			'reportId' => 0,
-			'eventId' => 0,
-			'term' => '',
-			'contactFieldId' => ''
-		));
-		
-		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
-		
-		$info = $this->logic->search($params);
-		return $this->converter->getSearch($info);
-	}
 }
 
 ?>

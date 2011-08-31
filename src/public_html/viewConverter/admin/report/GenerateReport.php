@@ -8,22 +8,17 @@ class viewConverter_admin_report_GenerateReport extends viewConverter_admin_Admi
 	
 	protected function body() {
 		$body = parent::body();
-		
-		$fieldSelect = fragment_reportField_HTML::select($this->event, false);
+
+		$this->title = $this->report['name'];
 		
 		$body .= <<<_
 			<script type="text/javascript">
 				dojo.require("hhreg.admin.widget.ReportResultsGrid");
 				
 				dojo.addOnLoad(function() {
-					var fieldSelect = dojo.query("#search-fields select")[0];
-					
 					new hhreg.admin.widget.ReportResultsGrid({
 						reportId: {$this->reportId},
-						eventId: {$this->eventId},
-						isSearch: {$this->isSearch},
-						showSearchLink: {$this->showSearchLink},
-						searchFieldSelectNode: fieldSelect
+						eventId: {$this->eventId}
 					}, dojo.place("<div></div>", dojo.byId("results-grid"), "replace")).startup();
 				});
 			</script>
@@ -33,9 +28,6 @@ class viewConverter_admin_report_GenerateReport extends viewConverter_admin_Admi
 					<h3>{$this->title}</h3>
 					
 					<div id="results-grid"></div>
-					<div id="search-fields">
-						{$fieldSelect}
-					</div>
 				</div>
 			</div>	
 _;
@@ -68,10 +60,6 @@ _;
 		}
 		
 		return new template_TemplateWrapper($text);		
-	}
-	
-	public function getSearch($properties) {
-		return $this->getView($properties);
 	}
 }
 

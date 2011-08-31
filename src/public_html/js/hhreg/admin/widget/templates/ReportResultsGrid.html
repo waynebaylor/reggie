@@ -1,33 +1,4 @@
 
 <div style="margin:15px;">
-	<span class="link">Search</span>
-	<form method="post" action="" data-dojo-attach-point="searchFormNode">
-		<input type="hidden" name="eventId" value="${eventId}">
-		<input type="hidden" name="reportId" value="${reportId}">
-		
-		<table>
-			<tr>
-				<td class="label">Search For</td>
-				<td>
-					<input type="text" name="term" value="" size="20">
-				</td>		
-			</tr>
-			<tr>
-				<td class="label">Column</td>
-				<td>
-					<div data-dojo-attach-point="columnSelectNode"></div>
-				</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>
-					<div data-dojo-attach-point="searchButtonNode"></div>
-				</td>
-			</tr>
-		</table>
-	</form>
-	
-	<div class="divider"></div>
-	
 	<div data-dojo-attach-point="gridNode"></div>
 </div>

@@ -153,7 +153,7 @@ _;
 			model_Role::$VIEW_EVENT
 		), $eventId);
 		
-		return $showMenu;
+		return $showMenu? 'true' : 'false';
 	}
 
 	private function getShowRegFormMenu($user, $eventId) {
@@ -166,7 +166,7 @@ _;
 			model_Role::$EVENT_MANAGER
 		), $eventId);
 		
-		return $showMenu;
+		return $showMenu? 'true' : 'false';
 	}
 
 	private function getShowBadgeTemplateMenu($user, $eventId) {
@@ -180,7 +180,7 @@ _;
 			model_Role::$EVENT_REGISTRAR
 		), $eventId);
 		
-		return $showMenu;
+		return $showMenu? 'true' : 'false';
 	}
 
 	private function getShowFileMenu($user, $eventId) {
@@ -193,7 +193,7 @@ _;
 			model_Role::$EVENT_MANAGER
 		), $eventId);
 		
-		return $showMenu;
+		return $showMenu? 'true' : 'false';
 	}
 
 	private function getShowPageMenu($user, $eventId) {
@@ -206,7 +206,7 @@ _;
 			model_Role::$EVENT_MANAGER
 		), $eventId);
 		
-		return $showMenu;
+		return $showMenu? 'true' : 'false';
 	}
 } 
 

@@ -17,6 +17,8 @@ class logic_admin_report_Results extends logic_Performer
 		$info = $this->getBaseInfo($report, $searchTerm, $searchFieldId);
 		$info['event'] = db_EventManager::getInstance()->find($info['eventId']);
 		
+		$this->showGroupLinks = true;
+		
 		if($report['isPaymentsToDate'] === 'T') {
 			$info = logic_admin_report_PaymentsToDateHelper::addSpecialInfo($report, $info);
 		}
@@ -25,12 +27,15 @@ class logic_admin_report_Results extends logic_Performer
 		}
 		else if($report['isOptionCount'] === 'T') {
 			$info = logic_admin_report_OptionCountHelper::addSpecialInfo($report, $info);
+			$this->showGroupLinks = false;
 		}
 		else if($report['isRegTypeBreakdown'] === 'T') {
 			$info = logic_admin_report_RegTypeBreakdownHelper::addSpecialInfo($report, $info);
+			$this->showGroupLinks = false;
 		}
 		
 		return array( 
+			'showGroupLinks' => $this->showGroupLinks,
 			'eventId' => $eventId,
 			'reportId' => $reportId,
 			'info' => $info
