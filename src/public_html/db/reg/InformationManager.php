@@ -163,6 +163,64 @@ class db_reg_InformationManager extends db_Manager
 		
 		$this->execute($sql, $params, 'Delete registration information.');
 	}
+	
+	public function searchInformationValues($params) {
+		$sql = "
+			(
+				SELECT
+					Registration.id as registrationId,
+					Registration.regGroupId,
+					Registration_Information.value as value, 
+					ContactField.displayName
+				FROM
+					Registration_Information
+				INNER JOIN
+					Registration
+				ON
+					Registration.id = Registration_Information.registrationId
+				INNER JOIN
+					ContactField
+				ON
+					ContactField.id = Registration_Information.contactFieldId
+				WHERE
+					Registration.eventId = :eventId
+				AND
+					ContactField.formInputId IN (1, 2)
+				AND
+					Registration_Information.value LIKE CONCAT(:searchTerm, '%')
+			)
+			UNION ALL
+			(
+				SELECT
+					Registration.id as registrationId,
+					Registration.regGroupId,
+					ContactField.displayName,
+					ContactFieldOption.displayName as value
+				FROM
+					Registration_Information
+				INNER JOIN
+					Registration
+				ON
+					Registration.id = Registration_Information.registrationId
+				INNER JOIN
+					ContactField
+				ON
+					ContactField.id = Registration_Information.contactFieldId
+				INNER JOIN
+					ContactFieldOption 
+				ON
+					ContactField.id = ContactFieldOption.contactFieldId
+				WHERE
+					Registration.eventId = :eventId
+				AND
+					ContactField.formInputId IN (3, 4, 5)
+				AND
+					ContactFieldOption.displayName LIKE CONCAT(:searchTerm, '%')
+			)
+		";
+		
+		return $this->rawQuery($sql, $params, 'Search registration information.');
+	}
 }
 
 ?>

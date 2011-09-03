@@ -19,7 +19,8 @@ class action_admin_search_Search extends action_ValidatorAction
 			$user, 
 			array(
 				model_Role::$EVENT_MANAGER,
-				model_Role::$EVENT_REGISTRAR
+				model_Role::$EVENT_REGISTRAR,
+				model_Role::$VIEW_EVENT
 			), 
 			$eventId
 		);
@@ -40,6 +41,19 @@ class action_admin_search_Search extends action_ValidatorAction
 		
 		$info = $this->logic->view($params);
 		return $this->converter->getView($info);
+	}
+	
+	public function listResults() {
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'searchTerm' => ''
+		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->listResults($params);
+		return $this->converter->getListResults($info);
 	}
 }
 

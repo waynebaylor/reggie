@@ -5,6 +5,8 @@ dojo.require("dijit.MenuBar");
 dojo.require("dijit.MenuItem");
 dojo.require("dijit.PopupMenuBarItem");
 dojo.require("dijit.MenuBarItem");
+dojo.require("dijit.TooltipDialog");
+dojo.require("hhreg.admin.widget.SearchForm");
 
 dojo.provide("hhreg.admin.widget.ActionMenuBar");
 
@@ -141,23 +143,13 @@ dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Template
 				}));
 			}
 			
-			// -------------------------------------------
-			// create widget for search 
-			dojo.require("dijit.TooltipDialog");
-			dojo.require("hhreg.admin.widget.SearchForm");
-			
 			var searchForm = new hhreg.admin.widget.SearchForm({eventId: _this.eventId}, dojo.place("<div></div>", dojo.body()));
 			searchForm.startup();
 			
-			var searchDialog = new dijit.TooltipDialog({
-				content: searchForm.domNode
-			}, dojo.place("<div></div>", dojo.body()));
-			
 			eventMenu.addChild(new dijit.PopupMenuBarItem({
 				label: "Search",
-				popup: searchDialog
+				popup: new dijit.TooltipDialog({content: searchForm.domNode}, dojo.place("<div></div>", dojo.body()))
 			}));
-			// -------------------------------------------
 			
 			eventMenu.startup();
 			
