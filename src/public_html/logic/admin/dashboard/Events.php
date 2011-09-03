@@ -18,6 +18,10 @@ class logic_admin_dashboard_Events extends logic_Performer
 			'events' => db_EventManager::getInstance()->findInfoByUserId($params['user']['id'])
 		);
 	}
+	
+	public function deleteEvents($params) {
+		
+	}
 }
 
 ?>

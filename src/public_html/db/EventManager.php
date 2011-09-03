@@ -369,7 +369,7 @@ class db_EventManager extends db_Manager
 		// delete user associations.
 		$sql = '
 			DELETE FROM
-				User_Event
+				User_Role
 			WHERE
 				eventId = :eventId
 		';

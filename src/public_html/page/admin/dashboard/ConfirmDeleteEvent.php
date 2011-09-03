@@ -4,13 +4,12 @@
 	dojo.require("dijit.form.Button");
 	
 	dojo.addOnLoad(function() {
-		var eventId = dojo.byId("eventId").value;
-		
 		dojo.query("input[type=button]").forEach(function(item) {
 			new dijit.form.Button({
 				label: "Continue",
+				title: item.title,
 				onClick: function() {
-					document.location = hhreg.util.contextUrl("/admin/dashboard/ConfirmDeleteEvent?a=deleteEvent&id="+eventId);
+					document.forms[0].submit();
 				}
 			}, item);
 		});
@@ -23,7 +22,7 @@
 			<h3>Delete Event</h3>
 			
 			<p>
-				Deleting this event will permanently remove all related data
+				Deleting the event(s) will permanently remove all related data
 				and registrations. 
 			</p>	
 
@@ -31,18 +30,26 @@
 
 			<div class="sub-divider"></div>
 				
-			<?php echo $this->HTML->hidden(array(
-				'id' => 'eventId',
-				'name' => 'id',
-				'value' => $this->eventId
-			)) ?>		
-			
-			<input type="button" title="Yes, delete the event" value="Continue">
-			
-			<?php echo $this->HTML->link(array(
-				'label' => 'Cancel',
-				'href' => '/admin/Login'
-			)) ?>
+			<form method="post" action="<?php echo $this->contextUrl('/admin/dashboard/ConfirmDeleteEvent') ?>">
+				<?php echo $this->HTML->hidden(array(
+					'name' => 'a',
+					'value' => 'deleteEvents'
+				)) ?>
+				
+				<?php foreach($this->eventIds as $eventId): ?>
+					<?php echo $this->HTML->hidden(array(
+						'name' => 'eventIds[]',
+						'value' => $eventId
+					)) ?>		
+				<?php endforeach; ?>
+				
+				<input type="button" title="Yes, delete the event(s)" value="Continue">
+				
+				<?php echo $this->HTML->link(array(
+					'label' => 'Cancel',
+					'href' => '/admin/Login'
+				)) ?>
+			</form>
 			
 			<div class="sub-divider"></div>
 		</div>

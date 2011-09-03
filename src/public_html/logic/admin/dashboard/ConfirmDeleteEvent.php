@@ -6,15 +6,14 @@ class logic_admin_dashboard_ConfirmDeleteEvent extends logic_Performer
 		parent::__construct();
 	}
 	
-	public function view($user, $eventId) {
+	public function view($params) {
 		return array(
-			'user' => $user,
-			'eventId' => $eventId
+			'eventIds' => $params['eventIds']
 		);
 	}
 	
-	public function deleteEvent($user, $eventId) {
-		if(SecurityUtil::hasEventPermission($user, $eventId)) {
+	public function deleteEvents($params) {
+		foreach($params['eventIds'] as $eventId) {
 			db_EventManager::getInstance()->delete($eventId);
 		}
 		

@@ -1,12 +1,14 @@
 
 dojo.require("hhreg.util");
+dojo.require("dojo.cache");
+dojo.require("dojo.string");
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
-dojo.require("dijit.form.Button");
+dojo.require("dojox.form.BusyButton");
 dojo.require("dojox.grid.EnhancedGrid");
+dojo.require("dojox.grid.enhanced.plugins.IndirectSelection");
 dojo.require("dojox.grid.enhanced.plugins.Pagination");
 dojo.require("dojo.data.ItemFileReadStore");
-dojo.require("dojo.string");
 dojo.require("dojo.date.locale");
 
 dojo.provide("hhreg.admin.widget.EventsGrid");
@@ -14,10 +16,16 @@ dojo.provide("hhreg.admin.widget.EventsGrid");
 dojo.declare("hhreg.admin.widget.EventsGrid", [dijit._Widget, dijit._Templated], {
 	storeUrl: hhreg.util.contextUrl("/admin/dashboard/Events?a=listEvents"),
 	baseClass: "hhreg-admin-EventsGrid",
-	templateString: '<div><div data-dojo-attach-point="gridNode"></div></div>',
+	templateString: dojo.cache("hhreg.admin.widget", "templates/EventsGrid.html"),
 	postCreate: function() {
 		this.inherited(arguments);
 		
+		var _this = this;
+		
+		_this.setupGrid();
+		_this.setupDeleteButton();
+	},
+	setupGrid: function() {
 		var _this = this;
 		
 		var grid = new dojox.grid.EnhancedGrid({
@@ -28,6 +36,9 @@ dojo.declare("hhreg.admin.widget.EventsGrid", [dijit._Widget, dijit._Templated],
 			store: new dojo.data.ItemFileReadStore({url: _this.storeUrl, hierarchical: false, clearOnClose: true}),
 			query: {eventId: "*"},
 			plugins: {
+				indirectSelection: {
+					headerSelector: true
+				},
 				pagination: {}
 			},
 			structure: [
@@ -81,5 +92,38 @@ dojo.declare("hhreg.admin.widget.EventsGrid", [dijit._Widget, dijit._Templated],
 		grid.startup();
 		
 		_this.gridNode = grid.domNode;
+	},
+	setupDeleteButton: function() {
+		var _this = this;
+		
+		var b = new dojox.form.BusyButton({
+			label: "Delete Selected Events",
+			timeout: 60*1000,
+			onClick: function() {
+				var grid = dijit.byNode(_this.gridNode);
+				var selectedItems = grid.selection.getSelected();
+
+				// don't do anything if nothing is selected.
+				if(!selectedItems || selectedItems.length == 0) { 
+					b.cancel();
+					return; 
+				}
+				
+				// last chance to change your mind.
+				if(!confirm("Are you sure?")) { 
+					b.cancel();
+					return; 
+				}
+				
+				var eventIds = dojo.map(selectedItems, function(storeItem) {
+					return grid.store.getValue(storeItem, "eventId");
+				});
+				window.location.href = hhreg.util.contextUrl("/admin/dashboard/ConfirmDeleteEvent?")+dojo.objectToQuery({"eventIds[]": eventIds});
+			}
+		}, _this.deleteButtonNode);
+		
+		b.startup();
+		
+		_this.deleteButtonNode = b.domNode;
 	}
 });

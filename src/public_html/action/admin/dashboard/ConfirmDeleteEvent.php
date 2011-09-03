@@ -9,16 +9,47 @@ class action_admin_dashboard_ConfirmDeleteEvent extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_dashboard_ConfirmDeleteEvent();
 	}
 	
-	public function view() {
-		$info = $this->logic->view(SessionUtil::getUser(), RequestUtil::getValue('id', 0));
+	private function checkEventRole($user, $eventId) {
+		$hasRole = model_Role::userHasRole($user, array(
+	   		model_Role::$SYSTEM_ADMIN, 
+	   		model_Role::$EVENT_ADMIN	
+   		));
+   		
+   		$hasRole = $hasRole || model_Role::userHasRoleForEvent($user, array(
+   			model_Role::$EVENT_MANAGER
+   		), $eventId);
 		
+		if(!$hasRole) {
+			throw new Exception('User does not have required role.');	
+		}
+	}
+	
+	public function view() {
+		$params = RequestUtil::getValues(array(
+			'eventIds' => array()
+		));
+		
+		$user = SessionUtil::getUser();
+		foreach($params['eventIds'] as $eventId) {
+			$this->checkEventRole($user, $eventId);
+		}
+		
+		$info = $this->logic->view($params);
 		return $this->converter->getView($info);
 	}
 	
-	public function deleteEvent() {
-		$info = $this->logic->deleteEvent(SessionUtil::getUser(), RequestUtil::getValue('id', 0));
+	public function deleteEvents() {
+		$params = RequestUtil::getValues(array(
+			'eventIds' => array()
+		));
 		
-		return $this->converter->getDeleteEvent($info);
+		$user = SessionUtil::getUser();
+		foreach($params['eventIds'] as $eventId) {
+			$this->checkEventRole($user, $eventId);
+		}
+		
+		$info = $this->logic->deleteEvents($params);
+		return $this->converter->getDeleteEvents($info);
 	}
 }
 

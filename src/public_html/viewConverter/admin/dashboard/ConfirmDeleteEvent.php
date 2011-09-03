@@ -15,11 +15,7 @@ class viewConverter_admin_dashboard_ConfirmDeleteEvent extends viewConverter_adm
 		return $body;
 	}
 	
-	protected function getBreadcrumbs() {
-		return '';
-	}
-	
-	public function getDeleteEvent($properties) {
+	public function getDeleteEvents($properties) {
 		$this->setProperties($properties);
 		
 		return new template_Redirect('/admin/Login');
