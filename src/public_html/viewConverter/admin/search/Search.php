@@ -27,6 +27,12 @@ class viewConverter_admin_search_Search extends viewConverter_admin_AdminConvert
 				<div class="fragment-edit">
 					<h3>{$this->title}</h3>
 					
+					<div style="font-style:italic;">
+						Showing values starting with: "<span style="font-weight:bold;">{$this->searchTerm}</span>"
+					</div>
+					
+					<div class="sub-divider"></div>
+					
 					<div id="results-grid"></div>
 				</div>
 			</div>
