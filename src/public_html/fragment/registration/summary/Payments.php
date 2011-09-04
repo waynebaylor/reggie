@@ -44,7 +44,7 @@ class fragment_registration_summary_Payments extends template_Template
 				$type = "{$payment['cardType']} {$payment['cardSuffix']}";
 				// admin's can see the transaction id on the group summary page, 
 				// but it shouldn't show on the user confirmation page.
-				if(SecurityUtil::isAdmin(SessionUtil::getUser())) {
+				if(SessionUtil::getUser()) {
 					$type .= "<br>Transaction ID: {$payment['transactionId']}";
 				}
 			}
