@@ -10,8 +10,10 @@
 
 <div id="content">
 
-	<h3>Manage Users</h3>
-	<div id="user-list"></div>
+	<div class="fragment-edit">
+		<h3>Manage Users</h3>
+		<div id="user-list"></div>
+	</div>
 	
 </div>
 

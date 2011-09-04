@@ -10,8 +10,10 @@
 
 <div id="content">
 
-	<h3>Manage Events</h3>
-	<div id="event-list"></div>
+	<div class="fragment-edit">
+		<h3>Manage Events</h3>
+		<div id="event-list"></div>
+	</div>
 	
 </div>
 

@@ -28,6 +28,8 @@ dojo.declare("hhreg.admin.widget.EventsGrid", [dijit._Widget, dijit._Templated],
 	setupGrid: function() {
 		var _this = this;
 		
+		var disabledRowIndexes = [];
+		
 		var grid = new dojox.grid.EnhancedGrid({
 			initialWidth: "100%",
 			autoHeight: true,
@@ -36,37 +38,35 @@ dojo.declare("hhreg.admin.widget.EventsGrid", [dijit._Widget, dijit._Templated],
 			store: new dojo.data.ItemFileReadStore({url: _this.storeUrl, hierarchical: false, clearOnClose: true}),
 			query: {eventId: "*"},
 			plugins: {
-				indirectSelection: {
-					headerSelector: true
-				},
+				indirectSelection: {},
 				pagination: {}
 			},
 			structure: [
 			    {field: "title", name: "Title", width: "100%"},
 			    {field: "code", name: "Code", width: "100%"},
 			    {name: "Status", width: "100%", get: function(rowIndex, storeItem) {
-			    	if(storeItem) {
-			    		var open = dojo.date.locale.parse(
-		    				grid.store.getValue(storeItem, "regOpen"), 
-		    				{datePattern: "yyyy-MM-dd", timePattern: "HH:mm"}
-			    		);
-			    		var closed = dojo.date.locale.parse(
-			    			grid.store.getValue(storeItem, "regClosed"),
-			    			{datePattern: "yyyy-MM-dd", timePattern: "HH:mm"}
-			    		);
-			    		
-			    		var current = new Date();
-			    		
-			    		if(current > open && current < closed) {
-			    			return "Active";
-			    		}
-			    		else if(current < open) {
-			    			return "Upcoming";
-			    		}
-			    		else if(current > closed) {
-			    			return '<span style="color:#aaa;">Inactive</span>';
-			    		}
-			    	}
+			    	if(!storeItem) { return; }
+			    	
+		    		var open = dojo.date.locale.parse(
+	    				grid.store.getValue(storeItem, "regOpen"), 
+	    				{datePattern: "yyyy-MM-dd", timePattern: "HH:mm"}
+		    		);
+		    		var closed = dojo.date.locale.parse(
+		    			grid.store.getValue(storeItem, "regClosed"),
+		    			{datePattern: "yyyy-MM-dd", timePattern: "HH:mm"}
+		    		);
+		    		
+		    		var current = new Date();
+		    		
+		    		if(current > open && current < closed) {
+		    			return "Active";
+		    		}
+		    		else if(current < open) {
+		    			return "Upcoming";
+		    		}
+		    		else if(current > closed) {
+		    			return '<span style="color:#aaa;">Inactive</span>';
+		    		}
 			    }},
 			    {field: "regOpen", name: "Registration Open", width: "100%", formatter: function(value) {
 			    	return value && value.replace(/00:00/, "");
@@ -75,12 +75,12 @@ dojo.declare("hhreg.admin.widget.EventsGrid", [dijit._Widget, dijit._Templated],
 		    		return value && value.replace(/00:00/, "");
 			    }},
 			    {field: "manageUrl", name: "Options", width: "100%", get: function(rowIndex, storeItem) {
-			    	if(storeItem) {
-				    	return dojo.string.substitute(
-				    			'<a href="${url}">Manage</a>', 
-				    			{url: grid.store.getValue(storeItem, "manageUrl")}
-				    	);
-			    	}
+			    	if(!storeItem) { return; }
+			    		
+			    	return dojo.string.substitute(
+			    			'<a href="${url}">Manage</a>', 
+			    			{url: grid.store.getValue(storeItem, "manageUrl")}
+			    	);
 			    }}
 			],
 			canSort: function(columnIndex) {
@@ -90,6 +90,15 @@ dojo.declare("hhreg.admin.widget.EventsGrid", [dijit._Widget, dijit._Templated],
 		}, _this.gridNode);
 		
 		grid.startup();
+		
+		// set the disabled state on the appropriate rows.
+		grid.store.fetch({onItem: function(storeItem) {
+	    	var canDelete = grid.store.getValue(storeItem, "canDelete", false);
+	    	if(!canDelete) { 
+	    		var rowIndex = grid.getItemIndex(storeItem);
+				grid.rowSelectCell.setDisabled(rowIndex, true);
+	    	}
+		}});
 		
 		_this.gridNode = grid.domNode;
 	},
