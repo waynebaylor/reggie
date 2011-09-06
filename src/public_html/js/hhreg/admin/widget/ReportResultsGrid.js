@@ -47,14 +47,14 @@ dojo.declare("hhreg.admin.widget.ReportResultsGrid", [dijit._Widget, dijit._Temp
 		}, _this.gridNode);
 		
 		grid.startup();
-		
+			
 		// manually show loading message until xhr is completed.
 		grid.showMessage(grid.loadingMessage);
 
 		_this.gridNode = grid.domNode;
 	},
 	setupData: function() {
-		var _this = this;
+		var _this = this; 
 		
 		var dataRequest = dojo.xhrGet({
 			url: _this.storeUrl,
@@ -63,30 +63,42 @@ dojo.declare("hhreg.admin.widget.ReportResultsGrid", [dijit._Widget, dijit._Temp
 		
 		dataRequest.addCallback(function(results) {
 			var grid = dijit.byNode(_this.gridNode);
-			
+	
 			var s = [];
 			dojo.forEach(results.headings, function(heading) {
-				s.push({name: heading, width: "100%"});
+				s.push({
+					name: heading, 
+					width: "100%"
+				});
 			});
 			
-			if(results.showGroupLinks) {
+			if(results.showDetailsLink || results.showSummaryLink) {
 				s.push({
 					name: "Options",
 					width: "100%",
 					get: function(rowIndex, storeItem) {
 						if(!storeItem) { return; }
 						
-						return dojo.string.substitute('<a href="${detailsUrl}">Details</a> <a href="${summaryUrl}">Summary</a>', {
-							detailsUrl: grid.store.getValue(storeItem, "detailsUrl"),
-							summaryUrl: grid.store.getValue(storeItem, "summaryUrl")
-						});
+						var links = "";
+						
+						if(results.showDetailsLink) {
+							links += dojo.string.substitute('<a href="${detailsUrl}">Details</a> ', {detailsUrl: grid.store.getValue(storeItem, "detailsUrl")});
+						}
+						
+						if(results.showSummaryLink) {
+							links += dojo.string.substitute('<a href="${summaryUrl}">Summary</a>', {summaryUrl: grid.store.getValue(storeItem, "summaryUrl")});
+						}
+						
+						return links;
 					}
 				});
 			}
 			
 			grid.setStructure(s);
-			
+					
+			grid.store.data = {"identifier":"index", "items":[]}; // this prevents store from printing warning to console.
 			grid.store.close();
+
 			grid.setStore(new dojo.data.ItemFileReadStore({data: results, hierarchical: false, clearOnClose: true}));
 		});
 	}

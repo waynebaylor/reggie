@@ -17,7 +17,8 @@ class logic_admin_report_Results extends logic_Performer
 		$info = $this->getBaseInfo($report, $searchTerm, $searchFieldId);
 		$info['event'] = db_EventManager::getInstance()->find($info['eventId']);
 		
-		$this->showGroupLinks = true;
+		$this->showDetailsLink = $this->canSeeDetailsLink($params['user'], $eventId);
+		$this->showSummaryLink = $this->canSeeSummaryLink($params['user'], $eventId);
 		
 		if($report['isPaymentsToDate'] === 'T') {
 			$info = logic_admin_report_PaymentsToDateHelper::addSpecialInfo($report, $info);
@@ -27,15 +28,18 @@ class logic_admin_report_Results extends logic_Performer
 		}
 		else if($report['isOptionCount'] === 'T') {
 			$info = logic_admin_report_OptionCountHelper::addSpecialInfo($report, $info);
-			$this->showGroupLinks = false;
+			$this->showDetailsLink = false;
+			$this->showSummaryLink = false;
 		}
 		else if($report['isRegTypeBreakdown'] === 'T') {
 			$info = logic_admin_report_RegTypeBreakdownHelper::addSpecialInfo($report, $info);
-			$this->showGroupLinks = false;
+			$this->showDetailsLink = false;
+			$this->showSummaryLink = false;
 		}
 		
 		return array( 
-			'showGroupLinks' => $this->showGroupLinks,
+			'showDetailsLink' => $this->showDetailsLink,
+			'showSummaryLink' => $this->showSummaryLink,
 			'eventId' => $eventId,
 			'reportId' => $reportId,
 			'info' => $info
@@ -152,6 +156,24 @@ class logic_admin_report_Results extends logic_Performer
 		}
 		
 		return $values;
+	}
+	
+	private function canSeeDetailsLink($user, $eventId) {
+		$hasRole =  model_Role::userHasRole($user, array(
+			model_Role::$SYSTEM_ADMIN, 
+			model_Role::$EVENT_ADMIN
+		));
+		
+		$hasRole = $hasRole || model_Role::userHasRoleForEvent($user, array(
+			model_Role::$EVENT_MANAGER, 
+			model_Role::$EVENT_REGISTRAR
+		), $eventId);
+		
+		return $hasRole;
+	}
+	
+	private function canSeeSummaryLink($user, $eventId) {
+		return $this->getShowDetailsLink($user, $eventId) || model_Role::userHasRoleForEvent($user, model_Role::$VIEW_EVENT, $eventId);
 	}
 }
 
