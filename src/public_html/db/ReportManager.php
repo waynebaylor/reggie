@@ -308,8 +308,10 @@ class db_ReportManager extends db_Manager
 	
 	/**
 	 * field values [(field id) -> (value | [values])].
+	 * 
+	 * @param array $params ['reportId', 'registrationId']
 	 */
-	private function getReportFieldValuesByRegistrationId($registrationId) { 
+	private function getReportFieldValuesByRegistrationId($params) { 
 		// single input fields (text, textarea).
 		$sql = '
 			SELECT 
@@ -328,14 +330,12 @@ class db_ReportManager extends db_Manager
 			WHERE
 				Registration_Information.registrationId = :registrationId
 			AND
+				Report_ContactField.reportId = :reportId
+			AND
 				ContactField.formInputId 
 			IN
 				(1, 2)
 		';
-		
-		$params = array(
-			'registrationId' => $registrationId
-		);
 		
 		$results = $this->rawQuery($sql, $params, 'Find report field values.');
 		
@@ -356,10 +356,6 @@ class db_ReportManager extends db_Manager
 			ON
 				Registration_Information.contactFieldId = ContactField.id
 			INNER JOIN
-				Registration
-			ON
-				Registration_Information.registrationId = Registration.id
-			INNER JOIN
 				Report_ContactField
 			ON
 				Report_ContactField.contactFieldId = ContactField.id
@@ -368,7 +364,9 @@ class db_ReportManager extends db_Manager
 			ON
 				Registration_Information.value = ContactFieldOption.id
 			WHERE
-				Registration.id = :registrationId
+				Registration_Information.registrationId = :registrationId
+			AND
+				Report_ContactField.reportId = :reportId
 			AND
 				ContactField.formInputId 
 			IN
@@ -613,7 +611,7 @@ class db_ReportManager extends db_Manager
 		$values = array();
 		foreach($regIds as $regId) { 
 			$regId = $regId['id']; 
-			$values[$regId] = $this->getReportFieldValuesByRegistrationId($regId);
+			$values[$regId] = $this->getReportFieldValuesByRegistrationId(array('reportId' => $reportId, 'registrationId' => $regId));
 		}
 		
 		return $values;

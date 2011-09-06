@@ -463,8 +463,8 @@ _;
 				'label' => "Report Results ({$this->config['reportName']})",
 				'href' => '/admin/report/GenerateReport',
 				'parameters' => array(
-					'a' => 'view',
-					'id' => $this->config['reportId']
+					'eventId' => $this->config['eventId'],
+					'reportId' => $this->config['reportId']
 				)
 			))}	
 _;
@@ -494,7 +494,8 @@ _;
 				'label' => "Report Results ({$this->config['reportName']})",
 				'href' => '/admin/report/GenerateReport',
 				'parameters' => array(
-					'id' => $this->config['reportId']
+					'eventId' => $this->config['eventId'],
+					'reportId' => $this->config['reportId']
 				)
 			))}
 _;

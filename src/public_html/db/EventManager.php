@@ -468,7 +468,7 @@ class db_EventManager extends db_Manager
 		}
 		else {
 			$sql = '
-				SELECT
+				SELECT DISTINCT
 					Event.id,
 					Event.code,
 					Event.displayName,

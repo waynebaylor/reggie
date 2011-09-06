@@ -173,7 +173,7 @@ class logic_admin_report_Results extends logic_Performer
 	}
 	
 	private function canSeeSummaryLink($user, $eventId) {
-		return $this->getShowDetailsLink($user, $eventId) || model_Role::userHasRoleForEvent($user, model_Role::$VIEW_EVENT, $eventId);
+		return $this->canSeeDetailsLink($user, $eventId) || model_Role::userHasRoleForEvent($user, model_Role::$VIEW_EVENT, $eventId);
 	}
 }
 
