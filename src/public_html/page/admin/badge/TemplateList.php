@@ -40,7 +40,8 @@
 					'label' => 'Edit',
 					'href' => '/admin/badge/EditBadgeTemplate',
 					'parameters' => array(
-						'id' => $template['id']
+						'id' => $template['id'],
+						'eventId' => $this->eventId
 					),
 					'title' => 'Edit Badge Template'
 				)) ?>

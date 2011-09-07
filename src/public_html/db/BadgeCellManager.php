@@ -90,7 +90,7 @@ class db_BadgeCellManager extends db_OrderableManager
 		return $this->lastInsertId();
 	}
 	
-	public function saveBadgeCell($data) {
+	public function saveBadgeCell($data) { 
 		$id = $data['id'];
 		unset($data['id']);
 		

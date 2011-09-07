@@ -20,7 +20,8 @@
 							'parameters' => array(
 								'a' => 'view',
 								'id' => $this->template['id'],
-								'selectedCellId' => $cell['id']
+								'selectedCellId' => $cell['id'],
+								'eventId' => $this->eventId
 							),
 							'fragment' => 'template-layout'
 						)) ?>
@@ -32,7 +33,8 @@
 						'href' => '/admin/badge/EditBadgeTemplate',
 						'parameters' => array(
 							'a' => 'removeBadgeCell',
-							'id' => $cell['id']
+							'id' => $cell['id'],
+							'eventId' => $this->eventId
 						),
 						'class' => 'remove-cell-link'
 					)) ?>

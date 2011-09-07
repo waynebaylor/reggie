@@ -20,6 +20,7 @@ dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Template
 	showBadgeTemplates: false,
 	showFiles: false,
 	showPages: false,
+	showCreateReg: false,
 	eventId: 0,
 	baseClass: "reggie-admin-ActionMenuBar",
 	templateString: dojo.cache("hhreg.admin.widget", "templates/ActionMenuBar.html"),
@@ -95,7 +96,7 @@ dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Template
 		
 			var eventLabelItem = new dijit.MenuBarItem({
 				style: {color: "darkorange", opacity: "1.0", fontWeight: "bold"},
-				disabled: true,
+				disabled: false,
 				label: _this.eventLabel,
 				onClick: function() {}
 			});
@@ -139,6 +140,16 @@ dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Template
 					label: "Pages",
 					onClick: function() {
 						window.location.href = hhreg.util.contextUrl("/admin/staticPage/PageList?")+dojo.objectToQuery({eventId: _this.eventId}); 
+					}
+				}));
+			}
+			if(_this.showCreateReg) {
+				eventMenu.addChild(new dijit.MenuBarItem({
+					label: "Create Registration",
+					onClick: function() {
+						// TODO show CreateRegistrationForm or something. 
+						// this could be easier if you implemented the ability
+						// to change registrant's category.
 					}
 				}));
 			}

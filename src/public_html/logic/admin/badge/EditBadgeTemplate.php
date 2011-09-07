@@ -64,14 +64,12 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		
 		return $this->view(array(
 			'id' => $badgeTemplate['id'],
+			'eventId' => $badgeTemplate['eventId'],
 			'selectedCellId' => 0
 		));
 	}
 	
 	public function saveTemplate($params) {
-		$params['type'] = $params['badgeTemplateType'];
-		unset($params['badgeTemplateType']);
-		
 		$badgeTemplate = $this->strictFindById(db_BadgeTemplateManager::getInstance(), $params['id']);
 		db_BadgeTemplateManager::getInstance()->save($params);
 		
@@ -92,6 +90,7 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	
 	public function saveCellDetails($params) {
 		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $params['id']);
+		$badgeTemplate = $this->strictFindById(db_BadgeTemplateManager::getInstance(), $cell['badgeTemplateId']);
 		
 		// these columns are not used for barcodes, so no need to ever update them. 
 		if($cell['hasBarcode'] === 'T') {
@@ -101,11 +100,16 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 			unset($params['horizontalAlign']);	
 		}
 		
+		// will be used when query/update security is put in place.
+		$eventId = $params['eventId'];
+		unset($params['eventId']); 
+		
 		db_BadgeCellManager::getInstance()->saveBadgeCell($params);
 		
 		return $this->view(array(
 			'id' => $cell['badgeTemplateId'],
-			'selectedCellId' => $cell['id']
+			'selectedCellId' => $cell['id'],
+			'eventId' => $eventId
 		));
 	}
 	
@@ -135,7 +139,8 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		
 		return $this->view(array(
 			'id' => $cell['badgeTemplateId'],
-			'selectedCellId' => $cell['id']
+			'selectedCellId' => $cell['id'],
+			'eventId' => $params['eventId']
 		));
 	}
 	
@@ -147,7 +152,8 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		
 		return $this->view(array(
 			'id' => $cell['badgeTemplateId'],
-			'selectedCellId' => $cell['id']
+			'selectedCellId' => $cell['id'],
+			'eventId' => $params['eventId']
 		));
 	}
 	
@@ -159,7 +165,8 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		
 		return $this->view(array(
 			'id' => $cell['badgeTemplateId'],
-			'selectedCellId' => $cell['id']
+			'selectedCellId' => $cell['id'],
+			'eventId' => $params['eventId']
 		));
 	}
 	
@@ -175,7 +182,8 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		
 		return $this->view(array(
 			'id' => $cell['badgeTemplateId'],
-			'selectedCellId' => $cell['id']
+			'selectedCellId' => $cell['id'],
+			'eventId' => $params['eventId']
 		));
 	}
 	
@@ -183,9 +191,12 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $params['id']);
 		db_BadgeCellManager::getInstance()->deleteBadgeCell($cell['id']);
 		
+		$badgeTemplate = db_BadgeTemplateManager::getInstance()->find($cell['badgeTemplateId']);
+		
 		return $this->view(array(
 			'id' => $cell['badgeTemplateId'],
-			'selectedCellId' => 0
+			'selectedCellId' => 0,
+			'eventId' => $badgeTemplate['eventId']
 		));
 	}
 }

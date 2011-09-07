@@ -25,7 +25,8 @@
 						'parameters' => array(
 							'a' => 'removeCellContent',
 							'cellId' => $this->selectedCell['id'],
-							'id' => $barcodeField['id']
+							'id' => $barcodeField['id'],
+							'eventId' => $this->eventId
 						),
 						'class' => 'remove'
 					)) ?>
@@ -50,7 +51,8 @@
 					<?php echo $this->arrows(array(
 						'href' => '/admin/badge/EditBadgeTemplate',
 						'parameters' => array(
-							'cellId' => $this->selectedCell['id']
+							'cellId' => $this->selectedCell['id'],
+							'eventId' => $this->eventId
 						),
 						'up' => array(
 							'a' => 'moveCellContentUp',
@@ -80,7 +82,8 @@
 						'parameters' => array(
 							'a' => 'removeCellContent',
 							'cellId' => $this->selectedCell['id'],
-							'id' => $content['id']
+							'id' => $content['id'],
+							'eventId' => $this->eventId
 						),
 						'class' => 'remove'
 					)) ?>

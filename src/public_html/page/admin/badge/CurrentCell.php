@@ -16,6 +16,10 @@
 								'value' => $this->selectedCell['xCoord'],
 								'size' => 5
 							)) ?>
+							<?php echo $this->HTML->hidden(array(
+								'name' => 'eventId',
+								'value' => $this->eventId
+							)) ?>
 							in
 						</td>
 					</tr>

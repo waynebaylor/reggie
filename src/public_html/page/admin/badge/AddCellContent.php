@@ -7,6 +7,10 @@
 			'name' => 'cellId',
 			'value' => $this->selectedCell['id']
 		)) ?>
+		<?php echo $this->HTML->hidden(array(
+			'name' => 'eventId',
+			'value' => $this->eventId
+		)) ?>
 		<?php echo fragment_contactField_HTML::selectByEventId($this->eventId) ?>
 	</td>
 </tr>
@@ -17,6 +21,10 @@
 		<?php echo $this->HTML->hidden(array(
 			'name' => 'cellId',
 			'value' => $this->selectedCell['id']
+		)) ?>
+		<?php echo $this->HTML->hidden(array(
+			'name' => 'eventId',
+			'value' => $this->eventId
 		)) ?>
 		<?php echo $this->HTML->radios(array(
 			'name' => 'contentType',

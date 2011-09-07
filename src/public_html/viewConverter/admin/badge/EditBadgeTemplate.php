@@ -82,7 +82,7 @@ _;
 	public function getRemoveBadgeCell($properties) {
 		$this->setProperties($properties);
 		
-		return new template_Redirect("/admin/badge/EditBadgeTemplate?id={$this->template['id']}#template-layout");
+		return new template_Redirect("/admin/badge/EditBadgeTemplate?id={$this->template['id']}&eventId={$this->eventId}#template-layout");
 	}
 }
 

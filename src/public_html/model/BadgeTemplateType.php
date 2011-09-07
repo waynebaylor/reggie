@@ -7,6 +7,11 @@ class model_BadgeTemplateType
 			'name' => '3 x 8 Single',
 			'code' => 'ThreeByFourDouble',
 			'className' => 'badgeTemplateType_ThreeByFourDouble'
+		),
+		array(
+			'name' => '3 x 4',
+			'code' => 'ThreeByFour',
+			'className' => 'badgeTemplateType_ThreeByFour'
 		)
 	);
 		

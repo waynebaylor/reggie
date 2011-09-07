@@ -6,6 +6,10 @@
 			'name' => 'badgeTemplateId',
 			'value' => $this->template['id']
 		)) ?>
+		<?php echo $this->HTML->hidden(array(
+			'name' => 'eventId',
+			'value' => $this->template['eventId']
+		)) ?>
 		<?php echo $this->HTML->radios(array(
 			'name' => 'contentType',
 			'items' => array(

@@ -3,7 +3,7 @@
 class fragment_badge_HTML
 {
 	public static function selectByEventId($eventId, $config = array()) {
-		$config['name'] = ArrayUtil::getValue($config, 'name', 'badgeTemplateType');		
+		$config['name'] = ArrayUtil::getValue($config, 'name', 'type');		
 		$config['value'] = ArrayUtil::getValue($config, 'value', '');
 		
 		$items = array();

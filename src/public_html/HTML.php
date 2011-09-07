@@ -215,15 +215,20 @@ _;
 	}
 	
 	public function select($config) {
+		// if no value is given, then we don't want any options selected.
+		if(isset($config['value']) && is_array($config['value'])) {
+			$value = $config['value'];
+		}
+		else {
+			$value = ArrayUtil::getValue($config, 'value', 'a value that does not match anything normal');
+		}
+		unset($config['value']);
+		
 		$attrs = self::getAttributeString($config);
 		
 		$html = <<<_
 			<select {$attrs}>	
 _;
-		// if no value is given, then we don't want any options selected. 
-		if(!isset($config['value'])) {
-			$config['value'] = 'a value that does not match anything normal'; 	
-		}
 		
 		foreach($config['items'] as $item) {
 			// optgroup.
@@ -233,9 +238,9 @@ _;
 _;
 				
 				foreach($item['value'] as $opt) {
-					$checked = is_array($config['value'])? 
-						in_array($opt['value'], $config['value']) : 
-						$config['value'] === $opt['value'];
+					$checked = is_array($value)? 
+						in_array($opt['value'], $value) : 
+						$value === $opt['value'];
 			
 					$checked = $checked? 'selected="selected"' : '';
 					
@@ -247,9 +252,9 @@ _;
 				$html .= '</optgroup>';
 			}
 			else {
-				$checked = is_array($config['value'])? 
-					in_array($item['value'], $config['value']) : 
-					$config['value'] === $item['value'];
+				$checked = is_array($value)? 
+					in_array($item['value'], $value) : 
+					$value === $item['value'];
 				
 				$checked = $checked? 'selected="selected"' : '';
 				

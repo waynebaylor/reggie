@@ -49,7 +49,11 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 			'contentType' => 'text',
 			'templateField' => '',
 			'text' => '',
+			'eventId' => 0
 		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->addBadgeCell($params); 
 		return $this->converter->getAddBadgeCell($info);
@@ -60,7 +64,7 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 			'id' => 0,
 			'eventId' => 0,
 			'name' => '',
-			'badgeTemplateType' => ''
+			'type' => ''
 		));
 		$params['regTypeIds'] = RequestUtil::getValueAsArray('regTypeIds', array(-1));
 		
@@ -89,10 +93,14 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 			'width' => 4,
 			'font' => 'arial',
 			'fontSize' => 12,
-			'horizontalAlign' => 'C'
+			'horizontalAlign' => 'C',
+			'eventId' => 0
 		));
 		
-		$info = $this->logic->saveCellDetails($params);
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->saveCellDetails($params); 
 		return $this->converter->getSaveCellDetails($info);
 	}
 	
@@ -102,8 +110,12 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 			'contentType' => 'text',
 			'contactFieldId' => 0,
 			'templateField' => 0,
-			'text' => ''
+			'text' => '',
+			'eventId' => 0
 		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->addCellContent($params);
 		return $this->converter->getAddCellContent($info);
@@ -111,8 +123,12 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 	
 	public function moveCellContentUp() {
 		$params = RequestUtil::getValues(array(
-			'id' => 0	
+			'id' => 0,
+			'eventId' => 0
 		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->moveCellContentUp($params);
 		return $this->converter->getMoveCellContentUp($info);
@@ -120,8 +136,12 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 	
 	public function moveCellContentDown() {
 		$params = RequestUtil::getValues(array(
-			'id' => 0		
+			'id' => 0,
+			'eventId' => 0
 		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->moveCellContentDown($params);
 		return $this->converter->getMoveCellContentDown($info);
@@ -130,8 +150,12 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 	public function removeCellContent() {
 		$params = RequestUtil::getValues(array(
 			'cellId' => 0,
-			'id' => 0
+			'id' => 0,
+			'eventId' => 0
 		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->removeCellContent($params);
 		return $this->converter->getRemoveCellContent($info);
@@ -139,8 +163,12 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 	
 	public function removeBadgeCell() {
 		$params = RequestUtil::getValues(array(
-			'id' => 0
+			'id' => 0,
+			'eventId' => 0
 		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->removeBadgeCell($params);
 		return $this->converter->getRemoveBadgeCell($info);
