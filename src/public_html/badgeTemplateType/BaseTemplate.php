@@ -13,8 +13,6 @@ abstract class badgeTemplateType_BaseTemplate
 		$this->sideMargin = 0;
 	}
 	
-	public abstract function getPdfSingle($config);
-	
 	public function getHtml($template, $selectedCellId) {
 		$cellsHtml = '';
 		$summaries = page_admin_badge_Helper::badgeCellSummaries($template, $selectedCellId);
@@ -72,6 +70,35 @@ _;
 				{$cellsHtml}
 			</div>
 _;
+	}
+	
+	public function getPdfSingle($config) {
+		$user = $config['user'];
+		$event = $config['event'];
+		$data = $config['data'];
+		
+		$margins = $this->getMargins(false, $config['shiftDown'], $config['shiftRight']);
+		
+		$pdf = $this->createTcpdf(array(
+			'orientation' => 'L',
+			'creator' => $user['email'],
+			'author' => $user['email'],
+			'title' => $event['code'],
+			'subject' => $event['code'],
+			'sideMargin' => $margins['side'],
+			'topMargin' => $margins['top']
+		));
+
+		$pdf->AddPage();
+		
+		$position = array('x' => (11.0-$this->badgeWidth), 'y' => 2.75);
+		
+		$this->writeData($pdf, $position, $margins, $data);
+		
+		return array(
+			'pdf' => $pdf,
+			'name' => 'single_badge'
+		);
 	}
 	
 	protected function createTcpdf($config) {

@@ -11,9 +11,12 @@ class viewConverter_admin_badge_BadgeTemplates extends viewConverter_admin_Admin
 		$body = parent::body();
 		$body .= <<<_
 			<script type="text/javascript">
+				dojo.require("hhreg.admin.printBadges");
 				dojo.require("hhreg.admin.widget.BadgeTemplateGrid");
 				
 				dojo.addOnLoad(function() {
+					hhreg.admin.printBadges.setup();
+					
 					new hhreg.admin.widget.BadgeTemplateGrid({
 						eventId: {$this->eventId}
 					}, dojo.place("<div></div>", dojo.byId("badge-template-grid"), "replace")).startup();
@@ -23,6 +26,26 @@ class viewConverter_admin_badge_BadgeTemplates extends viewConverter_admin_Admin
 			<div id="content">
 				<div class="fragment-edit">
 					<h3>{$this->title}</h3>
+					
+					<div style="padding-left:15px;">
+						{$this->HTML->link(array(
+							'label' => 'Create New Template',
+							'href' => '/admin/badge/CreateBadgeTemplate',
+							'parameters' => array(
+								'eventId' => $this->eventId
+							)
+						))}
+						&nbsp;&nbsp;
+						<span id="print-badges-link" class="link">Print Badges</span>
+						<div id="print-badges-form" class="hide">
+							{$this->tableForm(
+								'/admin/badge/PrintBadge',
+								'batchCount',
+								$this->getFileContents('page_admin_badge_PrintBadgeForm'),
+								'Print Badges'
+							)}
+						</div>
+					</div>
 					
 					<div id="badge-template-grid"></div>
 				</div>

@@ -22,19 +22,9 @@ dojo.declare("hhreg.admin.widget.BadgeTemplateGrid", [dijit._Widget, dijit._Temp
 		
 		_this.storeUrl = _this.storeUrl+"?"+dojo.objectToQuery({a: "listTemplates", eventId: _this.eventId});
 		
-		_this.setupCreateLink();
-		_this.setupPrintLink();
 		_this.setupGrid();
 		_this.setupDeleteButton();
 	},
-	setupCreateLink: function() {
-		var _this = this;
-		
-		// prefix href with context.
-		var href = dojo.attr(_this.createLinkNode, "href");
-		dojo.attr(_this.createLinkNode, "href", hhreg.util.contextUrl(href));
-	},
-	setupPrintLink: function() {},
 	setupGrid: function() {
 		var _this = this;
 		

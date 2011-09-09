@@ -35,24 +35,20 @@ class badgeTemplateType_MultiBadge extends badgeTemplateType_BaseTemplate
 			'topMargin' => 0
 		));
 		
-		$pdf->AddPage();
-		
-		$pageHeight = $pdf->getPageHeight();
-		$pageWidth = $pdf->getPageWidth();
-		
 		$position = array('x' => 0, 'y' => 0);
 		
 		foreach($config['data'] as $index => $badgeData) {
 			$template = model_BadgeTemplateType::newTemplate($badgeData['template']['type']);
 			$data = $badgeData['data'];
 
-			if($index > 0 && ($index % 3) === 0) {
+			$coordIndex = $index % count($template->badgeCoords);
+			
+			if($coordIndex === 0) {
 				$pdf->AddPage();
-				$position = array('x' => 0, 'y' => 0);
 			}
-			else {
-				$position['y'] = (($index%3)*$template->badgeHeight);
-			}			
+			
+			$position['x'] = $template->badgeCoords[$coordIndex][0]*$template->badgeWidth;
+			$position['y'] = $template->badgeCoords[$coordIndex][1]*$template->badgeHeight;
 			
 			$this->writeData($pdf, $position, $template->getMargins(), $data);
 		}
