@@ -7,11 +7,14 @@ class logic_admin_staticPage_CreatePage extends logic_Performer
 	}
 	
 	public function view($params) {
+		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
+		
 		return array(
-			'eventId' => $params['eventId'],
+			'actionMenuEventLabel' => $eventInfo['code'],
+			'eventId' => $eventInfo['id'],
 			'page' => array(
 				'id' => 0,
-				'eventId' => $params['eventId'],
+				'eventId' => $eventInfo['id'],
 				'name' => '',
 				'title' => '',
 				'content' => ''

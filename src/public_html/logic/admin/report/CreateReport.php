@@ -7,8 +7,11 @@ class logic_admin_report_CreateReport extends logic_Performer
 	}
 	
 	public function view($params) {
+		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
+		
 		return array(
-			'eventId' => $params['eventId'],
+			'actionMenuEventLabel' => $eventInfo['code'],
+			'eventId' => $eventInfo['id'],
 			'report' => array(
 				'id' => 0,
 				'name' => '',

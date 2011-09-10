@@ -30,8 +30,23 @@ class logic_admin_search_Search extends logic_Performer
 		return array(
 			'eventId' => $params['eventId'],
 			'searchTerm' => $params['searchTerm'],
-			'results' => $results
+			'results' => $results,
+			'showDetailsLink' => $this->getShowDetailsLink($params['user'], $params['eventId'])
 		);	
+	}
+	
+	private function getShowDetailsLink($user, $eventId) {
+		$showDetailsLink = model_Role::userHasRole($user, array(
+			model_Role::$SYSTEM_ADMIN, 
+			model_Role::$EVENT_ADMIN
+		));
+		
+		$showDetailsLink = $showDetailsLink || model_Role::userHasRoleForEvent($user, array(
+			model_Role::$EVENT_MANAGER,
+			model_Role::$EVENT_REGISTRAR
+		), $eventId);
+		
+		return $showDetailsLink;
 	}
 }
 

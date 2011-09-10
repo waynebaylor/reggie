@@ -33,6 +33,7 @@ abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConv
 		$this->showBadgeTemplateMenu = 'false';
 		$this->showFileMenu = 'false';
 		$this->showPageMenu = 'false';
+		$this->showCreateReg = 'false';
 		
 		$this->setProperties($properties);
 		
@@ -56,6 +57,7 @@ abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConv
 			$this->showBadgeTemplateMenu = $this->getShowBadgeTemplateMenu(SessionUtil::getUser(), $this->eventId);
 			$this->showFileMenu = $this->getShowFileMenu(SessionUtil::getUser(), $this->eventId);
 			$this->showPageMenu = $this->getShowPageMenu(SessionUtil::getUser(), $this->eventId);
+			$this->showCreateReg = $this->getShowCreateReg(SessionUtil::getUser(), $this->eventId);
 		}
 		
 		return parent::getView($properties);
@@ -106,6 +108,7 @@ _;
 							showBadgeTemplates: {$this->showBadgeTemplateMenu},
 							showFiles: {$this->showFileMenu},
 							showPages: {$this->showPageMenu},
+							showCreateReg: {$this->showCreateReg},
 							eventId: {$this->eventId}
 						}, dojo.place("<div></div>", dojo.byId("action-menu-bar"), "replace")).startup();
 					});
@@ -204,6 +207,20 @@ _;
 		
 		$showMenu = $showMenu || model_Role::userHasRoleForEvent($user, array(
 			model_Role::$EVENT_MANAGER
+		), $eventId);
+		
+		return $showMenu? 'true' : 'false';
+	}
+	
+	private function getShowCreateReg($user, $eventId) {
+		$showMenu = model_Role::userHasRole($user, array(
+			model_Role::$SYSTEM_ADMIN,
+			model_Role::$EVENT_ADMIN
+		));
+		
+		$showMenu = $showMenu || model_Role::userHasRoleForEvent($user, array(
+			model_Role::$EVENT_MANAGER,
+			model_Role::$EVENT_REGISTRAR
 		), $eventId);
 		
 		return $showMenu? 'true' : 'false';

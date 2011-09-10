@@ -121,6 +121,7 @@ _;
 					'href'	=> '/admin/registration/Registration',
 					'parameters' => array(
 						'a' => 'cancelRegistration',
+						'eventId' => $this->event['id'],
 						'registrationId' => $r['id'],
 						'reportId' => $this->report['id'],
 						'registrantNumber' => $num
@@ -177,6 +178,7 @@ _;
 					'href' => '/admin/registration/Registration',
 					'parameters' => array(
 						'a' => 'deleteRegistration',
+						'eventId' => $this->event['id'],
 						'registrationId' => $r['id'],
 						'reportId' => $this->report['id']
 					)

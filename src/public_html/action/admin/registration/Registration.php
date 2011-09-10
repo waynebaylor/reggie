@@ -10,11 +10,17 @@ class action_admin_registration_Registration extends action_ValidatorAction
 	}
 	
 	public function view() {
-		$reportId = RequestUtil::getValue('reportId', 0); // reportId is not required.
-		$groupId = RequestUtil::getValue('groupId', 0);
-		$eventId = RequestUtil::getValue('eventId', 0);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'groupId' => 0,
+			'reportId' => 0
+		));
 		
-		$eventInfo = db_reg_GroupManager::getInstance()->findEventInfoByGroupId($groupId);
+		$reportId = $params['reportId']; // reportId is not required.
+		$groupId = $params['groupId'];
+		$eventId = $params['eventId'];
+		
+		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
 		
 		$group = $this->strictFindById(db_reg_GroupManager::getInstance(), $groupId);
 		
@@ -49,16 +55,14 @@ class action_admin_registration_Registration extends action_ValidatorAction
 	}
 	
 	public function cancelRegistration() {
-		$registrationId = RequestUtil::getValue('registrationId', 0);
-		$reportId = RequestUtil::getValue('reportId', 0);
-		$registrantNumber = RequestUtil::getValue('registrantNumber', 1);
-		
-		$info = $this->logic->cancelRegistration(array(
-			'registrationId' => $registrationId, 
-			'reportId' => $reportId,
-			'registrantNumber' => $registrantNumber
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'registrationId' => 0,
+			'reportId' => 0,
+			'registrantNumber' => 0
 		));
 		
+		$info = $this->logic->cancelRegistration($params);
 		return $this->converter->getCancelRegistration($info);
 	}
 	
@@ -118,22 +122,14 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		return $this->converter->getAddRegistrantToGroup($info);
 	}
 	
-	public function createNewRegistration() {
-		$eventId = RequestUtil::getValue('eventId', 0);
-		$reportId = RequestUtil::getValue('reportId', 0);
-		$categoryId = RequestUtil::getValue('categoryId', 0);
-		
-		$this->logic->createNewRegistration($eventId, $categoryId);
-		
-		return new fragment_Success();
-	}
-	
 	public function deleteRegistration() {
-		$registrationId = RequestUtil::getValue('registrationId', 0);
-		$reportId = RequestUtil::getValue('reportId', 0);
-
-		$info = $this->logic->deleteRegistration($registrationId, $reportId);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'registrationId' => 0,
+			'reportId' => 0
+		));
 		
+		$info = $this->logic->deleteRegistration($params);
 		return $this->converter->getDeleteRegistration($info);
 	}
 	

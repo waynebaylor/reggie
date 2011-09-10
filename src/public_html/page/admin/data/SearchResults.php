@@ -11,6 +11,7 @@
 			"searchTerm": "<?php echo $this->searchTerm ?>",
 			"fieldName": "<?php echo $result['displayName'] ?>",
 			"fieldValue": "<?php echo $result['value'] ?>",
+			"showDetailsLink": <?php echo $this->showDetailsLink? 'true' : 'false' ?>,
 			"detailsUrl": "<?php echo $this->contextUrl("/admin/registration/Registration?eventId={$this->eventId}&groupId={$result['regGroupId']}") ?>",
 			"summaryUrl": "<?php echo $this->contextUrl("/admin/registration/Summary?eventId={$this->eventId}&regGroupId={$result['regGroupId']}") ?>"
 		}

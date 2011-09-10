@@ -37,13 +37,18 @@ dojo.declare("hhreg.admin.widget.SearchResultsGrid", [dijit._Widget, dijit._Temp
 			    {name: "Options", width: "100%", get: function(rowIndex, storeItem) {
 			    	if(!storeItem) { return; }
 			    	
-			    	return dojo.string.substitute(
-		    			'<a href="${detailsUrl}">Details</a> <a href="${summaryUrl}">Summary</a>', 
-		    			{
-		    				detailsUrl: grid.store.getValue(storeItem, "detailsUrl"), 
-		    				summaryUrl: grid.store.getValue(storeItem, "summaryUrl")
-		    			}
-			    	);
+			    	if(grid.store.getValue(storeItem, "showDetailsLink")) {
+			    		return dojo.string.substitute(
+			    			'<a href="${detailsUrl}">Details</a> <a href="${summaryUrl}">Summary</a>', 
+			    			{
+			    				detailsUrl: grid.store.getValue(storeItem, "detailsUrl"), 
+			    				summaryUrl: grid.store.getValue(storeItem, "summaryUrl")
+			    			}
+				    	);	
+			    	}
+			    	else {
+			    		return dojo.string.substitute('<a href="${summaryUrl}">Summary</a>', {summaryUrl: grid.store.getValue(storeItem, "summaryUrl")});
+			    	}
 			    }}
 			]
 		}, _this.gridNode);

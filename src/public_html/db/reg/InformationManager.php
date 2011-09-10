@@ -219,6 +219,8 @@ class db_reg_InformationManager extends db_Manager
 			)
 		";
 		
+		$params = ArrayUtil::keyIntersect($params, array('searchTerm', 'eventId'));
+		
 		return $this->rawQuery($sql, $params, 'Search registration information.');
 	}
 }

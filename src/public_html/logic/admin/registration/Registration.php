@@ -44,39 +44,6 @@ class logic_admin_registration_Registration extends logic_Performer
 		);
 	}
 	
-	public function createNewRegistration($eventId, $categoryId) {
-		$regGroupId = db_reg_GroupManager::getInstance()->createGroup();
-		
-		$regTypeId = 0;
-		
-		$regTypes = db_RegTypeManager::getInstance()->findByEvent(array('id' => $eventId));
-		foreach($regTypes as $regType) {
-			if(model_RegType::isVisibleTo($regType, array('id' => $categoryId))) {
-				$regTypeId = $regType['id'];
-				break;		
-			}
-		}
-
-		$newReg = array(
-			'regGroupId' => $regGroupId,
-			'categoryId' => $categoryId,
-			'regTypeId' => $regTypeId,
-			'eventId' => $eventId,
-			'information' => array(),
-			'regOptionIds' => array(),
-			'variableQuantity' => array()
-		);
-		
-		$newRegId = db_reg_RegistrationManager::getInstance()->createRegistration($regGroupId, $newReg);
-		
-		db_reg_RegistrationManager::getInstance()->createLeadNumber($eventId, $newRegId);
-		
-		return array(
-			'regGroupId' => $regGroupId,
-			'registrationId' => $newRegId
-		);
-	}
-	
 	public function sendConfirmation($registrationId) {
 		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $registrationId);	
 		$event = $this->strictFindById(db_EventManager::getInstance(), $registration['eventId']);
@@ -120,12 +87,16 @@ _;
 		}
 	}
 	
-	public function deleteRegistration($registrationId, $reportId) {
+	public function deleteRegistration($params) {
+		$registrationId = $params['registrationId'];
+		$reportId = $params['reportId'];
+		
 		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $registrationId);
 		
 		db_reg_RegistrationManager::getInstance()->delete($registration);
 		
 		return array(
+			'eventId' => $params['eventId'],
 			'regGroupId' => $registration['regGroupId'],
 			'reportId' => $reportId
 		);
@@ -153,6 +124,7 @@ _;
 		db_reg_RegistrationManager::getInstance()->cancelRegistration($registration);
 
 		return array(
+			'eventId' => $params['eventId'],
 			'regGroupId' => $registration['regGroupId'],
 			'reportId' => $params['reportId'],
 			'registrantNumber' => $params['registrantNumber']

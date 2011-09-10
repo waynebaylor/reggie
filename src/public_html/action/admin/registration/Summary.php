@@ -2,21 +2,48 @@
 
 class action_admin_registration_Summary extends action_ValidatorAction
 {
+	function __construct() {
+		parent::__construct();
+
+		$this->logic = new logic_admin_registration_Summary();
+		$this->converter = new viewConverter_admin_registration_Summary();
+	}
+	
+	private function checkRole($user, $eventId) {
+		$hasRole = model_Role::userHasRole($user, array(
+			model_Role::$SYSTEM_ADMIN,
+			model_Role::$EVENT_ADMIN
+		));	
+		
+		$hasRole = $hasRole || model_Role::userHasRoleForEvent(
+			$user, 
+			array(
+				model_Role::$EVENT_MANAGER,
+				model_Role::$EVENT_REGISTRAR,
+				model_Role::$VIEW_EVENT
+			), 
+			$eventId
+		);
+		
+		if(!$hasRole) {
+			throw new Exception('User does not have required role.');
+		}
+	}
+	
 	public function view() {
-		$group = $this->strictFindById(db_reg_GroupManager::getInstance(), RequestUtil::getValue('regGroupId', 0));
-		$reportId = RequestUtil::getValue('reportId', 0);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'regGroupId' => 0,
+			'reportId' => 0
+		));
 		
-		$r = reset($group['registrations']);
-		$event = $this->strictFindById(db_EventManager::getInstance(), $r['eventId']);
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
-		if(empty($reportId)) {
-			$report = reset($event['reports']); 
-		}
-		else {
-			$report = db_ReportManager::getInstance()->find($reportId);
-		}
+		$params['user'] = $user;
 		
-		return new template_admin_GroupSummary($event, $report, $group);
+		$info = $this->logic->view($params);
+		return $this->converter->getView($info);		
 	}
 }
 

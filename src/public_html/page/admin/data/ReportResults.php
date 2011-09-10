@@ -16,7 +16,7 @@
 			"index": <?php echo $rowIndex ?>,
 			<?php if($this->showSummaryLink || $this->showDetailsLink): ?>
 			"detailsUrl": "<?php echo $this->contextUrl("/admin/registration/Registration?groupId={$row['regGroupId']}&reportId={$this->reportId}") ?>",
-			"summaryUrl": "<?php echo $this->contextUrl("/admin/registration/Summary?regGroupId={$row['regGroupId']}&reportId={$this->reportId}") ?>",
+			"summaryUrl": "<?php echo $this->contextUrl("/admin/registration/Summary?eventId={$this->eventId}&regGroupId={$row['regGroupId']}&reportId={$this->reportId}") ?>",
 			<?php endif; ?>
 			"data": [
 				<?php foreach($row['data'] as $dataIndex => $dataItem): ?>

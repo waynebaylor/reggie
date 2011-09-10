@@ -94,14 +94,32 @@ dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Template
 		if(_this.showEventMenu) {
 			var eventMenu = new dijit.MenuBar({}, _this.eventMenuNode);
 		
-			var eventLabelItem = new dijit.MenuBarItem({
-				style: {color: "darkorange", opacity: "1.0", fontWeight: "bold"},
-				disabled: false,
-				label: _this.eventLabel,
-				onClick: function() {}
-			});
-			dojo.query("*", eventLabelItem.domNode).style("opacity", "1.0");
-			eventMenu.addChild(eventLabelItem);
+			if(_this.showCreateReg) {
+				var eventActions = new dijit.Menu({});
+				
+				eventActions.addChild(new dijit.MenuItem({
+					label: "Create Registration",
+					onClick: function() {
+						window.location.href = hhreg.util.contextUrl("/admin/registration/CreateRegistration?")+dojo.objectToQuery({eventId: _this.eventId});
+					}
+				}));
+				
+				eventMenu.addChild(new dijit.PopupMenuBarItem({
+					label: _this.eventLabel,
+					style: {color: "darkorange", opacity: "1.0", fontWeight: "bold"},
+					popup: eventActions
+				}));
+			}
+			else {
+				var eventLabelItem = new dijit.MenuBarItem({
+					style: {color: "darkorange", opacity: "1.0", fontWeight: "bold"},
+					disabled: false,
+					label: _this.eventLabel,
+					onClick: function() {}
+				});
+				dojo.query("*", eventLabelItem.domNode).style("opacity", "1.0");
+				eventMenu.addChild(eventLabelItem);	
+			}
 			
 			if(_this.showReports) {
 				eventMenu.addChild(new dijit.MenuBarItem({
@@ -140,16 +158,6 @@ dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Template
 					label: "Pages",
 					onClick: function() {
 						window.location.href = hhreg.util.contextUrl("/admin/staticPage/PageList?")+dojo.objectToQuery({eventId: _this.eventId}); 
-					}
-				}));
-			}
-			if(_this.showCreateReg) {
-				eventMenu.addChild(new dijit.MenuBarItem({
-					label: "Create Registration",
-					onClick: function() {
-						// TODO show CreateRegistrationForm or something. 
-						// this could be easier if you implemented the ability
-						// to change registrant's category.
 					}
 				}));
 			}

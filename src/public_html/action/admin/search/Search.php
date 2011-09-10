@@ -52,6 +52,8 @@ class action_admin_search_Search extends action_ValidatorAction
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $params['eventId']);
 		
+		$params['user'] = $user;
+		
 		$info = $this->logic->listResults($params);
 		return $this->converter->getListResults($info);
 	}

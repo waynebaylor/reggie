@@ -9,7 +9,7 @@ class viewConverter_admin_registration_Registration extends viewConverter_admin_
 	public function getDeleteRegistration($properties) {
 		$this->setProperties($properties);
 		
-		return new template_Redirect("/admin/registration/Registration?groupId={$this->regGroupId}&reportId={$this->reportId}");
+		return new template_Redirect("/admin/registration/Registration?eventId={$this->eventId}&groupId={$this->regGroupId}&reportId={$this->reportId}");
 	}
 	
 	public function getPaymentSummary($properties) {
@@ -42,7 +42,7 @@ _;
 	public function getCancelRegistration($properties) {
 		$this->setProperties($properties);
 		
-		return new template_Redirect("/admin/registration/Registration?groupId={$this->regGroupId}&reportId={$this->reportId}#registrant{$this->registrantNumber}");
+		return new template_Redirect("/admin/registration/Registration?eventId={$this->eventId}&groupId={$this->regGroupId}&reportId={$this->reportId}#registrant{$this->registrantNumber}");
 	}
 }
 

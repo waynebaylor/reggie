@@ -160,30 +160,6 @@ class db_reg_GroupManager extends db_Manager
 		
 		return $this->query($sql, $params, 'Find registration groups by event.');
 	}
-	
-	public function findEventInfoByGroupId($id) {
-		$sql = '
-			SELECT
-				RegistrationGroup.id,
-				Registration.eventId 
-			FROM
-				RegistrationGroup
-			INNER JOIN
-				Registration
-			ON
-				RegistrationGroup.id = Registration.regGroupId
-			WHERE
-				RegistrationGroup.id = :id
-		';
-		
-		$params = array(
-			'id' => $id
-		);
-		
-		$result = $this->rawQueryUnique($sql, $params, 'Find event id by reg group.');
-		
-		return db_EventManager::getInstance()->findInfoById($result['eventId']);
-	}
 }
 
 ?>
