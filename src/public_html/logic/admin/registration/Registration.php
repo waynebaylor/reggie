@@ -7,23 +7,13 @@ class logic_admin_registration_Registration extends logic_Performer
 	}
 	
 	public function addRegistrantToGroup($params) {
-		$regTypes = db_RegTypeManager::getInstance()->findByEventId($params['eventId']);
-		// default is the first reg type whatever it is.
-		$regType = reset($regTypes);
-		$regTypeId = $regType['id'];
-		
-		// if we can find a reg type that is specifically visible to the selected category, 
-		// then go with that.
-		foreach($regTypes as $regType) {
-			if(model_RegType::isVisibleTo($regType, array('id' => $params['categoryId']))) {
-				$regTypeId = $regType['id'];
-			}
-		}
+		$regType = db_RegTypeManager::getInstance()->find($params['regTypeId']);
+		$category = reset($regType['visibleTo']);
 		
 		$newReg = array(
 			'regGroupId' => $params['regGroupId'],
-			'categoryId' => $params['categoryId'],
-			'regTypeId' => $regTypeId,
+			'categoryId' => $category['id'],
+			'regTypeId' => $regType['id'],
 			'eventId' => $params['eventId'],
 			'information' => array(),
 			'regOptionIds' => array(),
@@ -38,6 +28,7 @@ class logic_admin_registration_Registration extends logic_Performer
 		$count = count($group['registrations']);
 		
 		return array(
+			'eventId' => $params['eventId'],
 			'reportId' => $params['reportId'],
 			'groupId' => $params['regGroupId'],
 			'newNumber' => $count

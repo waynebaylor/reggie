@@ -21,7 +21,7 @@ class action_admin_registration_CreateRegistration extends action_ValidatorActio
 	public function createRegistration() {
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0,
-			'categoryId' => 0
+			'regTypeId' => 0
 		));
 		
 		$info = $this->logic->createRegistration($params);

@@ -49,16 +49,13 @@ _;
 	}
 	
 	private function getAddRegistrantForm() {
-		$categories = model_Category::values();
-		$category = reset($categories);
-		$categoryDropDown = fragment_category_HTML::radios(array(
-			'name' => 'categoryId',
-			'value' => $category['id']
+		$regTypeDropdown = fragment_regType_HTML::selectByEventId($this->event['id'], array(
+			'name' => 'regTypeId', 'multiple' => false, 'size' => 1
 		));
 		
 		$addregistrantRows = <<<_
 			<tr>
-				<td class="label">Category</td>
+				<td class="label required">Registration Type</td>
 				<td style="padding-right:60px;">
 					{$this->HTML->hidden(array(
 						'name' => 'reportId',
@@ -73,7 +70,7 @@ _;
 						'value' => $this->event['id']
 					))}
 					
-					{$categoryDropDown}
+					{$regTypeDropdown}
 				</td>
 			</tr>
 _;
