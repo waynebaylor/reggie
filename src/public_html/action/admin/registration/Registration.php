@@ -86,7 +86,7 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		
 		$this->logic->sendConfirmation($registrationId);
 		
-		return new template_Redirect("/admin/registration/Registration?groupId={$registration['regGroupId']}&reportId={$reportId}");
+		return new template_Redirect("/admin/registration/Registration?eventId={$registration['eventId']}&groupId={$registration['regGroupId']}&reportId={$reportId}");
 	}
 	
 	private function saveInformationFields($registrationId, $sectionId) {

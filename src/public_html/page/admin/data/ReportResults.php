@@ -15,7 +15,7 @@
 		{
 			"index": <?php echo $rowIndex ?>,
 			<?php if($this->showSummaryLink || $this->showDetailsLink): ?>
-			"detailsUrl": "<?php echo $this->contextUrl("/admin/registration/Registration?groupId={$row['regGroupId']}&reportId={$this->reportId}") ?>",
+			"detailsUrl": "<?php echo $this->contextUrl("/admin/registration/Registration?eventId={$this->eventId}&groupId={$row['regGroupId']}&reportId={$this->reportId}") ?>",
 			"summaryUrl": "<?php echo $this->contextUrl("/admin/registration/Summary?eventId={$this->eventId}&regGroupId={$row['regGroupId']}&reportId={$this->reportId}") ?>",
 			<?php endif; ?>
 			"data": [

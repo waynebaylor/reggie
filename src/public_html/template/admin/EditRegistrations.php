@@ -154,6 +154,7 @@ _;
 					'href' => '/admin/registration/Registration',
 					'parameters' => array(
 						'a' => 'sendConfirmation',
+						'eventId' => $this->event['id'],
 						'registrationId' => $r['id'],
 						'reportId' => $this->report['id']
 					)
@@ -263,6 +264,10 @@ _;
 					{$this->HTML->hidden(array(
 						'name' => 'id',
 						'value' => $r['id']
+					))}
+					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $this->event['id']
 					))}
 					
 					{$this->HTML->textarea(array(

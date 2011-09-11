@@ -26,6 +26,10 @@ class fragment_editRegistrations_InformationFields extends template_Template
 							'name' => 'registrationId',
 							'value' => $this->registration['id']
 						))}
+						{$this->HTML->hidden(array(
+							'name' => 'eventId',
+							'value' => $this->registration['eventId']
+						))}
 						
 						{$this->HTML->hidden(array(
 							'name' => 'sectionId',

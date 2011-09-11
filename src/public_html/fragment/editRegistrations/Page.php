@@ -75,12 +75,10 @@ _;
 	private function getChangeRegTypeForm($registration) {
 		$items = array();
 		foreach($this->event['regTypes'] as $regType) {
-			if(model_RegType::isVisibleTo($regType, array('id' => $registration['categoryId']))) {
-				$items[] = array(
-					'label' => $regType['description'],
-					'value' => $regType['id']
-				);
-			}
+			$items[] = array(
+				'label' => $regType['description'],
+				'value' => $regType['id']
+			);
 		}
 		
 		$rows = <<<_
@@ -95,12 +93,16 @@ _;
 				<td>
 					{$this->HTML->hidden(array(
 						'class' => 'change-reg-type-redirect',
-						'value' => "/admin/registration/Registration?groupId={$registration['regGroupId']}&reportId={$this->report['id']}"
+						'value' => "/admin/registration/Registration?eventId={$this->event['id']}&groupId={$registration['regGroupId']}&reportId={$this->report['id']}"
 					))}
 					
 					{$this->HTML->hidden(array(
 						'name' => 'registrationId',
 						'value' => $registration['id']
+					))}
+					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $this->event['id']
 					))}
 					
 					{$this->HTML->select(array(

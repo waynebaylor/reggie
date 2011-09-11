@@ -323,19 +323,24 @@ class db_reg_RegistrationManager extends db_Manager
 	}
 	
 	public function changeRegType($registration, $newRegTypeId) {
-		// 1. set new reg type.
+		// 1. set new reg type and category.
+		$newRegType = db_RegTypeManager::getInstance()->find($newRegTypeId);
+		$category = reset($newRegType['visibleTo']); //use first valid category.
+		
 		$sql = '
 			UPDATE
 				Registration
 			SET
-				regTypeId = :regTypeId
+				regTypeId = :regTypeId,
+				categoryId = :categoryId
 			WHERE
 				id = :id
 		';
 		
 		$params = array(
 			'id' => $registration['id'],
-			'regTypeId' => $newRegTypeId
+			'regTypeId' => $newRegTypeId,
+			'categoryId' => $category['id']
 		);
 		
 		$this->execute($sql, $params, 'Change reg type.');

@@ -82,7 +82,8 @@ _;
 							'a' => 'cancelRegOption',
 							'id' => $o['id'],
 							'groupId' => $this->registration['regGroupId'],
-							'reportId' => $this->report['id']
+							'reportId' => $this->report['id'],
+							'eventId' => $this->event['id']
 						)
 					));
 				}
