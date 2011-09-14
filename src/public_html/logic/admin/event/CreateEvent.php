@@ -39,6 +39,10 @@ class logic_admin_event_CreateEvent extends logic_Performer
 			);
 		}
 		
+		// Refresh the session user because their event permissions
+		// have changed.
+		SessionUtil::refreshUser();
+		
 		return array(
 			'user' => $params['user'],
 			'newEventId' => $newEventId

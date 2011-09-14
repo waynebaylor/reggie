@@ -63,11 +63,6 @@ class action_admin_event_CreateEvent extends action_ValidatorAction
 		
 		$info = $this->logic->createEvent($params);
 		
-		// event permissions have changed, so we need to update the 
-		// user stored in the session.
-		$updatedUser = db_UserManager::getInstance()->find($user['id']);
-		SessionUtil::setUser($updatedUser);
-		
 		return $this->converter->getCreateEvent($info);
 	}
 }
