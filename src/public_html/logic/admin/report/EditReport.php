@@ -21,6 +21,8 @@ class logic_admin_report_EditReport extends logic_Performer
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
+			'actionMenuEventLabel' => $event['code'],
+			'eventId' => $event['id'],
 			'event' => $event,
 			'report' => $report
 		);
