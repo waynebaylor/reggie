@@ -9,7 +9,7 @@ class action_admin_badge_CreateBadgeTemplate extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_badge_CreateBadgeTemplate();
 	}
 	
-	private function checkRole($user, $eventId) {
+	public function checkRole($user, $eventId, $method='') {
 		$hasRole = model_Role::userHasRole($user, array(
 			model_Role::$SYSTEM_ADMIN,
 			model_Role::$EVENT_ADMIN

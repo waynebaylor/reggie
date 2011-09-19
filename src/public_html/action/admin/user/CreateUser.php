@@ -9,7 +9,7 @@ class action_admin_user_CreateUser extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_user_CreateUser();
 	}
 	
-	private function checkRole($user) {
+	public function checkRole($user, $eventId, $method='') {
 		$hasRole = model_Role::userHasRole($user, array(
 			model_Role::$SYSTEM_ADMIN, 
 			model_Role::$USER_ADMIN

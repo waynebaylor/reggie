@@ -12,6 +12,16 @@ abstract class action_BaseAction
 {
 	function __construct() {}
 	
+	/**
+	 * Check if user has valid role for executing action. 
+	 * @param array $user the user
+	 * @param integer $eventId the event id
+	 * @param string $method the action method being executed
+	 */
+	public function checkRole($user, $eventId, $method='') {
+		return true;
+	}
+	
 	public function execute() {
 		$action = $_REQUEST['action'];
 		
