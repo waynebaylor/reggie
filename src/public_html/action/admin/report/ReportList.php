@@ -9,7 +9,7 @@ class action_admin_report_ReportList extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_report_ReportList();
 	}
 	
-	public function checkRole($user, $eventId, $method='') {
+	public function checkRole($user, $eventId=0, $method='') {
 		$hasRole = model_Role::userHasRole($user, array(
 			model_Role::$SYSTEM_ADMIN,
 			model_Role::$EVENT_ADMIN

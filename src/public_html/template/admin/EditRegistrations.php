@@ -34,11 +34,15 @@ class template_admin_EditRegistrations extends template_AdminPage
 				<h3>Edit Registrations</h3>
 				
 				<div class="add-registrant">
-					<span class="add-registrant-link link">Add Registrant To Group</span>
-					
-					<div class="add-registrant-content hide">
-						{$this->getAddRegistrantForm()}
-					</div>
+					{$this->HTML->link(array(
+						'label' => 'Add Registrant To Group',
+						'href' => '/admin/registration/Registration',
+						'parameters' => array(
+							'a' => 'addRegistrantToGroup',
+							'eventId' => $this->event['id'],
+							'regGroupId' => $this->group['id']
+						)
+					))}
 				</div>
 				
 				{$this->getRegistrants()}
@@ -46,45 +50,6 @@ class template_admin_EditRegistrations extends template_AdminPage
 				<div class="divider"></div>
 			</div>
 _;
-	}
-	
-	private function getAddRegistrantForm() {
-		$regTypeDropdown = fragment_regType_HTML::selectByEventId($this->event['id'], array(
-			'name' => 'regTypeId', 'multiple' => false, 'size' => 1
-		));
-		
-		$addregistrantRows = <<<_
-			<tr>
-				<td class="label required">Registration Type</td>
-				<td style="padding-right:60px;">
-					{$this->HTML->hidden(array(
-						'name' => 'reportId',
-						'value' => $this->report['id']
-					))}
-					{$this->HTML->hidden(array(
-						'name' => 'regGroupId',
-						'value' => $this->group['id']
-					))}
-					{$this->HTML->hidden(array(
-						'name' => 'eventId',
-						'value' => $this->event['id']
-					))}
-					
-					{$regTypeDropdown}
-				</td>
-			</tr>
-_;
-
-		$addRegistrantForm = new fragment_XhrTableForm(
-			'/admin/registration/Registration', 
-			'addRegistrantToGroup', 
-			$addregistrantRows,
-			'Continue',
-			'There was a problem saving. Please try again.',
-			false
-		);
-		
-		return $addRegistrantForm->html();
 	}
 	
 	private function getRegistrants() {

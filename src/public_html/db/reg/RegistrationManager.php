@@ -78,6 +78,45 @@ class db_reg_RegistrationManager extends db_Manager
 		return $this->query($sql, $params, 'Find registrations by event.');
 	}
 	
+	private function getNewRegistrationParams($regGroupId) {
+		$sql = '
+			SELECT
+				id,
+				regGroupId,
+				categoryId,
+				eventId,
+				regTypeId
+			FROM
+				Registration
+			WHERE
+				regGroupId = :regGroupId
+			LIMIT 1
+		';
+		
+		return $this->rawQueryUnique($sql, array('regGroupId' => $regGroupId), 'Find new registration info.');
+	}
+	
+	private function getNewRegistrationInfo($regId) {
+		$reg = self::getInstance()->find($regId);
+		
+		// get the contact field ids included in the event's group reg configuration.
+		$groupRegInfoFieldIds = array();
+		$groupRegData = db_GroupRegistrationManager::getInstance()->findByEventId($reg['eventId']);
+		foreach($groupRegData['fields'] as $groupRegField) {
+			$groupRegInfoFieldIds[] = $groupRegField['contactFieldId'];
+		}
+		
+		// get the group reg values from the sample registrant.
+		$infoValues = array();
+		foreach($reg['information'] as $info) {
+			if(in_array($info['contactFieldId'], $groupRegInfoFieldIds)) {
+				$infoValues[] = array('id' => $info['contactFieldId'], 'value' => $info['value']);
+			}
+		}
+		
+		return $infoValues;
+	}
+	
 	/**
 	 * creates a row in the registration table for the 
 	 * given registration. this includes the associated
@@ -85,6 +124,8 @@ class db_reg_RegistrationManager extends db_Manager
 	 * @param $r
 	 */
 	public function createRegistration($regGroupId, $r) { 
+		$groupMemberParams = $this->getNewRegistrationParams($regGroupId);
+		
 		$sql = '
 			INSERT INTO
 				Registration(
@@ -109,15 +150,15 @@ class db_reg_RegistrationManager extends db_Manager
 		
 		$today = new DateTime();
 		
-		$params = array(
+		$params = ArrayUtil::getValues($groupMemberParams, array(
+			'regGroupId' => 0,
+			'categoryId' => 0,
+			'eventId' => 0,
+			'regTypeId' => 0,
 			'dateRegistered' => date_format($today,'Y-m-d H:i'),
 			'comments' => '',
-			'regGroupId' => $regGroupId,
-			'categoryId' => $r['categoryId'],
-			'eventId' => $r['eventId'],
-			'regTypeId' => $r['regTypeId'],
 			'confirmationNumber' => '00000000'
-		);
+		));
 		
 		$this->execute($sql, $params, 'Create registration.');
 		
@@ -145,11 +186,12 @@ class db_reg_RegistrationManager extends db_Manager
 		//
 		// populate registration associations.
 		//
-		db_reg_InformationManager::getInstance()->createInformation($regId, $r['information']);
+		$newRegInfo = $this->getNewRegistrationInfo($groupMemberParams['id']); 
+		db_reg_InformationManager::getInstance()->createInformation($regId, $newRegInfo);
 		
-		db_reg_RegOptionManager::getInstance()->createOptions($r['regTypeId'], $regId, $r['regOptionIds']);
+		db_reg_RegOptionManager::getInstance()->createOptions($groupMemberParams['regTypeId'], $regId, $r['regOptionIds']);
 		
-		db_reg_VariableQuantityManager::getInstance()->createOptions($r['regTypeId'], $regId, $r['variableQuantity']);
+		db_reg_VariableQuantityManager::getInstance()->createOptions($groupMemberParams['regTypeId'], $regId, $r['variableQuantity']);
 		
 		return $regId;
 	}

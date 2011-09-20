@@ -7,13 +7,8 @@ class logic_admin_registration_Registration extends logic_Performer
 	}
 	
 	public function addRegistrantToGroup($params) {
-		$regType = db_RegTypeManager::getInstance()->find($params['regTypeId']);
-		$category = reset($regType['visibleTo']);
-		
 		$newReg = array(
 			'regGroupId' => $params['regGroupId'],
-			'categoryId' => $category['id'],
-			'regTypeId' => $regType['id'],
 			'eventId' => $params['eventId'],
 			'information' => array(),
 			'regOptionIds' => array(),
@@ -29,7 +24,6 @@ class logic_admin_registration_Registration extends logic_Performer
 		
 		return array(
 			'eventId' => $params['eventId'],
-			'reportId' => $params['reportId'],
 			'groupId' => $params['regGroupId'],
 			'newNumber' => $count
 		);

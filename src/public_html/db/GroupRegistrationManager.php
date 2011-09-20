@@ -45,6 +45,10 @@ class db_GroupRegistrationManager extends db_Manager
 	}
 	
 	public function findByEvent($event) {
+		return $this->findByEventId($event['id']);
+	}
+	
+	public function findByEventId($eventId) {
 		$sql = '
 			SELECT
 				id,
@@ -58,7 +62,7 @@ class db_GroupRegistrationManager extends db_Manager
 		';
 		
 		$params = array(
-			'eventId' => $event['id']
+			'eventId' => $eventId
 		);
 		
 		return $this->queryUnique($sql, $params, 'Find event group registration by event.');

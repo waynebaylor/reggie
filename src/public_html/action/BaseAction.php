@@ -18,7 +18,7 @@ abstract class action_BaseAction
 	 * @param integer $eventId the event id
 	 * @param string $method the action method being executed
 	 */
-	public function checkRole($user, $eventId, $method='') {
+	public function checkRole($user, $eventId=0, $method='') {
 		return true;
 	}
 	
