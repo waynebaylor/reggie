@@ -1,24 +1,25 @@
 <?php
 
-class template_admin_EditAppearance extends template_AdminPage
+class viewConverter_admin_event_EditAppearance extends viewConverter_admin_AdminConverter
 {
-	private $event;
+	function __construct() {
+		parent::__construct();
+	}
 	
-	function __construct($event) {
-		parent::__construct('Edit Event Appearance');
+	public function getView($properties) {
+		$this->setProperties($properties);
 		
-		$this->event = $event;
+		$html = $this->getContent();
+		return new template_TemplateWrapper($html);
 	}
 	
-	protected function getBreadcrumbs() {
-		return new fragment_Breadcrumb(array(
-			'location' => 'Appearance',
-			'eventId' => $this->event['id'],
-			'eventCode' => $this->event['code']
-		));	
+	public function getSaveAppearance($properties) {
+		$this->setProperties($properties);
+		
+		return new fragment_Success();
 	}
 	
-	protected function getContent() {
+	private function getContent() {
 		$form = new fragment_XhrTableForm(
 			'/admin/event/EditAppearance', 
 			'saveAppearance', 
@@ -27,9 +28,17 @@ class template_admin_EditAppearance extends template_AdminPage
 			
 		return <<<_
 			<script type="text/javascript">
-				dojo.require("hhreg.xhrEditForm");
+				dojo.require("hhreg.xhrTableForm");
 				
 				dojo.addOnLoad(function() {
+					dojo.query("#edit-event-appearance form").forEach(function(item) {
+						hhreg.xhrTableForm.bind(item);
+					});
+					
+					dojo.query("#edit-event-appearance textarea.expanding").forEach(function(item) {
+						hhreg.util.enhanceTextarea(item);
+					});
+					
 					dojo.query("input.color-value").forEach(function(input) {
 						var display = dojo.query(".color-display", input.parentNode)[0];
 						
@@ -40,12 +49,8 @@ class template_admin_EditAppearance extends template_AdminPage
 				});
 			</script>
 			
-			<div id="content">
-				<div class="fragment-edit">
-					<h3>Event Appearance</h3>
-
-					{$form->html()}
-				</div>
+			<div id="edit-event-appearance">
+				{$form->html()}
 			</div>
 _;
 	}
@@ -61,8 +66,13 @@ _;
 						'name' => 'id',
 						'value' => $appearance['id']
 					))}
+					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $this->eventId
+					))}
 					
 					{$this->HTML->textarea(array(
+						'class' => 'expanding',
 						'name' => 'headerContent',
 						'value' => $this->escapeHtml($appearance['headerContent']),
 						'rows' => 10,
@@ -74,6 +84,7 @@ _;
 				<td class="label">Page Footer</td>
 				<td>
 					{$this->HTML->textarea(array(
+						'class' => 'expanding',
 						'name' => 'footerContent',
 						'value' => $this->escapeHtml($appearance['footerContent']),
 						'rows' => 10,
@@ -85,6 +96,7 @@ _;
 				<td class="label">Menu Title</td>
 				<td>
 					{$this->HTML->textarea(array(
+						'class' => 'expanding',
 						'name' => 'menuTitle',
 						'value' => $this->escapeHtml($appearance['menuTitle']),
 						'rows' => 10,

@@ -9,7 +9,7 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_badge_EditBadgeTemplate();
 	}
 	
-	public function checkRole($user, $eventId=0, $method='') {
+	public static function checkRole($user, $eventId=0, $method='') {
 		$hasRole = model_Role::userHasRole($user, array(
 			model_Role::$SYSTEM_ADMIN,
 			model_Role::$EVENT_ADMIN
@@ -37,7 +37,7 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
+		self::checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->view($params);
 		return $this->converter->getView($info);
@@ -53,7 +53,7 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
+		self::checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->addBadgeCell($params); 
 		return $this->converter->getAddBadgeCell($info);
@@ -69,7 +69,7 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 		$params['regTypeIds'] = RequestUtil::getValueAsArray('regTypeIds', array(-1));
 		
 		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
+		self::checkRole($user, $params['eventId']);
 		
 		$errors = validation_Validator::validate(validation_admin_BadgeTemplate::getConfig(), ArrayUtil::keyIntersect($params, array(
 			'name',
@@ -98,7 +98,7 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
+		self::checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->saveCellDetails($params); 
 		return $this->converter->getSaveCellDetails($info);
@@ -115,7 +115,7 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
+		self::checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->addCellContent($params);
 		return $this->converter->getAddCellContent($info);
@@ -128,7 +128,7 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
+		self::checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->moveCellContentUp($params);
 		return $this->converter->getMoveCellContentUp($info);
@@ -141,7 +141,7 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
+		self::checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->moveCellContentDown($params);
 		return $this->converter->getMoveCellContentDown($info);
@@ -155,7 +155,7 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
+		self::checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->removeCellContent($params);
 		return $this->converter->getRemoveCellContent($info);
@@ -168,7 +168,7 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
+		self::checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->removeBadgeCell($params);
 		return $this->converter->getRemoveBadgeCell($info);

@@ -1,3 +1,4 @@
+dojo.require("dijit.form.Textarea");
 
 (function() {
 	var util = dojo.provide("hhreg.util");
@@ -41,5 +42,14 @@
 		// replace double '/'s. this may happen if the context path is
 		// simply '/' and the url starts with a '/'.
 		return newUrl.replace(/\/\//g, "/");
+	};
+	
+	util.enhanceTextarea = function(/*DOM Node*/ node) {
+		var ta = new dijit.form.Textarea({
+			name: node.name, 
+			style: "min-height:75px; width:500px;"
+		}, node);
+		
+		ta.startup();
 	};
 })();

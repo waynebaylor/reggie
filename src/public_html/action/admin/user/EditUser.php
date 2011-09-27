@@ -9,7 +9,7 @@ class action_admin_user_EditUser extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_user_EditUser();
 	}
 	
-	public function checkRole($user, $eventId=0, $method='') {
+	public static function checkRole($user, $eventId=0, $method='') {
 		$hasRole = model_Role::userHasRole($user, array(
 			model_Role::$SYSTEM_ADMIN, 
 			model_Role::$USER_ADMIN
@@ -22,7 +22,7 @@ class action_admin_user_EditUser extends action_ValidatorAction
 	
 	public function view() {
 		$user = SessionUtil::getUser();
-		$this->checkRole($user);
+		self::checkRole($user);
 		
 		$userId = RequestUtil::getValue('id' , 0);
 		
@@ -34,7 +34,7 @@ class action_admin_user_EditUser extends action_ValidatorAction
 	
 	public function saveUser() {
 		$user = SessionUtil::getUser();
-		$this->checkRole($user);
+		self::checkRole($user);
 		
 		$validateFields = array(
 			'id' => RequestUtil::getValue('id', 0),

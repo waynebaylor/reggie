@@ -124,7 +124,7 @@ class db_AppearanceManager extends db_Manager
 		$this->execute($sql, $params, 'Create event appearance.');
 	}
 	
-	public function save($appearance) {
+	public function save($params) {
 		$sql = '
 			UPDATE
 				Appearance
@@ -144,24 +144,9 @@ class db_AppearanceManager extends db_Manager
 				menuHighlightColor = :menuHighlightColor
 			WHERE
 				id = :id
+			AND
+				eventId = :eventId
 		';
-		
-		$params = RequestUtil::getParameters(array(
-			'id',
-			'headerContent',
-			'footerContent',
-			'headerBackgroundColor',
-			'footerBackgroundColor',
-			'menuTitle',
-			'menuBackgroundColor',
-			'backgroundColor',
-			'formBackgroundColor',
-			'buttonTextColor',
-			'buttonBackgroundColor',
-			'pageBackgroundColor',
-			'menuTitleBackgroundColor',
-			'menuHighlightColor'
-		));
 		
 		$this->execute($sql, $params, 'Save event appearance.');
 	}

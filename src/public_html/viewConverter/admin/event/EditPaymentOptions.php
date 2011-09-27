@@ -1,23 +1,24 @@
 <?php
 
-class template_admin_EditPaymentOptions extends template_AdminPage
+class viewConverter_admin_event_EditPaymentOptions extends viewConverter_admin_AdminConverter
 {
-	private $event;
+	function __construct() {
+		parent::__construct();
+	}
 	
-	function __construct($event) {
-		parent::__construct('Edit Event Payment Options');
+	public function getView($properties) {
+		$this->setProperties($properties);
 		
-		$this->event = $event;
+		$html = $this->getContent();
+		return new template_TemplateWrapper($html);
 	}
 	
-	protected function getBreadcrumbs() {
-		return new fragment_Breadcrumb(array(
-			'location' => 'PaymentOptions',
-			'eventId' => $this->event['id'],
-			'eventCode' => $this->event['code']
-		));
+	public function getSavePaymentTypes($properties) {
+		$this->setProperties($properties);
+		return new fragment_Success();
 	}
-	protected function getContent() {
+	
+	private function getContent() {
 		$form = new fragment_XhrTableForm(
 			'/admin/event/EditPaymentOptions',
 			'savePaymentTypes',
@@ -25,16 +26,23 @@ class template_admin_EditPaymentOptions extends template_AdminPage
 		
 		return <<<_
 			<script type="text/javascript">
-				dojo.require("hhreg.xhrEditForm");
+				dojo.require("hhreg.util");
+				dojo.require("hhreg.xhrTableForm");
 				dojo.require("hhreg.admin.paymentTypes");
+				
+				dojo.addOnLoad(function() {
+					dojo.query("#edit-event-payment-options form").forEach(function(item) {
+						hhreg.xhrTableForm.bind(item);
+					});
+					
+					dojo.query("#edit-event-payment-options textarea.expanding").forEach(function(item) {
+						hhreg.util.enhanceTextarea(item);
+					});
+				});
 			</script>
 			
-			<div id="content">
-				<div class="fragment-edit">
-					<h3>Payment Options</h3>
-
-					{$form->html()}
-				</div>
+			<div id="edit-event-payment-options">
+				{$form->html()}
 			</div>
 _;
 	}
@@ -50,6 +58,7 @@ _;
 					))}
 					
 					{$this->HTML->textarea(array(
+						'class' => 'expanding',
 						'name' => 'paymentInstructions',
 						'value' => $this->event['paymentInstructions'],
 						'rows' => 10,
@@ -110,6 +119,7 @@ _;
 						<td class="label">Instructions</td>
 						<td>
 							{$this->HTML->textarea(array(
+								'class' => 'expanding',
 								'name' => "paymentTypes_{$type['id']}_instructions",
 								'value' => $enabled? $this->escapeHtml($details['instructions']) : '',
 								'rows' => 10,
@@ -144,6 +154,7 @@ _;
 						<td class="label">Instructions</td>
 						<td>
 							{$this->HTML->textarea(array(
+								'class' => 'expanding',
 								'name' => "paymentTypes_{$type['id']}_instructions",
 								'value' => $enabled? $this->escapeHtml($details['instructions']) : '',
 								'rows' => 10,
@@ -178,6 +189,7 @@ _;
 						<td class="label">Instructions</td>
 						<td>
 							{$this->HTML->textarea(array(
+								'class' => 'expanding',
 								'name' => "paymentTypes_{$type['id']}_instructions",
 								'value' => $enabled? $this->escapeHtml($details['instructions']) : '',
 								'rows' => 10,

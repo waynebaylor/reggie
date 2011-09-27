@@ -9,7 +9,7 @@ class action_admin_registration_Summary extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_registration_Summary();
 	}
 	
-	public function checkRole($user, $eventId=0, $method='') {
+	public static function checkRole($user, $eventId=0, $method='') {
 		$hasRole = model_Role::userHasRole($user, array(
 			model_Role::$SYSTEM_ADMIN,
 			model_Role::$EVENT_ADMIN
@@ -38,7 +38,7 @@ class action_admin_registration_Summary extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
+		self::checkRole($user, $params['eventId']);
 		
 		$params['user'] = $user;
 		

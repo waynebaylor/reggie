@@ -7,7 +7,7 @@ class logic_admin_emailTemplate_EditEmailTemplate extends logic_Performer
 	}
 	
 	public function view($id) {
-		return $this->strictFindById(db_EmailTemplateManager::getInstance(), $id);
+		return $this->strictFindById(db_EmailTemplateManager::getInstance(), $id); 
 	}
 	
 	public function saveEmailTemplate($template, $regTypeIds) {

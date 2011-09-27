@@ -9,7 +9,7 @@ class action_admin_fileUpload_FileUpload extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_fileUpload_FileUpload();
 	}
 
-	public function checkRole($user, $eventId=0, $method='') {
+	public static function checkRole($user, $eventId=0, $method='') {
 		$hasRole = model_Role::userHasRole($user, array(
 			model_Role::$SYSTEM_ADMIN,
 			model_Role::$EVENT_ADMIN
@@ -28,7 +28,7 @@ class action_admin_fileUpload_FileUpload extends action_ValidatorAction
 		);
 		
 		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
+		self::checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->view($params);
 		return $this->converter->getView($info);
@@ -40,7 +40,7 @@ class action_admin_fileUpload_FileUpload extends action_ValidatorAction
 		);
 		
 		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
+		self::checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->listFiles($params);
 		return $this->converter->getListFiles($info);
@@ -53,7 +53,7 @@ class action_admin_fileUpload_FileUpload extends action_ValidatorAction
 		);
 		
 		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
+		self::checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->deleteFiles($params);
 		return $this->converter->getDeleteFiles($info);
@@ -66,7 +66,7 @@ class action_admin_fileUpload_FileUpload extends action_ValidatorAction
 		);
 		
 		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
+		self::checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->saveFile($params);
 		return $this->converter->getSaveFile($info);

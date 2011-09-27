@@ -1,13 +1,53 @@
 
 <script type="text/javascript">
+	dojo.require("hhreg.util");
 	dojo.require("hhreg.xhrEditForm");
 	dojo.require("hhreg.calendar");
 	dojo.require("hhreg.xhrAddList");
+	dojo.require("dijit.layout.TabContainer");
+    dojo.require("dojox.layout.ContentPane");
 
 	dojo.addOnLoad(function() {
+		var eventId = <?php echo $this->event['id'] ?>;
+		
 		dojo.query(".fragment-pages").forEach(function(item) {
 			hhreg.xhrAddList.bind(item);
 		});
+
+		//////////////////////////////
+
+		var tabContainer = new dijit.layout.TabContainer({
+			style: "width: 100%; height: 100%;",
+			doLayout: false
+		}, dojo.byId("edit-event-tabs"));
+
+
+		tabContainer.addChild(new dojox.layout.ContentPane({
+			title: "General",
+			content: dojo.byId("edit-event-general")
+		}));
+		
+		tabContainer.addChild(new dojox.layout.ContentPane({
+			title: "Appearance",
+			href: hhreg.util.contextUrl("/admin/event/EditAppearance?")+dojo.objectToQuery({"eventId": eventId})
+		}));
+
+		tabContainer.addChild(new dojox.layout.ContentPane({
+			title: "Payment Options",
+			href: hhreg.util.contextUrl("/admin/event/EditPaymentOptions?")+dojo.objectToQuery({"eventId": eventId})
+		}));
+
+		tabContainer.addChild(new dojox.layout.ContentPane({
+			title: "Email Templates",
+			href: hhreg.util.contextUrl("/admin/emailTemplate/EmailTemplates?")+dojo.objectToQuery({"eventId": eventId})
+		}));
+
+		tabContainer.addChild(new dojox.layout.ContentPane({
+			title: "Group Registration",
+			href: hhreg.util.contextUrl("/admin/event/EditGroupRegistration?")+dojo.objectToQuery({"eventId": eventId})
+		}));
+		
+		tabContainer.startup();
 	});
 </script>
 
@@ -17,53 +57,15 @@
 			<?php echo $this->title ?>
 		</h3>
 		
-		<?php echo $this->HTML->link(array(
-			'label' => 'Appearance',
-			'href' => '/admin/event/EditAppearance',
-			'title' => 'Edit event appearance',
-			'parameters' => array(
-				'action' => 'view',
-				'eventId' => $this->event['id']
-			)
-		)) ?>
-		&nbsp;
-		<?php echo $this->HTML->link(array(
-			'label' => 'Payment Options',
-			'href' => '/admin/event/EditPaymentOptions',
-			'title' => 'Edit event payment options',
-			'parameters' => array(
-				'action' => 'view',
-				'id' => $this->event['id']
-			)
-		)) ?>
-		&nbsp;
-		<?php echo $this->HTML->link(array(
-			'label' => 'Email Templates',
-			'href' => '/admin/emailTemplate/EmailTemplates',
-			'title' => 'Event Email Templates',
-			'parameters' => array(
-				'a' => 'view',
-				'eventId' => $this->event['id']
-			)
-		)) ?>
-		&nbsp;
-		<?php echo $this->HTML->link(array(
-			'label' => 'Group Registration',
-			'href' => '/admin/event/EditGroupRegistration',
-			'title' => 'Edit event group registration options.',
-			'parameters' => array(
-				'a' => 'view',
-				'id' => $this->event['id']
-			)
-		)) ?>
+		<div id="edit-event-tabs"></div>
 		
-		<div class="sub-divider"></div>
-		
-		<?php echo $this->xhrTableForm(
-			'/admin/event/EditEvent', 
-			'saveEvent', 
-			$this->getFileContents('page_admin_event_Edit')
-		) ?>
+		<div id="edit-event-general">
+			<?php echo $this->xhrTableForm(
+				'/admin/event/EditEvent', 
+				'saveEvent', 
+				$this->getFileContents('page_admin_event_Edit')
+			) ?>
+		</div>
 	</div>
 	
 	<div class="divider"></div>

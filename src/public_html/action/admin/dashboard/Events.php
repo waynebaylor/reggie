@@ -9,7 +9,7 @@ class action_admin_dashboard_Events extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_dashboard_Events();
 	}
 	
-	public function checkRole($user, $eventId=0, $method='') {
+	public static function checkRole($user, $eventId=0, $method='') {
 		$hasRole = model_Role::userHasRole($user, array(
 	   		model_Role::$SYSTEM_ADMIN, 
 	   		model_Role::$EVENT_ADMIN,
@@ -26,7 +26,7 @@ class action_admin_dashboard_Events extends action_ValidatorAction
 	
 	public function view() {
 		$user = SessionUtil::getUser();
-		$this->checkRole($user);
+		self::checkRole($user);
 		
 		$info = $this->logic->view(array('user' => $user));
 		return $this->converter->getView($info);
@@ -34,7 +34,7 @@ class action_admin_dashboard_Events extends action_ValidatorAction
 	
 	public function listEvents() {
 		$user = SessionUtil::getUser();
-		$this->checkRole($user);
+		self::checkRole($user);
 		
 		$info = $this->logic->listEvents(array('user' => $user));
 		return $this->converter->getListEvents($info);

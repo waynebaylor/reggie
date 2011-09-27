@@ -91,11 +91,7 @@ _;
 						}, 3000);
 						
 						dojo.query("textarea.expanding").forEach(function(item) {
-							var ta = new dijit.form.Textarea({
-								name: item.name, 
-								style: "min-height:75px; width:500px;"
-							}, item);
-							ta.startup();
+							hhreg.util.enhanceTextarea(item);
 						});
 						
 						new hhreg.admin.widget.ActionMenuBar({

@@ -9,7 +9,7 @@ class action_admin_badge_BadgeTemplates extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_badge_BadgeTemplates();
 	}
 	
-	public function checkRole($user, $eventId=0, $method='') {
+	public static function checkRole($user, $eventId=0, $method='') {
 		$hasRole = model_Role::userHasRole($user, array(
 			model_Role::$SYSTEM_ADMIN,
 			model_Role::$EVENT_ADMIN
@@ -35,7 +35,7 @@ class action_admin_badge_BadgeTemplates extends action_ValidatorAction
 		);
 		
 		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
+		self::checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->view($params);
 		return $this->converter->getView($info);
@@ -47,7 +47,7 @@ class action_admin_badge_BadgeTemplates extends action_ValidatorAction
 		);
 		
 		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
+		self::checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->listTemplates($params);
 		return $this->converter->getListTemplates($info);
@@ -60,7 +60,7 @@ class action_admin_badge_BadgeTemplates extends action_ValidatorAction
 		);
 		
 		$user = SessionUtil::getUser();
-		$this->checkRole($user, $params['eventId']);
+		self::checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->deleteTemplates($params);
 		return $this->converter->getDeleteTemplates($info);

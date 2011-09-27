@@ -7,7 +7,7 @@ class action_admin_event_EditGroupRegistration extends action_BaseAction
 	}
 	
 	public function view() {
-		$id = RequestUtil::getValue('id', 0);
+		$id = RequestUtil::getValue('eventId', 0);
 		$event = $this->strictFindById(db_EventManager::getInstance(), $id);
 		
 		return new template_admin_EditGroupRegistration($event);		

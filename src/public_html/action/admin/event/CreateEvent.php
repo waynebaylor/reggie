@@ -9,7 +9,7 @@ class action_admin_event_CreateEvent extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_event_CreateEvent();
 	}
 
-	public function checkRole($user, $eventId=0, $method='') {
+	public static function checkRole($user, $eventId=0, $method='') {
 		$hasRole = model_Role::userHasRole($user, array(
 			model_Role::$SYSTEM_ADMIN,
 			model_Role::$EVENT_ADMIN,
@@ -23,7 +23,7 @@ class action_admin_event_CreateEvent extends action_ValidatorAction
 	
 	public function view() {
 		$user = SessionUtil::getUser();
-		$this->checkRole($user);
+		self::checkRole($user);
 		
 		$info = $this->logic->view(array('user' => $user));
 		return $this->converter->getView($info);
@@ -31,7 +31,7 @@ class action_admin_event_CreateEvent extends action_ValidatorAction
 	
 	public function createEvent() {
 		$user = SessionUtil::getUser();
-		$this->checkRole($user);
+		self::checkRole($user);
 		
 		$errors = validation_Validator::validate(validation_admin_Event::getConfig(), array(
 			'code' => RequestUtil::getValue('code', ''),
