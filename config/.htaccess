@@ -1,6 +1,8 @@
 #
 # Make sure AllowOverride is set to 'All' for the deployment directory ('/var/www', etc).
 #
+# Required Apache Modules: rewrite, expires, headers, deflate
+#
 
 #
 # run everything through Controller.php
@@ -19,7 +21,7 @@ RewriteRule ^(.*)$ index.php [L]
 
 
 ########################################
-# force SSL--still needs testing
+# force SSL
 ########################################
 
 ##
@@ -52,13 +54,13 @@ SetOutputFilter DEFLATE
 Header set Cache-Control "max-age=3600, public, must-revalidate"
 </FilesMatch>
 
-AddOutputFilterByType DEFLATE text/html text/plain
+AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript
 
 
 
 
 #########################################################################
-# php settings must be set by adhost in their environment. the following
+# php settings must be set by host in their environment. the following
 # should be commented when running there.
 #########################################################################
 
