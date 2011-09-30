@@ -4,36 +4,38 @@ class viewConverter_admin_emailTemplate_EmailTemplates extends viewConverter_adm
 {
 	function __construct() {
 		parent::__construct();
-		
-		$this->title = 'Email Templates';
 	}
 	
-	protected function body() {
-		$body = parent::body();
-		
-		$body .= $this->getFileContents('page_admin_emailTemplate_EmailTemplates');
-		
-		return $body;
-	}
-	
-	protected function getBreadcrumbs() {
-		$info = db_BreadcrumbManager::getInstance()->findEmailTemplatesCrumbs($this->eventId);
-		
-		$crumbs = new fragment_Breadcrumb(array(
-			'location' => 'EmailTemplates',
-			'eventId' => $this->eventId,
-			'eventCode' => $info['code']
-		));
-		
-		return $crumbs->html();
-	}
-	
-	public function getAddEmailTemplate($properties) {
+	public function getView($properties) {
 		$this->setProperties($properties);
 		
-		$list = $this->getFileContents('page_admin_emailTemplate_List');
-		
-		return new template_TemplateWrapper($list);
+		$html = <<<_
+			<script type="text/javascript">
+				dojo.require("hhreg.admin.widget.EmailTemplateGrid");
+				
+				dojo.addOnLoad(function() {
+					new hhreg.admin.widget.EmailTemplateGrid({
+						eventId: {$this->eventId}
+					}, dojo.place("<div></div>", dojo.byId("email-template-grid"), "replace")).startup();
+				});
+			</script>
+			
+			<div id="email-template-grid"></div>
+_;
+
+		return new template_TemplateWrapper($html);
+	}
+	
+	public function getListTemplates($properties) {
+		$this->setProperties($properties);
+
+		$html = $this->getFileContents('page_admin_emailTemplate_List');
+		return new template_TemplateWrapper($html);
+	}
+	
+	public function getDeleteTemplates($properties) {
+		$this->setProperties($properties);
+		return new fragment_Success();		
 	}
 }
 

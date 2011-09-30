@@ -9,112 +9,45 @@ class action_admin_emailTemplate_EmailTemplates extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_emailTemplate_EmailTemplates();
 	}
 	
+	public static function checkRole($user, $eventId=0, $method='') {
+		return action_admin_event_EditEvent::checkRole($user, $eventId, $method);
+	}
+	
 	public function view() {
-		$eventId = RequestUtil::getValue('eventId', 0);
-		
-		$emailTemplates = $this->logic->view($eventId);
-		
-		return $this->converter->getView(array(
-			'eventId' => $eventId,
-			'emailTemplates' => page_admin_emailTemplate_Helper::convert($emailTemplates)
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0
 		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->view($params);
+		return $this->converter->getView($info);
 	}	
 	
-	public function addEmailTemplate() {
-		$errors = $this->validate();
-		
-		if(!empty($errors)) {
-			return new fragment_validation_ValidationErrors($errors);
-		}
-		
-		$template = RequestUtil::getParameters(array(
-			'eventId',
-			'enabled',
-			'contactFieldId',
-			'fromAddress',
-			'bcc',
-			'subject',
-			'header',
-			'footer'
+	public function listTemplates() {
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0
 		));
 		
-		$regTypeIds = RequestUtil::getValueAsArray('regTypeIds', array(-1));
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$updatedTemplates = $this->logic->addEmailTemplate($template, $regTypeIds);
-		
-		return $this->converter->getAddEmailTemplate(array(
-			'emailTemplates' => page_admin_emailTemplate_Helper::convert($updatedTemplates)
+		$info = $this->logic->listTemplates($params);
+		return $this->converter->getListTemplates($info);
+	}
+	
+	public function deleteTemplates() {
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'emailTemplateIds' => array()
 		));
-	}
-	
-	public function removeEmailTemplate() {
-		$emailTemplateId = RequestUtil::getValue('id', 0);
 		
-		$updatedTemplates = $this->logic->removeEmailTemplate($emailTemplateId);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		return $this->converter->getAddEmailTemplate(array(
-			'emailTemplates' => page_admin_emailTemplate_Helper::convert($updatedTemplates)
-		));
-	}
-	
-	public function validate($fieldNames = array()) {
-		$errors = parent::validate($fieldNames);
-
-		// check if there is overlap between templates.
-		$regTypeIds = RequestUtil::getValueAsArray('regTypeIds', array());
-		$existingTemplates = db_EmailTemplateManager::getInstance()->findByEventId(RequestUtil::getValue('eventId', 0));
-		foreach($existingTemplates as $template) {
-			if(model_EmailTemplate::hasOverlap($template, $regTypeIds)) {
-				$errors['regTypeIds[]'] = 'Registration Types conflict with existing template.'; 
-			}
-		}	
-
-		return $errors;
-	}
-	
-	protected function getValidationConfig() {
-		return array(
-			array(
-				'name' => 'enabled',
-				'value' => RequestUtil::getValue('enabled', false),
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Status is required.'
-					)
-				)
-			),
-			array(
-				'name' => 'contactFieldId',
-				'value' => RequestUtil::getValue('contactFieldId', null),
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Contact Field is required.'
-					)
-				)
-			),
-			array(
-				'name' => 'fromAddress',
-				'value' => RequestUtil::getValue('fromAddress', null),
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'From Address is required.'
-					)
-				)
-			),
-			array(
-				'name' => 'regTypeIds[]',
-				'value' => RequestUtil::getValueAsArray('regTypeIds', array()),
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Registration Types is required.'
-					)
-				)
-			)
-		);
+		$info = $this->logic->deleteTemplates($params);
+		return $this->converter->getDeleteTemplates($info);
 	}
 }
 

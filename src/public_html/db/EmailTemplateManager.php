@@ -306,6 +306,38 @@ class db_EmailTemplateManager extends db_Manager
 			$this->delete($t['id']);
 		}
 	}
+	
+	public function deleteTemplates($params) {
+		// delete reg type associations.
+		$sql = '
+			DELETE FROM
+				RegType_EmailTemplate
+			WHERE
+				emailTemplateId IN (
+					SELECT
+						id 
+					FROM
+						EmailTemplate
+					WHERE
+						eventId = :eventId
+					AND
+						id IN (:[emailTemplateIds])
+				)
+		';
+		
+		$this->execute($sql, $params, 'Delete email template reg type associations.');
+		
+		$sql = '
+			DELETE FROM
+				EmailTemplate
+			WHERE
+				eventId = :eventId
+			AND
+				id IN (:[emailTemplateIds])
+		';
+		
+		$this->execute($sql, $params, 'Delete email templates.');
+	}
 }
 
 ?>

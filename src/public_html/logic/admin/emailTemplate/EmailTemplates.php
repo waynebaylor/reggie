@@ -6,21 +6,28 @@ class logic_admin_emailTemplate_EmailTemplates extends logic_Performer
 		parent::__construct();
 	}
 	
-	public function view($eventId) {
-		return db_EmailTemplateManager::getInstance()->findByEventId($eventId);
+	public function view($params) {
+		return array(
+			'eventId' => $params['eventId']
+		);
 	}
 	
-	public function addEmailTemplate($template, $regTypeIds) {
-		db_EmailTemplateManager::getInstance()->createEmailTemplate($template, $regTypeIds);
-
-		return db_EmailTemplateManager::getInstance()->findByEventId($template['eventId']);
-	}
-	
-	public function removeEmailTemplate($id) {
-		$template = $this->strictFindById(db_EmailTemplateManager::getInstance(), $id);
-		db_EmailTemplateManager::getInstance()->delete($id);
+	public function listTemplates($params) {
+		$templates = db_EmailTemplateManager::getInstance()->findByEventId($params['eventId']);
 		
-		return db_EmailTemplateManager::getInstance()->findByEventId($template['eventId']);
+		return array(
+			'eventId' => $params['eventId'],
+			'emailTemplates' => page_admin_emailTemplate_Helper::convert($templates)
+		);
+	}
+	
+	public function deleteTemplates($params) {
+		db_EmailTemplateManager::getInstance()->deleteTemplates(array(
+			'eventId' => $params['eventId'],
+			'emailTemplateIds' => $params['emailTemplateIds']
+		));
+		
+		return array('eventId' => $params['eventId']);
 	}
 }
 

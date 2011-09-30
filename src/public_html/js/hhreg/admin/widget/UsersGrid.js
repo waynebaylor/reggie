@@ -41,7 +41,7 @@ dojo.declare("hhreg.admin.widget.UsersGrid", [dijit._Widget, dijit._Templated], 
 			    {field: "email", name: "Email", width: "100%"},
 			    {field: "roles", name: "Roles", width: "100%", get: function(rowIndex, storeItem) {
 			    	if(storeItem) {
-				    	var roles = grid.store.getValues(storeItem, "roles"); console.log(roles);
+				    	var roles = grid.store.getValues(storeItem, "roles"); 
 				    	return dojo.map(roles, function(r) {
 				    		var code = r.eventCode? "("+r.eventCode+")" : "";
 				    		return dojo.string.substitute("${eventCode} ${name}", {eventCode: code, name: r.name});
