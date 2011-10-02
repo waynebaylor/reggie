@@ -1,11 +1,10 @@
 
-
 <tr>
 	<td class="label required">Status</td>
 	<td>
 		<?php echo $this->HTML->hidden(array(
 			'name' => 'eventId',
-			'value' => $this->emailTemplate['eventId']
+			'value' => $this->eventId
 		)) ?>
 		<?php echo $this->HTML->hidden(array(
 			'name' => 'id',

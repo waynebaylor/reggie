@@ -8,25 +8,6 @@ class viewConverter_admin_emailTemplate_EditEmailTemplate extends viewConverter_
 		$this->title = 'Edit Email Template';
 	}
 	
-	public function getView($properties) {
-		$template = $properties['emailTemplate'];
-
-		$regTypeIds = array();
-		
-		if($template['availableToAll'] === true) {
-			$regTypeIds[] = -1;	
-		}
-		else {
-			foreach($template['availableTo'] as $regType) {
-				$regTypeIds[] = $regType['id'];
-			}
-		}
-		
-		$properties['emailTemplate']['regTypeIds'] = $regTypeIds;
- 		
-		return parent::getView($properties);
-	}
-	
 	protected function body() {
 		$body = parent::body();
 		
@@ -35,16 +16,14 @@ class viewConverter_admin_emailTemplate_EditEmailTemplate extends viewConverter_
 		return $body;
 	}
 	
-	protected function getBreadcrumbs() {
-		$info = db_BreadcrumbManager::getInstance()->findEditEmailTemplateCrumbs($this->emailTemplate['id']);
-		
-		$crumbs = new fragment_Breadcrumb(array(
-			'location' => 'EditEmailTemplate',
-			'eventId' => $this->emailTemplate['eventId'],
-			'eventCode' => $info['code']
-		));
-		
-		return $crumbs->html();
+	public function getSaveEmailTemplate($properties) {
+		$this->setProperties($properties);
+		return new fragment_Success();
+	}
+	
+	public function getSendTestEmail($properties) {
+		$this->setProperties($properties);
+		return new fragment_Success();
 	}
 }
 

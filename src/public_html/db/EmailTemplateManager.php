@@ -150,7 +150,10 @@ class db_EmailTemplateManager extends db_Manager
 		return $template;
 	}
 	
-	public function createEmailTemplate($params, $regTypeIds) {
+	public function createEmailTemplate($params) {
+		$regTypeIds = $params['regTypeIds'];
+		unset($params['regTypeIds']);
+		
 		$sql = '
 			INSERT INTO
 				EmailTemplate(
@@ -199,6 +202,8 @@ class db_EmailTemplateManager extends db_Manager
 				footer = :footer
 			WHERE
 				id = :id
+			AND
+				eventId = :eventId
 		';
 		
 		$this->execute($sql, $params, 'Save email template.');

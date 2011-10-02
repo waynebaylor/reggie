@@ -9,6 +9,10 @@ class validation_Validator
 			foreach($config as $restriction) {
 				// limit to only one error per field.
 				if($restriction->field === $fieldName && !in_array($fieldName, $messages) && !self::isValid($restriction, $value)) {
+					// append [] for array values. this will match the input name in the html form.
+					if(is_array($value)) {
+						$fieldName = $fieldName.'[]'; 
+					}
 					$messages[$fieldName] = $restriction->text;
 					break;
 				}

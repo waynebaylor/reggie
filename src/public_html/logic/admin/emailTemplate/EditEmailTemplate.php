@@ -6,28 +6,57 @@ class logic_admin_emailTemplate_EditEmailTemplate extends logic_Performer
 		parent::__construct();
 	}
 	
-	public function view($id) {
-		return $this->strictFindById(db_EmailTemplateManager::getInstance(), $id); 
-	}
-	
-	public function saveEmailTemplate($template, $regTypeIds) {
-		db_EmailTemplateManager::getInstance()->save($template, $regTypeIds);
-	}
-	
-	public function sendTestEmail($emailTemplateId, $toAddress) {
-		if(!empty($toAddress)) {
-			$template = $this->strictFindById(db_EmailTemplateManager::getInstance(), $emailTemplateId);
+	public function view($params) {
+		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
+		$template = db_EmailTemplateManager::getInstance()->find($params['emailTemplateId']);
 
-			$text = $template['header'].'<div>[Registration Summary]</div>'.$template['footer'];
-
-			EmailUtil::send(array(
-				'to' => $toAddress,
-				'from' => $template['fromAddress'],
-				'bcc' => $template['bcc'],
-				'subject' => $template['subject'],
-				'text' => $text
-			));
+		$regTypeIds = array();
+		
+		if($template['availableToAll'] === true) {
+			$regTypeIds[] = -1;	
 		}
+		else {
+			foreach($template['availableTo'] as $regType) {
+				$regTypeIds[] = $regType['id'];
+			}
+		}
+		
+		$template['regTypeIds'] = $regTypeIds;
+		
+		return array(
+			'actionMenuEventLabel' => $eventInfo['code'],
+			'eventId' => $params['eventId'],
+			'emailTemplate' => $template
+		);
+	}
+	
+	public function saveEmailTemplate($params) {
+		$regTypeIds = $params['regTypeIds'];
+		unset($params['regTypeIds']);
+		
+		db_EmailTemplateManager::getInstance()->save($params, $regTypeIds);
+		
+		return array(
+			'eventId' => $params['eventId']
+		);
+	}
+	
+	public function sendTestEmail($params) {
+		$template = $this->strictFindById(db_EmailTemplateManager::getInstance(), $params['id']);
+
+		$text = $template['header'].'<div>[Registration Summary]</div>'.$template['footer'];
+
+		EmailUtil::send(array(
+			'to' => $params['toAddress'],
+			'from' => $template['fromAddress'],
+			'bcc' => $template['bcc'],
+			'subject' => $template['subject'],
+			'text' => $text
+		));
+
+		return array(
+			'eventId' => $params['eventId']
+		);
 	}
 }
 

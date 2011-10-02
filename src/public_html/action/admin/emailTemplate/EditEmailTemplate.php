@@ -9,111 +9,67 @@ class action_admin_emailTemplate_EditEmailTemplate extends action_ValidatorActio
 		$this->converter = new viewConverter_admin_emailTemplate_EditEmailTemplate();
 	}
 	
+	public static function checkRole($user, $eventId=0, $method='') {
+		return action_admin_event_EditEvent::checkRole($user, $eventId, $method);
+	}
+	
 	public function view() {
-		$id = RequestUtil::getValue('id', 0);
-		
-		$template = $this->logic->view($id);
-		
-		return $this->converter->getView(array(
-			'emailTemplate' => $template
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'emailTemplateId' => 0
 		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->view($params);
+		return $this->converter->getView($info);		
 	}
 	
 	public function saveEmailTemplate() {
-		$errors = $this->validate();
+		$params = RequestUtil::getValues(array(
+			'id' => 0,
+			'eventId' => 0,
+			'enabled' => 'F',
+			'contactFieldId' => 0,
+			'fromAddress' => '',
+			'bcc' => '',
+			'regTypeIds' => array(-1),
+			'subject' => '',
+			'header' => '',
+			'footer' => ''
+			
+		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$errors = validation_admin_EmailTemplate::validate($params);
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);
 		}
 		
-		$template = RequestUtil::getParameters(array(
-			'id',
-			'enabled',
-			'contactFieldId',
-			'fromAddress',
-			'bcc',
-			'subject',
-			'header',
-			'footer'
-		));
-		
-		$regTypeIds = RequestUtil::getValueAsArray('regTypeIds', array(-1));
-		
-		$this->logic->saveEmailTemplate($template, $regTypeIds);
-		
-		return new fragment_Success();
+		$info = $this->logic->saveEmailTemplate($params);
+		return $this->converter->getSaveEmailTemplate($info);
 	}
 	
 	public function sendTestEmail() {
-		$emailTemplateId = RequestUtil::getValue('id', 0);
-		$toAddress = RequestUtil::getValue('toAddress', '');
+		$params = RequestUtil::getValues(array(
+			'id' => 0,
+			'eventId' => 0,
+			'toAddress' => ''
+		));
 		
-		$this->logic->sendTestEmail($emailTemplateId, $toAddress);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		return $this->view();
-	}
-	
-	public function validate($fieldNames = array()) {
-		$errors = parent::validate($fieldNames);
-
-		// check if there is overlap between templates.
-		$regTypeIds = RequestUtil::getValueAsArray('regTypeIds', array());
+		if(empty($params['toAddress'])) {
+			return new fragment_validation_ValidationErrors(array('toAddress' => 'To Address is required.'));	
+		}
 		
-		$currentTemplate = $this->strictFindById(db_EmailTemplateManager::getInstance(), RequestUtil::getValue('id', 0));
-		$existingTemplates = db_EmailTemplateManager::getInstance()->findByEventId($currentTemplate['eventId']);
-		
-		foreach($existingTemplates as $template) {
-			if($template['id'] != $currentTemplate['id'] && model_EmailTemplate::hasOverlap($template, $regTypeIds)) {
-				$errors['regTypeIds[]'] = 'Registration Types conflict with existing template.'; 
-			}
-		}	
-
-		return $errors;
-	}
-	
-	protected function getValidationConfig() {
-		return array(
-			array(
-				'name' => 'enabled',
-				'value' => RequestUtil::getValue('enabled', false),
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Status is required.'
-					)
-				)
-			),
-			array(
-				'name' => 'contactFieldId',
-				'value' => RequestUtil::getValue('contactFieldId', null),
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Contact Field is required.'
-					)
-				)
-			),
-			array(
-				'name' => 'fromAddress',
-				'value' => RequestUtil::getValue('fromAddress', null),
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'From Address is required.'
-					)
-				)
-			),
-			array(
-				'name' => 'regTypeIds[]',
-				'value' => RequestUtil::getValueAsArray('regTypeIds', array()),
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Registration Types is required.'
-					)
-				)
-			)
-		);
+		$info = $this->logic->sendTestEmail($params);
+		return $this->converter->getSendTestEmail($info);
 	}
 }
 

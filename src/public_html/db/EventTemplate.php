@@ -42,10 +42,11 @@ class db_EventTemplate extends db_Manager
 			'enabled' => 'F',
 			'fromAddress' => '',
 			'bcc' => '',
+			'regTypeIds' => array(-1),
 			'subject' => 'Thank you for registering.',
 			'header' => '',
 			'footer' => ''
-		), array(-1));	
+		));	
 	}
 	
 	private function createRegTypeTemplatePage($eventId, $categoryIds) {
