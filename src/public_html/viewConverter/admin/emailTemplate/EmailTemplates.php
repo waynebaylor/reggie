@@ -21,7 +21,7 @@ class viewConverter_admin_emailTemplate_EmailTemplates extends viewConverter_adm
 			</script>
 			
 			<div id="email-template-grid">
-				{$this->HTML->img(array('src' => '/js/dijit/themes/claro/images/loadingAnimation.gif'))} Loading...
+				<div class="dijitContentPaneLoading" style="height:24px; width:24px;"></div> Loading...
 			</div>
 _;
 
