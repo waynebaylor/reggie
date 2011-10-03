@@ -4,27 +4,40 @@ class action_admin_event_EditGroupRegistration extends action_BaseAction
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->logic = new logic_admin_event_EditGroupRegistration();
+		$this->converter = new viewConverter_admin_event_EditGroupRegistration();
+	}
+	
+	public static function checkRole($user, $eventId=0, $method='') {
+		return action_admin_event_EditEvent::checkRole($user, $eventId, $method);
 	}
 	
 	public function view() {
-		$id = RequestUtil::getValue('eventId', 0);
-		$event = $this->strictFindById(db_EventManager::getInstance(), $id);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0
+		));
+			
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		return new template_admin_EditGroupRegistration($event);		
+		$info = $this->logic->view($params);
+		return $this->converter->getView($info);
 	}
 	
 	public function saveGroupReg() {
-		$groupReg = RequestUtil::getParameters(array(
-			'id',
-			'eventId'
+		$params = RequestUtil::getValues(array(
+			'id' => 0,
+			'eventId' => 0,
+			'enabled' => 'F',
+			'defaultRegType' => 'F'
 		));
 		
-		$groupReg['enabled'] = RequestUtil::getValue('enabled', 'F');
-		$groupReg['defaultRegType'] = RequestUtil::getValue('defaultRegType', 'F');
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		db_GroupRegistrationManager::getInstance()->save($groupReg);
-		
-		return new fragment_Success();
+		$info = $this->logic->saveGroupReg($params);
+		return $this->converter->getSaveGroupReg($info);
 	}
 	
 	public function addField() {

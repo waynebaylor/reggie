@@ -18,9 +18,17 @@ class fragment_groupRegistration_Edit extends template_Template
 		);
 		
 		return <<<_
-				<div class="fragment-edit">
-					<h3>Group Registration</h3>
+				<script type="text/javascript">
+					dojo.require("hhreg.xhrTableForm");
 					
+					dojo.addOnLoad(function() {
+						dojo.query("#edit-group-reg form").forEach(function(item) {
+							hhreg.xhrTableForm.bind(item);		
+						});
+					});
+				</script>
+				
+				<div id="edit-group-reg">
 					{$form->html()}
 				</div>
 _;

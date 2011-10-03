@@ -101,9 +101,11 @@ class db_GroupRegistrationManager extends db_Manager
 				defaultRegType = :defaultRegType
 			WHERE
 				id = :id
+			AND
+				eventId = :eventId
 		';
 		
-		$params = ArrayUtil::keyIntersect($groupReg, array('id', 'enabled', 'defaultRegType'));
+		$params = ArrayUtil::keyIntersect($groupReg, array('id', 'eventId', 'enabled', 'defaultRegType'));
 		
 		$this->execute($sql, $params, 'Save event group registration.');
 	}
