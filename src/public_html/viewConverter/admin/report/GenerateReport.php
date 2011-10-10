@@ -38,7 +38,8 @@ _;
 	public function getCsv($properties) {
 		$this->setProperties($properties);
 		
-		$text = '"'.implode('","', $this->info['headings']).'"';
+		$text = "\xEF\xBB\xBF"; // utf-8 byte-order-mark
+		$text .= '"'.implode('","', $this->info['headings']).'"';
 		$text .= PHP_EOL;
 		
 		foreach($this->info['rows'] as $row) {
@@ -48,7 +49,7 @@ _;
 		
 		$fileName = preg_replace('/\s+/', '_', $this->info['reportName']).'.csv';
 		
-		header('Content-Type: text/csv');
+		header('Content-Type: text/csv; charset=utf-8');
 		
 		// f'n IE doesn't recognize it as a downloadable so we have to do 
 		// something special.
