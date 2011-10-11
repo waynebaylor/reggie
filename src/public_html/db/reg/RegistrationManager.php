@@ -78,24 +78,6 @@ class db_reg_RegistrationManager extends db_Manager
 		return $this->query($sql, $params, 'Find registrations by event.');
 	}
 	
-	private function getNewRegistrationParams($regGroupId) {
-		$sql = '
-			SELECT
-				id,
-				regGroupId,
-				categoryId,
-				eventId,
-				regTypeId
-			FROM
-				Registration
-			WHERE
-				regGroupId = :regGroupId
-			LIMIT 1
-		';
-		
-		return $this->rawQueryUnique($sql, array('regGroupId' => $regGroupId), 'Find new registration info.');
-	}
-	
 	private function getNewRegistrationInfo($regId) {
 		$reg = self::getInstance()->find($regId);
 		
@@ -124,8 +106,6 @@ class db_reg_RegistrationManager extends db_Manager
 	 * @param $r
 	 */
 	public function createRegistration($regGroupId, $r) { 
-		$groupMemberParams = $this->getNewRegistrationParams($regGroupId);
-		
 		$sql = '
 			INSERT INTO
 				Registration(
@@ -150,7 +130,7 @@ class db_reg_RegistrationManager extends db_Manager
 		
 		$today = new DateTime();
 		
-		$params = ArrayUtil::getValues($groupMemberParams, array(
+		$params = ArrayUtil::getValues($r, array(
 			'regGroupId' => 0,
 			'categoryId' => 0,
 			'eventId' => 0,
@@ -186,12 +166,15 @@ class db_reg_RegistrationManager extends db_Manager
 		//
 		// populate registration associations.
 		//
-		$newRegInfo = $this->getNewRegistrationInfo($groupMemberParams['id']); 
+		$groupRegistrations = self::findByRegistrationGroupId($regGroupId);
+		$sampleRegistration = reset($groupRegistrations);
+		$newRegInfo = $this->getNewRegistrationInfo($sampleRegistration['id']); 
+
 		db_reg_InformationManager::getInstance()->createInformation($regId, $newRegInfo);
 		
-		db_reg_RegOptionManager::getInstance()->createOptions($groupMemberParams['regTypeId'], $regId, $r['regOptionIds']);
+		db_reg_RegOptionManager::getInstance()->createOptions($r['regTypeId'], $regId, $r['regOptionIds']);
 		
-		db_reg_VariableQuantityManager::getInstance()->createOptions($groupMemberParams['regTypeId'], $regId, $r['variableQuantity']);
+		db_reg_VariableQuantityManager::getInstance()->createOptions($r['regTypeId'], $regId, $r['variableQuantity']);
 		
 		return $regId;
 	}
@@ -285,6 +268,10 @@ class db_reg_RegistrationManager extends db_Manager
 	}
 	
 	public function findByRegistrationGroup($group) {
+		return self::findByRegistrationGroupId($group['id']);
+	}
+	
+	public function findByRegistrationGroupId($groupId) {
 		$sql = '
 			SELECT
 				id,
@@ -304,7 +291,8 @@ class db_reg_RegistrationManager extends db_Manager
 		';
 		
 		$params = array(
-			'regGroupId' => $group['id']
+			'regGroupId' => $groupId
+		
 		);
 		
 		return $this->query($sql, $params, 'Find registrations by group.');
