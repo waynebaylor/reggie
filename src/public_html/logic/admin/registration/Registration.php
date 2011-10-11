@@ -15,6 +15,13 @@ class logic_admin_registration_Registration extends logic_Performer
 			'variableQuantity' => array()
 		);
 		
+		$groupRegistrations = db_reg_RegistrationManager::getInstance()->findByRegistrationGroupId($params['regGroupId']);
+		$sampleRegistration = reset($groupRegistrations);
+		
+		// these can be changed after the registration is created.
+		$newReg['regTypeId'] = $sampleRegistration['regTypeId'];
+		$newReg['categoryId'] = $sampleRegistration['categoryId'];
+		
 		$newRegId = db_reg_RegistrationManager::getInstance()->createRegistration($params['regGroupId'], $newReg);
 		
 		db_reg_RegistrationManager::getInstance()->createLeadNumber($params['eventId'], $newRegId);
