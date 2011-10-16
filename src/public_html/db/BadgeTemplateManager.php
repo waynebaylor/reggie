@@ -263,6 +263,26 @@ class db_BadgeTemplateManager extends db_Manager
 		
 		return $this->queryUnique($sql, $params, 'Find badge template.');
 	}
+	
+	public function deleteByEventId($eventId) {
+		$sql = '
+			SELECT
+				id
+			FROM
+				BadgeTemplate
+			WHERE
+				eventId = :eventId
+		';
+		
+		$results = $this->rawQuery($sql, array('eventId' => $eventId), 'Find badge template ids.');
+		
+		$templateIds = array();
+		foreach($results as $result) {
+			$templateIds[] = $result['id'];
+		}
+		
+		$this->deleteTemplates(array('eventId' => $eventId, 'templateIds' => $templateIds));
+	}
 }
 
 ?>
