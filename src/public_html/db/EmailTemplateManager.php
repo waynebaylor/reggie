@@ -153,6 +153,7 @@ class db_EmailTemplateManager extends db_Manager
 	public function createEmailTemplate($params) {
 		$regTypeIds = $params['regTypeIds'];
 		unset($params['regTypeIds']);
+		unset($params['id']);
 		
 		$sql = '
 			INSERT INTO

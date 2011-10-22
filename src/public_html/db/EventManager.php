@@ -502,6 +502,27 @@ class db_EventManager extends db_Manager
 			return $this->rawQuery($sql, $params, 'Find event info accessible to user.');
 		}
 	}
+	
+	public function hasVisiblePages($params) {
+		$sql = '
+			SELECT 
+				count(*) as count
+			FROM
+				Page
+			INNER JOIN
+				Category_Page
+			ON
+				Page.id = Category_Page.pageId
+			WHERE
+				Page.eventId = :eventId
+			AND
+				Category_Page.categoryId = :categoryId
+		';
+		
+		$results = $this->rawQueryUnique($sql, $params, 'Find if category can see any reg pages.');
+		
+		return ($results['count'] > 0);
+	}
 }
 
 ?>

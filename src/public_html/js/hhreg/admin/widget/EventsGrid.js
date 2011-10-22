@@ -74,6 +74,31 @@ dojo.declare("hhreg.admin.widget.EventsGrid", [dijit._Widget, dijit._Templated],
 			    {field: "regClosed", name: "Registration Closed", width: "100%", formatter: function(value) {
 		    		return value && value.replace(/00:00/, "");
 			    }},
+			    {name: "Registration Form", width: "100%", get: function(rowIndex, storeItem) {
+			    	if(!storeItem) { return; }
+			    	
+			    	var urls = [];
+			    	var attendeeUrl = grid.store.getValue(storeItem, "attendeeUrl");
+			    	var exhibitorUrl = grid.store.getValue(storeItem, "exhibitorUrl");
+			    	var specialUrl = grid.store.getValue(storeItem, "specialUrl");
+			    	
+			    	if(attendeeUrl) {
+			    		urls.push(dojo.string.substitute('<a href="${url}" target="_blank">Attendee</a>', {url: attendeeUrl}));
+			    	}
+			    	if(exhibitorUrl) {
+			    		urls.push(dojo.string.substitute('<a href="${url}" target="_blank">Exhibitor</a>', {url: exhibitorUrl}));
+			    	}
+			    	if(specialUrl) {
+			    		urls.push(dojo.string.substitute('<a href="${url}" target="_blank">Special</a>', {url: specialUrl}));
+			    	}
+			    	
+			    	if(urls.length > 0) {
+			    		return urls.join("<div style='padding:3px;'></div>");
+			    	}
+			    	else {
+			    		return "None";
+			    	}
+			    }},
 			    {field: "manageUrl", name: "Options", width: "100%", get: function(rowIndex, storeItem) {
 			    	if(!storeItem) { return; }
 			    		
@@ -84,8 +109,9 @@ dojo.declare("hhreg.admin.widget.EventsGrid", [dijit._Widget, dijit._Templated],
 			    }}
 			],
 			canSort: function(columnIndex) {
-				return Math.abs(columnIndex) != 3 &&  	// can't sort on status column.
-					   Math.abs(columnIndex) != 6;		// can't sort on options column.
+				return Math.abs(columnIndex) != 4 &&  	// can't sort on status column.
+					   Math.abs(columnIndex) != 7 &&	// can't sort on reg form column.
+					   Math.abs(columnIndex) != 8;		// can't sort on options column.
 			}
 		}, _this.gridNode);
 		

@@ -39,6 +39,7 @@ class action_admin_emailTemplate_CreateEmailTemplate extends action_BaseAction
 	
 	public function createTemplate() {
 		$params = RequestUtil::getValues(array(
+			'id' => 0, // used in validation
 			'eventId' => 0,
 			'enabled' => 'F',
 			'contactFieldId' => 0,
