@@ -4,45 +4,49 @@ class action_admin_page_Page extends action_ValidatorAction
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->logic = new logic_admin_page_Page();
+		$this->converter = new viewConverter_admin_page_Page();
 	}
 
+	public static function checkRole($user, $eventId=0, $method='') {
+		return action_admin_event_EditEvent::checkRole($user, $eventId, $method);	
+	}
+	
 	public function view() {
-		$page = $this->strictFindById(db_PageManager::getInstance(), $_REQUEST['id']);
-		$event = $this->strictFindById(db_EventManager::getInstance(), $page['eventId']);
+		$params = RequestUtil::getValues(array(
+			'id' => 0,
+			'eventId' => 0
+		));
 		
-		return new template_admin_EditPage($event, $page);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->view($params);
+		return $this->converter->getView($info);
 	}
 	
 	public function savePage() {
-		$errors = $this->validate();
+		$params = RequestUtil::getValues(array(
+			'id' => 0,
+			'eventId' => 0,
+			'title' => '',
+			'categoryIds' => array()
+		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$errors = validation_Validator::validate(validation_admin_Page::getConfig(), array(
+			'titke' => $params['title']
+		));
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);	
 		}
 		
-		$page = $this->strictFindById(db_PageManager::getInstance(), $_REQUEST['id']);
-		
-		$page['title'] = $_REQUEST['title'];
-		$categoryIds = $_REQUEST['categoryIds'];
-		
-		db_PageManager::getInstance()->savePage($page, $categoryIds);
-		
-		return new fragment_Success();
-	}
-	
-	protected function getValidationConfig() {
-		return array(
-			array(
-				'name' => 'title',
-				'value' => $_REQUEST['title'],
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Page Title is required.'
-					)
-				)
-			)
-		);
+		$info = $this->logic->savePage($params);
+		return $this->converter->getSavePage($info);
 	}
 }
 ?>

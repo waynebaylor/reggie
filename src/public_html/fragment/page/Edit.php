@@ -28,6 +28,10 @@ _;
 				<td class="required label">Page Title</td>
 				<td>
 					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $this->page['eventId']
+					))}
+					{$this->HTML->hidden(array(
 						'name' => 'id',
 						'value' => $this->page['id']
 					))}
