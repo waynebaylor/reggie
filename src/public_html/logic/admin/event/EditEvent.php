@@ -12,7 +12,10 @@ class logic_admin_event_EditEvent extends logic_Performer
 		return array(
 			'actionMenuEventLabel' => $event['code'],
 			'eventId' => $event['id'],
-			'event' => $event
+			'event' => $event,
+			'breadcrumbsParams' => array(
+				'eventId' => $event['id']
+			) 
 		);
 	}
 	

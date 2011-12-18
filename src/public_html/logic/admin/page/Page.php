@@ -14,7 +14,11 @@ class logic_admin_page_Page extends logic_Performer
 			'actionMenuEventLabel' => $event['code'],
 			'eventId' => $event['id'],
 			'event' => $event,
-			'page' => $page
+			'page' => $page,
+			'breadcrumbsParams' => array(
+				'eventId' => $event['id'],
+				'pageId' => $page['id']
+			)
 		);
 	}
 	

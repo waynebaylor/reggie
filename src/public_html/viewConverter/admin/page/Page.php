@@ -13,11 +13,15 @@ class viewConverter_admin_page_Page extends viewConverter_admin_AdminConverter
 		$edit = new fragment_page_Edit($this->page);
 		$sections = new fragment_section_Sections($this->page);
 		
+		$breadcrumbs = new fragment_Breadcrumbs($this->breadcrumbsParams); 
+		
 		$body .= <<<_
 			<script type="text/javascript">
 				dojo.require("hhreg.xhrEditForm");
 				dojo.require("hhreg.admin.sections");
 			</script>
+			
+			{$breadcrumbs->html()}
 			
 			<div id="content">
 				{$edit->html()}

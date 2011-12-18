@@ -12,6 +12,12 @@ class template_admin_EditSection extends template_AdminPage
 		$this->event = $event;
 		$this->section = $section;
 		
+		$this->breadcrumbsParams = array(
+			'eventId' => $event['id'],
+			'pageId' => $section['pageId'],
+			'sectionId' => $section['id']
+		);
+		
 		$this->contentToFragment = array(
 			model_ContentType::$REG_TYPE => new fragment_regType_RegTypes($event, $section),
 			model_ContentType::$CONTACT_FIELD => new fragment_contactField_ContactFields($event, $section),
@@ -21,16 +27,11 @@ class template_admin_EditSection extends template_AdminPage
 		);
 	}
 
-	protected function getBreadcrumbs() {
-		return new fragment_Breadcrumb(array(
-			'location' => 'Section',
-			'sectionId' => $this->section['id']
-		));
-	}
-	
 	protected function getContent() {
 		$edit = new fragment_section_Edit($this->section);
 		$content = $this->contentToFragment[$this->section['contentType']['id']];
+		
+		$breadcrumbs = new fragment_Breadcrumbs($this->breadcrumbsParams);
 		
 		return <<<_
 			<script type="text/javascript">
@@ -40,6 +41,8 @@ class template_admin_EditSection extends template_AdminPage
 				dojo.require("hhreg.admin.regOptionGroups");
 				dojo.require("hhreg.admin.variableQuantityOptions");
 			</script>
+			
+			{$breadcrumbs->html()}
 			
 			<div id="content">
 				{$edit->html()}

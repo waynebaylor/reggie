@@ -94,6 +94,25 @@ _;
 							hhreg.util.enhanceTextarea(item);
 						});
 						
+						//////////////////////////////
+						// setup breadcrumbs (this must come before setting up main menu)
+						//////////////////////////////
+						
+						var breadcrumbHtml = dojo.query("input.breadcrumb").map(function(item) {
+							return {label: item.name, href: hhreg.util.contextUrl(item.value)};
+						}).map(function(item) {
+							return dojo.string.substitute('<td><a href="\${href}">\${label}</a></td>', item);
+						}).join('');
+						
+						if(breadcrumbHtml) {
+							breadcrumbHtml = '<div id="breadcrumb-bar"><table><tr>'+breadcrumbHtml+'</tr></table></div>';
+							dojo.place(breadcrumbHtml, dojo.byId("action-menu-bar"), "after");
+						}
+						
+						//////////////////////////////
+						// setup main menu
+						//////////////////////////////
+						
 						new hhreg.admin.widget.ActionMenuBar({
 							showUsers: {$this->showUsersMenu},
 							showEvents: {$this->showEventsMenu},

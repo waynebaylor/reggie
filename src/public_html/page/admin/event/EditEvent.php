@@ -6,6 +6,7 @@
 	dojo.require("hhreg.xhrAddList");
 	dojo.require("dijit.layout.TabContainer");
     dojo.require("dojox.layout.ContentPane");
+    dojo.require("dojo.string");
 
 	dojo.addOnLoad(function() {
 		var eventId = <?php echo $this->event['id'] ?>;
@@ -50,6 +51,8 @@
 		tabContainer.startup();
 	});
 </script>
+
+<?php $breadcrumbs = new fragment_Breadcrumbs($this->breadcrumbsParams); echo $breadcrumbs->html(); ?>
 
 <div id="content">
 	<div class="fragment-edit">

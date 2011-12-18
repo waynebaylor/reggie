@@ -86,7 +86,9 @@ _;
 		return '';
 	}
 	
-	protected abstract function getBreadcrumbs();
+	protected function getBreadcrumbs() {
+		return '';
+	}
 }
 
 ?>
