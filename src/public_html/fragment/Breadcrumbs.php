@@ -35,6 +35,14 @@ class fragment_Breadcrumbs extends template_Template
 			));
 		}
 		
+		if(isset($this->params['regTypeId'])) {
+			$html .= $this->HTML->hidden(array(
+				'class' => 'breadcrumb',
+				'name' => 'Registration Type',
+				'value' => "/admin/regType/RegType?eventId={$this->params['eventId']}&id={$this->params['regTypeId']}"
+			));
+		}
+		
 		return $html;
 	}
 }

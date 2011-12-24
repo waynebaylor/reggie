@@ -11,12 +11,6 @@ class viewConverter_admin_section_Section extends viewConverter_admin_AdminConve
 	protected function body() {
 		$body = parent::body();
 		
-		$this->breadcrumbsParams = array(
-			'eventId' => $this->event['id'],
-			'pageId' => $this->section['pageId'],
-			'sectionId' => $this->section['id']
-		);
-		
 		$this->contentToFragment = array(
 			model_ContentType::$REG_TYPE => new fragment_regType_RegTypes($this->event, $this->section),
 			model_ContentType::$CONTACT_FIELD => new fragment_contactField_ContactFields($this->event, $this->section),

@@ -4,117 +4,109 @@ class action_admin_regType_RegType extends action_ValidatorAction
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->logic = new logic_admin_regType_RegType();
+		$this->converter = new viewConverter_admin_regType_RegType();
+	}
+	
+	public static function checkRole($user, $eventId=0, $method='') {
+		return action_admin_event_EditEvent::checkRole($user, $eventId, $method);	
 	}
 
 	public function view() {
-		$regType = $this->strictFindById(db_RegTypeManager::getInstance(), $_REQUEST['id']);
-		$event = $this->strictFindById(db_EventManager::getInstance(), $_REQUEST['eventId']);
+		$params = RequestUtil::getValues(array(
+			'id' => 0,
+			'eventId' => 0
+		));
 		
-		return new template_admin_EditRegType($event, $regType);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->view($params);
+		return $this->converter->getView($info);
 	}
 	
 	public function saveRegType() {
-		$errors = $this->validate();
+		$params = RequestUtil::getValues(array(
+			'id' => 0,
+			'eventId' => 0,
+			'description' => '',
+			'code' => '',
+			'categoryIds' => array()
+		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$errors = validation_Validator::validate(validation_admin_RegType::getConfig(), $params);
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);	
 		}
 		
-		$regType = $this->strictFindById(db_RegTypeManager::getInstance(), $_REQUEST['id']);
-		
-		$regType['description'] = $_REQUEST['description'];
-		$regType['code'] = $_REQUEST['code'];
-		$categoryIds = $_REQUEST['categoryIds'];
-
-		db_RegTypeManager::getInstance()->save($regType, $categoryIds);
-		
-		return new fragment_Success();
+		$info = $this->logic->saveRegType($params);
+		return $this->converter->getSaveRegType($info);
 	}
 	
 	public function addRegType() {
-		$errors = $this->validate();
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'sectionId' => 0,
+			'description' => '',
+			'code' => '',
+			'categoryIds' => array()
+		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$errors = validation_Validator::validate(validation_admin_RegType::getConfig(), $params);
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);	
 		}
 		
-		$section = $this->strictFindById(db_PageSectionManager::getInstance(), $_REQUEST['sectionId']);
-
-		$desc = $_REQUEST['description'];
-		$code = $_REQUEST['code'];
-		$categoryIds = $_REQUEST['categoryIds'];
-
-		$page = db_PageManager::getInstance()->find($section['pageId']);
-
-		db_RegTypeManager::getInstance()->createRegType($page['eventId'], $section['id'], $desc, $code, $categoryIds);
-
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($section['id']);
-		
-		return new fragment_regType_List($event, $section);
+		$info = $this->logic->addRegType($params);
+		return $this->converter->getAddRegType($info);
 	}
 
 	public function removeRegType() {
-		$regType = $this->strictFindById(db_RegTypeManager::getInstance(), $_REQUEST['id']);
-
-		db_RegTypeManager::getInstance()->delete($regType);
-
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($regType['sectionId']);
-
-		return new fragment_regType_List($event, $section);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->removeRegType($params);
+		return $this->converter->getRemoveRegType($info);
 	}
 
 	public function moveRegTypeUp() {
-		$regType = $this->strictFindById(db_RegTypeManager::getInstance(), $_REQUEST['id']);
-
-		db_RegTypeManager::getInstance()->moveRegTypeUp($regType);
-
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($regType['sectionId']);
-
-		return new fragment_regType_List($event, $section);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->moveRegTypeUp($params);
+		return $this->converter->getMoveRegTypeUp($info);
 	}
 
 	public function moveRegTypeDown() {
-		$regType = $this->strictFindById(db_RegTypeManager::getInstance(), $_REQUEST['id']);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		db_RegTypeManager::getInstance()->moveRegTypeDown($regType);
-
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($regType['sectionId']);
-
-		return new fragment_regType_List($event, $section);
-	}
-	
-	protected function getValidationConfig() {
-		return array(
-			array(
-				'name' => 'description',
-				'value' => $_REQUEST['description'],
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Description is required.'
-					)
-				)
-			),
-			array(
-				'name' => 'code',
-				'value' => $_REQUEST['code'],
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Code is required.'
-					),
-					array(
-						'name' => 'pattern',
-						'regex' => '/^[A-Za-z0-9]+$/',
-						'text' => 'Code can only contain letters and numbers.'
-					)
-				)
-			)
-		);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->moveRegTypeDown($params);
+		return $this->converter->getMoveRegTypeDown($info);
 	}
 }
 
