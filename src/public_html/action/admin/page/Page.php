@@ -38,7 +38,7 @@ class action_admin_page_Page extends action_ValidatorAction
 		self::checkRole($user, $params['eventId']);
 		
 		$errors = validation_Validator::validate(validation_admin_Page::getConfig(), array(
-			'titke' => $params['title']
+			'title' => $params['title']
 		));
 		
 		if(!empty($errors)) {

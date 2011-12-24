@@ -26,6 +26,10 @@ _;
 					<td class="required label">Name</td>
 					<td>
 						{$this->HTML->hidden(array(
+							'name' => 'eventId',
+							'value' => $this->page['eventId']
+						))}
+						{$this->HTML->hidden(array(
 							'name' => 'pageId',
 							'value' => $this->page['id']
 						))}

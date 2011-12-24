@@ -52,6 +52,7 @@ _;
 				<td class="label">Text</td>
 				<td>
 					{$this->HTML->textarea(array(
+						'class' => 'expanding',
 						'name' => 'text',
 						'value' => $this->escapeHtml($this->section['text']),
 						'rows' => 10,

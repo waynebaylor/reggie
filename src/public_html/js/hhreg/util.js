@@ -47,7 +47,7 @@ dojo.require("dijit.form.Textarea");
 	util.enhanceTextarea = function(/*DOM Node*/ node) {
 		var ta = new dijit.form.Textarea({
 			name: node.name, 
-			style: "min-height:75px; width:500px;"
+			style: "min-height:75px; width:900px;"
 		}, node);
 		
 		ta.startup();
