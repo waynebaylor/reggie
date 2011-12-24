@@ -62,6 +62,21 @@ _;
 		$this->setProperties($properties);
 		return new fragment_section_List($this->page);
 	}
+	
+	public function getRemoveSection($properties) {
+		$this->setProperties($properties);
+		return new fragment_section_List($this->page);
+	}
+	
+	public function getMoveSectionUp($properties) {
+		$this->setProperties($properties);
+		return new fragment_section_List($this->page);
+	}
+	
+	public function getMoveSectionDown($properties) {
+		$this->setProperties($properties);
+		return new fragment_section_List($this->page);
+	}
 }
 
 ?>

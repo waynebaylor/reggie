@@ -68,38 +68,44 @@ class action_admin_section_Section extends action_ValidatorAction
 		$info = $this->logic->addSection($params);
 		return $this->converter->getAddSection($info);
 	}
-
-	
-	
 	
 	public function removeSection() {
-		$section = $this->strictFindById(db_PageSectionManager::getInstance(), $_REQUEST['id']);
-
-		db_PageSectionManager::getInstance()->delete($section);
-
-		$page = db_PageManager::getInstance()->find($section['pageId']);
-
-		return new fragment_section_List($page);
+		$params = RequestUtil::getValues(array(
+			'id' => 0,
+			'eventId' => 0
+		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->removeSection($params);
+		return $this->converter->getRemoveSection($info);
 	}
 
 	public function moveSectionUp() {
-		$section = $this->strictFindById(db_PageSectionManager::getInstance(), $_REQUEST['id']);
-
-		db_PageSectionManager::getInstance()->moveSectionUp($section);
-
-		$page = db_PageManager::getInstance()->find($section['pageId']);
-
-		return new fragment_section_List($page);
+		$params = RequestUtil::getValues(array(
+			'id' => 0,
+			'eventId' => 0
+		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->moveSectionUp($params);
+		return $this->converter->getMoveSectionUp($info);
 	}
 
 	public function moveSectionDown() {
-		$section = $this->strictFindById(db_PageSectionManager::getInstance(), $_REQUEST['id']);
-
-		db_PageSectionManager::getInstance()->moveSectionDown($section);
-
-		$page = db_PageManager::getInstance()->find($section['pageId']);
-
-		return new fragment_section_List($page);
+		$params = RequestUtil::getValues(array(
+			'id' => 0,
+			'eventId' => 0
+		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->moveSectionDown($params);
+		return $this->converter->getMoveSectionDown($info);
 	}
 }
 

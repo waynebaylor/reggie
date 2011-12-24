@@ -39,6 +39,45 @@ class logic_admin_section_Section extends logic_Performer
 			'page' => $page
 		);
 	}
+	
+	public function removeSection($params) {
+		$section = $this->strictFindById(db_PageSectionManager::getInstance(), $params['id']);
+
+		db_PageSectionManager::getInstance()->delete($section);
+
+		$page = db_PageManager::getInstance()->find($section['pageId']);
+
+		return array(
+			'eventId' => $params['eventId'],
+			'page' => $page
+		);
+	}
+	
+	public function moveSectionUp($params) {
+		$section = $this->strictFindById(db_PageSectionManager::getInstance(), $params['id']);
+
+		db_PageSectionManager::getInstance()->moveSectionUp($section);
+
+		$page = db_PageManager::getInstance()->find($section['pageId']);
+
+		return array(
+			'eventId' => $params['eventId'],
+			'page' => $page
+		);
+	}
+	
+	public function moveSectionDown($params) {
+		$section = $this->strictFindById(db_PageSectionManager::getInstance(), $params['id']);
+
+		db_PageSectionManager::getInstance()->moveSectionDown($section);
+
+		$page = db_PageManager::getInstance()->find($section['pageId']);
+
+		return array(
+			'eventId' => $params['eventId'],
+			'page' => $page
+		);
+	}
 }
 
 ?>
