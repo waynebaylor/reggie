@@ -32,6 +32,10 @@ _;
 				<td class="required label">Label</td>
 				<td>
 					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $this->event['id']
+					))}
+					{$this->HTML->hidden(array(
 						'name' => 'sectionId',
 						'value'=> $this->section['id']
 					))}

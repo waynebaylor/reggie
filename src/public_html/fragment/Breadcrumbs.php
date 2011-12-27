@@ -43,6 +43,14 @@ class fragment_Breadcrumbs extends template_Template
 			));
 		}
 		
+		if(isset($this->params['contactFieldId'])) {
+			$html .= $this->HTML->hidden(array(
+				'class' => 'breadcrumb',
+				'name' => 'Information Field',
+				'value' => "/admin/contactField/ContactField?eventId={$this->params['eventId']}&id={$this->params['contactFieldId']}"
+			));
+		}
+		
 		return $html;
 	}
 }

@@ -40,7 +40,9 @@ _;
 		foreach($contactFields as $field) {
 			$arrows = new fragment_Arrows(array(
 				'href' => '/admin/contactField/ContactField',
-				'parameters' => array(),
+				'parameters' => array(
+					'eventId' => $this->event['id']
+				),
 				'up' => array(
 					'action' => 'moveFieldUp',
 					'id' => $field['id']
@@ -76,7 +78,8 @@ _;
 							'href' => '/admin/contactField/ContactField',
 							'parameters' => array(
 								'action' => 'view',
-								'id' => $field['id']
+								'id' => $field['id'],
+								'eventId' => $this->event['id']
 							)
 						))}
 						
@@ -85,7 +88,8 @@ _;
 							'href' => '/admin/contactField/ContactField',
 							'parameters' => array(
 								'action' => 'removeField',
-								'id' => $field['id']
+								'id' => $field['id'],
+								'eventId' => $this->event['id']
 							),
 							'class' => 'remove'
 						))}

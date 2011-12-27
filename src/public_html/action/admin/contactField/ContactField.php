@@ -4,126 +4,114 @@ class action_admin_contactField_ContactField extends action_ValidatorAction
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->logic = new logic_admin_contactField_ContactField();
+		$this->converter = new viewConverter_admin_contactField_ContactField();
 	}
 
+	public static function checkRole($user, $eventId=0, $method='') {
+		return action_admin_event_EditEvent::checkRole($user, $eventId, $method);	
+	}
+	
 	public function view() {
-		$field = $this->strictFindById(db_ContactFieldManager::getInstance(), $_REQUEST['id']);
-		$event = $this->strictFindById(db_EventManager::getInstance(), $field['eventId']);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		return new template_admin_EditContactField($event, $field);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->view($params);
+		return $this->converter->getView($info);
 	}
 	
 	public function addField() {
-		$errors = $this->validate();
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'sectionId' => 0,
+			'displayName' => '',
+			'code' => '',
+			'formInputId' => 0,
+			'request' => $_REQUEST
+		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$errors = validation_Validator::validate(validation_admin_ContactField::getConfig(), $params);
 		
 		if(!empty($errors)) {
-			return new fragment_validation_ValidationErrors($errors);
+			return new fragment_validation_ValidationErrors($errors);	
 		}
 		
-		$section = $this->strictFindById(db_PageSectionManager::getInstance(), $_REQUEST['sectionId']);
-
-		$field = array();
-		ObjectUtils::populate($field, $_REQUEST); 
-		$field['eventId'] = $section['eventId'];
-		
-		db_ContactFieldManager::getInstance()->createContactField($field);
-		
-
-		$event = db_EventManager::getInstance()->find($section['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($section['id']);
-		
-		return new fragment_contactField_List($event, $section);
+		$info = $this->logic->addField($params);
+		return $this->converter->getAddField($info);
 	}
 	
 	public function removeField() {
-		$field = $this->strictFindById(db_ContactFieldManager::getInstance(), $_REQUEST['id']);
-
-		$sectionId = $field['sectionId'];
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		db_ContactFieldManager::getInstance()->delete($field);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$event = db_EventManager::getInstance()->find($field['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($sectionId);
-		
-		return new fragment_contactField_List($event, $section);
+		$info = $this->logic->removeField($params);
+		return $this->converter->getRemoveField($info);
 	}
 	
 	public function moveFieldUp() {
-		$field = $this->strictFindById(db_ContactFieldManager::getInstance(), $_REQUEST['id']);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		db_ContactFieldManager::getInstance()->moveFieldUp($field);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$event = db_EventManager::getInstance()->find($field['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($field['sectionId']);
-		
-		return new fragment_contactField_List($event, $section);
+		$info = $this->logic->moveFieldUp($params);
+		return $this->converter->getMoveFieldUp($info);
 	}
 	
 	public function moveFieldDown() {
-		$field = $this->strictFindById(db_ContactFieldManager::getInstance(), $_REQUEST['id']);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		db_ContactFieldManager::getInstance()->moveFieldDown($field);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$event = db_EventManager::getInstance()->find($field['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($field['sectionId']);
-		
-		return new fragment_contactField_List($event, $section);
+		$info = $this->logic->moveFieldDown($params);
+		return $this->converter->getMoveFieldDown($info);
 	}
 	
 	public function save() {
-		$errors = $this->validate();
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0,
+			'displayName' => '',
+			'code' => '',
+			'formInputId' => 0,
+			'request' => $_REQUEST
+		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$errors = validation_Validator::validate(validation_admin_ContactField::getConfig(), $params);
 		
 		if(!empty($errors)) {
-			return new fragment_validation_ValidationErrors($errors);
+			return new fragment_validation_ValidationErrors($errors);	
 		}
 		
-		$field = array();
-		ObjectUtils::populate($field, $_REQUEST);
-
-		db_ContactFieldManager::getInstance()->save($field);
-	
-		return new fragment_Success();
+		$info = $this->logic->save($params);
+		return $this->converter->getSave($info);
 	}
 	
-	protected function getValidationConfig() {
-		return array(
-			array(
-				'name' => 'displayName',
-				'value' => $_REQUEST['displayName'],
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Label is required.'
-					)
-				)
-			),
-			array(
-				'name' => 'code',
-				'value' => $_REQUEST['code'],
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Code is required.'
-					),
-					array(
-						'name' => 'pattern',
-						'regex' => '/^[A-Za-z0-9]+$/',
-						'text' => 'Code can only contain letters and numbers.'
-					)
-				)
-			),
-			array(
-				'name' => 'formInputId',
-				'value' => $_REQUEST['formInputId'],
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Type is required.'
-					)
-				)
-			)
-		);
-	}
+	
 }
 
 ?>
