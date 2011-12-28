@@ -51,6 +51,37 @@ class fragment_Breadcrumbs extends template_Template
 			));
 		}
 		
+		// the option groups and reg options are ordered in a sub-array according to their hierarchy.
+		if(isset($this->params['regGroupsAndOpts'])) {
+			foreach($this->params['regGroupsAndOpts'] as $index => $groupOrOptId) {
+				// the first will always be the option group under the section.
+				if($index === 0) {
+					$html .= $this->HTML->hidden(array(
+						'class' => 'breadcrumb',
+						'name' => 'Option Group',
+						'value' => "/admin/regOption/SectionRegOptionGroup?eventId={$this->params['eventId']}&id={$groupOrOptId}"
+					));
+				}
+				
+				// reg option comes next.
+				if($index > 0 && $index % 2 === 1) {
+					$html .= $this->HTML->hidden(array(
+						'class' => 'breadcrumb',
+						'name' => 'Reg Option',
+						'value' => "/admin/regOption/RegOption?{$this->params['eventId']}&id={$groupOrOptId}"
+					));
+				}
+				// followed by option group.
+				else if($index > 0 && $index % 2 === 0) {
+					$html .= $this->HTML->hidden(array(
+						'class' => 'breadcrumb',
+						'name' => 'Option Group',
+						'value' => "/admin/regOption/RegOptionGroup?{$this->params['eventId']}&id={$groupOrOptId}"
+					));
+				}
+			}
+		}
+		
 		return $html;
 	}
 }

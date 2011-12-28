@@ -4,138 +4,105 @@ class action_admin_regOption_SectionRegOptionGroup extends action_ValidatorActio
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->logic = new logic_admin_regOption_SectionRegOptionGroup();
+		$this->converter = new viewConverter_admin_regOption_SectionRegOptionGroup();
+	}
+	
+	public static function checkRole($user, $eventId=0, $method='') {
+		return action_admin_event_EditEvent::checkRole($user, $eventId, $method);	
 	}
 	
 	public function view() {
-		$group = $this->strictFindById(db_GroupManager::getInstance(), RequestUtil::getValue('id', 0));
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		$eventId = RequestUtil::getValue('eventId', 0);
-		$event = db_EventManager::getInstance()->find($eventId);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		return new template_admin_EditSectionRegOptionGroup($event, $group);
+		$info = $this->logic->view($params);
+		return $this->converter->getView($info);
 	}
 	
 	public function addGroup() {
-		$errors = $this->validate();
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'sectionId' => 0,
+			'required' => 'F',
+			'multiple' => 'F',
+			'minimum' => 0,
+			'maximum' => 0
+		));
 		
-		if(!empty($errors)) {
-			return new fragment_validation_ValidationErrors($errors);	
-		}
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$section = $this->strictFindById(db_PageSectionManager::getInstance(), $_REQUEST['sectionId']);
-		
-		$group = array(
-			'eventId' => $section['eventId'],
-			'sectionId' => $section['id'],
-			'required' => RequestUtil::getValue('required', 'F'),
-			'multiple' => RequestUtil::getValue('multiple', 'F'),
-			'minimum' => RequestUtil::getValue('minimum', 0),
-			'maximum' => RequestUtil::getValue('maximum', 0)
-		);
-		
-		db_GroupManager::getInstance()->createGroupUnderSection($group);
-		
-		$section = db_PageSectionManager::getInstance()->find($section['id']);
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
-		
-		return new fragment_sectionRegOptionGroup_List($event, $section);
+		$info = $this->logic->addGroup($params);
+		return $this->converter->getAddGroup($info);
 	}
 	
 	public function removeGroup() {
-		$group = $this->strictFindById(db_GroupManager::getInstance(), RequestUtil::getValue('id', 0));
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		db_GroupManager::getInstance()->deleteById($group['id']);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$section = db_PageSectionManager::getInstance()->find($group['sectionId']);
-		$event = db_EventManager::getInstance()->find($group['eventId']);
-		
-		return new fragment_sectionRegOptionGroup_List($event, $section);
+		$info = $this->logic->removeGroup($params);
+		return $this->converter->getRemoveGroup($info);
 	}
 	
 	public function moveGroupUp() {
-		$group = $this->strictFindById(db_GroupManager::getInstance(), RequestUtil::getValue('id', 0));
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		db_GroupManager::getInstance()->moveGroupUp($group);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$section = db_PageSectionManager::getInstance()->find($group['sectionId']);
-		$event = db_EventManager::getInstance()->find($group['eventId']);
-		
-		return new fragment_sectionRegOptionGroup_List($event, $section);
+		$info = $this->logic->moveGroupUp($params);
+		return $this->converter->getMoveGroupUp($info);
 	}
 	
 	public function moveGroupDown() {
-		$group = $this->strictFindById(db_GroupManager::getInstance(), RequestUtil::getValue('id', 0));
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		db_GroupManager::getInstance()->moveGroupDown($group);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$section = db_PageSectionManager::getInstance()->find($group['sectionId']);
-		$event = db_EventManager::getInstance()->find($group['eventId']);
-		
-		return new fragment_sectionRegOptionGroup_List($event, $section);
+		$info = $this->logic->moveGroupDown($params);
+		return $this->converter->getMoveGroupDown($info);
 	}
 	
 	public function saveGroup() {
-		$errors = $this->validate();
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0,
+			'required' => 'F',
+			'multiple' => 'F',
+			'minimum' => 0,
+			'maximum' => 0
+		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$errors = validation_admin_SectionRegOptionGroup::validate($params);
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);	
 		}
 		
-		$group = $this->strictFindById(db_GroupManager::getInstance(), RequestUtil::getValue('id', 0));
-		
-		$group['required'] = RequestUtil::getValue('required', 'F');
-		$group['multiple'] = RequestUtil::getValue('multiple', 'F');
-		$group['minimum'] = RequestUtil::getValue('minimum', 0);
-		$group['maximum'] = RequestUtil::getValue('maximum', 0);
-		
-		db_GroupManager::getInstance()->save($group);
-		
-		return new fragment_Success();
-	}
-	
-	public function validate($fieldNames = array()) {
-		$errors = parent::validate($fieldNames);
-		
-		$validBooleans = array('T', 'F');
-		
-		$required = RequestUtil::getValue('required', 'F');
-		$multiple = RequestUtil::getValue('multiple', 'F');
-		
-		if(!in_array($required, $validBooleans)) {
-			$required = 'F';
-		}
-		
-		if(!in_array($multiple, $validBooleans)) {
-			$multiple = 'F';
-		}
-		
-		if($multiple === 'T') {
-			// don't let min/max start with 0, since octal numbers start with 0.
-			
-			$minimum = RequestUtil::getValue('minimum', 0);
-			
-			// first check if minimum is valid.
-			if(!preg_match('/^0|([1-9][0-9]*)$/', $minimum)) {
-				$errors['minimum'] = 'Minimum must be 0 or more.';
-			}
-			// if required, then the minimum must be at least one.
-			else if($required === 'T' && $minimum < 1) {
-				$errors['minimum'] = 'Minimum must be 1 or more if Required.';
-			}
-			// if minimum is greater than 0, then required must be true.
-			else if($required === 'F' && $minimum > 0) {
-				$errors['minimum'] = 'Minimum must be 0 if not Required.';		
-			}
-			// maximum can't be less than minimum.
-			else {
-				$maximum = RequestUtil::getValue('maximum', 0);
-				if(!preg_match('/^0|([1-9][0-9]*)$/', $maximum) || $maximum < $minimum) {
-					$errors['maximum'] = 'Maximum must be greater or equal to Minimum.';
-				}
-			}
-		}
-		
-		return $errors;
+		$info = $this->logic->saveGroup($params);
+		return $this->converter->getSaveGroup($info);
 	}
 }
 
