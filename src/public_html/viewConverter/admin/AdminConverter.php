@@ -86,10 +86,6 @@ _;
 					dojo.require("dijit.form.Textarea");
 					
 					dojo.addOnLoad(function() { 
-						setTimeout(function() {
-							dojo.query(dojo.byId("page-render-time")).orphan();
-						}, 3000);
-						
 						dojo.query("textarea.expanding").forEach(function(item) {
 							hhreg.util.enhanceTextarea(item);
 						});
@@ -135,7 +131,7 @@ _;
 				
 				<div id="action-menu-bar"></div>
 				
-				<div id="page-render-time" style="position:fixed;bottom:0;background-color:#333;color:#aaa;">Page Rendered in {$this->pageRenderTime()}s</div>
+				<div id="page-render-time" style="display:none;">Page Rendered in {$this->pageRenderTime()}s</div>
 _;
 	}
 	
