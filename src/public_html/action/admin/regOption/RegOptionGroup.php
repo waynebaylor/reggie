@@ -4,89 +4,100 @@ class action_admin_regOption_RegOptionGroup extends action_BaseAction
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->logic = new logic_admin_regOption_RegOptionGroup();
+		$this->converter = new viewConverter_admin_regOption_RegOptionGroup();
+	}
+	
+	public static function checkRole($user, $eventId=0, $method='') {
+		return action_admin_event_EditEvent::checkRole($user, $eventId, $method);	
 	}
 	
 	public function view() {
-		$group = $this->strictFindById(db_GroupManager::getInstance(), RequestUtil::getValue('id', 0));
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		$event = db_EventManager::getInstance()->find($group['eventId']);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		return new template_admin_EditSectionRegOptionGroup($event, $group);
+		$info = $this->logic->view($params);
+		return $this->converter->getView($info);
 	}
 	
 	public function addGroup() {
-		$option = $this->strictFindById(db_RegOptionManager::getInstance(), RequestUtil::getValue('regOptionId', 0));
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'regOptionId' => 0,
+			'required' => 'F',
+			'multiple' => 'F',
+			'minimum' => 0,
+			'maximum' => 0
+		));
 		
-		$required = RequestUtil::getValue('required', 'F');
-		$multiple = RequestUtil::getValue('multiple', 'F');
-
-		$minimum = ($multiple === 'T')? $_REQUEST['minimum'] : 0;
-		$maximum = ($multiple === 'T')? $_REQUEST['maximum'] : 0;
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$group = array(
-			'eventId' => RequestUtil::getValue('eventId', 0),
-			'regOptionId' => $option['id'],
-			'required' => $required,
-			'multiple' => $multiple,
-			'minimum' => $minimum,
-			'maximum' => $maximum
-		);
-		
-		db_GroupManager::getInstance()->createGroupUnderOption($group);
-		
-		$option = db_RegOptionManager::getInstance()->find($option['id']);
-		$event = db_EventManager::getInstance()->find($group['eventId']);
-		
-		return new fragment_regOptionGroup_List($event, $option);
+		$info = $this->logic->addGroup($params);
+		return $this->converter->getAddGroup($info);
 	}
 	
 	public function removeGroup() {
-		$group = $this->strictFindById(db_GroupManager::getInstance(), RequestUtil::getValue('id', 0));
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		db_GroupManager::getInstance()->deleteById($group['id']);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$option = db_RegOptionManager::getInstance()->find($group['regOptionId']);
-		$event = db_EventManager::getInstance()->find($group['eventId']);
-		
-		return new fragment_regOptionGroup_List($event, $option);
+		$info = $this->logic->removeGroup($params);
+		return $this->converter->getRemoveGroup($info);
 	}
 	
 	public function moveGroupUp() {
-		$group = $this->strictFindById(db_GroupManager::getInstance(), RequestUtil::getValue('id', 0));
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		db_GroupManager::getInstance()->moveGroupUp($group);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$option = db_RegOptionManager::getInstance()->find($group['regOptionId']);
-		$event = db_EventManager::getInstance()->find($group['eventId']);
-		
-		return new fragment_regOptionGroup_List($event, $option);
+		$info = $this->logic->moveGroupUp($params);
+		return $this->converter->getMoveGroupUp($info);
 	}
 	
 	public function moveGroupDown() {
-		$group = $this->strictFindById(db_GroupManager::getInstance(), RequestUtil::getValue('id', 0));
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		db_GroupManager::getInstance()->moveGroupDown($group);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$option = db_RegOptionManager::getInstance()->find($group['regOptionId']);
-		$event = db_EventManager::getInstance()->find($group['eventId']);
-		
-		return new fragment_regOptionGroup_List($event, $option);
+		$info = $this->logic->moveGroupDown($params);
+		return $this->converter->getMoveGroupDown($info);
 	}
 	
 	public function saveGroup() {
-		$group = $this->strictFindById(db_GroupManager::getInstance(), RequestUtil::getValue('id', 0));
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0,
+			'regOptionId' => 0,
+			'required' => 'F',
+			'multiple' => 'F',
+			'minimum' => 0,
+			'maximum' => 0
+		));
 		
-		$group = array(
-			'id' => $_REQUEST['id'],
-			'required' => RequestUtil::getValue('required', 'F'),
-			'multiple' => RequestUtil::getValue('multiple', 'F'),
-			'minimum' => RequestUtil::getValue('minimum', 0),
-			'maximum' => RequestUtil::getValue('maximum', 0)
-		);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		db_GroupManager::getInstance()->save($group);
-		
-		return new fragment_Success();
+		$info = $this->logic->saveGroup($params);
+		return $this->converter->getSaveGroup($info);
 	}
 }
 

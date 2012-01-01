@@ -68,7 +68,7 @@ class fragment_Breadcrumbs extends template_Template
 					$html .= $this->HTML->hidden(array(
 						'class' => 'breadcrumb',
 						'name' => 'Reg Option',
-						'value' => "/admin/regOption/RegOption?{$this->params['eventId']}&id={$groupOrOptId}"
+						'value' => "/admin/regOption/RegOption?eventId={$this->params['eventId']}&id={$groupOrOptId}"
 					));
 				}
 				// followed by option group.
@@ -76,7 +76,7 @@ class fragment_Breadcrumbs extends template_Template
 					$html .= $this->HTML->hidden(array(
 						'class' => 'breadcrumb',
 						'name' => 'Option Group',
-						'value' => "/admin/regOption/RegOptionGroup?{$this->params['eventId']}&id={$groupOrOptId}"
+						'value' => "/admin/regOption/RegOptionGroup?eventId={$this->params['eventId']}&id={$groupOrOptId}"
 					));
 				}
 			}

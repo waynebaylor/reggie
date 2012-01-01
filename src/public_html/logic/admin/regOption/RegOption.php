@@ -94,8 +94,8 @@ class logic_admin_regOption_RegOption extends logic_Performer
 		return $params;
 	}
 	
-	private function breadcrumbsParams($id) {
-		$groupsAndOpts = $this->getGroupsAndOpts($id);
+	private function breadcrumbsParams($regOptionId) {
+		$groupsAndOpts = db_BreadcrumbManager::getInstance()->getGroupsAndOpts($regOptionId);
 		
 		// the first id in $groupsAndOpts is the section group.
 		$group = db_GroupManager::getInstance()->find($groupsAndOpts[0]);
@@ -109,21 +109,7 @@ class logic_admin_regOption_RegOption extends logic_Performer
 		);
 	}
 	
-	private function getGroupsAndOpts($id) {
-		$ids = array($id);
-		
-		$option = db_RegOptionManager::getInstance()->find($id);
-		$group = db_GroupManager::getInstance()->find($option['parentGroupId']);
-		$ids[] = $group['id'];
-		
-		if(!model_RegOptionGroup::isSectionGroup($group)) {
-			$tmp = $this->getGroupsAndOpts($group['regOptionId']);
-			$tmp = array_reverse($tmp);
-			$ids = array_merge($ids, $tmp);
-		}
-		
-		return array_reverse($ids);
-	}
+	
 }
 
 ?>

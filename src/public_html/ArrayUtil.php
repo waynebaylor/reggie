@@ -49,7 +49,22 @@ class ArrayUtil
 	 * @param $default the default value
 	 */
 	public static function getValue($arr, $name, $default) {
-		return isset($arr[$name])? $arr[$name] : $default;
+		if(isset($arr[$name])) {
+			$value = $arr[$name];
+			
+			if(is_int($default)) {
+				return intval($value);
+			}
+			else if(is_float($default)) {
+				return floatval($value);
+			}
+			else {
+				return $value;
+			}
+		}
+		else {
+			return $default;
+		}
 	}
 	
 	public static function getValues($arr, $nameDefaults) {

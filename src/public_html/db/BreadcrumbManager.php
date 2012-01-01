@@ -169,6 +169,28 @@ class db_BreadcrumbManager extends db_Manager
 		
 		return $this->rawQueryUnique($sql, $params, 'Find generate report breadcrumbs.');
 	}
+	
+	/**
+	 * returns an array of reg group and reg option ids. ids are ordered by
+	 * placement in the hierarchy ending with the given reg option id and 
+	 * working backward up the hierarchy from there.
+	 * @param number $regOptionId the reg option to start with
+	 */
+	public function getGroupsAndOpts($regOptionId) {
+		$ids = array($regOptionId);
+		
+		$option = db_RegOptionManager::getInstance()->find($regOptionId);
+		$group = db_GroupManager::getInstance()->find($option['parentGroupId']);
+		$ids[] = $group['id'];
+		
+		if(!model_RegOptionGroup::isSectionGroup($group)) {
+			$tmp = $this->getGroupsAndOpts($group['regOptionId']);
+			$tmp = array_reverse($tmp);
+			$ids = array_merge($ids, $tmp);
+		}
+		
+		return array_reverse($ids);
+	}
 }
 
 ?>

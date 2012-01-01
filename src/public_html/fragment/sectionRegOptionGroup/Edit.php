@@ -35,6 +35,10 @@ _;
 				<td class="label">Restrictions</td>
 				<td>
 					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $this->group['eventId']
+					))}
+					{$this->HTML->hidden(array(
 						'name' => 'id',
 						'value' => $this->group['id']
 					))}
