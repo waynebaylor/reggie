@@ -15,25 +15,7 @@ class logic_admin_regOption_RegOptionGroup extends logic_Performer
 			'eventId' => $params['eventId'],
 			'event' => $event,
 			'group' => $group,
-			'breadcrumbsParams' => $this->breadcrumbsParams($group)
-		);
-		
-		return new template_admin_EditSectionRegOptionGroup($event, $group);
-	}
-	
-	private function breadcrumbsParams($group) {
-		$groupsAndOpts = db_BreadcrumbManager::getInstance()->getGroupsAndOpts($group['regOptionId']);
-		$groupsAndOpts[] = $group['id'];
-		
-		// the first id in $groupsAndOpts is the section group.
-		$sectionGroup = db_GroupManager::getInstance()->find($groupsAndOpts[0]);
-		$bc = db_BreadcrumbManager::getInstance()->findSectionCrumbs($sectionGroup['sectionId']);
-			
-		return array(
-			'eventId' => $bc['eventId'],
-			'pageId' => $bc['pageId'],
-			'sectionId' => $bc['sectionId'],
-			'regGroupsAndOpts' => $groupsAndOpts
+			'breadcrumbsParams' => db_BreadcrumbManager::getInstance()->findRegOptionGroupCrumbs($params['id'])
 		);
 	}
 	

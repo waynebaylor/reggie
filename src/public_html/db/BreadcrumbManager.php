@@ -170,13 +170,61 @@ class db_BreadcrumbManager extends db_Manager
 		return $this->rawQueryUnique($sql, $params, 'Find generate report breadcrumbs.');
 	}
 	
+	public function findRegOptionGroupCrumbs($regOptionGroupId) {
+		$group = db_GroupManager::getInstance()->find($regOptionGroupId);
+
+		$groupsAndOpts = $this->getGroupsAndOpts($group['regOptionId']);
+		$groupsAndOpts[] = $group['id'];
+		
+		// the first id in $groupsAndOpts is the section group.
+		$sectionGroup = db_GroupManager::getInstance()->find($groupsAndOpts[0]);
+		$bc =$this->findSectionCrumbs($sectionGroup['sectionId']);
+			
+		return array(
+			'eventId' => $bc['eventId'],
+			'pageId' => $bc['pageId'],
+			'sectionId' => $bc['sectionId'],
+			'regGroupsAndOpts' => $groupsAndOpts
+		);
+	}
+	
+	public function findRegOptionCrumbs($regOptionId) {
+		$groupsAndOpts = $this->getGroupsAndOpts($regOptionId);
+		
+		// the first id in $groupsAndOpts is the section group.
+		$group = db_GroupManager::getInstance()->find($groupsAndOpts[0]);
+		$bc = db_BreadcrumbManager::getInstance()->findSectionCrumbs($group['sectionId']);
+			
+		return array(
+			'eventId' => $bc['eventId'],
+			'pageId' => $bc['pageId'],
+			'sectionId' => $bc['sectionId'],
+			'regGroupsAndOpts' => $groupsAndOpts
+		);
+	}
+	
+	public function findRegOptionPriceCrumbs($regOptionPriceId) {
+		$price = db_RegOptionPriceManager::getInstance()->find($regOptionPriceId);
+		
+		if(db_RegOptionPriceManager::getInstance()->isVariableQuantityPrice($price)) {
+			$bc = db_BreadcrumbManager::getInstance()->findVariableRegOptionCrumbs($price['regOptionId']);
+		}
+		else {
+			$bc = db_BreadcrumbManager::getInstance()->findRegOptionCrumbs($price['regOptionId']);
+		}
+		
+		$bc['regOptionPrice'] = $regOptionPriceId;
+		
+		return $bc;
+	}
+	
 	/**
 	 * returns an array of reg group and reg option ids. ids are ordered by
 	 * placement in the hierarchy ending with the given reg option id and 
 	 * working backward up the hierarchy from there.
 	 * @param number $regOptionId the reg option to start with
 	 */
-	public function getGroupsAndOpts($regOptionId) {
+	private function getGroupsAndOpts($regOptionId) {
 		$ids = array($regOptionId);
 		
 		$option = db_RegOptionManager::getInstance()->find($regOptionId);

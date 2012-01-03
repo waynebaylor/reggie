@@ -4,199 +4,114 @@ class action_admin_regOption_RegOptionPrice extends action_ValidatorAction
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->logic = new logic_admin_regOption_RegOptionPrice();
+		$this->converter = new viewConverter_admin_regOption_RegOptionPrice();
+	}
+	
+	public static function checkRole($user, $eventId=0, $method='') {
+		return action_admin_event_EditEvent::checkRole($user, $eventId, $method);	
 	}
 	
 	public function view() {
-		$price = $this->strictFindById(db_RegOptionPriceManager::getInstance(), $_REQUEST['id']);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		$eventId = $_REQUEST['eventId'];
-		$event = db_EventManager::getInstance()->find($eventId);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		return new template_admin_EditRegOptionPrice($event, $price);
+		$info = $this->logic->view($params);
+		return $this->converter->getView($info);
 	}
 	
 	public function addVariableQuantityPrice() {
-		$errors = $this->validate();
-		
-		if(!empty($errors)) {
-			return new fragment_validation_ValidationErrors($errors);
-		}
-		
-		$option = $this->strictFindById(db_VariableQuantityOptionManager::getInstance(), $_REQUEST['regOptionId']);
-		
-		$price = RequestUtil::getParameters(array(
-			'eventId',
-			'regOptionId',
-			'description',
-			'startDate',
-			'endDate',
-			'price',
-			'regTypeIds'
+		$params = RequestUtil::getValues(array(
+			'action' => '',
+			'eventId' => 0,
+			'regOptionId' => 0,
+			'description' => '',
+			'startDate' => '',
+			'endDate' => '',
+			'price' => 0.00,
+			'regTypeIds' => array(-1)
 		));
 		
-		db_RegOptionPriceManager::getInstance()->createVariableQuantityPrice($price);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$option = db_VariableQuantityOptionManager::getInstance()->find($option['id']);
-		$event = db_EventManager::getInstance()->find($price['eventId']);
+		$errors = validation_admin_RegOptionPrice::validate($params);
 		
-		return new fragment_regOptionPrice_List($event, $option);
+		if(!empty($errors)) {
+			return new fragment_validation_ValidationErrors($errors);	
+		}
+		
+		$info = $this->logic->addVariableQuantityPrice($params);
+		return $this->converter->getAddVariableQuantityPrice($info);
 	}
 	
 	public function addRegOptionPrice() {
-		$errors = $this->validate();
-		
-		if(!empty($errors)) {
-			return new fragment_validation_ValidationErrors($errors);
-		}
-		
-		$option = $this->strictFindById(db_RegOptionManager::getInstance(), $_REQUEST['regOptionId']);
-		
-		$price = RequestUtil::getParameters(array(
-			'eventId',
-			'regOptionId',
-			'description',
-			'startDate',
-			'endDate',
-			'price',
-			'regTypeIds'
+		$params = RequestUtil::getValues(array(
+			'action' => '',
+			'eventId' => 0,
+			'regOptionId' => 0,
+			'description' => '',
+			'startDate' => '',
+			'endDate' => '',
+			'price' => 0.00,
+			'regTypeIds' => array(-1)
 		));
 		
-		db_RegOptionPriceManager::getInstance()->createRegOptionPrice($price);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$option = db_RegOptionManager::getInstance()->find($option['id']);
-		$event = db_EventManager::getInstance()->find($price['eventId']);
+		$errors = validation_admin_RegOptionPrice::validate($params);
 		
-		return new fragment_regOptionPrice_List($event, $option);
+		if(!empty($errors)) {
+			return new fragment_validation_ValidationErrors($errors);	
+		}
+		
+		$info = $this->logic->addRegOptionPrice($params);
+		return $this->converter->getAddRegOptionPrice($info);
 	}
 	
 	public function removePrice() {
-		$price = $this->strictFindById(db_RegOptionPriceManager::getInstance(), $_REQUEST['id']);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,	
+			'id' => 0
+		));
 		
-		db_RegOptionPriceManager::getInstance()->delete($price);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$option = db_RegOptionManager::getInstance()->find($price['regOptionId']);
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
-		
-		return new fragment_regOptionPrice_List($event, $option);
+		$info = $this->logic->removePrice($params);
+		return $this->converter->getRemovePrice($info);
 	}
 	
 	public function savePrice() {
-		$errors = $this->validate();
+		$params = RequestUtil::getValues(array(
+			'action' => '',
+			'eventId' => 0,
+			'id' => 0,
+			'description' => '',
+			'startDate' => '',
+			'endDate' => '',
+			'price' => 0.00,
+			'regTypeIds' => array(-1)
+		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$errors = validation_admin_RegOptionPrice::validate($params);
 		
 		if(!empty($errors)) {
-			return new fragment_validation_ValidationErrors($errors);
+			return new fragment_validation_ValidationErrors($errors);	
 		}
 		
-		$price = $this->strictFindById(db_RegOptionPriceManager::getInstance(), $_REQUEST['id']);
-		
-		$price = array();
-		ObjectUtils::populate($price, $_REQUEST);
-		
-		db_RegOptionPriceManager::getInstance()->save($price);
-		
-		return new fragment_Success();
-	}
-	
-	public function validate($fieldNames = array()) {
-		$errors = parent::validate($fieldNames);
-		
-		// 'regOptionId' will be present if this is a new price being added.
-		// 'id' will be present if this is an existing price being saved.
-		if(isset($_REQUEST['regOptionId'])) {
-			$optionId = $_REQUEST['regOptionId'];  
-		}
-		else {
-			$price = $this->strictFindById(db_RegOptionPriceManager::getInstance(), $_REQUEST['id']);
-			$optionId = $price['regOptionId'];
-		}
-
-		// if the price is associated with a variable quantity option, then:
-		//  1) when adding, the value of the action parameter will be 'addVariableQuantityPrice'.
-		//  2) when saving, the price can be checked by its manager.
-		$isVariableQuantityPrice = isset($price) && db_RegOptionPriceManager::getInstance()->isVariableQuantityPrice($price);
-		if($_REQUEST['action'] === 'addVariableQuantityPrice' || $isVariableQuantityPrice) {
-			$option = db_VariableQuantityOptionManager::getInstance()->find($optionId);	
-		}
-		else {
-			$option = db_RegOptionManager::getInstance()->find($optionId);
-		}
-			
-		$price = RequestUtil::getParameters(array(
-			'id', // may not be set if coming from add action
-			'startDate',
-			'endDate',
-			'regTypeIds'
-		));
-					
-		// check that the start date doesn't overlap with any existing prices.
-		if(empty($errors['startDate']) && empty($errors['endDate'])) {
-			if(model_RegOptionPrice::hasOverlap($option, $price)) {
-				$errors['startDate'] = 'Date conflicts with existing price.';
-				$errors['endDate'] = 'Date conflicts with existing price.';
-			}
-		}
-
-		return $errors;
-	}
-	
-	protected function getValidationConfig() {
-		return array(
-			array(
-				'name' => 'description',
-				'value' => $_REQUEST['description'],
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Description is required.'
-					)
-				)
-			),
-			array(
-				'name' => 'startDate',
-				'value' => $_REQUEST['startDate'],
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Start Date/Time is required.'
-					)
-				)
-			),
-			array(
-				'name' => 'endDate',
-				'value' => $_REQUEST['endDate'],
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'End Date/Time is required.'
-					)
-				)
-			),
-			array(
-				'name' => 'price',
-				'value' => $_REQUEST['price'],
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Price is required.'
-					),
-					array(
-						'name' => 'pattern',
-						'regex' => '/^[0-9]*\.?[0-9]*$/',
-						'text' => 'Price can contain numbers and a single decimal.'
-					)
-				)
-			),
-			array(
-				'name' => 'regTypeIds[]',
-				'value' => RequestUtil::getValueAsArray('regTypeIds', array()),
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Visible To is required.'
-					)
-				)
-			)
-		);
+		$info = $this->logic->savePrice($params);
+		return $this->converter->getSavePrice($info);		
 	}
 }
 

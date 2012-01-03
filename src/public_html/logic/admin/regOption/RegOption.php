@@ -15,7 +15,7 @@ class logic_admin_regOption_RegOption extends logic_Performer
 			'eventId' => $params['eventId'],
 			'event' => $event,
 			'option' => $option,
-			'breadcrumbsParams' => $this->breadcrumbsParams($params['id'])
+			'breadcrumbsParams' => db_BreadcrumbManager::getInstance()->findRegOptionCrumbs($params['id'])
 		);
 	}
 	
@@ -93,23 +93,6 @@ class logic_admin_regOption_RegOption extends logic_Performer
 		
 		return $params;
 	}
-	
-	private function breadcrumbsParams($regOptionId) {
-		$groupsAndOpts = db_BreadcrumbManager::getInstance()->getGroupsAndOpts($regOptionId);
-		
-		// the first id in $groupsAndOpts is the section group.
-		$group = db_GroupManager::getInstance()->find($groupsAndOpts[0]);
-		$bc = db_BreadcrumbManager::getInstance()->findSectionCrumbs($group['sectionId']);
-			
-		return array(
-			'eventId' => $bc['eventId'],
-			'pageId' => $bc['pageId'],
-			'sectionId' => $bc['sectionId'],
-			'regGroupsAndOpts' => $groupsAndOpts
-		);
-	}
-	
-	
 }
 
 ?>
