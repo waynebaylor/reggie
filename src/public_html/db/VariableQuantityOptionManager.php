@@ -152,7 +152,7 @@ class db_VariableQuantityOptionManager extends db_OrderableManager
 				id=:id
 		';
 		
-		$params = $option;
+		$params = ArrayUtil::keyIntersect($option, array('id', 'code', 'description', 'capacity'));
 		
 		$this->execute($sql, $params, 'Save variable quantity option.');
 	}

@@ -44,6 +44,7 @@ _;
 				<td class="required label">Description</td>
 				<td>
 					{$this->HTML->textarea(array(
+						'class' => 'expanding',
 						'name' => 'description',
 						'value' => $this->escapeHtml($this->option['description']),
 						'rows' => 10,

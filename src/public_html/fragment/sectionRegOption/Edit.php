@@ -31,6 +31,10 @@ _;
 				<td class="required label">Code</td>
 				<td>
 					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $this->option['eventId']
+					))}
+					{$this->HTML->hidden(array(
 						'name' => 'id',
 						'value' => $this->option['id']
 					))}
@@ -45,6 +49,7 @@ _;
 				<td class="required label">Description</td>
 				<td>
 					{$this->HTML->textarea(array(
+						'class' => 'expanding',
 						'name' => 'description',
 						'value' => $this->escapeHtml($this->option['description']),
 						'rows' => 10,

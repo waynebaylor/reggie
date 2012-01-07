@@ -82,19 +82,19 @@ class fragment_Breadcrumbs extends template_Template
 			}
 		}
 		
-		if(isset($this->params['variableQuantityOption'])) {
+		if(isset($this->params['variableQuantityOptionId'])) {
 			$html .= $this->HTML->hidden(array(
 				'class' => 'breadcrumb',
 				'name' => 'Variable Quantity Option',
-				'value' => ""
+				'value' => "/admin/regOption/VariableQuantity?eventId={$this->params['eventId']}&id={$this->params['variableQuantityOptionId']}"
 			));
 		}
 		
-		if(isset($this->params['regOptionPrice'])) {
+		if(isset($this->params['regOptionPriceId'])) {
 			$html .= $this->HTML->hidden(array(
 				'class' => 'breadcrumb',
 				'name' => 'Reg Option Price',
-				'value' => "/admin/regOption/RegOptionPrice?eventId={$this->params['eventId']}&id={$this->params['regOptionPrice']}"
+				'value' => "/admin/regOption/RegOptionPrice?eventId={$this->params['eventId']}&id={$this->params['regOptionPriceId']}"
 			));
 		}
 		

@@ -22,13 +22,15 @@ class logic_admin_regOption_RegOption extends logic_Performer
 	public function addOption($params) {
 		$newOptionId = db_RegOptionManager::getInstance()->createRegOption($params);
 		
+		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
+		
 		// create default $0 price for new option.
 		db_RegOptionPriceManager::getInstance()->createRegOptionPrice(array(
 			'eventId' => $params['eventId'],
 			'regOptionId' => $newOptionId,
 			'description' => 'free',
-			'startDate' => date(db_Manager::$DATE_FORMAT),
-			'endDate' => date(db_Manager::$DATE_FORMAT, time()+604800),
+			'startDate' => $eventInfo['regOpen'],
+			'endDate' => $eventInfo['regClosed'],
 			'price' => '0.00',
 			'regTypeIds' => array(-1)
 		));

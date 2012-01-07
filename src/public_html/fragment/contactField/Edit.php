@@ -37,6 +37,7 @@ _;
 						'value' => $this->field['id']
 					))}
 					{$this->HTML->textarea(array(
+						'class' => 'expanding',
 						'name' => 'displayName',
 						'value' => $this->escapeHtml($this->field['displayName']),
 						'rows' => 5,

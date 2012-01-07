@@ -4,133 +4,110 @@ class action_admin_regOption_VariableQuantity extends action_ValidatorAction
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->logic = new logic_admin_regOption_VariableQuantity();
+		$this->converter = new viewConverter_admin_regOption_VariableQuantity();
+	}
+
+	public static function checkRole($user, $eventId=0, $method='') {
+		return action_admin_event_EditEvent::checkRole($user, $eventId, $method);	
 	}
 	
 	public function view() {
-		$option = $this->strictFindById(db_VariableQuantityOptionManager::getInstance(), $_REQUEST['id']);
-	
-		$eventId = $_REQUEST['eventId'];
-		$event = db_EventManager::getInstance()->find($eventId);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		return new template_admin_EditVariableQuantity($event, $option);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->view($params);
+		return $this->converter->getView($info);
 	}
 	
 	public function addOption() {
-		$errors = $this->validate();
-
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'sectionId' => 0,
+			'code' => '',
+			'description' => '',
+			'capacity' => 0
+		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$errors = validation_Validator::validate(validation_admin_VariableQuantity::getConfig(), $params);
+		
 		if(!empty($errors)) {
-			return new fragment_validation_ValidationErrors($errors);
+			return new fragment_validation_ValidationErrors($errors);	
 		}
 
-		$section = $this->strictFindById(db_PageSectionManager::getInstance(), $_REQUEST['sectionId']);
-		
-		$option = RequestUtil::getParameters(array(
-			'sectionId',
-			'code',
-			'description',
-			'capacity'
-		));
-		$option['eventId'] = $section['eventId'];
-		
-		$newVarOptId = db_VariableQuantityOptionManager::getInstance()->createOption($option);
-		
-		// create default $0 price for new option.
-		db_RegOptionPriceManager::getInstance()->createVariableQuantityPrice(array(
-			'eventId' => $option['eventId'],
-			'regOptionId' => $newVarOptId,
-			'description' => 'free',
-			'startDate' => date(db_Manager::$DATE_FORMAT),
-			'endDate' => date(db_Manager::$DATE_FORMAT, time()+604800),
-			'price' => '0.00',
-			'regTypeIds' => array(-1)
-		));
-		
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($section['id']);
-
-		return new fragment_variableQuantityOption_List($event, $section);
+		$info = $this->logic->addOption($params);
+		return $this->converter->getAddOption($info);
 	}
 	
 	public function removeOption() {
-		$option = $this->strictFindById(db_VariableQuantityOptionManager::getInstance(), $_REQUEST['id']);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		db_VariableQuantityOptionManager::getInstance()->delete($option);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($option['sectionId']);
-
-		return new fragment_variableQuantityOption_List($event, $section);
+		$info = $this->logic->removeOption($params);
+		return $this->converter->getRemoveOption($info);
 	}
 	
 	public function saveOption() {
-		$errors = $this->validate();
-
-		if(!empty($errors)) {
-			return new fragment_validation_ValidationErrors($errors);
-		}
-		
-		$option = RequestUtil::getParameters(array(
-			'id',
-			'code',
-			'description',
-			'capacity'
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0,
+			'sectionId' => 0,
+			'code' => '',
+			'description' => '',
+			'capacity' => 0
 		));
 		
-		db_VariableQuantityOptionManager::getInstance()->save($option);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		return new fragment_Success();
+		$errors = validation_Validator::validate(validation_admin_VariableQuantity::getConfig(), $params);
+		
+		if(!empty($errors)) {
+			return new fragment_validation_ValidationErrors($errors);	
+		}
+
+		$info = $this->logic->saveOption($params);
+		return $this->converter->getSaveOption($info);
 	}
 	
 	public function moveOptionUp() {
-		$option = $this->strictFindById(db_VariableQuantityOptionManager::getInstance(), $_REQUEST['id']);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		db_VariableQuantityOptionManager::getInstance()->moveOptionUp($option);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($option['sectionId']);
-
-		return new fragment_variableQuantityOption_List($event, $section);
+		$info = $this->logic->moveOptionUp($params);
+		return $this->converter->getMoveOptionUp($info);
 	}
 	
 	public function moveOptionDown() {
-		$option = $this->strictFindById(db_VariableQuantityOptionManager::getInstance(), $_REQUEST['id']);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		db_VariableQuantityOptionManager::getInstance()->moveOptionDown($option);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($option['sectionId']);
-
-		return new fragment_variableQuantityOption_List($event, $section);
-	}
-	
-	protected function getValidationConfig() {
-		return array(
-			array(
-				'name' => 'code',
-				'value' => $_REQUEST['code'],
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Code is required.'
-					),
-					array(
-						'name' => 'pattern',
-						'regex' => '/^[A-Za-z0-9]+$/',
-						'text' => 'Code can only contain letters and numbers.'
-					)
-				)
-			),
-			array(
-				'name' => 'description',
-				'value' => $_REQUEST['description'],
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Description is required.'
-					)
-				)
-			)
-		);
+		$info = $this->logic->moveOptionDown($params);
+		return $this->converter->getMoveOptionDown($info);
 	}
 }
 

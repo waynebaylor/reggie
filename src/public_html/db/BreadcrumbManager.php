@@ -203,6 +203,18 @@ class db_BreadcrumbManager extends db_Manager
 		);
 	}
 	
+	public function findVariableRegOptionCrumbs($variableQuantityId) {
+		$variableQuantityOption = db_VariableQuantityOptionManager::getInstance()->find($variableQuantityId);
+		$bc = self::findSectionCrumbs($variableQuantityOption['sectionId']);
+		
+		return array(
+			'eventId' => $bc['eventId'],
+			'pageId' => $bc['pageId'],
+			'sectionId' => $bc['sectionId'],
+			'variableQuantityOptionId' => $variableQuantityId
+		);
+	}
+	
 	public function findRegOptionPriceCrumbs($regOptionPriceId) {
 		$price = db_RegOptionPriceManager::getInstance()->find($regOptionPriceId);
 		
@@ -213,7 +225,7 @@ class db_BreadcrumbManager extends db_Manager
 			$bc = db_BreadcrumbManager::getInstance()->findRegOptionCrumbs($price['regOptionId']);
 		}
 		
-		$bc['regOptionPrice'] = $regOptionPriceId;
+		$bc['regOptionPriceId'] = $regOptionPriceId;
 		
 		return $bc;
 	}
