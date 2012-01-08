@@ -15,6 +15,11 @@
 </script>
 
 <div id="header">
+	<?php echo $this->HTML->img(array(
+		'src' => '/images/cm_logo.jpg',
+		'style' => 'vertical-align: top; border: 1px solid #fff;',
+		'alt' => 'Conference Managers Logo'
+	)) ?>
 	Registration System
 </div>	
 

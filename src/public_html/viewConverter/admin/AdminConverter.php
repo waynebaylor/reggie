@@ -140,7 +140,14 @@ _;
 	 * @return string
 	 */
 	private function getBanner() {
-		$banner = 'Registration System';
+		$banner = <<<_
+			{$this->HTML->img(array(
+				'src' => '/images/cm_logo.jpg',
+				'style' => 'vertical-align: top; border: 1px solid #fff;',
+				'alt' => 'Conference Managers Logo'
+			))}
+			Registration System
+_;
 		
 		if($this->bannerLinkActive) {
 			$banner = $this->HTML->link(array(
