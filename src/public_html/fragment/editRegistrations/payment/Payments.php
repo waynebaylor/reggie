@@ -15,7 +15,7 @@ class fragment_editRegistrations_payment_Payments extends template_Template
 	}
 	
 	public function html() {
-		$list = new fragment_editRegistrations_payment_List($this->event, $this->report, $this->group);
+		$list = new fragment_editRegistrations_payment_List($this->group);
 		$add = new fragment_editRegistrations_payment_Add($this->event, $this->report, $this->group);
 		
 		$cost = db_reg_GroupManager::getInstance()->findTotalCost($this->group['id']);

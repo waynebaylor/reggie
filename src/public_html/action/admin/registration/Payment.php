@@ -2,185 +2,104 @@
 
 class action_admin_registration_Payment extends action_ValidatorAction
 {
-	public function view() {
-		$payment = $this->strictFindById(db_reg_PaymentManager::getInstance(), RequestUtil::getValue('id', 0));
-		$report = $this->strictFindById(db_ReportManager::getInstance(), RequestUtil::getValue('reportId', 0));
-		$event = $this->strictFindById(db_EventManager::getInstance(), $report['eventId']);
-		$group = $this->strictFindById(db_reg_GroupManager::getInstance(), RequestUtil::getValue('groupId', 0));
+	public function __construct() {
+		parent::__construct();
 		
-		return new template_admin_EditPayment($event, $report, $group, $payment);
+		$this->logic = new logic_admin_registration_Payment();
+		$this->converter = new viewConverter_admin_registration_Payment();
+	}
+	
+	public static function checkRole($user, $eventId=0, $method='') {
+		$hasRole = model_Role::userHasRole($user, array(
+			model_Role::$SYSTEM_ADMIN,
+			model_Role::$EVENT_ADMIN
+		));
+		
+		$hasRole = $hasRole || model_Role::userHasRoleForEvent($user, array(
+			model_Role::$EVENT_MANAGER,
+			model_Role::$EVENT_REGISTRAR
+		), $eventId);
+		
+		if(!$hasRole) {
+			throw new Exception('User does not have required role.');
+		}
+	}
+		
+	public function view() {
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->view($params);
+		return $this->converter->getView($info);
 	}
 	
 	public function savePayment() {
-		$payment = $this->strictFindById(db_reg_PaymentManager::getInstance(), RequestUtil::getValue('id', 0));
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0,
+			'paymentType' => 0,
+			'amount' => 0.00,
+			'checkNumber' =>'',
+			'purchaseOrderNumber' => '',
+			'paymentReceived' => 'F'
+		));
 		
-		$paymentTypeId = $payment['paymentTypeId'];
-		if(!in_array($paymentTypeId, array(model_PaymentType::$CHECK, model_PaymentType::$PO))) {
-			throw new Exception('Error editing payment. Only checks and purchse orders may be edited.');
-		}
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$errors = $this->validate($this->getPaymentFieldNames($paymentTypeId));
+		$errors = validation_admin_Payment::validate($params);
+		
 		if(!empty($errors)) {
-			return new fragment_validation_ValidationErrors($errors);
+			return new fragment_validation_ValidationErrors($errors);	
 		}
 		
-		$p = RequestUtil::getParameters(array('id', 'amount', 'checkNumber', 'purchaseOrderNumber'));
-		$p['paymentReceived'] = RequestUtil::getValue('paymentReceived', 'F');
-		$p['paymentTypeId'] = $payment['paymentTypeId'];
-		db_reg_PaymentManager::getInstance()->save($p);
-		
-		return new fragment_Success();
+		$info = $this->logic->savePayment($params);
+		return $this->converter->getSavePayment($info);		
 	}
 	
 	public function addPayment() { 
-		$errors = $this->validate($this->getPaymentFieldNames(RequestUtil::getValue('paymentType', 0)));
-		if(!empty($errors)) {
-			return new fragment_validation_ValidationErrors($errors);
-		}
-		
-		$report = $this->strictFindById(db_ReportManager::getInstance(), RequestUtil::getValue('reportId', 0));
-		$group = $this->strictFindById(db_reg_GroupManager::getInstance(), RequestUtil::getValue('regGroupId', 0));
-
-		$r = reset($group['registrations']);
-		$event = $this->strictFindById(db_EventManager::getInstance(), $r['eventId']);
-		
-		$payment = RequestUtil::getParameters(array(
-			'paymentType',
-			'amount',
-			'paymentReceived',
-			'checkNumber',
-			'purchaseOrderNumber',
-			'cardNumber',
-			'month', 
-			'year',
-			'firstName',
-			'lastName',
-			'address',
-			'city',
-			'state',
-			'zip',
-			'country'
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'regGroupId' => 0,
+			'paymentType' => 0,
+			'amount' => 0.00,
+			'paymentReceived' => 'F',
+			'checkNumber' => '',
+			'purchaseOrderNumber' => '',
+			'cardNumber' => '',
+			'month' => '', 
+			'year' => '',
+			'firstName' => '',
+			'lastName' => '',
+			'address' => '',
+			'city' => '',
+			'state' => '',
+			'zip' => '',
+			'country' => ''
 		));
-			
-		if($payment['paymentType'] == model_PaymentType::$AUTHORIZE_NET) {
-			$authorizeNet = new payment_AuthorizeNET($event, $payment, $payment['amount']);
-			$result = $authorizeNet->makePayment();
-			
-			$result['paymentType'] = model_PaymentType::$AUTHORIZE_NET;
-			$result['name'] = $payment['firstName'].' '.$payment['lastName'];
-			$result = array_merge(
-				$result, 
-				ArrayUtil::keyIntersect($payment, array('address', 'city', 'state', 'zip', 'country', 'amount'))
-			);
-			
-			if($result['success']) {
-				$payment = $result;
-			}
-			else {
-				$message = 'There was a problem processing your payment. ';
-				$message .= $result['responseText'];
-				
-				if(isset($errors['general'])) {
-					$errors['general'][] = $message;
-				}
-				else {
-					$errors['general'] = array($message);
-				}	
-				
-				return new fragment_validation_ValidationErrors($errors);
-			}
-		}
-				
-		$payment['eventId'] = $report['eventId'];
 		
-		db_reg_PaymentManager::getInstance()->createPayment($group['id'], $payment);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		return new fragment_editRegistrations_payment_List($event, $report, $group);
-	}
-	
-	protected function getValidationConfig() {
-		return array(
-			array(
-				'name' => 'checkNumber',
-				'value' => RequestUtil::getValue('checkNumber', ''),
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Check Number is required.'
-					)
-				)
-			),
-			array(
-				'name' => 'purchaseOrderNumber',
-				'value' => RequestUtil::getValue('purchaseOrderNumber', ''),
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Purchase Order Number is required.'
-					)
-				)
-			),
-			array(
-				'name' => 'amount',
-				'value' => RequestUtil::getValue('amount', ''),
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Amount is required.'
-					)
-				)
-			),
-			array(
-				'name' => 'cardNumber',
-				'value' => RequestUtil::getValue('cardNumber', ''),
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Card Number is required.'
-					)
-				)
-			),
-			array(
-				'name' => 'firstName',
-				'value' => RequestUtil::getValue('firstName', ''),
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'First Name is required.'
-					)
-				)
-			),
-			array(
-				'name' => 'lastName',
-				'value' => RequestUtil::getValue('lastName', ''),
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Last Name is required.'
-					)
-				)
-			)
-		);
-	}
-	
-	private function getPaymentFieldNames($paymentTypeId) {
-		$fields = array('amount');
+		$errors = validation_admin_Payment::validate($params);
 		
-		if($paymentTypeId == model_PaymentType::$CHECK) {
-			$fields[] = 'checkNumber';
-		}
-		else if($paymentTypeId == model_PaymentType::$PO) {
-			$fields[] = 'purchaseOrderNumber';
-		}
-		else if($paymentTypeId == model_PaymentType::$AUTHORIZE_NET) {
-			$fields = array_merge($fields, array(
-				'cardNumber',
-				'firstName',
-				'lastName'
-			));
+		if(!empty($errors)) {
+			return new fragment_validation_ValidationErrors($errors);	
 		}
 		
-		return $fields;
+		$info = $this->logic->addPayment($params);
+		
+		// processing payment may fail. if so, then display message as validation error.
+		if(!$info['success']) {
+			return new fragment_validation_ValidationErrors($info['errors']);
+		}
+		
+		return $this->converter->getAddPayment($info);		
 	}
 }
 

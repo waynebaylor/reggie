@@ -255,10 +255,10 @@ class db_reg_PaymentManager extends db_Manager
 	}
 	
 	public function save($paymentInfo) {
-		if($paymentInfo['paymentTypeId'] == model_PaymentType::$CHECK) {
+		if($paymentInfo['paymentType'] == model_PaymentType::$CHECK) {
 			$this->saveCheck($paymentInfo);
 		}
-		else if($paymentInfo['paymentTypeId'] == model_PaymentType::$PO) {
+		else if($paymentInfo['paymentType'] == model_PaymentType::$PO) {
 			$this->savePurchaseOrder($paymentInfo);
 		}
 	}

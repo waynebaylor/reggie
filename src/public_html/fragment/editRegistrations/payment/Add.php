@@ -40,8 +40,8 @@ _;
 						'value' => $this->group['id']
 					))}
 					{$this->HTML->hidden(array(
-						'name' => 'reportId',
-						'value' => $this->report['id']
+						'name' => 'eventId',
+						'value' => $this->event['id']
 					))}
 					
 					{$this->HTML->text(array(
