@@ -3,20 +3,18 @@
 class fragment_editRegistrations_RegOptions extends template_Template
 {
 	private $event;
-	private $report;
 	private $registration;
 	
-	function __construct($event, $report, $registration) {
+	function __construct($event, $registration) {
 		parent::__construct();
 		
 		$this->event = $event;
-		$this->report = $report;
 		$this->registration = $registration;
 	}
 	
 	public function html() {
-		$list = new fragment_editRegistrations_regOption_List($this->event, $this->report, $this->registration);
-		$add = new fragment_editRegistrations_regOption_Add($this->event, $this->report, $this->registration);
+		$list = new fragment_editRegistrations_regOption_List($this->event, $this->registration);
+		$add = new fragment_editRegistrations_regOption_Add($this->event, $this->registration);
 		
 		return <<<_
 			<div class="registrant-details-section">
@@ -64,6 +62,10 @@ _;
 			"<tr>
 				<td></td>
 				<td>
+					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $this->registration['eventId']
+					))}
 					{$this->HTML->hidden(array(
 						'name' => 'registrationId',
 						'value' => $this->registration['id']

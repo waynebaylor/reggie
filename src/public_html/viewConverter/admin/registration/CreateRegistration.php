@@ -36,7 +36,7 @@ _;
 	public function getCreateRegistration($properties) {
 		$this->setProperties($properties);
 		
-		return new template_Redirect("/admin/registration/Registration?eventId={$this->eventId}&groupId={$this->regGroupId}");
+		return new template_Redirect("/admin/registration/Registration?eventId={$this->eventId}&id={$this->regGroupId}");
 	}
 }
 

@@ -6,6 +6,75 @@ class logic_admin_registration_Registration extends logic_Performer
 		parent::__construct();
 	}
 	
+	public function view($params) {
+		$group = $this->strictFindById(db_reg_GroupManager::getInstance(), $params['id']);
+		$event = $this->strictFindById(db_EventManager::getInstance(), $params['eventId']);
+
+		return array(
+			'actionMenuEventLabel' => $event['code'],
+			'eventId' => $params['eventId'],
+			'event' => $event,
+			'group' => $group,
+			'breadcrumbsParams' => array(
+				'altEventId' => $params['eventId'], // don't want 'Event' link showing up
+				'regGroupId' => $group['id']
+			)
+		);
+	}
+	
+	public function saveGeneralInfo($params) {
+		$r = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $params['id']);
+		$r['comments'] = $params['comments'];
+		
+		db_reg_RegistrationManager::getInstance()->save($r);
+		
+		return $params;
+	}
+	
+	public function save($params) {
+	// remove all values in given section. this is necessary because
+		// checkboxes/radio buttons may not return a value if not selected.
+		db_reg_InformationManager::getInstance()->deleteBySection($params['registrationId'], $params['sectionId']);
+		
+		// save values.
+		foreach($params['request'] as $key => $value) {
+			if(strpos($key, model_ContentType::$CONTACT_FIELD.'_') === 0) {
+				$field = array(
+					'id' => str_replace(model_ContentType::$CONTACT_FIELD.'_', '', $key),
+					'value' => $value
+				);
+				db_reg_InformationManager::getInstance()->createInformation($params['registrationId'], array($field));
+			}
+		}
+		
+		return $params;
+	}
+	
+	public function changeRegType($params) {
+		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $params['registrationId']);
+		$regTypeId = $params['regTypeId'];
+		
+		// only change if a different reg type is selected.
+		if($registration['regTypeId'] != $regTypeId) {
+			db_reg_RegistrationManager::getInstance()->changeRegType($registration, $regTypeId);
+		}
+		
+		return $params;
+	}
+	
+	public function sendConfirmation($params) {
+		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $params['registrationId']);	
+		$event = $this->strictFindById(db_EventManager::getInstance(), $params['eventId']);
+		$regGroup = db_reg_GroupManager::getInstance()->find($registration['regGroupId']);
+		
+		$this->sendConfirmationEmail($event, $regGroup, $registration);
+		
+		return array(
+			'eventId' => $params['eventId'],
+			'regGroupId' => $regGroup['id']
+		);		
+	}
+	
 	public function addRegistrantToGroup($params) {
 		$newReg = array(
 			'regGroupId' => $params['regGroupId'],
@@ -34,14 +103,6 @@ class logic_admin_registration_Registration extends logic_Performer
 			'groupId' => $params['regGroupId'],
 			'newNumber' => $count
 		);
-	}
-	
-	public function sendConfirmation($registrationId) {
-		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $registrationId);	
-		$event = $this->strictFindById(db_EventManager::getInstance(), $registration['eventId']);
-		$regGroup = db_reg_GroupManager::getInstance()->find($registration['regGroupId']);
-		
-		$this->sendConfirmationEmail($event, $regGroup, $registration);
 	}
 	
 	public function sendConfirmationEmail($event, $regGroup, $registration) {
@@ -81,7 +142,6 @@ _;
 	
 	public function deleteRegistration($params) {
 		$registrationId = $params['registrationId'];
-		$reportId = $params['reportId'];
 		
 		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $registrationId);
 		
@@ -89,12 +149,13 @@ _;
 		
 		return array(
 			'eventId' => $params['eventId'],
-			'regGroupId' => $registration['regGroupId'],
-			'reportId' => $reportId
+			'regGroupId' => $registration['regGroupId']
 		);
 	}
 	
-	public function paymentSummary($groupId) {
+	public function paymentSummary($params) {
+		$groupId = $params['regGroupId'];
+		
 		$cost = db_reg_GroupManager::getInstance()->findTotalCost($groupId);
 		$paid = db_reg_GroupManager::getInstance()->findTotalPaid($groupId);
 		$remainingBalance = $cost - $paid;
@@ -118,7 +179,6 @@ _;
 		return array(
 			'eventId' => $params['eventId'],
 			'regGroupId' => $registration['regGroupId'],
-			'reportId' => $params['reportId'],
 			'registrantNumber' => $params['registrantNumber']
 		);
 	}

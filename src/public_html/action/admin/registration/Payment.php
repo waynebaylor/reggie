@@ -10,19 +10,7 @@ class action_admin_registration_Payment extends action_ValidatorAction
 	}
 	
 	public static function checkRole($user, $eventId=0, $method='') {
-		$hasRole = model_Role::userHasRole($user, array(
-			model_Role::$SYSTEM_ADMIN,
-			model_Role::$EVENT_ADMIN
-		));
-		
-		$hasRole = $hasRole || model_Role::userHasRoleForEvent($user, array(
-			model_Role::$EVENT_MANAGER,
-			model_Role::$EVENT_REGISTRAR
-		), $eventId);
-		
-		if(!$hasRole) {
-			throw new Exception('User does not have required role.');
-		}
+		return action_admin_registration_Registration::checkRole($user, $eventId, $method);
 	}
 		
 	public function view() {

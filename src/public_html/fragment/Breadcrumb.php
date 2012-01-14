@@ -478,9 +478,8 @@ _;
 				'label' => 'Edit Registrations',
 				'href' => '/admin/registration/Registration',
 				'parameters' => array(
-					'a' => 'view',
-					'groupId' => $this->config['groupId'],
-					'reportId' => $this->config['reportId']
+					'eventId' => $this->config['eventId'],
+					'id' => $this->config['groupId']
 				)
 			))}	
 _;

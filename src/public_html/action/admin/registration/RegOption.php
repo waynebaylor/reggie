@@ -13,20 +13,18 @@ class action_admin_registration_RegOption extends action_ValidatorAction
 		
 		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), RequestUtil::getValue('registrationId', 0));
 		$event = $this->strictFindById(db_EventManager::getInstance(), $registration['eventId']);
-		$report = $this->strictFindById(db_ReportManager::getInstance(), RequestUtil::getValue('reportId', 0));	
 		
-		return new fragment_editRegistrations_regOption_List($event, $report, $registration);
+		return new fragment_editRegistrations_regOption_List($event, $registration);
 	}
 	
 	public function cancelRegOption() {
 		$id = RequestUtil::getValue('id', 0); // the Registration_RegOption id.
 		$groupId = RequestUtil::getValue('groupId', 0);
-		$reportId = RequestUtil::getValue('reportId', 0);
 		$eventId = RequestUtil::getValue('eventId', 0);
 		
 		db_reg_RegOptionManager::getInstance()->cancel($id);
 				
-		return new template_Redirect("/admin/registration/Registration?eventId={$eventId}&groupId={$groupId}&reportId={$reportId}");
+		return new template_Redirect("/admin/registration/Registration?eventId={$eventId}&id={$groupId}");
 	}
 	
 	public function saveVariableQuantity() {

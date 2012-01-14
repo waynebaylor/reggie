@@ -3,20 +3,18 @@
 class fragment_editRegistrations_payment_Payments extends template_Template
 {
 	private $event;
-	private $report;
 	private $group;
 	
-	function __construct($event, $report, $group) {
+	function __construct($event, $group) {
 		parent::__construct();
 		
 		$this->event = $event;
-		$this->report = $report;
 		$this->group = $group;
 	}
 	
 	public function html() {
 		$list = new fragment_editRegistrations_payment_List($this->group);
-		$add = new fragment_editRegistrations_payment_Add($this->event, $this->report, $this->group);
+		$add = new fragment_editRegistrations_payment_Add($this->event, $this->group);
 		
 		$cost = db_reg_GroupManager::getInstance()->findTotalCost($this->group['id']);
 		$paid = db_reg_GroupManager::getInstance()->findTotalPaid($this->group['id']);

@@ -19,7 +19,7 @@ class logic_admin_registration_Payment extends logic_Performer
 			'payment' => $payment,
 			'group' => $group,
 			'breadcrumbsParams' => array(
-				'paymentEventId' => $params['eventId'], // don't want 'Event' link showing up
+				'altEventId' => $params['eventId'], // don't want 'Event' link showing up
 				'regGroupId' => $group['id'],
 				'paymentId' => $payment['id']
 			)

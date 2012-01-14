@@ -8,9 +8,10 @@ dojo.require("hhreg.util");
 	
 	var updatePaymentSummary = function() {
 		var groupId = dojo.query("input[name=regGroupId]")[0].value;
+		var eventId = dojo.query("input[name=eventId]")[0].value;
 		
 		var get = dojo.xhrGet({
-			url: hhreg.util.contextUrl("/admin/registration/Registration?a=paymentSummary&groupId="+groupId),
+			url: hhreg.util.contextUrl("/admin/registration/Registration?a=paymentSummary&eventId="+eventId+"&regGroupId="+groupId),
 			handleAs: "text"
 		});
 		

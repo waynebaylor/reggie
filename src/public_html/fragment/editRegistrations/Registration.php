@@ -3,15 +3,13 @@
 class fragment_editRegistrations_Registration extends template_Template
 {
 	private $event;
-	private $report;
 	private $group;
 	private $registration;
 	
-	function __construct($event, $report, $group, $registration) {
+	function __construct($event, $group, $registration) {
 		parent::__construct();
 		
 		$this->event = $event;
-		$this->report = $report;
 		$this->group = $group;
 		$this->registration = $registration;
 	}
@@ -21,7 +19,7 @@ class fragment_editRegistrations_Registration extends template_Template
 		
 		$pages = model_EventPage::getVisiblePages($this->event, array('id' => $this->registration['categoryId']));
 		foreach($pages as $page) {
-			$fragment = new fragment_editRegistrations_Page($this->event, $page, $this->report, $this->group, $this->registration);
+			$fragment = new fragment_editRegistrations_Page($this->event, $page, $this->group, $this->registration);
 			
 			$html .= $fragment->html();
 		}

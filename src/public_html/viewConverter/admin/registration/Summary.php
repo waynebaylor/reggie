@@ -20,8 +20,7 @@ class viewConverter_admin_registration_Summary extends viewConverter_admin_Admin
 						'href' => '/admin/registration/Registration',
 						'parameters' => array(
 							'eventId' => $this->event['id'],
-							'groupId' => $this->group['id'],
-							'reportId' => $this->report['id']
+							'id' => $this->group['id']
 						)
 					))}
 				</div>

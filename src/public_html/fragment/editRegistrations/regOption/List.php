@@ -3,14 +3,12 @@
 class fragment_editRegistrations_regOption_List extends template_Template
 {
 	private $event;
-	private $report;
 	private $registration;
 	
-	function __construct($event, $report, $registration) {
+	function __construct($event, $registration) {
 		parent::__construct();
 		
 		$this->event = $event;
-		$this->report = $report;
 		$this->registration = $registration;
 	}
 	
@@ -82,7 +80,6 @@ _;
 							'a' => 'cancelRegOption',
 							'id' => $o['id'],
 							'groupId' => $this->registration['regGroupId'],
-							'reportId' => $this->report['id'],
 							'eventId' => $this->event['id']
 						)
 					));

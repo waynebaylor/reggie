@@ -4,16 +4,14 @@ class fragment_editRegistrations_Page extends template_Template
 {
 	private $event;
 	private $page;
-	private $report;
 	private $group;
 	private $registration;
 	
-	function __construct($event, $page, $report, $group, $registration) {
+	function __construct($event, $page, $group, $registration) {
 		parent::__construct();
 		
 		$this->event = $event;
 		$this->page = $page;
-		$this->report = $report;
 		$this->group = $group;
 		$this->registration = $registration;
 	}
@@ -93,7 +91,7 @@ _;
 				<td>
 					{$this->HTML->hidden(array(
 						'class' => 'change-reg-type-redirect',
-						'value' => "/admin/registration/Registration?eventId={$this->event['id']}&groupId={$registration['regGroupId']}&reportId={$this->report['id']}"
+						'value' => "/admin/registration/Registration?eventId={$this->event['id']}&id={$registration['regGroupId']}"
 					))}
 					
 					{$this->HTML->hidden(array(

@@ -3,14 +3,12 @@
 class fragment_editRegistrations_payment_Add extends template_Template
 {
 	private $event;
-	private $report;
 	private $group;
 	
-	function __construct($event, $report, $group) {
+	function __construct($event, $group) {
 		parent::__construct();
 		
 		$this->event = $event;
-		$this->report = $report;
 		$this->group = $group;
 	}
 	

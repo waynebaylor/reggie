@@ -102,7 +102,7 @@ class fragment_Breadcrumbs extends template_Template
 			$html .= $this->HTML->hidden(array(
 				'class' => 'breadcrumb',
 				'name' => 'Registration',
-				'value' => "/admin/registration/Registration?eventId={$this->params['paymentEventId']}&id={$this->params['regGroupId']}"
+				'value' => "/admin/registration/Registration?eventId={$this->params['altEventId']}&id={$this->params['regGroupId']}"
 			));
 		}
 		
@@ -110,7 +110,7 @@ class fragment_Breadcrumbs extends template_Template
 			$html .= $this->HTML->hidden(array(
 				'class' => 'breadcrumb',
 				'name' => 'Payment',
-				'value' => "/admin/registration/Payment?eventId={$this->params['paymentEventId']}&id={$this->params['paymentId']}"
+				'value' => "/admin/registration/Payment?eventId={$this->params['altEventId']}&id={$this->params['paymentId']}"
 			));
 		}
 		

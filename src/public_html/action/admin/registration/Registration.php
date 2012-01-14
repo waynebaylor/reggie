@@ -9,101 +9,103 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_registration_Registration();
 	}
 	
+	public static function checkRole($user, $eventId=0, $method='') {
+		$hasRole = model_Role::userHasRole($user, array(
+			model_Role::$SYSTEM_ADMIN,
+			model_Role::$EVENT_ADMIN
+		));
+		
+		$hasRole = $hasRole || model_Role::userHasRoleForEvent($user, array(
+			model_Role::$EVENT_MANAGER,
+			model_Role::$EVENT_REGISTRAR
+		), $eventId);
+		
+		if(!$hasRole) {
+			throw new Exception('User does not have required role.');
+		}
+	}
+	
 	public function view() {
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0,
-			'groupId' => 0,
-			'reportId' => 0
+			'id' => 0
 		));
 		
-		$reportId = $params['reportId']; // reportId is not required.
-		$groupId = $params['groupId'];
-		$eventId = $params['eventId'];
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
-		
-		$group = $this->strictFindById(db_reg_GroupManager::getInstance(), $groupId);
-		
-		$event = $this->strictFindById(db_EventManager::getInstance(), $eventInfo['id']);
-
-		if(empty($reportId)) {
-			$report = reset($event['reports']); 
-		}
-		else {
-			$report = db_ReportManager::getInstance()->find($reportId);
-		}
-		
-		return new template_admin_EditRegistrations($event, $report, $group);	
+		$info = $this->logic->view($params);
+		return $this->converter->getView($info);
 	}
 	
 	public function saveGeneralInfo() {
-		$r = $this->strictFindById(db_reg_RegistrationManager::getInstance(), RequestUtil::getValue('id', 0));
-		$r['comments'] = RequestUtil::getValue('comments', '');
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0,
+			'comments' => ''
+		));
 		
-		db_reg_RegistrationManager::getInstance()->save($r);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		return new fragment_Success();
+		$info = $this->logic->saveGeneralInfo($params);
+		return $this->converter->getSaveGeneralInfo($info);
 	}
 	
 	public function save() {
-		$registrationId = RequestUtil::getValue('registrationId', 0);
-		$sectionId = RequestUtil::getValue('sectionId', 0);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'registrationId' => 0,
+			'sectionId' => 0,
+			'request' => $_REQUEST
+		));
 		
-		$this->saveInformationFields($registrationId, $sectionId);
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		return new fragment_Success();
+		$info = $this->logic->save($params);
+		return $this->converter->getSave($info);
 	}
 	
 	public function cancelRegistration() {
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0,
 			'registrationId' => 0,
-			'reportId' => 0,
 			'registrantNumber' => 0
 		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->cancelRegistration($params);
 		return $this->converter->getCancelRegistration($info);
 	}
 	
 	public function changeRegType() {
-		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), RequestUtil::getValue('registrationId', 0));
-		$regTypeId = RequestUtil::getValue('regTypeId', 0);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'registrationId' => 0,
+			'regTypeId' => 0
+		));
 		
-		// only change if a different reg type is selected.
-		if($registration['regTypeId'] != $regTypeId) {
-			db_reg_RegistrationManager::getInstance()->changeRegType($registration, $regTypeId);
-		}
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		return new fragment_Success();
+		$info = $this->logic->changeRegType($params);
+		return $this->converter->getChangeRegType($info);
 	}
 
 	public function sendConfirmation() {
-		$registrationId = RequestUtil::getValue('registrationId', 0);
-		$reportId = RequestUtil::getValue('reportId', 0);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'registrationId' => 0
+		));
 		
-		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $registrationId);	
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
-		$this->logic->sendConfirmation($registrationId);
-		
-		return new template_Redirect("/admin/registration/Registration?eventId={$registration['eventId']}&groupId={$registration['regGroupId']}&reportId={$reportId}");
-	}
-	
-	private function saveInformationFields($registrationId, $sectionId) {
-		// remove all values in given section. this is necessary because
-		// checkboxes/radio buttons may not return a value if not selected.
-		db_reg_InformationManager::getInstance()->deleteBySection($registrationId, $sectionId);
-		
-		// save values.
-		foreach($_REQUEST as $key => $value) {
-			if(strpos($key, model_ContentType::$CONTACT_FIELD.'_') === 0) {
-				$field = array(
-					'id' => str_replace(model_ContentType::$CONTACT_FIELD.'_', '', $key),
-					'value' => $value
-				);
-				db_reg_InformationManager::getInstance()->createInformation($registrationId, array($field));
-			}
-		}
+		$info = $this->logic->sendConfirmation($params);
+		return $this->converter->getSendConfirmation($info);		
 	}
 	
 	public function addRegistrantToGroup() {
@@ -112,6 +114,9 @@ class action_admin_registration_Registration extends action_ValidatorAction
 			'regGroupId' => 0
 		));
 		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
 		$info = $this->logic->addRegistrantToGroup($params);
 		return $this->converter->getAddRegistrantToGroup($info);
 	}
@@ -119,19 +124,26 @@ class action_admin_registration_Registration extends action_ValidatorAction
 	public function deleteRegistration() {
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0,
-			'registrationId' => 0,
-			'reportId' => 0
+			'registrationId' => 0
 		));
+		
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->deleteRegistration($params);
 		return $this->converter->getDeleteRegistration($info);
 	}
 	
 	public function paymentSummary() {
-		$groupId = RequestUtil::getValue('groupId', 0);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'regGroupId' => 0
+		));
 		
-		$info = $this->logic->paymentSummary($groupId);
-
+		$user = SessionUtil::getUser();
+		self::checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->paymentSummary($params);
 		return $this->converter->getPaymentSummary($info);
 	}
 }

@@ -3,14 +3,12 @@
 class fragment_editRegistrations_regOption_Add extends template_Template
 {
 	private $event;
-	private $report;
 	private $registration;
 	
-	function __construct($event, $report, $registration) {
+	function __construct($event, $registration) {
 		parent::__construct();
 		
 		$this->event = $event;
-		$this->report = $report;
 		$this->registration = $registration;
 	}
 	
@@ -61,10 +59,6 @@ _;
 					{$this->HTML->hidden(array(
 						'name' => 'registrationId',
 						'value' => $this->registration['id']
-					))}
-					{$this->HTML->hidden(array(
-						'name' => 'reportId',
-						'value' => $this->report['id']
 					))}
 					
 					<table class="admin" style="border:none;">
