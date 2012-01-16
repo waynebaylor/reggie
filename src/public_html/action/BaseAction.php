@@ -18,8 +18,14 @@ abstract class action_BaseAction
 	 * @param integer $eventId the event id
 	 * @param string $method the action method being executed
 	 */
-	public static function checkRole($user, $eventId=0, $method='') {
+	public function hasRole($user, $eventId=0, $method='') {
 		return true;
+	}
+	
+	protected function checkRole($user, $eventId=0, $method='') {
+		if(!$this->hasRole($user, $eventId, $method)) {
+			throw new Exception('User does not have required role.');
+		}
 	}
 	
 	public function execute() {

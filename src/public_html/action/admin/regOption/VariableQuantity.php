@@ -9,8 +9,9 @@ class action_admin_regOption_VariableQuantity extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_regOption_VariableQuantity();
 	}
 
-	public static function checkRole($user, $eventId=0, $method='') {
-		return action_admin_event_EditEvent::checkRole($user, $eventId, $method);	
+	public function hasRole($user, $eventId=0, $method='') {
+		$a = new action_admin_event_EditEvent();
+		return $a->hasRole($user, $eventId, $method);	
 	}
 	
 	public function view() {
@@ -20,7 +21,7 @@ class action_admin_regOption_VariableQuantity extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		self::checkRole($user, $params['eventId']);
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->view($params);
 		return $this->converter->getView($info);
@@ -36,7 +37,7 @@ class action_admin_regOption_VariableQuantity extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		self::checkRole($user, $params['eventId']);
+		$this->checkRole($user, $params['eventId']);
 		
 		$errors = validation_Validator::validate(validation_admin_VariableQuantity::getConfig(), $params);
 		
@@ -55,7 +56,7 @@ class action_admin_regOption_VariableQuantity extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		self::checkRole($user, $params['eventId']);
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->removeOption($params);
 		return $this->converter->getRemoveOption($info);
@@ -72,7 +73,7 @@ class action_admin_regOption_VariableQuantity extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		self::checkRole($user, $params['eventId']);
+		$this->checkRole($user, $params['eventId']);
 		
 		$errors = validation_Validator::validate(validation_admin_VariableQuantity::getConfig(), $params);
 		
@@ -91,7 +92,7 @@ class action_admin_regOption_VariableQuantity extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		self::checkRole($user, $params['eventId']);
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->moveOptionUp($params);
 		return $this->converter->getMoveOptionUp($info);
@@ -104,7 +105,7 @@ class action_admin_regOption_VariableQuantity extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		self::checkRole($user, $params['eventId']);
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->moveOptionDown($params);
 		return $this->converter->getMoveOptionDown($info);

@@ -9,20 +9,18 @@ class action_admin_dashboard_Users extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_dashboard_Users();
 	}
 	
-	public static function checkRole($user, $eventId=0, $method='') {
+	public function hasRole($user, $eventId=0, $method='') {
 		$hasRole = model_Role::userHasRole($user, array(
 			model_Role::$SYSTEM_ADMIN, 
 			model_Role::$USER_ADMIN
 		));
 		
-		if(!$hasRole) {
-			throw new Exception('User does not have required role.');	
-		}
+		return $hasRole;
 	}
 	
 	public function view() {
 		$user = SessionUtil::getUser();
-		self::checkRole($user);
+		$this->checkRole($user);
 		
 		$info = $this->logic->view(array('user' => $user));
 		return $this->converter->getView($info);
@@ -30,7 +28,7 @@ class action_admin_dashboard_Users extends action_ValidatorAction
 	
 	public function listUsers() {
 		$user = SessionUtil::getUser();
-		self::checkRole($user);
+		$this->checkRole($user);
 		
 		$info = $this->logic->listUsers(array('user' => $user));
 		return $this->converter->getListUsers($info);
@@ -38,7 +36,7 @@ class action_admin_dashboard_Users extends action_ValidatorAction
 	
 	public function deleteUsers() {
 		$user = SessionUtil::getUser();
-		self::checkRole($user);
+		$this->checkRole($user);
 		
 		$info = $this->logic->deleteUsers(array(
 			'user' => $user,

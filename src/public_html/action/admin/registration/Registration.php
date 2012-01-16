@@ -9,7 +9,7 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_registration_Registration();
 	}
 	
-	public static function checkRole($user, $eventId=0, $method='') {
+	public function hasRole($user, $eventId=0, $method='') {
 		$hasRole = model_Role::userHasRole($user, array(
 			model_Role::$SYSTEM_ADMIN,
 			model_Role::$EVENT_ADMIN
@@ -20,9 +20,7 @@ class action_admin_registration_Registration extends action_ValidatorAction
 			model_Role::$EVENT_REGISTRAR
 		), $eventId);
 		
-		if(!$hasRole) {
-			throw new Exception('User does not have required role.');
-		}
+		return $hasRole;
 	}
 	
 	public function view() {
@@ -32,7 +30,7 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		self::checkRole($user, $params['eventId']);
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->view($params);
 		return $this->converter->getView($info);
@@ -46,7 +44,7 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		self::checkRole($user, $params['eventId']);
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->saveGeneralInfo($params);
 		return $this->converter->getSaveGeneralInfo($info);
@@ -61,7 +59,7 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		self::checkRole($user, $params['eventId']);
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->save($params);
 		return $this->converter->getSave($info);
@@ -75,7 +73,7 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		self::checkRole($user, $params['eventId']);
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->cancelRegistration($params);
 		return $this->converter->getCancelRegistration($info);
@@ -89,7 +87,7 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		self::checkRole($user, $params['eventId']);
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->changeRegType($params);
 		return $this->converter->getChangeRegType($info);
@@ -102,7 +100,7 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		self::checkRole($user, $params['eventId']);
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->sendConfirmation($params);
 		return $this->converter->getSendConfirmation($info);		
@@ -115,7 +113,7 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		self::checkRole($user, $params['eventId']);
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->addRegistrantToGroup($params);
 		return $this->converter->getAddRegistrantToGroup($info);
@@ -128,7 +126,7 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		self::checkRole($user, $params['eventId']);
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->deleteRegistration($params);
 		return $this->converter->getDeleteRegistration($info);
@@ -141,7 +139,7 @@ class action_admin_registration_Registration extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		self::checkRole($user, $params['eventId']);
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->paymentSummary($params);
 		return $this->converter->getPaymentSummary($info);

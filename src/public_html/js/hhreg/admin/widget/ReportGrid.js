@@ -15,6 +15,8 @@ dojo.provide("hhreg.admin.widget.ReportGrid");
 dojo.declare("hhreg.admin.widget.ReportGrid", [dijit._Widget, dijit._Templated], {
 	storeUrl: hhreg.util.contextUrl("/admin/report/ReportList"),
 	eventId: 0,
+	showCreateLink: true,
+	showDeleteButton: true,
 	baseClass: "hhreg-admin-ReportGrid",
 	templateString: dojo.cache("hhreg.admin.widget", "templates/ReportGrid.html"),
 	postCreate: function() {
@@ -29,9 +31,14 @@ dojo.declare("hhreg.admin.widget.ReportGrid", [dijit._Widget, dijit._Templated],
 	setupCreateLink: function() {
 		var _this = this;
 		
-		// add context info to the create page link.
-		var createUrl = hhreg.util.contextUrl(dojo.attr(_this.createLinkNode, "href"));
-		dojo.attr(_this.createLinkNode, "href", createUrl);
+		if(_this.showCreateLink) {
+			// add context info to the create page link.
+			var createUrl = hhreg.util.contextUrl(dojo.attr(_this.createLinkNode, "href"));
+			dojo.attr(_this.createLinkNode, "href", createUrl);
+		}
+		else {
+			dojo.query(_this.createLinkNode).orphan();
+		}
 	},
 	setupGrid: function() {
 		var _this = this;
@@ -79,6 +86,11 @@ dojo.declare("hhreg.admin.widget.ReportGrid", [dijit._Widget, dijit._Templated],
 	},
 	setupDeleteButton: function() {
 		var _this = this;
+		
+		if(!_this.showDeleteButton) {
+			dojo.query(_this.deleteButtonNode).orphan();
+			return;
+		}
 		
 		var b = new dojox.form.BusyButton({
 			label: "Delete Selected Reports",

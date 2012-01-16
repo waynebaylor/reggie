@@ -17,7 +17,9 @@ class viewConverter_admin_report_ReportList extends viewConverter_admin_AdminCon
 				
 				dojo.addOnLoad(function() {
 					new hhreg.admin.widget.ReportGrid({
-						eventId: {$this->eventId}
+						eventId: {$this->eventId},
+						showCreateLink: {$this->showControls},
+						showDeleteButton: {$this->showControls}
 					}, dojo.place("<div></div>", dojo.byId("report-grid"), "replace")).startup();
 				});
 			</script>

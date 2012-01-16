@@ -9,9 +9,14 @@ class logic_admin_report_ReportList extends logic_Performer
 	public function view($params) {
 		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
 		
+		$user = SessionUtil::getUser();
+		$a = new action_admin_report_CreateReport();
+		$showControls = $a->hasRole($user, $params['eventId']);
+		
 		return array(
 			'eventId' => $eventInfo['id'],
-			'actionMenuEventLabel' => $eventInfo['code']
+			'actionMenuEventLabel' => $eventInfo['code'],
+			'showControls' => $showControls? 'true' : 'false'
 		);
 	}
 	

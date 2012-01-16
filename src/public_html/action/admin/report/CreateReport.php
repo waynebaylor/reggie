@@ -9,7 +9,7 @@ class action_admin_report_CreateReport extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_report_CreateReport();
 	}
 	
-	public static function checkRole($user, $eventId=0, $method='') {
+	public function hasRole($user, $eventId=0, $method='') {
 		$hasRole = model_Role::userHasRole($user, array(
 			model_Role::$SYSTEM_ADMIN,
 			model_Role::$EVENT_ADMIN
@@ -24,9 +24,7 @@ class action_admin_report_CreateReport extends action_ValidatorAction
 			$eventId
 		);
 		
-		if(!$hasRole) {
-			throw new Exception('User does not have required role.');
-		}
+		return $hasRole;
 	}
 	
 	public function view() {
@@ -35,7 +33,7 @@ class action_admin_report_CreateReport extends action_ValidatorAction
 		);
 		
 		$user = SessionUtil::getUser();
-		self::checkRole($user, $params['eventId']);
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->view($params);
 		return $this->converter->getView($info);
@@ -48,7 +46,7 @@ class action_admin_report_CreateReport extends action_ValidatorAction
 		));
 		
 		$user = SessionUtil::getUser();
-		self::checkRole($user, $params['eventId']);
+		$this->checkRole($user, $params['eventId']);
 		
 		$errors = validation_Validator::validate(validation_admin_Report::getConfig(), array(
 			'name' => $params['name']

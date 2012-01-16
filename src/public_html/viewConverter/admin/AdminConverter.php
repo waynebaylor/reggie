@@ -163,85 +163,33 @@ _;
 	}
 	
 	private function getShowReportMenu($user, $eventId) {
-		$showMenu = model_Role::userHasRole($user, array(
-			model_Role::$SYSTEM_ADMIN,
-			model_Role::$EVENT_ADMIN
-		));
-		
-		$showMenu = $showMenu || model_Role::userHasRoleForEvent($user, array(
-			model_Role::$EVENT_MANAGER,
-			model_Role::$EVENT_REGISTRAR,
-			model_Role::$VIEW_EVENT
-		), $eventId);
-		
-		return $showMenu? 'true' : 'false';
+		$a = new action_admin_report_ReportList();
+		return $a->hasRole($user, $eventId)? 'true' : 'false';
 	}
 
 	private function getShowRegFormMenu($user, $eventId) {
-		$showMenu = model_Role::userHasRole($user, array(
-			model_Role::$SYSTEM_ADMIN,
-			model_Role::$EVENT_ADMIN
-		));
-		
-		$showMenu = $showMenu || model_Role::userHasRoleForEvent($user, array(
-			model_Role::$EVENT_MANAGER
-		), $eventId);
-		
-		return $showMenu? 'true' : 'false';
+		$a = new action_admin_event_EditEvent();
+		return $a->hasRole($user, $eventId)? 'true' : 'false';
 	}
 
 	private function getShowBadgeTemplateMenu($user, $eventId) {
-		$showMenu = model_Role::userHasRole($user, array(
-			model_Role::$SYSTEM_ADMIN,
-			model_Role::$EVENT_ADMIN
-		));
-		
-		$showMenu = $showMenu || model_Role::userHasRoleForEvent($user, array(
-			model_Role::$EVENT_MANAGER,
-			model_Role::$EVENT_REGISTRAR
-		), $eventId);
-		
-		return $showMenu? 'true' : 'false';
+		$a = new action_admin_badge_BadgeTemplates();
+		return $a->hasRole($user, $eventId)? 'true' : 'false';
 	}
 
 	private function getShowFileMenu($user, $eventId) {
-		$showMenu = model_Role::userHasRole($user, array(
-			model_Role::$SYSTEM_ADMIN,
-			model_Role::$EVENT_ADMIN
-		));
-		
-		$showMenu = $showMenu || model_Role::userHasRoleForEvent($user, array(
-			model_Role::$EVENT_MANAGER
-		), $eventId);
-		
-		return $showMenu? 'true' : 'false';
+		$a = new action_admin_fileUpload_FileUpload();
+		return $a->hasRole($user, $eventId)? 'true' : 'false';
 	}
 
 	private function getShowPageMenu($user, $eventId) {
-		$showMenu = model_Role::userHasRole($user, array(
-			model_Role::$SYSTEM_ADMIN,
-			model_Role::$EVENT_ADMIN
-		));
-		
-		$showMenu = $showMenu || model_Role::userHasRoleForEvent($user, array(
-			model_Role::$EVENT_MANAGER
-		), $eventId);
-		
-		return $showMenu? 'true' : 'false';
+		$a = new action_admin_staticPage_PageList();		
+		return $a->hasRole($user, $eventId)? 'true' : 'false';
 	}
 	
 	private function getShowCreateReg($user, $eventId) {
-		$showMenu = model_Role::userHasRole($user, array(
-			model_Role::$SYSTEM_ADMIN,
-			model_Role::$EVENT_ADMIN
-		));
-		
-		$showMenu = $showMenu || model_Role::userHasRoleForEvent($user, array(
-			model_Role::$EVENT_MANAGER,
-			model_Role::$EVENT_REGISTRAR
-		), $eventId);
-		
-		return $showMenu? 'true' : 'false';
+		$a = new action_admin_registration_CreateRegistration();
+		return $a->hasRole($user, $eventId)? 'true' : 'false';
 	}
 } 
 
