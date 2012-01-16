@@ -281,7 +281,9 @@ class db_BadgeTemplateManager extends db_Manager
 			$templateIds[] = $result['id'];
 		}
 		
-		$this->deleteTemplates(array('eventId' => $eventId, 'templateIds' => $templateIds));
+		if(!empty($templateIds)) {
+			$this->deleteTemplates(array('eventId' => $eventId, 'templateIds' => $templateIds));
+		}
 	}
 }
 

@@ -41,6 +41,21 @@ class FileUtil
 		return true;
 	}
 	
+	public static function deleteEventDir($event) {
+		$path = self::getEventFilesDir($event);
+		$dirContents = scandir($path);
+		
+		if($dirContents === FALSE) { return;}
+			
+		foreach($dirContents as $entry) {
+			if(in_array($entry, array('.', '..'))) { continue;}
+
+			unlink($path.'/'.$entry);
+		}
+		
+		rmdir($path);
+	}
+	
 	public static function saveEventFile($event, $file) {
 		$path = self::getEventFilesDir($event).'/'.basename($file['name']);
 		

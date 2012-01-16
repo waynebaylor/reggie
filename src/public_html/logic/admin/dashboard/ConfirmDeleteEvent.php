@@ -14,6 +14,9 @@ class logic_admin_dashboard_ConfirmDeleteEvent extends logic_Performer
 	
 	public function deleteEvents($params) {
 		foreach($params['eventIds'] as $eventId) {
+			$eventInfo = db_EventManager::getInstance()->findInfoById($eventId);
+			FileUtil::deleteEventDir($eventInfo);
+			
 			db_EventManager::getInstance()->delete($eventId);
 		}
 		
