@@ -64,23 +64,7 @@ class action_admin_badge_BadgeTemplates extends action_ValidatorAction
 		return $this->converter->getDeleteTemplates($info);
 	}
 	
-	
-	
-	
-	
-	
-
 	public function addTemplate() {
-		$errors = validation_Validator::validate(validation_admin_BadgeTemplate::getConfig(), array(
-			'name' => RequestUtil::getValue('name', ''),
-			'badgeTemplateType' => RequestUtil::getValue('badgeTemplateType', ''),
-			'regTypeIds' => RequestUtil::getValueAsArray('regTypeIds', array(-1))
-		));
-		
-		if(!empty($errors)) {
-			return new fragment_validation_ValidationErrors($errors);
-		}
-		
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0,
 			'name' => '',
@@ -88,21 +72,40 @@ class action_admin_badge_BadgeTemplates extends action_ValidatorAction
 			'regTypeIds' => array(-1)
 		));
 		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$errors = validation_Validator::validate(validation_admin_BadgeTemplate::getConfig(), $params);
+		
+		if(!empty($errors)) {
+			return new fragment_validation_ValidationErrors($errors);
+		}
+		
 		$info = $this->logic->addTemplate($params);
 		return $this->converter->getAddTemplate($info);
 	}
 	
 	public function removeTemplate() {
-		$params = array(
-			'id' => RequestUtil::getValue('id', 0)
-		);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->removeTemplate($params);
 		return $this->converter->getRemoveTemplate($info);
 	}
 	
 	public function copyTemplate() {
-		$params = RequestUtil::getValues(array('id' => 0));
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->copyTemplate($params);
 		return $this->converter->getCopyTemplate($info);

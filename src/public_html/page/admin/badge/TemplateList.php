@@ -50,6 +50,7 @@
 					'href' => '/admin/badge/BadgeTemplates',
 					'parameters' => array(
 						'a' => 'copyTemplate',
+						'eventId' => $this->eventId,
 						'id' => $template['id']
 					),
 					'title' => 'Copy Badge Template'
@@ -59,6 +60,7 @@
 					'href' => '/admin/badge/BadgeTemplates',
 					'parameters' => array(
 						'a' => 'removeTemplate',
+						'eventId' => $this->eventId,
 						'id' => $template['id']
 					),
 					'title' => 'Delete Badge Template',
