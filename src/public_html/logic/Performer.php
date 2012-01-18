@@ -23,12 +23,14 @@ abstract class logic_Performer
 		$config->set('HTML.Doctype', 'HTML 4.01 Strict');
 		$config->set('HTML.TidyLevel', 'heavy');
 		$config->set('Attr.EnableID', true); // allow the 'id' attribute.
+		$config->set('Output.CommentScriptContents', false);
 
 		// allow <a> tag to have 'target' attribute. allow style tag.
 		$def = $config->maybeGetRawHTMLDefinition(); 
 		if(!empty($def)) {
 			$def->addAttribute('a', 'target', 'Enum#_blank');
 			$def->addElement('style', 'Block', 'Flow', 'Common', array('type' => 'Enum#text/css'));	
+			$def->addElement('script', 'Inline', 'Inline', 'Common', array('type' => 'Enum#text/javascript'));
 		}
 		
 		$htmlp = new HTMLPurifier($config);
