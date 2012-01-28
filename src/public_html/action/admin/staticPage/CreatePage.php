@@ -21,9 +21,9 @@ class action_admin_staticPage_CreatePage extends action_ValidatorAction
 	}
 	
 	public function view() {
-		$params = array(
-			'eventId' => RequestUtil::getValue('eventId', 0)
-		);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0
+		));
 		
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $params['eventId']);
@@ -43,9 +43,7 @@ class action_admin_staticPage_CreatePage extends action_ValidatorAction
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $params['eventId']);
 		
-		$errors = validation_Validator::validate(validation_admin_StaticPage::getConfig(), array(
-			'name' => $params['name']
-		));
+		$errors = validation_Validator::validate(validation_admin_StaticPage::getConfig(), $params);
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);

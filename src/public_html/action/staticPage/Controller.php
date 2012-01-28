@@ -8,11 +8,7 @@ class action_staticPage_Controller
 	}
 	
 	public function view($props) {
-		$info = $this->logic->view(array(
-			'eventCode' => $props['eventCode'],
-			'name' => $props['name']
-		));
-		
+		$info = $this->logic->view($props);
 		$template = $this->converter->getView($info);
 		
 		echo $template->html();

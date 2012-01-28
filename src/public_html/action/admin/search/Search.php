@@ -10,22 +10,8 @@ class action_admin_search_Search extends action_ValidatorAction
 	}
 	
 	public function hasRole($user, $eventId=0, $method='') {
-		$hasRole = model_Role::userHasRole($user, array(
-			model_Role::$SYSTEM_ADMIN,
-			model_Role::$EVENT_ADMIN
-		));	
-		
-		$hasRole = $hasRole || model_Role::userHasRoleForEvent(
-			$user, 
-			array(
-				model_Role::$EVENT_MANAGER,
-				model_Role::$EVENT_REGISTRAR,
-				model_Role::$VIEW_EVENT
-			), 
-			$eventId
-		);
-		
-		return $hasRole;
+		$a = new action_admin_report_ReportList();
+		return $a->hasRole($user, $eventId, $method);
 	}
 	
 	public function view() {

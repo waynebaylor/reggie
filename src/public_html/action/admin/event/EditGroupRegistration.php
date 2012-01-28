@@ -42,25 +42,30 @@ class action_admin_event_EditGroupRegistration extends action_BaseAction
 	}
 	
 	public function addField() {
-		$field = RequestUtil::getParameters(array('groupRegistrationId', 'contactFieldId'));
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'groupRegistrationId' => 0,
+			'contactFieldId' => 0
+		));
 		
-		db_GroupRegistrationFieldManager::getInstance()->createField($field);
-
-		$groupReg = $this->strictFindById(db_GroupRegistrationManager::getInstance(), $field['groupRegistrationId']);
-		$event = $this->strictFindById(db_EventManager::getInstance(), $groupReg['eventId']);
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
-		return new fragment_groupRegistration_field_List($event);
+		$info = $this->logic->addField($params);
+		return $this->converter->getAddField($info);
 	}
 	
 	public function removeField() {
-		$field = $this->strictFindById(db_GroupRegistrationFieldManager::getInstance(), RequestUtil::getValue('id', 0));
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		db_GroupRegistrationFieldManager::getInstance()->deleteField($field);
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
-		$groupReg = $this->strictFindById(db_GroupRegistrationManager::getInstance(), $field['groupRegistrationId']);
-		$event = $this->strictFindById(db_EventManager::getInstance(), $groupReg['eventId']);
-		
-		return new fragment_groupRegistration_field_List($event);
+		$info = $this->logic->removeField($params);
+		return $this->converter->getRemoveField($info);		
 	}
 }
 

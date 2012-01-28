@@ -16,7 +16,8 @@ class viewConverter_admin_event_EditEvent extends viewConverter_admin_AdminConve
 		return $body;
 	}
 	
-	public function getSaveEvent($properties = array()) {
+	public function getSaveEvent($properties) {
+		$this->setProperties($properties);
 		return new fragment_Success();
 	}
 	

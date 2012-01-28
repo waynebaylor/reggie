@@ -4,77 +4,74 @@ class action_admin_contactField_Option extends action_ValidatorAction
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->logic = new logic_admin_contactField_Option();
+		$this->converter = new viewConverter_admin_contactField_Option();
+	}
+	
+	public function hasRole($user, $eventId=0, $method='') {
+		$a = new action_admin_event_EditEvent();
+		return $a->hasRole($user, $eventId, $method);
 	}
 	
 	public function addOption() {
-		$errors = $this->validate();
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'contactFieldId' => 0,
+			'displayName' => '',
+			'defaultSelected' => 'F'
+		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$errors = validation_Validator::validate(validation_admin_ContactFieldOption::getConfig(), $params);
 		
 		if(!empty($errors)) {
-			return new fragment_validation_ValidationErrors($errors);
+			return new fragment_validation_ValidationErrors($errors);	
 		}
 		
-		$field = $this->strictFindById(db_ContactFieldManager::getInstance(), $_REQUEST['contactFieldId']);
-		
-		if(!empty($_REQUEST['displayName'])) {
-			db_ContactFieldOptionManager::getInstance()->createOption(array(
-				'contactFieldId' => $field['id'],
-				'displayName' => $_REQUEST['displayName'],
-				'defaultSelected' => RequestUtil::getValue('defaultSelected', 'F')
-			));
-		}
-		
-		$field = db_ContactFieldManager::getInstance()->find($field['id']);
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
-		
-		return new fragment_contactFieldOption_List($event, $field);
+		$info = $this->logic->addOption($params);
+		return $this->converter->getAddOption($info);
 	}
 
 	public function removeOption() {
-		$option = $this->strictFindById(db_ContactFieldOptionManager::getInstance(), $_REQUEST['id']);
-
-		db_ContactFieldOptionManager::getInstance()->delete($option);
-
-		$field = db_ContactFieldManager::getInstance()->find($option['contactFieldId']);
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		return new fragment_contactFieldOption_List($event, $field);
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->removeOption($params);
+		return $this->converter->getRemoveOption($info);		
 	}
 	
 	public function moveOptionUp() {
-		$option = $this->strictFindById(db_ContactFieldOptionManager::getInstance(), $_REQUEST['id']);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		db_ContactFieldOptionManager::getInstance()->moveOptionUp($option);
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
-		$field = db_ContactFieldManager::getInstance()->find($option['contactFieldId']);
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
-		
-		return new fragment_contactFieldOption_List($event, $field);
+		$info = $this->logic->moveOptionUp($params);
+		return $this->converter->getMoveOptionUp($info);
 	}
 	
 	public function moveOptionDown() {
-		$option = $this->strictFindById(db_ContactFieldOptionManager::getInstance(), $_REQUEST['id']);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
 		
-		db_ContactFieldOptionManager::getInstance()->moveOptionDown($option);
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
-		$field = db_ContactFieldManager::getInstance()->find($option['contactFieldId']);
-		$event = db_EventManager::getInstance()->find($_REQUEST['eventId']);
-		
-		return new fragment_contactFieldOption_List($event, $field);
-	}
-	
-	protected function getValidationConfig() {
-		return array(
-			array(
-				'name' => 'displayName',
-				'value' => $_REQUEST['displayName'],
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Label is required.'
-					)
-				)
-			)
-		);
+		$info = $this->logic->moveOptionDown($params);
+		return $this->converter->getMoveOptionDown($info);
 	}
 }
 

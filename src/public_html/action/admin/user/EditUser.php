@@ -10,12 +10,8 @@ class action_admin_user_EditUser extends action_ValidatorAction
 	}
 	
 	public function hasRole($user, $eventId=0, $method='') {
-		$hasRole = model_Role::userHasRole($user, array(
-			model_Role::$SYSTEM_ADMIN, 
-			model_Role::$USER_ADMIN
-		));
-		
-		return $hasRole;
+		$a = new action_admin_user_CreateUser();
+		return $a->hasRole($user, $eventId, $method);
 	}
 	
 	public function view() {

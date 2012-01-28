@@ -3,6 +3,10 @@
 	<td class="required label">Code</td>
 	<td>
 		<?php echo $this->HTML->hidden(array(
+			'name' => 'eventId',
+			'value' => $this->event['id']
+		)) ?>
+		<?php echo $this->HTML->hidden(array(
 			'name' => 'id',
 			'value' => $this->event['id']
 		)) ?>

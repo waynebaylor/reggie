@@ -39,82 +39,90 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 	}
 	
 	public function addPage() {
-		$errors = validation_Validator::validate(validation_admin_Page::getConfig(), array(
-			'title' => RequestUtil::getValue('title', '')
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'title' => '',
+			'categoryIds' => array()
 		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$errors = validation_Validator::validate(validation_admin_Page::getConfig(), $params);
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);
 		}
 		
-		$eventId = RequestUtil::getValue('eventId', 0);
-		$title = RequestUtil::getValue('title', '');
-		$categoryIds = RequestUtil::getValueAsArray('categoryIds', array());
-		
-		$event = $this->logic->addPage($eventId, $title, $categoryIds);
-		
-		return $this->converter->getAddPage(array(
-			'event' => $event
-		));
+		$info = $this->logic->addPage($params);
+		return $this->converter->getAddPage($info);
 	}
 	
 	public function removePage() {
-		$pageId = RequestUtil::getValue('id', 0);
-		
-		$event = $this->logic->removePage($pageId);
-		
-		return $this->converter->getRemovePage(array(
-			'event' => $event
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
 		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->removePage($params);
+		return $this->converter->getRemovePage($info);
 	}
 	
 	public function movePageUp() {
-		$pageId = RequestUtil::getValue('id', 0);
-		
-		$event = $this->logic->movePageUp($pageId);
-		
-		return $this->converter->getMovePageUp(array(
-			'event' => $event
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
 		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->movePageUp($params);
+		return $this->converter->getMovePageUp($info);
 	}
 	
 	public function movePageDown() {
-		$pageId = RequestUtil::getValue('id', 0);
-		
-		$event = $this->logic->movePageDown($pageId);
-		
-		return $this->converter->getMovePageDown(array(
-			'event' => $event
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
 		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->movePageDown($params);
+		return $this->converter->getMovePageDown($info);
 	}
 	
 	public function saveEvent() {
-		$errors = validation_Validator::validate(validation_admin_Event::getConfig(), array(
-			'code' => RequestUtil::getValue('code', ''),
-			'regOpen' => RequestUtil::getValue('regOpen', ''),
-			'regClosed' => RequestUtil::getValue('regClosed', '')
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0,
+			'code' => '',
+			'displayName' => '',
+			'regOpen' => '',
+			'regClosed' => '',
+			'capacity' => 0,
+			'confirmationText' => '',
+			'regClosedText' => '',
+			'cancellationPolicy' => '',
+			'paymentInstructions' => ''
 		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$errors = validation_Validator::validate(validation_admin_Event::getConfig(), $params);
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);
 		}
 		
-		$eventInfo = RequestUtil::getParameters(array(
-			'id',
-			'code',
-			'displayName',
-			'regOpen',
-			'regClosed',
-			'capacity',
-			'confirmationText',
-			'regClosedText',
-			'cancellationPolicy',
-			'paymentInstructions'
-		));
-		
-		$this->logic->saveEvent($eventInfo);
-		
-		return $this->converter->getSaveEvent();
+		$info = $this->logic->saveEvent($params);
+		return $this->converter->getSaveEvent($info);
 	}
 }
 

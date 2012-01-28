@@ -60,7 +60,6 @@ class action_admin_event_CreateEvent extends action_ValidatorAction
 		);
 		
 		$info = $this->logic->createEvent($params);
-		
 		return $this->converter->getCreateEvent($info);
 	}
 }

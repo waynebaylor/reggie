@@ -111,8 +111,6 @@ class action_admin_contactField_ContactField extends action_ValidatorAction
 		$info = $this->logic->save($params);
 		return $this->converter->getSave($info);
 	}
-	
-	
 }
 
 ?>

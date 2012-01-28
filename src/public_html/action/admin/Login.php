@@ -40,7 +40,23 @@ class action_admin_Login extends action_ValidatorAction
 	}
 	
 	public function login() {
-		$errors = $this->validate();
+		$params = RequestUtil::getValues(array(
+			'email' => '',
+			'password' => ''
+		));
+		
+		$errors = validation_Validator::validate($this->getValidationConfig(), $params);
+		
+		if(empty($errors)) {
+			$user = db_UserManager::getInstance()->authenticate($params);
+
+			if(empty($user)) {
+				$errors['general'] = array('Invalid email or password.');	
+			}
+			else {
+				SessionUtil::setUser($user);
+			}
+		}
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);
@@ -54,46 +70,10 @@ class action_admin_Login extends action_ValidatorAction
 		return new template_Redirect('/admin/Login');
 	}
 	
-	public function validate($fieldNames = array()) {
-		$errors = parent::validate($fieldNames);
-
-		if(empty($errors)) {
-			$info = RequestUtil::getParameters(array('email', 'password'));
-			$user = db_UserManager::getInstance()->authenticate($info);
-
-			if(empty($user)) {
-				$errors['general'] = array('Invalid email or password.');	
-			}
-			else {
-				SessionUtil::setUser($user);
-			}
-		}
-		
-		return $errors;
-	}
-	
-	protected function getValidationConfig() {
+	private function getValidationConfig() {
 		return array(
-			array(
-				'name' => 'email',
-				'value' => RequestUtil::getValue('email', ''),
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Email is required.'
-					)
-				)
-			),
-			array(
-				'name' => 'password',
-				'value' => RequestUtil::getValue('password', ''),
-				'restrictions' => array(
-					array(
-						'name' => 'required',
-						'text' => 'Password is required.'
-					)
-				)
-			)
+			validation_Validator::required('email', 'Email is required.'),
+			validation_Validator::required('password', 'Password is required.')
 		);
 	}
 }

@@ -38,7 +38,7 @@ class action_admin_event_EditAppearance extends action_BaseAction
 			'menuBackgroundColor' => 'ffffff',
 			'backgroundColor' => 'ffffff',
 			'formBackgroundColor' => 'ffffff',
-			'buttonTextColor' => 'ffffff',
+			'buttonTextColor' => '000000',
 			'buttonBackgroundColor' => 'ffffff',
 			'pageBackgroundColor' => 'ffffff',
 			'menuTitleBackgroundColor' => 'ffffff',

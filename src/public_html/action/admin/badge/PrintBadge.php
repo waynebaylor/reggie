@@ -9,6 +9,11 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 		$this->converter = new viewConverter_admin_badge_PrintBadge();
 	}
 	
+	public function hasRole($user, $eventId=0, $method='') {
+		$a = new action_admin_badge_BadgeTemplates();
+		return $a->hasRole($user, $eventId, $method);
+	}
+	
 	public function singleBadge() {
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0, 
@@ -17,6 +22,9 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 			'shiftRight' => 0,
 			'shiftDown' => 0
 		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->singleBadge($params);
 		return $this->converter->getSingleBadge($info);		
@@ -32,6 +40,9 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 			'endDate' => ''
 		));
 
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
 		$info = $this->logic->allBadges($params);
 		return $this->converter->getAllBadges($info);
 	}
@@ -44,6 +55,9 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 			'startDate' => '',
 			'endDate' => ''
 		));	
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
 		$info = $this->logic->batchCount($params);
 		return $this->converter->getBatchCount($info);

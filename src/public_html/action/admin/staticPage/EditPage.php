@@ -10,14 +10,8 @@ class action_admin_staticPage_EditPage extends action_ValidatorAction
 	}
 	
 	public function hasRole($user, $eventId=0, $method='') {
-		$hasRole = model_Role::userHasRole($user, array(
-			model_Role::$SYSTEM_ADMIN,
-			model_Role::$EVENT_ADMIN
-		));	
-		
-		$hasRole = $hasRole || model_Role::userHasRoleForEvent($user, model_Role::$EVENT_MANAGER, $eventId);
-		
-		return $hasRole;
+		$a = new action_admin_staticPage_CreatePage();
+		return $a->hasRole($user, $eventId, $method);
 	}
 	
 	public function view() {
@@ -45,9 +39,7 @@ class action_admin_staticPage_EditPage extends action_ValidatorAction
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $params['eventId']);
 		
-		$errors = validation_Validator::validate(validation_admin_StaticPage::getConfig(), array(
-			'name' => $params['name']
-		));
+		$errors = validation_Validator::validate(validation_admin_StaticPage::getConfig(), $params);
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);

@@ -17,8 +17,17 @@ class viewConverter_admin_event_EditGroupRegistration extends viewConverter_admi
 	
 	public function getSaveGroupReg($properties) {
 		$this->setProperties($properties);
-		
 		return new fragment_Success();
+	}
+	
+	public function getAddField($properties) {
+		$this->setProperties($properties);
+		return new fragment_groupRegistration_field_List($this->event);
+	}
+	
+	public function getRemoveField($properties) {
+		$this->setProperties($properties);
+		return new fragment_groupRegistration_field_List($this->event);
 	}
 	
 	private function getContent() {

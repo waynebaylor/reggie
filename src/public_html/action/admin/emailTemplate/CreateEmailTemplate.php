@@ -18,18 +18,6 @@ class action_admin_emailTemplate_CreateEmailTemplate extends action_BaseAction
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0
 		));
-		$params['emailTemplate'] = array(
-			'id' => 0,
-			'eventId' => $params['eventId'],
-			'enabled' => 'T',
-			'contactFieldId' => 0,
-			'fromAddress' => '',
-			'bcc' => '',
-			'regTypeIds' => array(),
-			'subject' => '',
-			'header' => '',
-			'footer' => '' 
-		);
 		
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $params['eventId']);
@@ -40,7 +28,7 @@ class action_admin_emailTemplate_CreateEmailTemplate extends action_BaseAction
 	
 	public function createTemplate() {
 		$params = RequestUtil::getValues(array(
-			'id' => 0, // used in validation
+			'id' => 0, // used in validation to check for overlap
 			'eventId' => 0,
 			'enabled' => 'F',
 			'contactFieldId' => 0,

@@ -1,5 +1,6 @@
 <?php
 
+// PRETTY SURE THIS ACTION IS NOT USED ANYWHERE
 class action_admin_data_User extends action_ValidatorAction
 {
 	function __construct() {
@@ -14,6 +15,8 @@ class action_admin_data_User extends action_ValidatorAction
 	}
 	
 	public function currentUser() {
+		throw new Exception('Action not implemented: currentUser.');
+		
 		$user = SessionUtil::getUser();
 		
 		$info = $this->logic->currentUser(array('id' => $user['id']));

@@ -10,20 +10,14 @@ class action_admin_staticPage_PageList extends action_ValidatorAction
 	}
 	
 	public function hasRole($user, $eventId=0, $method='') {
-		$hasRole = model_Role::userHasRole($user, array(
-			model_Role::$SYSTEM_ADMIN,
-			model_Role::$EVENT_ADMIN
-		));	
-		
-		$hasRole = $hasRole || model_Role::userHasRoleForEvent($user, model_Role::$EVENT_MANAGER, $eventId);
-		
-		return $hasRole;
+		$a = new action_admin_staticPage_CreatePage();
+		return $a->hasRole($user, $eventId, $method);
 	}
 	
 	public function view() {
-		$params = array(
-			'eventId' => RequestUtil::getValue('eventId', 0)
-		);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0
+		));
 		
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $params['eventId']);
@@ -33,9 +27,9 @@ class action_admin_staticPage_PageList extends action_ValidatorAction
 	}
 	
 	public function listPages() {
-		$params = array(
-			'eventId' => RequestUtil::getValue('eventId', 0)
-		);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0
+		));
 		
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $params['eventId']);
@@ -45,10 +39,10 @@ class action_admin_staticPage_PageList extends action_ValidatorAction
 	}
 	
 	public function deletePages() {
-		$params = array(
-			'eventId' => RequestUtil::getValue('eventId', 0),
-			'pageIds' => RequestUtil::getValueAsArray('pageIds', array())
-		);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'pageIds' => array()
+		));
 		
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $params['eventId']);

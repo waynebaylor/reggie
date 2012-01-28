@@ -19,34 +19,35 @@ class action_admin_user_CreateUser extends action_ValidatorAction
 	}
 	
 	public function view() {
+		$params = array();
+		
 		$user = SessionUtil::getUser();
 		$this->checkRole($user);
 		
-		$info = $this->logic->view(array('user' => $user));
+		$params['user'] = $user;
+		
+		$info = $this->logic->view($params);
 		return $this->converter->getView($info);
 	}
 	
 	public function createUser() {
+		$params = RequestUtil::getValues(array(
+			'email' => '',
+			'password' => '',
+			'generalRoles' => array(),
+			'eventRoles' => array()
+		));
+		
 		$user = SessionUtil::getUser();
 		$this->checkRole($user);
+
+		$params['user'] = $user;
 		
-		$errors = validation_admin_User::validate(array(
-			'email' => RequestUtil::getValue('email', ''), 
-			'password' => RequestUtil::getValue('password', '')
-		));
+		$errors = validation_admin_User::validate($params);
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);
 		}
-		
-		$params = RequestUtil::getParameters(array(
-			'email',
-			'password'
-		));
-		$params['generalRoles'] = RequestUtil::getValueAsArray('generalRoles', array());
-		$params['eventRoles'] = RequestUtil::getValueAsArray('eventRoles', array());
-		
-		$params['user'] = $user;
 		
 		$info = $this->logic->createUser($params);
 		return $this->converter->getCreateUser($info);

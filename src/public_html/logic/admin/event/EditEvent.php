@@ -19,42 +19,64 @@ class logic_admin_event_EditEvent extends logic_Performer
 		);
 	}
 	
-	public function saveEvent($info) {
-		$oldEvent = $this->strictFindById(db_EventManager::getInstance(), $info['id']);
+	public function saveEvent($params) {
+		$oldEvent = $this->strictFindById(db_EventManager::getInstance(), $params['id']);
 	
-		db_EventManager::getInstance()->save($info);
+		db_EventManager::getInstance()->save($params);
 		
-		FileUtil::renameEventDir($oldEvent, $info);
+		FileUtil::renameEventDir($oldEvent, $params);
+		
+		return $params;
 	}
 	
-	public function addPage($eventId, $title, $categoryIds) {
-		db_PageManager::getInstance()->createPage($eventId, $title, $categoryIds);
+	public function addPage($params) {
+		db_PageManager::getInstance()->createPage($params['eventId'], $page['title'], $params['categoryIds']);
 
-		return db_EventManager::getInstance()->find($eventId);
+		$event = db_EventManager::getInstance()->find($params['eventId']);
+		
+		return array(
+			'eventId' => $params['eventId'],
+			'event' => $event
+		); 
 	}
 	
-	public function removePage($pageId) {
-		$page = $this->strictFindById(db_PageManager::getInstance(), $pageId);
+	public function removePage($params) {
+		$page = $this->strictFindById(db_PageManager::getInstance(), $params['pageId']);
 
 		db_PageManager::getInstance()->deletePage($page);
 		
-		return db_EventManager::getInstance()->find($page['eventId']);
+		$event = db_EventManager::getInstance()->find($params['eventId']);
+		
+		return array(
+			'eventId' => $params['eventId'],
+			'event' => $event
+		);
 	}
 	
-	public function movePageUp($pageId) {
-		$page = $this->strictFindById(db_PageManager::getInstance(), $pageId);
+	public function movePageUp($params) {
+		$page = $this->strictFindById(db_PageManager::getInstance(), $params['pageId']);
 
 		db_PageManager::getInstance()->movePageUp($page);
 		
-		return db_EventManager::getInstance()->find($page['eventId']);
+		$event = db_EventManager::getInstance()->find($params['eventId']);
+		
+		return array(
+			'eventId' => $params['eventId'],
+			'event' => $event
+		);
 	}
 	
 	public function movePageDown($pageId) {
-		$page = $this->strictFindById(db_PageManager::getInstance(), $pageId);
+		$page = $this->strictFindById(db_PageManager::getInstance(), $params['pageId']);
 
 		db_PageManager::getInstance()->movePageDown($page);
 		
-		return db_EventManager::getInstance()->find($page['eventId']);
+		$event = db_EventManager::getInstance()->find($params['eventId']);
+		
+		return array(
+			'eventId' => 0,
+			'event' => $event
+		);
 	}
 }
 		
