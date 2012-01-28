@@ -28,14 +28,14 @@ class logic_admin_report_EditReport extends logic_Performer
 		);
 	}
 	
-	public function saveReport($reportId, $reportName) {
-		$report = $this->strictFindById(db_ReportManager::getInstance(), $reportId);
+	public function saveReport($params) {
+		$report = $this->strictFindById(db_ReportManager::getInstance(), $params['id']);
 		
-		$report['name'] = $reportName;
+		$report['name'] = $params['name'];
 		
 		db_ReportManager::getInstance()->saveReport($report);
 		
-		return array();
+		return $params;
 	}
 	
 	public function addField($field) {
@@ -52,41 +52,44 @@ class logic_admin_report_EditReport extends logic_Performer
 		);
 	}
 	
-	public function removeField($reportId, $id) {
-		if(in_array($id, $this->specialFields)) {
+	public function removeField($params) {
+		if(in_array($params['id'], $this->specialFields)) {
 			$field = array(
-				'name' => $id,
-				'reportId' => $reportId
+				'name' => $params['id'],
+				'reportId' => $params['reportId']
 			);
 			
 			db_ReportManager::getInstance()->removeSpecialField($field);
 		}
 		else {
-			$field = $this->strictFindById(db_ReportFieldManager::getInstance(), $id);
+			$field = $this->strictFindById(db_ReportFieldManager::getInstance(), $params['id']);
 			db_ReportFieldManager::getInstance()->deleteField($field);
 		}
 		
 		return array(
+			'eventId' => $params['eventId'],
 			'report' => db_ReportManager::getInstance()->find($field['reportId'])
 		);
 	}
 	
-	public function moveFieldUp($fieldId) {
-		$field = $this->strictFindById(db_ReportFieldManager::getInstance(), $fieldId);
+	public function moveFieldUp($params) {
+		$field = $this->strictFindById(db_ReportFieldManager::getInstance(), $params['id']);
 		
 		db_ReportFieldManager::getInstance()->moveFieldUp($field);
 		
 		return array(
+			'eventId' => $params['eventId'],
 			'report' => db_ReportManager::getInstance()->find($field['reportId'])
 		);
 	}
 	
-	public function moveFieldDown($fieldId) {
-		$field = $this->strictFindById(db_ReportFieldManager::getInstance(), $fieldId);
+	public function moveFieldDown($params) {
+		$field = $this->strictFindById(db_ReportFieldManager::getInstance(), $params['id']);
 		
 		db_ReportFieldManager::getInstance()->moveFieldDown($field);
 		
 		return array(
+			'eventId' => $params['eventId'],
 			'report' => db_ReportManager::getInstance()->find($field['reportId'])
 		);
 	}

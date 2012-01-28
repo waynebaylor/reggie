@@ -48,9 +48,7 @@ class action_admin_report_CreateReport extends action_ValidatorAction
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $params['eventId']);
 		
-		$errors = validation_Validator::validate(validation_admin_Report::getConfig(), array(
-			'name' => $params['name']
-		));
+		$errors = validation_Validator::validate(validation_admin_Report::getConfig(), $params);
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);

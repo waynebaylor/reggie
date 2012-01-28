@@ -28,9 +28,12 @@ class logic_admin_report_CreateReport extends logic_Performer
 	}
 	
 	public function createReport($params) {
-		db_ReportManager::getInstance()->createReport($params);
+		$newId = db_ReportManager::getInstance()->createReport($params);
 		
-		return array('eventId' => $params['eventId']);
+		return array(
+			'eventId' => $params['eventId'],
+			'reportId' => $newId
+		);
 	}
 }
 

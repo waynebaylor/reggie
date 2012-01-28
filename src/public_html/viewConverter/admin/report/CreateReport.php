@@ -15,7 +15,7 @@ class viewConverter_admin_report_CreateReport extends viewConverter_admin_AdminC
 			'url' => '/admin/report/CreateReport',
 			'action' => 'createReport',
 			'rows' => $this->getFileContents('page_admin_report_Edit'),
-			'redirectUrl' => "/admin/report/ReportList?eventId={$this->eventId}"
+			'useAjax' => false
 		));
 		
 		$body .= <<<_
@@ -36,7 +36,7 @@ _;
 	
 	public function getCreateReport($properties) {
 		$this->setProperties($properties);
-		return new fragment_Success();
+		return new template_Redirect("/admin/report/EditReport?eventId={$this->eventId}&reportId={$this->reportId}");
 	}
 }
 

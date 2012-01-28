@@ -28,55 +28,76 @@ class action_admin_report_EditReport extends action_ValidatorAction
 	}
 	
 	public function saveReport() {
-		$errors = validation_Validator::validate(validation_admin_Report::getConfig(), array(
-			'name' => RequestUtil::getValue('name', '')
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0,
+			'name' => ''
 		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$errors = validation_Validator::validate(validation_admin_Report::getConfig(), $params);
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);
 		}
 		
-		$reportId = RequestUtil::getValue('id', 0);
-		$reportName = RequestUtil::getValue('name', '');
-		
-		$info = $this->logic->saveReport($reportId, $reportName);
-		
+		$info = $this->logic->saveReport($params);
 		return $this->converter->getSaveReport($info);
 	}
 	
 	public function addField() {
-		$field = RequestUtil::getValues(array(
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
 			'reportId' => 0, 
-			'contactFieldId' => 0
+			'contactFieldId' => '' // can be a string or a number.
 		));
 		
-		$info = $this->logic->addField($field);
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
+		$info = $this->logic->addField($params);
 		return $this->converter->getAddField($info);
 	}
 	
 	public function removeField() {
-		$id = RequestUtil::getValue('id', 0);
-		$reportId = RequestUtil::getValue('reportId', 0);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => '', // can be a string or a number.
+			'reportId' => 0
+		));
 		
-		$info = $this->logic->removeField($reportId, $id);
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
+		$info = $this->logic->removeField($params);
 		return $this->converter->getRemoveField($info);
 	}
 	
 	public function moveFieldUp() {
-		$fieldId = RequestUtil::getValue('id', 0);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => ''
+		));
 		
-		$info = $this->logic->moveFieldUp($fieldId);
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
+		$info = $this->logic->moveFieldUp($params);
 		return $this->converter->getMoveFieldUp($info);
 	}
 	
 	public function moveFieldDown() {
-		$fieldId = RequestUtil::getValue('id', 0);
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => ''
+		));
 		
-		$info = $this->logic->moveFieldDown($fieldId);
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
 		
+		$info = $this->logic->moveFieldDown($params);
 		return $this->converter->getMoveFieldDown($info);
 	}
 }

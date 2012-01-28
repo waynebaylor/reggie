@@ -70,7 +70,7 @@ class action_admin_Login extends action_ValidatorAction
 		return new template_Redirect('/admin/Login');
 	}
 	
-	private function getValidationConfig() {
+	protected function getValidationConfig() {
 		return array(
 			validation_Validator::required('email', 'Email is required.'),
 			validation_Validator::required('password', 'Password is required.')

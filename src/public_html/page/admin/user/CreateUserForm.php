@@ -31,7 +31,7 @@
 		<?php foreach($this->generalRoles as $role): ?>
 		<div style="padding-bottom:5px;">
 			<?php echo $this->HTML->checkbox(array(
-				'label' => $role['name'].'<br><span style="color: #aaa;">'.$role['description'].'</span>',
+				'label' => $role['name'].'<br><span style="color: #888;">'.$role['description'].'</span>',
 				'name' => 'generalRoles[]',
 				'value' => $role['id'],
 				'checked' => model_Role::userHasRole($this->user, $role['id'])
@@ -50,7 +50,7 @@
 	<td>
 		<?php foreach($this->events as $event): ?>
 		<div style="padding-bottom:10px;">
-			<div style="background-color:#d3d3d3; padding:2px 5px;">
+			<div style="background-color:#d3d3d3; padding:5px 7px;">
 				(<?php echo $event['code'] ?>) 
 				<span style="font-style:italic;">
 					<?php echo $event['displayName'] ?>
@@ -60,7 +60,7 @@
 			<?php foreach($this->eventRoles as $role): ?>
 				<div style="padding-bottom:5px;">
 					<?php echo $this->HTML->checkbox(array(
-						'label' => $role['name'].'<br><span style="color: #aaa;">'.$role['description'].'</span>',
+						'label' => $role['name'].'<br><span style="color: #888;">'.$role['description'].'</span>',
 						'name' => 'eventRoles[]',
 						'value' => $event['id'].'_'.$role['id'],
 						'checked' => model_Role::userHasRoleForEvent($this->user, $role['id'], $event['id'])

@@ -1,6 +1,5 @@
 dojo.require("hhreg.validation");
 dojo.require("dojox.form.BusyButton");
-dojo.require("dijit.form.Button");
 
 (function() {
 	var xhrTableForm = dojo.provide("hhreg.xhrTableForm");
@@ -144,8 +143,9 @@ dojo.require("dijit.form.Button");
 		}
 		else {
 			// do a standard form submit.
-			saveButton = new dijit.form.Button({
+			saveButton = new dojox.form.BusyButton({
 				label: button.value,
+				busyLabel: "Processing...",
 				onClick: function() {
 					form.submit();
 				}
