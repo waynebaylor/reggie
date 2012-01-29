@@ -5,15 +5,24 @@ class viewConverter_admin_regOption_RegOption extends viewConverter_admin_AdminC
 	function __construct() {
 		parent::__construct();
 		
-		$this->title = 'Edit Registration Option';
+		$this->title = 'Edit';
 	}
 	
 	protected function body() {
+		if(empty($this->option['text'])) {
+			$prices = new fragment_regOptionPrice_Prices($this->event, $this->option);
+			$prices = $prices->html();
+			$groups = new fragment_regOptionGroup_RegOptionGroups($this->event, $this->option);
+			$groups = $groups->html();
+		}
+		else {
+			$prices = '';
+			$groups = '';
+		}
+		
 		$body = parent::body();
 		
 		$edit = new fragment_sectionRegOption_Edit($this->option);  
-		$prices = new fragment_regOptionPrice_Prices($this->event, $this->option);
-		$groups = new fragment_regOptionGroup_RegOptionGroups($this->event, $this->option);
 		
 		$breadcrumbs = new fragment_Breadcrumbs($this->breadcrumbsParams);
 		
@@ -32,11 +41,11 @@ class viewConverter_admin_regOption_RegOption extends viewConverter_admin_AdminC
 
 				<div class="divider"></div>
 				
-				{$prices->html()}
+				{$prices}
 				
 				<div class="divider"></div>
 				
-				{$groups->html()}
+				{$groups}
 			</div>
 _;
 
@@ -66,6 +75,11 @@ _;
 	public function getSaveOption($properties) {
 		$this->setProperties($properties);
 		return new fragment_Success();
+	}
+	
+	public function getAddText($properties) {
+		$this->setProperties($properties);
+		return new fragment_sectionRegOption_List($this->event, $this->group);
 	}
 }
 

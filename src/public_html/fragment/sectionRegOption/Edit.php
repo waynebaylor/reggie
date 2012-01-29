@@ -16,9 +16,16 @@ class fragment_sectionRegOption_Edit extends template_Template
 			'saveOption',
 			$this->getFormRows());
 		
+		if(empty($this->option['text'])) {
+			$heading = 'Edit Registration Option';
+		}
+		else {
+			$heading = 'Edit Text';			
+		}
+		
 		return <<<_
 			<div class="fragment-edit">			
-				<h3>Edit Registration Option</h3>
+				<h3>{$heading}</h3>
 
 				{$form->html()}
 			</div>
@@ -26,6 +33,42 @@ _;
 	}
 	
 	private function getFormRows() {
+		if(empty($this->option['text'])) {
+			return $this->getOptionFormRows();		
+		}
+		else {
+			return $this->getTextFormRows();
+		}
+	}
+	
+	private function getTextFormRows() {
+		return <<<_
+			<tr>
+				<td class="label required">Text</td>
+				<td>
+					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $this->option['eventId']
+					))}
+					{$this->HTML->hidden(array(
+						'name' => 'id',
+						'value' => $this->option['id']
+					))}
+					{$this->HTML->hidden(array(
+						'name' => 'isText',
+						'value' => 'true'
+					))}
+					{$this->HTML->textarea(array(
+						'class' => 'expanding',
+						'name' => 'text',
+						'value' => $this->escapeHtml($this->option['text'])
+					))}
+				</td>
+			</tr>
+_;
+	}
+	
+	private function getOptionFormRows() {
 		return <<<_
 			<tr>
 				<td class="required label">Code</td>

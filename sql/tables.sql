@@ -124,19 +124,19 @@ create table if not exists `RegOptionGroup` (
 -- --------------------------------------------------------------------------
 
 create table if not exists `RegOption` (
-	`id` 			integer 	not null auto_increment,
-	`eventId`		integer		not null,
-	`parentGroupId` 	integer 	not null,
-	`code` 			varchar(255) 	not null,
+	`id` 			    integer 	    not null auto_increment,
+	`eventId`		    integer		    not null,
+	`parentGroupId` 	integer 	    not null,
+	`code` 			    varchar(255) 	not null,
 	`description`		varchar(255) 	not null,
-	`capacity` 		integer 	not null,
-	`defaultSelected`	char(1)		not null, 
-	`showPrice`		char(1)		not null,
-	`displayOrder` 		integer 	not null,
+	`capacity` 		    integer 	    not null,
+	`defaultSelected`	char(1)		    not null, 
+	`showPrice`		    char(1)		    not null,
+	`displayOrder` 		integer 	    not null,
+	`text`              text,
 	primary key (`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
-	
 -- --------------------------------------------------------------------------
 
 create table if not exists `RegType` (

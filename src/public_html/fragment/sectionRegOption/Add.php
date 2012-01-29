@@ -13,15 +13,27 @@ class fragment_sectionRegOption_Add extends template_Template
 	}
 	
 	public function html() {
-		$form = new fragment_XhrAddForm(
+		$addOptForm = new fragment_XhrAddForm(
 			'Add Reg Option',
 			'/admin/regOption/RegOption',
 			'addOption',
-			$this->getFormRows());
+			$this->getFormRows()
+		);
+		
+		$addTextForm = new fragment_XhrAddForm(
+			'Add Text',
+			'/admin/regOption/RegOption',
+			'addText',
+			$this->getTextFormRows()
+		);
 		
 		return <<<_
 			<div class="fragment-add">
-				{$form->html()}
+				{$addOptForm->html()}
+			</div>
+			<div class="sub-divider"></div>
+			<div class="fragment-add">
+				{$addTextForm->html()}
 			</div>
 _;
 	}
@@ -83,6 +95,25 @@ _;
 						'value' => '',
 						'size' => '2'
 					))}
+				</td>
+			</tr>
+_;
+	}
+	
+	private function getTextFormRows() {
+		return <<<_
+			<tr>
+				<td class="label required">Text</td>
+				<td>
+					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $this->event['id']
+					))}
+					{$this->HTML->hidden(array(
+						'name' => 'parentGroupId',
+						'value' => $this->group['id']
+					))}
+					<textarea class="expanding" name="text"></textarea>
 				</td>
 			</tr>
 _;

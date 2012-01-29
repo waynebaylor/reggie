@@ -41,7 +41,7 @@ class action_admin_regOption_RegOption extends action_ValidatorAction
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $params['eventId']);
 		
-		$errors = validation_Validator::validate(validation_admin_RegOption::getConfig(), $params);
+		$errors = validation_Validator::validate(validation_admin_RegOption::getOptionConfig(), $params);
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);	
@@ -98,13 +98,20 @@ class action_admin_regOption_RegOption extends action_ValidatorAction
 			'description' => '',
 			'capacity' => 0,
 			'defaultSelected' => 'F',
-			'showPrice' => 'F'
+			'showPrice' => 'F',
+			'text' => '',
+			'isText' => 'false'
 		));
 		
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $params['eventId']);
 		
-		$errors = validation_Validator::validate(validation_admin_RegOption::getConfig(), $params);
+		if($params['isText'] === 'true') {
+			$errors = validation_Validator::validate(validation_admin_RegOption::getTextConfig(), $params);
+		}
+		else {
+			$errors = validation_Validator::validate(validation_admin_RegOption::getOptionConfig(), $params);
+		}
 		
 		if(!empty($errors)) {
 			return new fragment_validation_ValidationErrors($errors);	
@@ -112,6 +119,26 @@ class action_admin_regOption_RegOption extends action_ValidatorAction
 		
 		$info = $this->logic->saveOption($params);
 		return $this->converter->getSaveOption($info);
+	}
+	
+	public function addText() {
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'parentGroupId' => 0,
+			'text' => ''
+		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$errors = validation_Validator::validate(validation_admin_RegOption::getTextConfig(), $params);
+		
+		if(!empty($errors)) {
+			return new fragment_validation_ValidationErrors($errors);	
+		}
+		
+		$info = $this->logic->addText($params);
+		return $this->converter->getAddText($info);
 	}
 } 
 

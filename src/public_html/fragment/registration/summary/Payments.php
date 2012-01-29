@@ -45,7 +45,11 @@ class fragment_registration_summary_Payments extends template_Template
 				// admin's can see the transaction id on the group summary page, 
 				// but it shouldn't show on the user confirmation page.
 				if(SessionUtil::getUser()) {
-					$type .= "<br>Transaction ID: {$payment['transactionId']}";
+					$type = <<<_
+						{$payment['name']}
+						<br>{$type}
+						<br>Transaction ID: {$payment['transactionId']}
+_;
 				}
 			}
 			
@@ -53,9 +57,9 @@ class fragment_registration_summary_Payments extends template_Template
 			
 			$html .= <<<_
 				<tr>
-					<td>{$date}</td>
-					<td>{$type}</td>
-					<td>{$amount}</td>
+					<td style="vertical-align:top; padding-bottom:15px;">{$date}</td>
+					<td style="vertical-align:top; padding-bottom:15px;">{$type}</td>
+					<td style="vertical-align:top; padding-bottom:15px;">{$amount}</td>
 				</tr>
 _;
 		}

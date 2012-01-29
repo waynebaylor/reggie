@@ -55,11 +55,8 @@ _;
 				)
 			));
 			
-			$html .= <<<_
-				<tr>
-					<td>
-						{$arrows->html()}
-					</td>
+			if(empty($option['text'])) {
+				$cells = <<<_
 					<td>
 						{$this->escapeHtml($option['code'])}
 					</td>
@@ -68,7 +65,23 @@ _;
 					</td>
 					<td>
 						{$this->getRestrictions($option)}
+					</td>			
+_;
+			}
+			else {
+				$cells = <<<_
+					<td colspan="3">
+						{$this->escapeHtml($option['text'])}
 					</td>
+_;
+			}			
+			
+			$html .= <<<_
+				<tr>
+					<td>
+						{$arrows->html()}
+					</td>
+					{$cells}
 					<td>
 						{$this->HTML->link(array(
 							'label' => 'Edit',

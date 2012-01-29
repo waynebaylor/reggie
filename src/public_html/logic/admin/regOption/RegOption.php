@@ -95,6 +95,21 @@ class logic_admin_regOption_RegOption extends logic_Performer
 		
 		return $params;
 	}
+	
+	public function addText($params) {
+		$newOptionId = db_RegOptionManager::getInstance()->createText($params);
+		
+		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
+		
+		$group = db_GroupManager::getInstance()->find($params['parentGroupId']);
+		$event = db_EventManager::getInstance()->find($params['eventId']);
+		
+		return array(
+			'eventId' => $params['eventId'],
+			'event' => $event,
+			'group' => $group
+		);
+	}
 }
 
 ?>

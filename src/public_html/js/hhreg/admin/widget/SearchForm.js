@@ -27,8 +27,15 @@ dojo.declare("hhreg.admin.widget.SearchForm", [dijit._Widget, dijit._Templated],
 				}
 			}
 		}, _this.submitButtonNode);
-		
 		b.startup();
+		
+		dojo.connect(_this.formNode, "onkeypress", function(event) {
+			if(event.keyCode === dojo.keys.ENTER && _this.formNode.searchTerm.value) {
+				dojo.stopEvent(event);
+				b.makeBusy();
+				_this.formNode.submit();
+			}
+		});
 		
 		_this.submitButtonNode = b.domNode;
 	}

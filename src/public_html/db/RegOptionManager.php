@@ -42,7 +42,8 @@ class db_RegOptionManager extends db_OrderableManager
 				capacity,
 				defaultSelected,
 				showPrice,
-				displayOrder
+				displayOrder,
+				text
 			FROM
 				RegOption
 			WHERE
@@ -67,7 +68,8 @@ class db_RegOptionManager extends db_OrderableManager
 				capacity,
 				defaultSelected,
 				showPrice,
-				displayOrder
+				displayOrder,
+				text
 			FROM
 				RegOption
 			WHERE
@@ -125,27 +127,41 @@ class db_RegOptionManager extends db_OrderableManager
 	}
 	
 	public function save($option) {
-		$sql = '
-			UPDATE
-				RegOption
-			SET
-				code=:code,
-				description=:description,
-				capacity=:capacity,
-				defaultSelected=:defaultSelected,
-				showPrice=:showPrice
-			WHERE
-				id=:id
-		';
-		
-		$params = array(
-			'id'              => $option['id'],
-			'code'            => $option['code'],
-			'description'     => $option['description'],
-			'capacity'        => $option['capacity'],
-			'defaultSelected' => $option['defaultSelected'],
-			'showPrice'       => $option['showPrice']
-		);
+		if(empty($option['text'])) {
+			$sql = '
+				UPDATE
+					RegOption
+				SET
+					code=:code,
+					description=:description,
+					capacity=:capacity,
+					defaultSelected=:defaultSelected,
+					showPrice=:showPrice
+				WHERE
+					id=:id
+			';
+			
+			$params = ArrayUtil::keyIntersect($params, array(
+				'id', 
+				'code', 
+				'description', 
+				'capacity', 
+				'defaultSelected', 
+				'showPrice'
+			)); 
+		}
+		else {
+			$sql = '
+				UPDATE
+					RegOption
+				SET
+					text = :text
+				WHERE
+					id = :id
+			';
+
+			$params = ArrayUtil::keyIntersect($option, array('id', 'text'));
+		}
 		
 		$this->execute($sql, $params, 'Save reg option.');
 	}
@@ -197,6 +213,50 @@ class db_RegOptionManager extends db_OrderableManager
 	
 	public function moveOptionDown($option) {
 		$this->moveDown($option, 'parentGroupId', $option['parentGroupId']);
+	}
+	
+	public function createText($params) {
+		$sql = '
+			INSERT INTO
+				RegOption(
+					eventId,
+					parentGroupId,
+					code,
+					description,
+					capacity,
+					defaultSelected,
+					showPrice,
+					displayOrder,
+					text	
+				)
+			VALUES(
+				:eventId,
+				:parentGroupId,
+				:code,
+				:description,
+				:capacity,
+				:defaultSelected,
+				:showPrice,
+				:displayOrder,
+				:text
+			)
+		';
+		
+		$params = array(
+			'eventId' => $params['eventId'],
+			'parentGroupId' => $params['parentGroupId'],
+			'code' => 'REGGIE_TEXT_'.time(),
+			'description' => '',
+			'capacity' => 0,
+			'defaultSelected' => 'F',
+			'showPrice' => 'F',
+			'displayOrder' => $this->getNextOrder(),
+			'text' => $params['text']
+		);
+		
+		$this->execute($sql, $params, 'Create text.');
+		
+		return $this->lastInsertId();
 	}
 } 
 

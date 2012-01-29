@@ -26,31 +26,36 @@ _;
 	private function getGroupRows() {
 		$html = '';
 
-		foreach($this->group['options'] as $option) {
-			$price = $this->getPrice($option);
-			
-			if(!empty($price)) {
-				$groupsTemplate = new fragment_reg_regOptionGroup_RegOptionGroups($option['groups'], $this->regTypeId, $this->selectedOptions, $this->pageId);
-				$optionGroupsHtml = $groupsTemplate->html();
+		foreach($this->group['options'] as $option) { 
+			if(empty($option['text'])) {
+				$price = $this->getPrice($option);
 				
-				$html .= <<<_
-					<tr>
-						<td class="reg-option">
-							{$this->getOption($option)}
-							{$optionGroupsHtml}
-						</td>
-						<td class ="price">
-							{$price}
-						</td>
-					</tr>
+				if(!empty($price)) {
+					$groupsTemplate = new fragment_reg_regOptionGroup_RegOptionGroups($option['groups'], $this->regTypeId, $this->selectedOptions, $this->pageId);
+					$optionGroupsHtml = $groupsTemplate->html();
+					
+					$html .= <<<_
+						<tr>
+							<td class="reg-option">
+								{$this->getOption($option)}
+								{$optionGroupsHtml}
+							</td>
+							<td class ="price">
+								{$price}
+							</td>
+						</tr>
 _;
+				}				
+			}
+			else {
+				$html .= $option['text'];
 			}
 		}	
 
 		return $html;
 	}
 	
-	private function getOption($option) {
+	private function getOption($option) { 
 		$name = model_ContentType::$REG_OPTION.'_'.$option['parentGroupId'];
 		
 		$config = array(
@@ -71,7 +76,7 @@ _;
 		}
 		else {
 			return $this->HTML->radio($config);
-		}
+		}			
 	}
 	
 	private function getPrice($option) {
