@@ -90,6 +90,19 @@ class action_admin_registration_Payment extends action_ValidatorAction
 		
 		return $this->converter->getAddPayment($info);		
 	}
+	
+	public function removePayment() {
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->removePayment($params);
+		return $this->converter->getRemovePayment($info);
+	}
 }
 
 ?>

@@ -77,6 +77,17 @@ class logic_admin_registration_Payment extends logic_Performer
 			'group' => $group
 		);
 	}
+	
+	public function removePayment($params) {
+		$payment = $this->strictFindById(db_reg_PaymentManager::getInstance(), $params['id']);
+		
+		db_reg_PaymentManager::getInstance()->deletePayment($params);
+		
+		return array(
+			'eventId' => $params['eventId'],
+			'group' => db_reg_GroupManager::getInstance()->find($payment['regGroupId'])
+		);
+	}
 }
 
 ?>

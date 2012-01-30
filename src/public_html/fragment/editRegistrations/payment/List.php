@@ -46,6 +46,7 @@ _;
 		$received = ($payment['paymentReceived'] === 'T')? 'Received' : 'Pending';
 							
 		$editLink = '';
+		$removeLink = '';
 		if(in_array($payment['paymentTypeId'], array(model_PaymentType::$CHECK, model_PaymentType::$PO))) {
 			$editLink = $this->HTML->link(array(
 				'label' => 'Edit',
@@ -54,6 +55,17 @@ _;
 					'a' => 'view',
 					'id' => $payment['id'],
 					'eventId' => $payment['eventId']
+				)
+			));
+			
+			$removeLink = $this->HTML->link(array(
+				'class' => 'remove',
+				'label' => 'Remove',
+				'href' => '/admin/registration/Payment',
+				'parameters' => array(
+					'a' => 'removePayment',
+					'eventId' => $payment['eventId'],
+					'id' => $payment['id']
 				)
 			));
 		}
@@ -74,6 +86,7 @@ _;
 				</td>
 				<td>
 					{$editLink}
+					{$removeLink}
 				</td>
 			</tr>
 _;

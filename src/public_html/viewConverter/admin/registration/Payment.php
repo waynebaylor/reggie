@@ -41,6 +41,11 @@ _;
 		$this->setProperties($properties);
 		return new fragment_editRegistrations_payment_List($this->group);
 	}
+	
+	public function getRemovePayment($properties) {
+		$this->setProperties($properties);
+		return new fragment_editRegistrations_payment_List($this->group);
+	}
 }
 
 ?>

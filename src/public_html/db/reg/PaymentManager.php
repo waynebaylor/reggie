@@ -323,6 +323,24 @@ class db_reg_PaymentManager extends db_Manager
 		
 		$this->execute($sql, $params, 'Delete event payments.');
 	}
+	
+	public function deletePayment($params) {
+		// only allow deleting checks and PO payments.
+		$sql = '
+			DELETE FROM
+				Payment
+			WHERE
+				eventId = :eventId
+			AND
+				id = :id
+			AND
+				paymentTypeId IN (1, 2)
+		';
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
+		
+		$this->execute($sql, $params, 'Remove payment.');
+	}
 }
 
 ?>
