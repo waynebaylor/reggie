@@ -51,6 +51,14 @@ class fragment_Breadcrumbs extends template_Template
 			));
 		}
 		
+		if(isset($this->params['contactFieldOptionId'])) {
+			$html .= $this->HTML->hidden(array(
+				'class' => 'breadcrumb',
+				'name' => 'Option',
+				'value' => "/admin/contactField/Option?eventId={$this->params['eventId']}&id={$this->params['contactFieldOptionId']}"
+			));
+		}
+		
 		// the option groups and reg options are ordered in a sub-array according to their hierarchy.
 		if(isset($this->params['regGroupsAndOpts'])) {
 			foreach($this->params['regGroupsAndOpts'] as $index => $groupOrOptId) {

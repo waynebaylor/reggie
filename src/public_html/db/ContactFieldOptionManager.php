@@ -123,6 +123,37 @@ class db_ContactFieldOptionManager extends db_OrderableManager
 		$this->execute($sql, $params, 'Remove all contact field options.');		
 	}
 	
+	public function save($params) {
+		// includes some funky sql to perform event permission check.
+		// since ContactFieldOption doesn't have an eventId column we have to use
+		// ContactField's eventId column.
+		$sql = '
+			UPDATE
+				ContactFieldOption
+			SET
+				ContactFieldOption.displayName = :displayName,
+				ContactFieldOption.defaultSelected = :defaultSelected
+			WHERE
+				ContactFieldOption.contactFieldId = (
+					SELECT ContactField.id 
+					FROM ContactField 
+					WHERE ContactField.eventId = :eventId 
+					AND ContactField.id = ContactFieldOption.contactFieldId
+				)
+			AND
+				ContactFieldOption.id = :id
+		';	
+		
+		$params = ArrayUtil::keyIntersect($params, array(
+			'eventId', 
+			'id', 
+			'displayName', 
+			'defaultSelected'
+		));
+		
+		$this->execute($sql, $params, 'Save field option.');
+	}
+	
 	public function moveOptionUp($option) {
 		$this->moveUp($option, 'contactFieldId', $option['contactFieldId']);
 	}

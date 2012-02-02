@@ -6,6 +6,27 @@ class logic_admin_contactField_Option extends logic_Performer
 		parent::__construct();
 	}
 	
+	public function view($params) {
+		$option = db_ContactFieldOptionManager::getInstance()->find($params['id']);
+		$event = db_EventManager::getInstance()->findInfoById($params['eventId']);
+		
+		$bc = db_BreadcrumbManager::getInstance()->findContactFieldCrumbs($option['contactFieldId']);
+		
+		return array(
+			'actionMenuEventLabel' => $event['code'],
+			'eventId' => $params['eventId'],
+			'event' => $event,
+			'option' => $option,
+			'breadcrumbsParams' => array(
+				'eventId' => $bc['eventId'],
+				'pageId' => $bc['pageId'],
+				'sectionId' => $bc['sectionId'],
+				'contactFieldId' => $bc['contactFieldId'],
+				'contactFieldOptionId' => $option['id']
+			)
+		);
+	}
+	
 	public function addOption($params) {
 		db_ContactFieldOptionManager::getInstance()->createOption($params);
 		
@@ -32,6 +53,12 @@ class logic_admin_contactField_Option extends logic_Performer
 			'event' => $event,
 			'field' => $field
 		);
+	}
+	
+	public function saveOption($params) {
+		db_ContactFieldOptionManager::getInstance()->save($params);
+
+		return $params;
 	}
 	
 	public function moveOptionUp($params) {

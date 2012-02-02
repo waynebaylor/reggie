@@ -70,6 +70,14 @@ _;
 					</td>
 					<td>
 						{$this->HTML->link(array(
+							'label' => 'Edit',
+							'href' => '/admin/contactField/Option',
+							'parameters' => array(
+								'eventId' => $this->event['id'],
+								'id' => $option['id']
+							)
+						))}
+						{$this->HTML->link(array(
 							'label' => 'Remove',
 							'href'  => '/admin/contactField/Option',
 							'parameters' => array(

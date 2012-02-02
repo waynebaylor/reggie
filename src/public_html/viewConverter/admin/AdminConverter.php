@@ -16,14 +16,6 @@ abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConv
 		$this->bannerLinkActive = true;
 	}
 	
-	/**
-	 * Returns the HTML for displaying the breadcrumbs associated with this page.
-	 * @return string
-	 */
-	protected function getBreadcrumbs() {
-		return '';	
-	}
-	
 	public function getView($properties) {
 		$this->eventId = 0;
 		$this->showEventMenu = 'false';
@@ -97,7 +89,7 @@ _;
 						var breadcrumbHtml = dojo.query("input.breadcrumb").map(function(item) {
 							return {label: item.name, href: hhreg.util.contextUrl(item.value)};
 						}).map(function(item) {
-							return dojo.string.substitute('<td><a href="\${href}">\${label}</a></td>', item);
+							return dojo.string.substitute('<td onclick="document.location=\'\${href}\'">\${label}</td>', item);
 						}).join('');
 						
 						if(breadcrumbHtml) {
