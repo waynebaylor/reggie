@@ -446,7 +446,11 @@ class db_BadgeCellManager extends db_OrderableManager
 		return $this->rawQuery($sql, $params, 'Find badge cell content.');
 	}
 	
-	public function findBadgeCellContentById($id) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function findBadgeCellContentById($params) {
 		$sql = '
 			SELECT
 				BadgeCell_TextContent.id,
@@ -463,11 +467,24 @@ class db_BadgeCellManager extends db_OrderableManager
 				ContactField
 			ON
 				BadgeCell_TextContent.contactFieldId = ContactField.id
+			INNER JOIN
+				BadgeCell
+			ON
+				BadgeCell_TextContent.badgeCellId = BadgeCell.id
+			INNER JOIN
+				BadgeTemplate
+			ON
+				BadgeCell.badgeTemplateId = BadgeTemplate.id
 			WHERE
+				BadgeTemplate.eventId = :eventId
+			AND
 				BadgeCell_TextContent.id = :id
 		';
 		
-		$params = array('id' => $id);
+		$params = ArrayUtil::keyIntersect($params, array(
+			'eventId',
+			'id'
+		));
 		
 		return $this->rawQueryUnique($sql, $params, 'Find badge cell content by id.');
 	}
