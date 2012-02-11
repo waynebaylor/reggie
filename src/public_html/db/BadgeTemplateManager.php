@@ -16,12 +16,15 @@ class db_BadgeTemplateManager extends db_Manager
 		return self::$instance;
 	}
 	
-	protected function populate(&$obj, $arr) {
+	protected function populate(&$obj, $arr) { 
 		parent::populate($obj, $arr);
 		
 		$obj['appliesToAll'] = $this->isAppliedToAll($obj);
 		$obj['appliesTo'] = db_RegTypeManager::getInstance()->findForBadgeTemplate($obj);
-		$obj['cells'] = db_BadgeCellManager::getInstance()->findByBadgeTemplateId($obj['id']);
+		$obj['cells'] = db_BadgeCellManager::getInstance()->findByBadgeTemplateId(array(
+			'eventId' => $obj['eventId'],
+			'badgeTemplateId' => $obj['id']
+		));
 		
 		return $obj;
 	}
@@ -151,17 +154,41 @@ class db_BadgeTemplateManager extends db_Manager
 				'name' => $template['name'],
 				'type' => $template['type']
 			), 
-			array('id' => $template['id'])
+			array(
+				'id' => $template['id'],
+				'eventId' => $template['eventId']
+			)
 		);
 		
 		$this->setBadgeTemplateRegTypes($template['id'], $template['regTypeIds']);
 	}
 	
-	public function delete($id) {
-		$this->del('BadgeTemplate_RegType', array('badgeTemplateId' => $id));
-		db_BadgeCellManager::getInstance()->deleteByTemplateId($id);
+	/**
+	 * 
+	 * @param array $params [eventId, badgeTemplateId]
+	 */
+	public function delete($params) {
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'badgeTemplateId'));
 		
-		$this->del('BadgeTemplate', array('id' => $id));
+		// delete badge template reg types.
+		$this->deleteBadgeTemplateRegTypes(array(
+			'eventId' => $params['eventId'],
+			'templateIds' => array($params['badgeTemplateId'])
+		));
+		
+		// delete badge template cells.
+		db_BadgeCellManager::getInstance()->deleteByTemplateId($params);
+		
+		// delete badge template.
+		$this->del(
+			'BadgeTemplate', 
+			array(
+				'eventId' => $params['eventId'],
+				'id' => $params['badgeTemplateId']	
+			)
+		);
+		
+		$this->execute($sql, $params, 'Delete badge template.');
 	}
 	
 	public function findPrintBadgeTemplate($eventId, $regTypeId, $templateIds) {
@@ -199,7 +226,7 @@ class db_BadgeTemplateManager extends db_Manager
 	
 	/**
 	 * Delete reg type relations for the given badge templates.
-	 * @param array $params ['eventId', 'templateIds'] 
+	 * @param array $params [eventId, templateIds] 
 	 */
 	private function deleteBadgeTemplateRegTypes($params) {
 		$sql = '
@@ -223,7 +250,7 @@ class db_BadgeTemplateManager extends db_Manager
 	
 	/**
 	 * Delete the given badge templates.
-	 * @param array $params ['eventId', 'templateIds'] 
+	 * @param array $params [eventId, templateIds] 
 	 */
 	public function deleteTemplates($params) {
 		$this->deleteBadgeTemplateRegTypes($params);	
@@ -244,7 +271,7 @@ class db_BadgeTemplateManager extends db_Manager
 	
 	/**
 	 * Find badge template.
-	 * @param array $params ['eventId', 'id']
+	 * @param array $params [eventId, id]
 	 */
 	public function findTemplate($params) {
 		$sql = '
@@ -260,6 +287,8 @@ class db_BadgeTemplateManager extends db_Manager
 			AND
 				id = :id
 		';
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->queryUnique($sql, $params, 'Find badge template.');
 	}

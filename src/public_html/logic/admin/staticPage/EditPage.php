@@ -12,7 +12,10 @@ class logic_admin_staticPage_EditPage extends logic_Performer
 			'pageId' => $params['pageId']
 		));
 		
+		$eventInfo = db_EventManager::getInstance()->findInfoById($page['eventId']);
+		
 		return array(
+			'actionMenuEventLabel' => $eventInfo['code'],
 			'eventId' => $page['eventId'],
 			'page' => $page
 		);

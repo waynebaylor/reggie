@@ -16,7 +16,7 @@ class db_AppearanceManager extends db_Manager
 		return self::$instance;
 	}
 	
-	public function find($id) {
+	public function find($params) {
 		$sql = '
 			SELECT
 				id,
@@ -37,12 +37,12 @@ class db_AppearanceManager extends db_Manager
 			FROM
 				Appearance
 			WHERE
-				id=:id
+				id = :id
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $id
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->queryUnique($sql, $params, 'Find event appearance.');
 	}

@@ -84,7 +84,7 @@ abstract class db_Manager
 	 * @param array $params
 	 * @param string $desc
 	 */
-	protected function queryUnique($sql, $params, $desc) {
+	protected function queryUnique($sql, $params, $desc) { 
 		$results = $this->query($sql, $params, $desc);
 		
 		if(empty($results)) {

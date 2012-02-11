@@ -6,7 +6,7 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		parent::__construct();
 	}
 	
-	public function view($params) {
+	public function view($params) { 
 		$badgeTemplate = db_BadgeTemplateManager::getInstance()->findTemplate(ArrayUtil::keyIntersect($params, array('eventId', 'id')));
 		$selectedCell = $this->getSelectedCell($badgeTemplate, $params['selectedCellId']);
 		$badgeCells = page_admin_badge_Helper::badgeCellSummaries($badgeTemplate, $selectedCell['id']);
@@ -39,6 +39,7 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		$badgeTemplate = $this->strictFindById(db_BadgeTemplateManager::getInstance(), $params['badgeTemplateId']);
 		
 		$newCellId = db_BadgeCellManager::getInstance()->createBadgeCell(array(
+			'eventId' => $badgeTemplate['eventId'],
 			'badgeTemplateId' => $badgeTemplate['id'],
 			'xCoord' => 0, // inches
 			'yCoord' => 0, // inches
@@ -51,12 +52,14 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		
 		if($params['contentType'] === 'field') {
 			db_BadgeCellManager::getInstance()->addInformationField(array(
+				'eventId' => $badgeTemplate['eventId'],
 				'badgeCellId' => $newCellId,
 				'templateField' => $params['templateField']
 			));
 		}
 		else if($params['contentType'] === 'text') {
 			db_BadgeCellManager::getInstance()->addText(array(
+				'eventId' => $badgeTemplate['eventId'],
 				'badgeCellId' => $newCellId,
 				'text' => $params['text']
 			));
@@ -80,7 +83,7 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		$selectedCell = null;
 		
 		foreach($template['cells'] as $index => $cell) {
-			if($index === 0 || $cell['id'] === $cellId) {
+			if($index === 0 || intval($cell['id']) === intval($cellId)) {
 				$selectedCell = $cell;
 			}
 		}
@@ -89,35 +92,27 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	}
 	
 	public function saveCellDetails($params) {
-		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $params['id']);
-		$badgeTemplate = $this->strictFindById(db_BadgeTemplateManager::getInstance(), $cell['badgeTemplateId']);
-		
-		// these columns are not used for barcodes, so no need to ever update them. 
-		if($cell['hasBarcode'] === 'T') {
-			unset($params['width']);
-			unset($params['font']);
-			unset($params['fontSize']);
-			unset($params['horizontalAlign']);	
-		}
-		
-		// will be used when query/update security is put in place.
-		$eventId = $params['eventId'];
-		unset($params['eventId']); 
-		
+		$cell = db_BadgeCellManager::getInstance()->find($params);
+		$badgeTemplate = db_BadgeTemplateManager::getInstance()->find($cell['badgeTemplateId']);
+	
 		db_BadgeCellManager::getInstance()->saveBadgeCell($params);
 		
 		return $this->view(array(
 			'id' => $cell['badgeTemplateId'],
 			'selectedCellId' => $cell['id'],
-			'eventId' => $eventId
+			'eventId' => $params['eventId']
 		));
 	}
 	
-	public function addCellContent($params) {
-		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $params['cellId']);
+	public function addCellContent($params) { 
+		$cell = db_BadgeCellManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['cellId']
+		));
 
 		if($cell['hasBarcode'] === 'T') {
 			db_BadgeBarcodeFieldManager::getInstance()->addInformationField(array(
+				'eventId' => $params['eventId'],
 				'badgeCellId' => $cell['id'],
 				'contactFieldId' => $params['contactFieldId']
 			));
@@ -125,12 +120,14 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 		else {
 			if($params['contentType'] === 'text') {
 				db_BadgeCellManager::getInstance()->addText(array(
+					'eventId' => $params['eventId'],
 					'badgeCellId' => $cell['id'],
 					'text' => $params['text']
 				));
 			} 	
 			else if($params['contentType'] === 'field') {
 				db_BadgeCellManager::getInstance()->addInformationField(array(
+					'eventId' => $params['eventId'],
 					'badgeCellId' => $cell['id'],
 					'templateField' => $params['templateField']
 				));
@@ -146,9 +143,14 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	
 	public function moveCellContentUp($params) {
 		$cellContent = db_BadgeCellManager::getInstance()->findBadgeCellContentById($params['id']);
+		$cellContent['eventId'] = $params['eventId'];
+		
 		db_BadgeCellManager::getInstance()->moveCellContentUp($cellContent);
 		
-		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $cellContent['badgeCellId']);
+		$cell = db_BadgeCellManager::getInstance()->find(array(
+			'eventId' => $params['eventId'], 
+			'id' => $cellContent['badgeCellId']
+		));
 		
 		return $this->view(array(
 			'id' => $cell['badgeTemplateId'],
@@ -159,9 +161,14 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	
 	public function moveCellContentDown($params) {
 		$cellContent = db_BadgeCellManager::getInstance()->findBadgeCellContentById($params['id']);
+		$cellContent['eventId'] = $params['eventId'];
+		
 		db_BadgeCellManager::getInstance()->moveCellContentDown($cellContent);
 		
-		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $cellContent['badgeCellId']);
+		$cell = db_BadgeCellManager::getInstance()->find(array(
+			'eventId' => $params['eventId'], 
+			'id' => $cellContent['badgeCellId']
+		));
 		
 		return $this->view(array(
 			'id' => $cell['badgeTemplateId'],
@@ -171,13 +178,19 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	}
 	
 	public function removeCellContent($params) {
-		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $params['cellId']);
+		$cell = db_BadgeCellManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['cellId']
+		));
 		
 		if($cell['hasBarcode'] === 'T') {
-			db_BadgeBarcodeFieldManager::getInstance()->deleteBadgeBarcodeField($params['id']);	
+			db_BadgeBarcodeFieldManager::getInstance()->deleteBadgeBarcodeField(array(
+				'eventId' => $params['eventId'],
+				'id' => $params['cellId']
+			));	
 		}
 		else {
-			db_BadgeCellManager::getInstance()->deleteBadgeCellContent($params['id']);
+			db_BadgeCellManager::getInstance()->deleteBadgeCellContent($params);
 		}
 		
 		return $this->view(array(
@@ -188,8 +201,8 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	}
 	
 	public function removeBadgeCell($params) {
-		$cell = $this->strictFindById(db_BadgeCellManager::getInstance(), $params['id']);
-		db_BadgeCellManager::getInstance()->deleteBadgeCell($cell['id']);
+		$cell = db_BadgeCellManager::getInstance()->find($params);
+		db_BadgeCellManager::getInstance()->deleteBadgeCell($params);
 		
 		$badgeTemplate = db_BadgeTemplateManager::getInstance()->find($cell['badgeTemplateId']);
 		

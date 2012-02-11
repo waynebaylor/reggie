@@ -8,6 +8,8 @@
 			"eventId": <?php echo $template['eventId'] ?>,
 			"name": "<?php echo $this->escapeHtml($template['name']) ?>",
 			"type": "<?php $view_templateType = model_BadgeTemplateType::valueOf($template['type']); echo $this->escapeHtml($view_templateType['name']) ?>",
+			"editLink": "/admin/badge/EditBadgeTemplate?eventId=<?php echo $template['eventId'] ?>&id=<?php echo $template['id'] ?>",
+			"copyLink": "/admin/badge/BadgeTemplates?a=copyTemplate&eventId=<?php echo $template['eventId'] ?>&id=<?php echo $template['id'] ?>",
 			"appliesToAll": <?php echo $template['appliesToAll']? 'true' : 'false' ?>,
 			"appliesTo": [
 				<?php foreach($template['appliesTo'] as $regTypeIndex => $regType): ?>

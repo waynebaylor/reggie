@@ -16,7 +16,11 @@ class db_BadgeBarcodeFieldManager extends db_Manager
 		return self::$instance;
 	}
 	
-	public function findByBadgeCellId($id) {
+	/**
+	 * 
+	 * @param array $params [eventId, badgeCellId]
+	 */
+	public function findByBadgeCellId($params) {
 		$sql = '
 			SELECT 
 				BadgeBarcodeField.id,
@@ -30,28 +34,96 @@ class db_BadgeBarcodeFieldManager extends db_Manager
 			ON
 				BadgeBarcodeField.contactFieldId = ContactField.id
 			WHERE
-				badgeCellId = :badgeCellId
+				BadgeBarcodeField.badgeCellId = :badgeCellId
+			AND
+				ContactField.eventId = :eventId
 		';
 		
-		$params = array(
-			'badgeCellId' => $id
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'badgeCellId'));
 		
 		return $this->query($sql, $params, 'Find badge barcode fields.');
 	}
 	
-	public function deleteBadgeBarcodeField($id) {
-		$this->del('BadgeBarcodeField', array('id' => $id));
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function deleteBadgeBarcodeField($params) {
+		$sql = '
+			DELETE FROM
+				BadgeBarcodeField
+			WHERE
+				BadgeBarcodeField.id = :id
+			AND
+				BadgeBarcodeField.contactFieldId 
+			IN (
+				SELECT ContactField.id 
+				FROM ContactField
+				WHERE ContactField.id = BadgeBarcodeField.contactFieldId
+				AND ContactField.eventId = :eventId
+			)
+		';
+
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
+		
+		$this->execute($sql, $params, 'Delete barcode field.');
 	}
 	
-	public function deleteByBadgeCellId($id) {
-		$this->del('BadgeBarcodeField', array('badgeCellId' => $id));
+	/**
+	 * 
+	 * @param array $params [eventId, badgeCellId]
+	 */
+	public function deleteByBadgeCellId($params) {
+		$sql = '
+			DELETE FROM
+				BadgeBarcodeField
+			WHERE
+				BadgeBarcodeField.badgeCellId = :badgeCellId
+			AND
+				BadgeBarcodeField.contactFieldId 
+			IN (
+				SELECT ContactField.id 
+				FROM ContactField
+				WHERE ContactField.id = BadgeBarcodeField.contactFieldId
+				AND ContactField.eventId = :eventId
+			)
+		';
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'badgeCellId'));
+		
+		$this->execute($sql, $params, 'Delete barcode field.');
 	}
 	
-	public function addInformationField($data) {
+	/**
+	 * 
+	 * @param array $params [eventId, badgeCellId, contactFieldId]
+	 */
+	public function addInformationField($params) {
+		$sql = '
+			SELECT
+				BadgeTemplate.id,
+				BadgeTemplate.eventId
+			FROM
+				BadgeTemplate
+			INNER JOIN
+				BadgeCell
+			ON
+				BadgeTemplate.id = BadgeCell.badgeTemplateId
+			WHERE
+				BadgeCell.id = :badgeCellId
+			AND
+				BadgeTemplate.eventId = :eventId
+		';
+		
+		$results = $this->rawQuery($sql, ArrayUtil::keyIntersect($params, array('eventId', 'badgeCellId')), 'Check badge barcode permission.');
+		
+		if(count($results) === 0) {
+			throw new Exception("Permission denied to modify BadgeBarcodeField. (event id, badge cell id) -> ({$params['eventId']}, {$params['badgeCellId']}).");	
+		}
+		
 		$this->insert(
 			'BadgeBarcodeField',
-			ArrayUtil::keyIntersect($data, array(
+			ArrayUtil::keyIntersect($params, array(
 				'badgeCellId',
 				'contactFieldId'
 			))

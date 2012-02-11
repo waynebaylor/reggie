@@ -26,83 +26,246 @@ class db_BadgeCellManager extends db_OrderableManager
 	protected function populate(&$obj, $arr) {
 		parent::populate($obj, $arr);
 
-		$obj['content'] = $this->findBadgeCellContentByCellId($obj['id']);
-		$obj['barcodeFields'] = db_BadgeBarcodeFieldManager::getInstance()->findByBadgeCellId($obj['id']);
+		$obj['content'] = $this->findBadgeCellContentByCellId(array(
+			'eventId' => $obj['eventId'],
+			'badgeCellId' => $obj['id']
+		));
+		
+		$obj['barcodeFields'] = db_BadgeBarcodeFieldManager::getInstance()->findByBadgeCellId(array(
+			'eventId' => $obj['eventId'],
+			'badgeCellId' => $obj['id']
+		));
 		
 		return $obj;
 	}
 	
-	public function find($id) {
-		return $this->selectUnique(
-			'BadgeCell', 
-			array(
-				'id',
-				'badgeTemplateId',
-				'xCoord',
-				'yCoord',
-				'width',
-				'font',
-				'fontSize',
-				'horizontalAlign',
-				'hasBarcode'
-			), 
-			array(
-				'id' => $id
-			)
-		);
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function find($params) {
+		$sql = '
+			SELECT
+				BadgeCell.id,
+				BadgeCell.badgeTemplateId,
+				BadgeCell.xCoord,
+				BadgeCell.yCoord,
+				BadgeCell.width,
+				BadgeCell.font,
+				BadgeCell.fontSize,
+				BadgeCell.horizontalAlign,
+				BadgeCell.hasBarcode,
+				BadgeTemplate.eventId
+			FROM
+				BadgeCell
+			INNER JOIN
+				BadgeTemplate
+			ON
+				BadgeCell.badgeTemplateId = BadgeTemplate.id
+			WHERE
+				BadgeCell.id = :id
+			AND
+				BadgeTemplate.eventId = :eventId
+		';
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
+		
+		return $this->queryUnique($sql, $params, 'Find badge cell.');
 	}
 	
-	public function findByBadgeTemplateId($id) {
-		return $this->select(
-			'BadgeCell', 
-			array(
-				'id',
-				'badgeTemplateId',
-				'xCoord',
-				'yCoord',
-				'width',
-				'font',
-				'fontSize',
-				'horizontalAlign',
-				'hasBarcode'
-			), 
-			array(
-				'badgeTemplateId' => $id
-			)
-		);
+	/**
+	 * 
+	 * @param array $params [eventId, badgeTemplateId]
+	 */
+	public function findByBadgeTemplateId($params) { 
+		$sql = '
+			SELECT
+				BadgeCell.id,
+				BadgeCell.badgeTemplateId,
+				BadgeCell.xCoord,
+				BadgeCell.yCoord,
+				BadgeCell.width,
+				BadgeCell.font,
+				BadgeCell.fontSize,
+				BadgeCell.horizontalAlign,
+				BadgeCell.hasBarcode,
+				BadgeTemplate.eventId
+			FROM
+				BadgeCell
+			INNER JOIN
+				BadgeTemplate
+			ON
+				BadgeCell.badgeTemplateId = BadgeTemplate.id
+			WHERE
+				BadgeCell.badgeTemplateId = :badgeTemplateId
+			AND
+				BadgeTemplate.eventId = :eventId
+		';
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'badgeTemplateId'));
+		
+		return $this->query($sql, $params, 'Find badge cell.');
 	}
 	
-	public function createBadgeCell($data) { 
-		$this->insert(
-			'BadgeCell', 
-			ArrayUtil::keyIntersect($data, array(
-				'badgeTemplateId',
-				'xCoord',
-				'yCoord',
-				'width',
-				'font',
-				'fontSize',
-				'horizontalAlign',
-				'hasBarcode'
-			))
+	/**
+	 * 
+	 * @param array $params [eventId, badgeTemplateId, xCoord, 
+	 * 						 yCoord, width, font, fontSize, 
+	 * 						 horizontalAlign, hasBarcode]
+	 */
+	public function createBadgeCell($params) { 
+		// check if they have access to the badge template
+		// before adding the cell.
+		$results = $this->rawSelect(
+			'BadgeTemplate', 
+			array(
+				'id', 
+				'eventId'
+			), 
+			array(
+				'id' => $params['badgeTemplateId'],
+				'eventId' => $params['eventId']
+			)
 		);
+		
+		if(count($results) > 0) {
+			$this->insert(
+				'BadgeCell', 
+				ArrayUtil::keyIntersect($params, array(
+					'badgeTemplateId',
+					'xCoord',
+					'yCoord',
+					'width',
+					'font',
+					'fontSize',
+					'horizontalAlign',
+					'hasBarcode'
+				))
+			);
+		}
 		
 		return $this->lastInsertId();
 	}
 	
-	public function saveBadgeCell($data) { 
-		$id = $data['id'];
-		unset($data['id']);
+	/**
+	 * 
+	 * @param array $params [eventId, id, xCoord, yCoord, width, font, fontSize,
+	 * 						 horizontalAlign, hasBarcode]
+	 */
+	public function saveBadgeCell($params) { 
+		$sql = '
+			UPDATE
+				BadgeCell
+			SET
+				xCoord = :xCoord,
+				yCoord = :yCoord,
+				width = :width,
+				font = :font,
+				fontSize = :fontSize,
+				horizontalAlign = :horizontalAlign
+			WHERE
+				id = :id
+			AND
+				badgeTemplateId 
+			IN (
+				SELECT BadgeTemplate.id
+				FROM BadgeTemplate
+				WHERE BadgeTemplate.id = badgeTemplateId
+				AND BadgeTemplate.eventId = :eventId
+					
+			)
+		';
 		
-		$this->update('BadgeCell', $data, array('id' => $id));
+		$params = ArrayUtil::keyIntersect($params, array(
+			'eventId',
+			'id',
+			'xCoord',
+			'yCoord',
+			'width',
+			'font',
+			'fontSize',
+			'horizontalAlign'
+		));
+
+		$this->execute($sql, $params, 'Save badge cell.');
 	}
 	
-	public function addText($data) { 
-		$data['displayOrder'] = $this->getNextOrder();
-
+	/**
+	 * 
+	 * @param array $params [eventId, badgeCellId]
+	 */
+	private function checkBadgeCellTextContentPermission($params) {
+		$sql = '
+			SELECT 
+				BadgeTemplate.id,
+				BadgeTemplate.eventId
+			FROM
+				BadgeTemplate
+			INNER JOIN
+				BadgeCell
+			ON
+				BadgeTemplate.id = BadgeCell.badgeTemplateId
+			INNER JOIN
+				BadgeCell_TextContent
+			ON
+				BadgeCell.id = BadgeCell_TextContent.badgeCellId
+			WHERE
+				BadgeTemplate.eventId = :eventId
+			AND
+				BadgeCell.id = :badgeCellId
+		';
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'badgeCellId'));
+		
+		$results = $this->rawQuery($sql, $params, 'Add badge cell text permission check.');
+		
+		if(count($results) === 0) {
+			throw new Exception("Permission denied to modify BadgeCell_TextContent: (event id, badge cell id) -> ({$params['eventId']}, {$params['badgeCellId']}).");
+		}
+	}
+	
+	/**
+	 * 
+	 * @param array $params [eventId, badgeCellId]
+	 */
+	private function checkBadgeCellPermission($params) {
+		$sql = '
+			SELECT 
+				BadgeTemplate.id,
+				BadgeTemplate.eventId
+			FROM
+				BadgeTemplate
+			INNER JOIN
+				BadgeCell
+			ON
+				BadgeTemplate.id = BadgeCell.badgeTemplateId
+			WHERE
+				BadgeTemplate.eventId = :eventId
+			AND
+				BadgeCell.id = :badgeCellId
+		';
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'badgeCellId'));
+		
+		$results = $this->rawQuery($sql, $params, 'Badge cell  permission check.');
+		
+		if(count($results) === 0) {
+			throw new Exception("Permission denied to badge cell: (event id, badge cell id) -> ({$params['eventId']}, {$params['badgeCellId']}).");
+		}
+	}
+	
+	/**
+	 * 
+	 * @param array $params [eventId, badgeCellId, text]
+	 */
+	public function addText($params) { 
+		$this->checkBadgeCellPermission($params);
+		
+		$params['displayOrder'] = $this->getNextOrder();
+	
 		$this->insert(
 			'BadgeCell_TextContent',
-			ArrayUtil::keyIntersect($data, array(
+			ArrayUtil::keyIntersect($params, array(
 				'badgeCellId',
 				'displayOrder',
 				'text'
@@ -110,7 +273,13 @@ class db_BadgeCellManager extends db_OrderableManager
 		);
 	}
 	
+	/**
+	 * 
+	 * @param array $data [eventId, badgeCellId, ...]
+	 */
 	public function addInformationField($data) {
+		$this->checkBadgeCellPermission($data);
+		
 		$data['displayOrder'] = $this->getNextOrder();
 
 		$data['showRegType'] = ($data['templateField'] === 'registration_type')? 'T' : 'F';
@@ -150,17 +319,106 @@ class db_BadgeCellManager extends db_OrderableManager
 		}
 	}
 	
-	public function deleteBadgeCellContent($id) {
-		$this->del('BadgeCell_TextContent', array('id' => $id));
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function deleteBadgeCellContent($params) {
+		$sql = '
+			DELETE FROM
+				BadgeCell_TextContent
+			WHERE
+				BadgeCell_TextContent.id = :id
+			AND
+				BadgeCell_TextContent.badgeCellId 
+			IN (
+				SELECT BadgeCell.id
+				FROM BadgeCell
+				INNER JOIN BadgeTemplate
+				ON BadgeCell.badgeTemplateId = BadgeTemplate.id
+				WHERE BadgeCell.id = BadgeCell_TextContent.badgeCellId
+				AND BadgeTemplate.eventId = :eventId
+			)
+		';
+
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
+		
+		$this->execute($sql, $params, 'Delete badge cell content.');
 	}
 	
-	public function deleteBadgeCell($id) {
-		$this->del('BadgeCell_TextContent', array('badgeCellId' => $id));
-		$this->del('BadgeBarcodeField', array('badgeCellId' => $id));
-		$this->del('BadgeCell', array('id' => $id));
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function deleteBadgeCell($params) {
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
+		
+		// delete badge cell content.
+		$sql = '
+			DELETE FROM
+				BadgeCell_TextContent
+			WHERE
+				BadgeCell_TextContent.badgeCellId = :id
+			AND
+				BadgeCell_TextContent.badgeCellId 
+			IN (
+				SELECT BadgeCell.id
+				FROM BadgeCell
+				INNER JOIN BadgeTemplate
+				ON BadgeCell.badgeTemplateId = BadgeTemplate.id
+				WHERE BadgeCell.id = BadgeCell_TextContent.badgeCellId
+				AND BadgeTemplate.eventId = :eventId
+			)
+		';
+
+		$this->execute($sql, $params, 'Delete badge cells.');
+		
+		// delete badge cell barcode.
+		$sql = '
+			DELETE FROM
+				BadgeBarcodeField
+			WHERE
+				BadgeBarcodeField.badgeCellId = :id
+			AND
+				BadgeBarcodeField.badgeCellId 
+			IN (
+				SELECT BadgeCell.id
+				FROM BadgeCell
+				INNER JOIN BadgeTemplate
+				ON BadgeCell.badgeTemplateId = BadgeTemplate.id
+				WHERE BadgeCell.id = BadgeBarcodeField.badgeCellId
+				AND BadgeTemplate.eventId = :eventId
+			)
+		';
+
+		$this->execute($sql, $params, 'Delete badge cell barcode.');
+		
+		// delete badge cell.
+		$sql = '
+			DELETE FROM
+				BadgeCell
+			WHERE
+				BadgeCell.id = :id
+			AND
+				BadgeCell.badgeTemplateId 
+			IN (
+				SELECT BadgeTemplate.id 
+				FROM BadgeTemplate
+				WHERE BadgeTemplate.id = BadgeCell.badgeTemplateId
+				AND BadgeTemplate.eventId = :eventId
+			)
+		';
+		
+		$this->execute($sql, $params, 'Delete badge cell.');
 	}
 	
-	public function findBadgeCellContentByCellId($id) {
+	/**
+	 * 
+	 * @param array $params [eventId, badgeCellId]
+	 */
+	public function findBadgeCellContentByCellId($params) {
+		$this->checkBadgeCellPermission($params);
+		
 		$sql = '
 			SELECT
 				BadgeCell_TextContent.id,
@@ -183,7 +441,7 @@ class db_BadgeCellManager extends db_OrderableManager
 				BadgeCell_TextContent.displayOrder
 		';
 		
-		$params = array('badgeCellId' => $id);
+		$params = ArrayUtil::keyIntersect($params, array('badgeCellId')); 
 		
 		return $this->rawQuery($sql, $params, 'Find badge cell content.');
 	}
@@ -214,25 +472,45 @@ class db_BadgeCellManager extends db_OrderableManager
 		return $this->rawQueryUnique($sql, $params, 'Find badge cell content by id.');
 	}
 	
-	public function deleteByTemplateId($templateId) {
-		$cells = $this->findByBadgeTemplateId($templateId);
+	/**
+	 * 
+	 * @param array $params [eventId, badgeTemplateId]
+	 */
+	public function deleteByTemplateId($params) {
+		$cells = $this->findByBadgeTemplateId($params['badgeTemplateId']);
 		
 		foreach($cells as $cell) {
-			$this->deleteBadgeCell($cell['id']);
+			$p = array(
+				'eventId' => $params['eventId'], 
+				'id' => $cell['id']
+			);
+			$this->deleteBadgeCell($p);
 		}
 	}
 	
-	public function moveCellContentUp($cellContent) {
-		$this->moveUp($cellContent, 'badgeCellId', $cellContent['badgeCellId']);
+	/**
+	 * 
+	 * @param array $params [eventId, badgeCellId]
+	 */
+	public function moveCellContentUp($params) {
+		$this->checkBadgeCellTextContentPermission(ArrayUtil::keyIntersect($params, array('eventId', 'badgeCellId')));
+		
+		$this->moveUp($params, 'badgeCellId', $params['badgeCellId']);
 	}
 	
-	public function moveCellContentDown($cellContent) {
-		$this->moveDown($cellContent, 'badgeCellId', $cellContent['badgeCellId']);
+	/**
+	 * 
+	 * @param array $params [eventId, badgeCellId]
+	 */
+	public function moveCellContentDown($params) {
+		$this->checkBadgeCellTextContentPermission(ArrayUtil::keyIntersect($params, array('eventId', 'badgeCellId')));
+		
+		$this->moveDown($params, 'badgeCellId', $params['badgeCellId']);
 	}
 	
 	/**
 	 * Delete badge cell text content for the given badge templates.
-	 * @param array $params ['eventId', 'templateIds'] 
+	 * @param array $params [eventId, templateIds] 
 	 */
 	private function deleteBadgeCellTextContentByTemplate($params) {
 		$sql = '
@@ -260,7 +538,7 @@ class db_BadgeCellManager extends db_OrderableManager
 	
 	/**
 	 * Delete badge barcode fields for the given badge templates.
-	 * @param array $params ['eventId', 'templateIds'] 
+	 * @param array $params [eventId, templateIds] 
 	 */
 	private function deleteBadgeBarcodeFieldByTemplate($params) {
 		$sql = '
@@ -288,7 +566,7 @@ class db_BadgeCellManager extends db_OrderableManager
 
 	/**
 	 * Delete all the badge cells for the given badge templates.
-	 * @param array $params ['eventId', 'templateIds'] 
+	 * @param array $params [eventId, templateIds] 
 	 */
 	public function deleteBadgeCellsByTemplate($params) {
 		$this->deleteBadgeCellTextContentByTemplate($params);

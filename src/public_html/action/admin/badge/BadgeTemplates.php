@@ -103,7 +103,7 @@ class action_admin_badge_BadgeTemplates extends action_ValidatorAction
 			'eventId' => 0,
 			'id' => 0
 		));
-		
+	
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $params['eventId']);
 		

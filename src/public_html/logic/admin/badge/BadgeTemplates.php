@@ -30,17 +30,6 @@ class logic_admin_badge_BadgeTemplates extends logic_Performer
 		return array('eventId' => $params['eventId']);
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public function addTemplate($params) {
 		$values = ArrayUtil::keyIntersect($params, array('eventId', 'name', 'regTypeIds'));
 		$values['type'] = $params['badgeTemplateType'];
@@ -53,7 +42,7 @@ class logic_admin_badge_BadgeTemplates extends logic_Performer
 	}
 	
 	public function removeTemplate($params) {
-		$template = $this->strictFindById(db_BadgeTemplateManager::getInstance(), $params['id']);
+		$template = db_BadgeTemplateManager::getInstance()->find($params['id']);
 		db_BadgeTemplateManager::getInstance()->delete($template['id']);
 		
 		return $this->view(array(
@@ -61,9 +50,9 @@ class logic_admin_badge_BadgeTemplates extends logic_Performer
 		));
 	}
 	
-	public function copyTemplate($params) {
+	public function copyTemplate($params) { 
 		// copy badge template.
-		$template = $this->strictFindById(db_BadgeTemplateManager::getInstance(), $params['id']);
+		$template = db_BadgeTemplateManager::getInstance()->find($params['id']);
 		$copyTemplateId = $this->copyBadgeTemplate($template);
 		
 		return $this->view(array(
@@ -71,7 +60,7 @@ class logic_admin_badge_BadgeTemplates extends logic_Performer
 		));
 	}
 	
-	private function copyBadgeTemplate($template) {
+	private function copyBadgeTemplate($template) { 
 		// pull out the reg type ids.
 		$regTypeIds = array();
 		if($template['appliesToAll']) {
@@ -94,16 +83,20 @@ class logic_admin_badge_BadgeTemplates extends logic_Performer
 		// copy badge cells.
 		foreach($template['cells'] as $cell) {
 			$cell['badgeTemplateId'] = $copyId;
+			$cell['eventId'] = $template['eventId'];
 			$this->copyBadgeCell($cell);
 		}	
 	}
 	
-	private function copyBadgeCell($cell) {
+	private function copyBadgeCell($params) {
+		$cell = $params;
+		
 		$copyId = db_BadgeCellManager::getInstance()->createBadgeCell($cell);
 
 		// copy cell text and contact info fields. 
 		foreach($cell['content'] as $cellContent) {
 			$cellContent['badgeCellId'] = $copyId;
+			$cellContent['eventId'] = $params['eventId'];
 			
 			if(empty($cellContent['contactFieldId'])) { 
 				db_BadgeCellManager::getInstance()->addText($cellContent);
@@ -125,6 +118,7 @@ class logic_admin_badge_BadgeTemplates extends logic_Performer
 		
 		// copy barcode fields. 
 		foreach($cell['barcodeFields'] as $barcodeField) {
+			$barcodeField['eventId'] = $params['eventId'];
 			$barcodeField['badgeCellId'] = $copyId;
 			
 			db_BadgeBarcodeFieldManager::getInstance()->addInformationField($barcodeField);

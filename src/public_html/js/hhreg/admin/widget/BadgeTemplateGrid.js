@@ -59,10 +59,11 @@ dojo.declare("hhreg.admin.widget.BadgeTemplateGrid", [dijit._Widget, dijit._Temp
 			    {name: "Options", width: "100%", get: function(rowIndex, storeItem) {
 			    	if(!storeItem) { return; }
 			    	
-			    	var templateId = grid.store.getValue(storeItem, "id");
+			    	var editLink = grid.store.getValue(storeItem, "editLink");
+			    	var copyLink = grid.store.getValue(storeItem, "copyLink");
 			    	
-			    	var editUrl = hhreg.util.contextUrl("/admin/badge/EditBadgeTemplate?")+dojo.objectToQuery({eventId: _this.eventId, id: templateId});
-			    	var copyUrl = hhreg.util.contextUrl("/admin/badge/BadgeTemplates?")+dojo.objectToQuery({eventId: _this.eventId, id: templateId});
+			    	var editUrl = hhreg.util.contextUrl(editLink);
+			    	var copyUrl = hhreg.util.contextUrl(copyLink);
 			    	
 			    	return dojo.string.substitute(
 		    			'<a href="${editHref}">Edit</a> <a href="${copyHref}">Copy</a>', 

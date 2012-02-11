@@ -73,11 +73,11 @@ class action_admin_badge_EditBadgeTemplate extends action_ValidatorAction
 	public function saveCellDetails() {
 		$params = RequestUtil::getValues(array(
 			'id' => 0,
-			'xCoord' => 0,
-			'yCoord' => 0,
-			'width' => 4,
+			'xCoord' => 0.0,
+			'yCoord' => 0.0,
+			'width' => 4.0,
 			'font' => 'arial',
-			'fontSize' => 12,
+			'fontSize' => 12.0,
 			'horizontalAlign' => 'C',
 			'eventId' => 0
 		));
