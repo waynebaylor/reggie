@@ -174,7 +174,10 @@ _;
 			
 			$printBadgeLink = '';
 			$printBadgeDialog = '';
-			$badgeTemplates = db_BadgeTemplateManager::getInstance()->findByRegTypeId($this->event['id'], $r['regTypeId']);
+			$badgeTemplates = db_BadgeTemplateManager::getInstance()->findByRegTypeId(array(
+				'eventId' => $this->event['id'], 
+				'regTypeId' => $r['regTypeId']
+			));
 			if(!empty($badgeTemplates) && empty($r['dateCancelled'])) {
 				$printBadgeLink = '<span class="print-badge-link link" title="Print badge for this registrant">Print Badge</span>';
 				$printBadgeDialog = $this->getPrintBadgeDialog($this->event['id'], $r['id'], $badgeTemplates);

@@ -10,8 +10,13 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 	}
 	
 	public function singleBadge($params) {
-		$badgeTemplate = $this->strictFindById(db_BadgeTemplateManager::getInstance(), $params['badgeTemplateId']);
+		$badgeTemplate = db_BadgeTemplateManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['badgeTemplateId']
+		));
+		
 		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
+		
 		$user = SessionUtil::getUser();
 		
 		$data = $this->getRegistrationBadgeData($params['registrationId'], $badgeTemplate);
@@ -42,7 +47,11 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 		$allData = array();
 		
 		foreach($regInfos as $regInfo) { 
-			$badgeTemplate = db_BadgeTemplateManager::getInstance()->findPrintBadgeTemplate($regInfo['eventId'], $regInfo['regTypeId'], $params['templateIds']);
+			$badgeTemplate = db_BadgeTemplateManager::getInstance()->findPrintBadgeTemplate(array(
+				'eventId' => $regInfo['eventId'], 
+				'regTypeId' => $regInfo['regTypeId'], 
+				'templateIds' => $params['templateIds']
+			));
 			
 			if(!empty($badgeTemplate)) {
 				$regData = $this->getRegistrationBadgeData($regInfo['id'], $badgeTemplate);

@@ -16,9 +16,12 @@ class logic_admin_badge_CreateBadgeTemplate extends logic_Performer
 	}
 	
 	public function createTemplate($params) {
-		db_BadgeTemplateManager::getInstance()->createBadgeTemplate($params);
+		$newTemplateId = db_BadgeTemplateManager::getInstance()->createBadgeTemplate($params);
 		
-		return array('eventId' => $params['eventId']);
+		return array(
+			'eventId' => $params['eventId'],
+			'badgeTemplateId' => $newTemplateId
+		);
 	}
 }
 

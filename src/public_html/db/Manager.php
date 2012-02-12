@@ -265,7 +265,7 @@ abstract class db_Manager
 		if(!empty($conditions)) {
 			$sql .= " WHERE {$conditions}";
 		}
-		
+
 		return $this->query($sql, $restrictions, "Find from {$table}.");
 	}
 	

@@ -12,7 +12,7 @@ class logic_admin_badge_BadgeTemplates extends logic_Performer
 		return array(
 			'eventId' => $event['id'],
 			'event' => $event,
-			'templates' => db_BadgeTemplateManager::getInstance()->findByEventId($event['id']),
+			'templates' => db_BadgeTemplateManager::getInstance()->findByEventId(array('eventId' => $event['id'])),
 			'actionMenuEventLabel' => $event['code']
 		);	
 	}
@@ -20,7 +20,7 @@ class logic_admin_badge_BadgeTemplates extends logic_Performer
 	public function listTemplates($params) {
 		return array(
 			'eventId' => $params['eventId'],
-			'templates' => db_BadgeTemplateManager::getInstance()->findByEventId($params['eventId'])
+			'templates' => db_BadgeTemplateManager::getInstance()->findByEventId($params)
 		);
 	}
 	
@@ -42,17 +42,17 @@ class logic_admin_badge_BadgeTemplates extends logic_Performer
 	}
 	
 	public function removeTemplate($params) {
-		$template = db_BadgeTemplateManager::getInstance()->find($params['id']);
-		db_BadgeTemplateManager::getInstance()->delete($template['id']);
-		
-		return $this->view(array(
-			'eventId' => $template['eventId']
+		db_BadgeTemplateManager::getInstance()->delete(array(
+			'eventId' => $params['eventId'],
+			'badgeTemplateId' => $params['id']
 		));
+		
+		return $this->view($params);
 	}
 	
 	public function copyTemplate($params) { 
 		// copy badge template.
-		$template = db_BadgeTemplateManager::getInstance()->find($params['id']);
+		$template = db_BadgeTemplateManager::getInstance()->find($params);
 		$copyTemplateId = $this->copyBadgeTemplate($template);
 		
 		return $this->view(array(

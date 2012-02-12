@@ -36,7 +36,10 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	}
 	
 	public function addBadgeCell($params) {
-		$badgeTemplate = $this->strictFindById(db_BadgeTemplateManager::getInstance(), $params['badgeTemplateId']);
+		$badgeTemplate = db_BadgeTemplateManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['badgeTemplateId']
+		));
 		
 		$newCellId = db_BadgeCellManager::getInstance()->createBadgeCell(array(
 			'eventId' => $badgeTemplate['eventId'],
@@ -73,10 +76,9 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	}
 	
 	public function saveTemplate($params) {
-		$badgeTemplate = $this->strictFindById(db_BadgeTemplateManager::getInstance(), $params['id']);
 		db_BadgeTemplateManager::getInstance()->save($params);
 		
-		return array();
+		return $params;
 	}
 	
 	private function getSelectedCell($template, $cellId) {
@@ -93,8 +95,7 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	
 	public function saveCellDetails($params) {
 		$cell = db_BadgeCellManager::getInstance()->find($params);
-		$badgeTemplate = db_BadgeTemplateManager::getInstance()->find($cell['badgeTemplateId']);
-	
+		
 		db_BadgeCellManager::getInstance()->saveBadgeCell($params);
 		
 		return $this->view(array(
@@ -142,7 +143,7 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	}
 	
 	public function moveCellContentUp($params) {
-		$cellContent = db_BadgeCellManager::getInstance()->findBadgeCellContentById($params['id']);
+		$cellContent = db_BadgeCellManager::getInstance()->findBadgeCellContentById($params);
 		$cellContent['eventId'] = $params['eventId'];
 		
 		db_BadgeCellManager::getInstance()->moveCellContentUp($cellContent);
@@ -160,7 +161,7 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	}
 	
 	public function moveCellContentDown($params) {
-		$cellContent = db_BadgeCellManager::getInstance()->findBadgeCellContentById($params['id']);
+		$cellContent = db_BadgeCellManager::getInstance()->findBadgeCellContentById($params);
 		$cellContent['eventId'] = $params['eventId'];
 		
 		db_BadgeCellManager::getInstance()->moveCellContentDown($cellContent);
@@ -202,9 +203,13 @@ class logic_admin_badge_EditBadgeTemplate extends logic_Performer
 	
 	public function removeBadgeCell($params) {
 		$cell = db_BadgeCellManager::getInstance()->find($params);
+		
 		db_BadgeCellManager::getInstance()->deleteBadgeCell($params);
 		
-		$badgeTemplate = db_BadgeTemplateManager::getInstance()->find($cell['badgeTemplateId']);
+		$badgeTemplate = db_BadgeTemplateManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $cell['badgeTemplateId']
+		));
 		
 		return $this->view(array(
 			'id' => $cell['badgeTemplateId'],

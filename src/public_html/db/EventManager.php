@@ -367,7 +367,7 @@ class db_EventManager extends db_Manager
 		
 		/////////////////////////////////////////////////////////////////////////////////
 		// delete badge templates
-		db_BadgeTemplateManager::getInstance()->deleteByEventId($eventId);
+		db_BadgeTemplateManager::getInstance()->deleteByEventId(array('eventId' => $eventId));
 		
 		/////////////////////////////////////////////////////////////////////////////////
 		// delete user associations.

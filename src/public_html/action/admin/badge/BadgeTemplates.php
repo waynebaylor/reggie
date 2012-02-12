@@ -35,7 +35,7 @@ class action_admin_badge_BadgeTemplates extends action_ValidatorAction
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $params['eventId']);
 		
-		$info = $this->logic->view($params);
+		$info = $this->logic->view($params); 
 		return $this->converter->getView($info);
 	}
 	

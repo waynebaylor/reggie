@@ -14,7 +14,7 @@ class viewConverter_admin_badge_CreateBadgeTemplate extends viewConverter_admin_
 			'url' => '/admin/badge/CreateBadgeTemplate',
 			'action' => 'createTemplate',
 			'rows' => $this->getFileContents('page_admin_badge_CreateTemplateForm'),
-			'redirectUrl' => "/admin/badge/BadgeTemplates?eventId={$this->eventId}"
+			'useAjax' => false
 		));
 		
 		$body .= <<<_
@@ -35,7 +35,7 @@ _;
 	
 	public function getCreateTemplate($properties) {
 		$this->setProperties($properties);
-		return new fragment_Success();
+		return new template_Redirect("/admin/badge/EditBadgeTemplate?eventId={$this->eventId}&id={$this->badgeTemplateId}");
 	}
 }
 
