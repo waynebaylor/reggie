@@ -399,7 +399,7 @@ class db_EventManager extends db_Manager
 		
 		///////////////////////////////////////////////////////////////////////////////
 		// delete static pages.
-		db_StaticPageManager::getInstance()->deleteByEventId($eventId);
+		db_StaticPageManager::getInstance()->deleteByEventId(array('eventId' => $eventId));
 		
 		/////////////////////////////////////////////////////////////////////////////////
 		// delete event.

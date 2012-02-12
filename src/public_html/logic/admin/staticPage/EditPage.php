@@ -7,10 +7,7 @@ class logic_admin_staticPage_EditPage extends logic_Performer
 	}
 	
 	public function view($params) { 
-		$page = db_StaticPageManager::getInstance()->findByIdAndEvent(array(
-			'eventId' => $params['eventId'],
-			'pageId' => $params['pageId']
-		));
+		$page = db_StaticPageManager::getInstance()->findByIdAndEvent($params);
 		
 		$eventInfo = db_EventManager::getInstance()->findInfoById($page['eventId']);
 		
@@ -22,13 +19,14 @@ class logic_admin_staticPage_EditPage extends logic_Performer
 	}
 	
 	public function savePage($params) {
-		$fixedContent = $this->purifyHtml($params['content']);
+		$purifiedContent = $this->purifyHtml($params['content']);
 		
 		db_StaticPageManager::getInstance()->save(array(
+			'eventId' => $params['eventId'],
 			'id' => $params['id'],
 			'name' => $params['name'],
 			'title' => $params['title'],
-			'content' => $fixedContent
+			'content' => $purifiedContent
 		));
 		
 		return $params;

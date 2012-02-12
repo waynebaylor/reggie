@@ -7,7 +7,7 @@ class logic_staticPage_Controller extends logic_Performer
 	}
 	
 	public function view($params) {
-		$page = db_StaticPageManager::getInstance()->findByEventCodeAndName($params['eventCode'], $params['name']);
+		$page = db_StaticPageManager::getInstance()->findByEventCodeAndName($params);
 		
 		return array(
 			'title' => $page['title'],

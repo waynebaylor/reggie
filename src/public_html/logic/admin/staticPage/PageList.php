@@ -17,7 +17,7 @@ class logic_admin_staticPage_PageList extends logic_Performer
 	
 	public function listPages($params) {
 		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
-		$pages = db_StaticPageManager::getInstance()->findByEventId($params['eventId']);
+		$pages = db_StaticPageManager::getInstance()->findByEventId($params);
 		
 		$urlAdded = array();
 		foreach($pages as $p) {
@@ -40,10 +40,7 @@ class logic_admin_staticPage_PageList extends logic_Performer
 	}
 	
 	public function deletePages($params) {
-		db_StaticPageManager::getInstance()->deletePages(array(
-			'eventId' => $params['eventId'],
-			'pageIds' => $params['pageIds']	
-		));
+		db_StaticPageManager::getInstance()->deletePages($params);
 
 		return array(
 			'eventId' => $params['eventId']

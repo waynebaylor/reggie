@@ -23,12 +23,7 @@ class logic_admin_staticPage_CreatePage extends logic_Performer
 	}
 	
 	public function createPage($params) {
-		db_StaticPageManager::getInstance()->createPage(array(
-			'eventId' => $params['eventId'],
-			'name' => $params['name'],
-			'title' => $params['title'],
-			'content' => $params['content']
-		));
+		db_StaticPageManager::getInstance()->createPage($params);
 		
 		return array('eventId' => $params['eventId']);
 	}
