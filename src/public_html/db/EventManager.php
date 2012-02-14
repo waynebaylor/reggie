@@ -255,7 +255,10 @@ class db_EventManager extends db_Manager
 		$id = $this->lastInsertId();
 		
 		// create the event's appearance information.
-		db_AppearanceManager::getInstance()->createAppearance($id, $event['displayName']);
+		db_AppearanceManager::getInstance()->createAppearance(array(
+			'eventId' => $id, 
+			'displayName' => $event['displayName']
+		));
 		 
 		// create the event's group registration information.
 		db_GroupRegistrationManager::getInstance()->createGroupRegistration($id);
@@ -386,7 +389,7 @@ class db_EventManager extends db_Manager
 		
 		/////////////////////////////////////////////////////////////////////////////////
 		// delete appearance, email templates, payment options, group registration.
-		db_AppearanceManager::getInstance()->deleteByEventId($eventId);    
+		db_AppearanceManager::getInstance()->deleteByEventId(array('eventId' => $eventId));    
 		db_EmailTemplateManager::getInstance()->deleteByEventId($eventId);
 		db_payment_CheckDirectionsManager::getInstance()->deleteByEventId($eventId);   
 		db_payment_PurchaseOrderDirectionsManager::getInstance()->deleteByEventId($eventId);

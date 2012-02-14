@@ -16,6 +16,10 @@ class db_AppearanceManager extends db_Manager
 		return self::$instance;
 	}
 	
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
 	public function find($params) {
 		$sql = '
 			SELECT
@@ -47,7 +51,11 @@ class db_AppearanceManager extends db_Manager
 		return $this->queryUnique($sql, $params, 'Find event appearance.');
 	}
 	
-	public function findByEvent($event) {
+	/**
+	 * 
+	 * @param array $params [id]
+	 */
+	public function findByEvent($params) {
 		$sql = '
 			SELECT
 				id,
@@ -72,13 +80,17 @@ class db_AppearanceManager extends db_Manager
 		';
 		
 		$params = array(
-			'eventId' => $event['id']
+			'eventId' => $params['id']
 		);
 		
 		return $this->queryUnique($sql, $params, 'Find appearance by event.');
 	}
 	
-	public function createAppearance($eventId, $displayName) {
+	/**
+	 * 
+	 * @param array $params [eventId, displayName]
+	 */
+	public function createAppearance($params) {
 		$sql = '
 			INSERT INTO
 				Appearance(
@@ -116,8 +128,8 @@ class db_AppearanceManager extends db_Manager
 		';
 
 		$params = array(
-			'eventId' => $eventId,
-			'headerContent' => '<div style="text-align:center; font-weight:bold; font-size:2.5em;">'.$displayName.'</div>',
+			'eventId' => $params['eventId'],
+			'headerContent' => '<div style="text-align:center; font-weight:bold; font-size:2.5em;">'.$params['displayName'].'</div>',
 			'menuTitle' => 'Registration Menu'
 		);
 		
@@ -148,10 +160,32 @@ class db_AppearanceManager extends db_Manager
 				eventId = :eventId
 		';
 		
+		$params = ArrayUtil::keyIntersect($params, array(
+			'id',
+			'eventId',
+			'headerContent',
+			'footerContent',
+			'headerBackgroundColor',
+			'footerBackgroundColor',
+			'menuTitle',
+			'menuBackgroundColor',
+			'backgroundColor',
+			'formBackgroundColor',
+			'buttonTextColor',
+			'buttonBackgroundColor',
+			'pageBackgroundColor',
+			'menuTitleBackgroundColor',
+			'menuHighlightColor'
+		));
+		
 		$this->execute($sql, $params, 'Save event appearance.');
 	}
 	
-	public function deleteByEventId($eventId) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function deleteByEventId($params) {
 		$sql = '
 			DELETE FROM
 				Appearance
@@ -159,9 +193,7 @@ class db_AppearanceManager extends db_Manager
 				eventId = :eventId
 		';
 		
-		$params = array(
-			'eventId' => $eventId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId'));
 		
 		$this->execute($sql, $params, 'Delete event appearance.');
 	}
