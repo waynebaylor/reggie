@@ -58,6 +58,9 @@ class action_admin_report_ReportList extends action_ValidatorAction
 			'reportIds' => RequestUtil::getValueAsArray('reportIds', array())
 		);
 		
+		// permission to delete reports is more restrictive than 
+		// listing them, thus we use CreateReport->hasRole() instead
+		// of ReportList->hasRole().
 		$user = SessionUtil::getUser();
 		$a = new action_admin_report_CreateReport();
 		$a->checkRole($user, $params['eventId']);

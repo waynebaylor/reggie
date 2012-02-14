@@ -10,7 +10,7 @@ class db_ReportManager extends db_Manager
 	// some of the payment fields don't have a dbValueColumn because
 	// they must be computed outside of a sql query.
 	//
-	public static $SPECIAL_FIELDS = array(
+	private static $SPECIAL_FIELDS = array(
 		'date_registered' => array(
 			'dbColumn' => 'showDateRegistered',
 			'dbValueColumn' => 'dateRegistered',
@@ -54,7 +54,10 @@ class db_ReportManager extends db_Manager
 	protected function populate(&$obj, $arr) {
 		parent::populate($obj, $arr);
 		
-		$obj['fields'] = db_ReportFieldManager::getInstance()->findByReport($obj);
+		$obj['fields'] = db_ReportFieldManager::getInstance()->findByReport(array(
+			'eventId' => $obj['eventId'], 
+			'reportId' => $obj['id']
+		));
 		
 		return $obj;
 	}
@@ -67,7 +70,11 @@ class db_ReportManager extends db_Manager
 		return self::$instance;
 	}
 	
-	public function find($id) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function find($params) {
 		$sql = '
 			SELECT
 				id,
@@ -87,21 +94,29 @@ class db_ReportManager extends db_Manager
 			FROM
 				Report
 			WHERE
-				id=:id
+				id = :id
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $id
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->queryUnique($sql, $params, 'Find report.');
 	}
 	
-	public function findByEvent($event) {
-		return $this->findByEventId($event['id']);
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function findByEvent($params) {
+		return $this->findByEventId($params);
 	}
 	
-	public function findByEventId($eventId) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function findByEventId($params) {
 		$sql = '
 			SELECT
 				id,
@@ -124,14 +139,16 @@ class db_ReportManager extends db_Manager
 				eventId = :eventId
 		';
 		
-		$params = array(
-			'eventId' => $eventId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId'));
 		
 		return $this->query($sql, $params, 'Find reports by event.');
 	}
 	
-	public function createReport($report) {
+	/**
+	 * 
+	 * @param array $params [eventId, name]
+	 */
+	public function createReport($params) {
 		$sql = '
 			INSERT INTO
 				Report (
@@ -144,28 +161,35 @@ class db_ReportManager extends db_Manager
 			)
 		';
 		
-		$params = array(
-			'eventId' => $report['eventId'],
-			'name' => $report['name']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'name'));
 		
 		$this->execute($sql, $params, 'Create report.');
 		
 		return $this->lastInsertId();
 	}
 	
-	public function deleteReport($report) {
+	/**
+	 * 
+	 * @param array $params [eventId, reportId]
+	 */
+	public function deleteReport($params) {
 		// delete report fields.
 		$sql = '
 			DELETE FROM
 				Report_ContactField
 			WHERE
-				reportId = :reportId
+				Report_ContactField.reportId = :reportId
+			AND
+				Report_ContactField.reportId
+			IN (
+				SELECT Report.id 
+				FROM Report
+				WHERE Report.id = :reportId
+				AND Report.eventId = :eventId
+			)
 		';
 		
-		$params = array(
-			'reportId' => $report['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'reportId'));
 		
 		$this->execute($sql, $params, 'Delete report fields.');
 		
@@ -174,36 +198,41 @@ class db_ReportManager extends db_Manager
 			DELETE FROM
 				Report
 			WHERE
-				id=:id
+				id = :reportId
+			AND
+				eventId = :eventId
 		';
-		
-		$params = array(
-			'id' => $report['id']
-		);
 		
 		$this->execute($sql, $params, 'Delete report.');
 	}
 	
-	public function saveReport($report) {
+	/**
+	 * 
+	 * @param array $params [eventId, id, name]
+	 */
+	public function saveReport($params) {
 		$sql = '
 			UPDATE
 				Report
 			SET
-				name=:name
+				name = :name
 			WHERE
-				id=:id
+				id = :id
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $report['id'],
-			'name' => $report['name']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id', 'name'));
 		
 		$this->execute($sql, $params, 'Save report.');
 	}
 
-	public function addSpecialField($field) {
-		$column = self::$SPECIAL_FIELDS[$field['name']]['dbColumn'];
+	/**
+	 * 
+	 * @param array $params [eventId, reportId, fieldName]
+	 */
+	public function addSpecialField($params) {
+		$column = self::$SPECIAL_FIELDS[$params['fieldName']]['dbColumn'];
 		
 		$sql = "
 			UPDATE
@@ -211,19 +240,26 @@ class db_ReportManager extends db_Manager
 			SET
 				{$column} = :value
 			WHERE
-				id = :id
+				id = :reportId
+			AND
+				eventId = :eventId
 		";
 				
 		$params = array(
-			'id' => $field['reportId'],
+			'reportId' => $params['reportId'],
+			'eventId' => $params['eventId'],
 			'value' => 'T'
 		);
 		
 		$this->execute($sql, $params, 'Add special field to report.');
 	}
 	
-	public function removeSpecialField($field) {
-		$column = self::$SPECIAL_FIELDS[$field['name']]['dbColumn'];
+	/**
+	 * 
+	 * @param array $params [eventId, reportId, fieldName]
+	 */
+	public function removeSpecialField($params) {
+		$column = self::$SPECIAL_FIELDS[$params['fieldName']]['dbColumn'];
 		
 		$sql = "
 			UPDATE
@@ -231,11 +267,14 @@ class db_ReportManager extends db_Manager
 			SET
 				{$column} = :value
 			WHERE
-				id = :id
+				id = :reportId
+			AND
+				eventId = :eventId
 		";
 				
 		$params = array(
-			'id' => $field['reportId'],
+			'reportId' => $params['reportId'],
+			'eventId' => $params['eventId'],
 			'value' => 'F'
 		);
 		
@@ -386,7 +425,11 @@ class db_ReportManager extends db_Manager
 		return $values;
 	}
 	
-	public function createRegTypeBreakdown($eventId) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function createRegTypeBreakdown($params) {
 		$sql = '
 			INSERT INTO
 				Report (
@@ -402,7 +445,7 @@ class db_ReportManager extends db_Manager
 		';	
 		
 		$params = array(
-			'eventId' => $eventId,
+			'eventId' => $params['eventId'],
 			'name' => 'Registration Type Breakdown',
 			'isRegTypeBreakdown' => 'T'
 		);
@@ -410,7 +453,11 @@ class db_ReportManager extends db_Manager
 		$this->execute($sql, $params, 'Create reg type breakdown report.');
 	}
 	
-	public function createOptionCount($eventId) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function createOptionCount($params) {
 		$sql = '
 			INSERT INTO
 				Report (
@@ -426,7 +473,7 @@ class db_ReportManager extends db_Manager
 		';	
 		
 		$params = array(
-			'eventId' => $eventId,
+			'eventId' => $params['eventId'],
 			'name' => 'Option Counts',
 			'isOptionCount' => 'T'
 		); 
@@ -434,7 +481,11 @@ class db_ReportManager extends db_Manager
 		$this->execute($sql, $params, 'Create option count report.');
 	}
 	
-	public function createAllRegToDate($eventId) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function createAllRegToDate($params) {
 		$sql = '
 			INSERT INTO
 				Report (
@@ -450,7 +501,7 @@ class db_ReportManager extends db_Manager
 		';	
 		
 		$params = array(
-			'eventId' => $eventId,
+			'eventId' => $params['eventId'],
 			'name' => 'All Registrations To Date',
 			'isAllRegToDate' => 'T'
 		);
@@ -458,7 +509,11 @@ class db_ReportManager extends db_Manager
 		$this->execute($sql, $params, 'Create all reg to date report.');
 	}
 	
-	public function createPaymentsToDate($eventId) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function createPaymentsToDate($params) {
 		$sql = '
 			INSERT INTO
 				Report (
@@ -474,7 +529,7 @@ class db_ReportManager extends db_Manager
 		';
 		
 		$params = array(
-			'eventId' => $eventId,
+			'eventId' => $params['eventId'],
 			'name' => 'Payments To Date',
 			'isPaymentsToDate' => 'T'
 			
@@ -483,7 +538,11 @@ class db_ReportManager extends db_Manager
 		$this->execute($sql, $params, 'Create payments to date report.');
 	}
 
-	public function findReportFieldHeadings($reportId) {
+	/**
+	 * 
+	 * @param array $params [reportId]
+	 */
+	public function findReportFieldHeadings($params) {
 		$sql = '
 			SELECT 
 				ContactField.id,
@@ -500,14 +559,16 @@ class db_ReportManager extends db_Manager
 				Report_ContactField.displayOrder
 		';
 		
-		$params = array(
-			'reportId' => $reportId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('reportId'));
 		
 		return $this->rawQuery($sql, $params, 'Find report contact field names.');
 	}
 
-	public function findReportRegistrationValues($reportId) {
+	/**
+	 * 
+	 * @param array $params [reportId]
+	 */
+	public function findReportRegistrationValues($params) {
 		$sql = '
 			SELECT
 				Registration.id AS registrationId,
@@ -537,17 +598,17 @@ class db_ReportManager extends db_Manager
 			ASC
 		';
 		
-		$params = array(
-			'reportId' => $reportId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('reportId'));
 		
 		return $this->rawQuery($sql, $params, 'Find report special values.');
 	}
 	
 	/**
 	 * payment values [(reg group id) -> (cost, paid, balance)].
+	 * 
+	 * @param array $params [eventId, reportId]
 	 */
-	public function findReportPaymentValues($reportId) {
+	public function findReportPaymentValues($params) {
 		$sql = '
 			SELECT DISTINCT
 				Registration.regGroupId
@@ -559,11 +620,11 @@ class db_ReportManager extends db_Manager
 				Registration.eventId = Report.eventId
 			WHERE
 				Report.id = :reportId
+			AND
+				Report.eventId = :eventId
 		';
 		
-		$params = array(
-			'reportId' => $reportId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'reportId'));
 		
 		$regGroupIds = $this->rawQuery($sql, $params, 'Find reg groups for event by report.');
 
@@ -585,8 +646,10 @@ class db_ReportManager extends db_Manager
 	
 	/**
 	 * report field values [(registration id) -> [(field id) -> (value | [values])]].
+	 * 
+	 * @param array $params [eventId, reportId]
 	 */
-	public function findReportFieldValues($reportId) {
+	public function findReportFieldValues($params) {
 		// find the registrations first.
 		$sql = '
 			SELECT 
@@ -599,11 +662,11 @@ class db_ReportManager extends db_Manager
 				Registration.eventId = Report.eventId
 			WHERE
 				Report.id = :reportId
+			AND
+				Report.eventId = :eventId
 		';
 
-		$params = array(
-			'reportId' => $reportId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'reportId'));
 		
 		$regIds = $this->rawQuery($sql, $params, 'Find registration ids by report.');
 		
@@ -611,7 +674,7 @@ class db_ReportManager extends db_Manager
 		$values = array();
 		foreach($regIds as $regId) { 
 			$regId = $regId['id']; 
-			$values[$regId] = $this->getReportFieldValuesByRegistrationId(array('reportId' => $reportId, 'registrationId' => $regId));
+			$values[$regId] = $this->getReportFieldValuesByRegistrationId(array('reportId' => $params['reportId'], 'registrationId' => $regId));
 		}
 		
 		return $values;
@@ -691,7 +754,11 @@ class db_ReportManager extends db_Manager
 		return $ids;
 	}
 	
-	public function findAllRegToDateValues($eventId) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function findAllRegToDateValues($params) {
 		$sql = '
 			(
 				SELECT
@@ -766,14 +833,16 @@ class db_ReportManager extends db_Manager
 				regGroupId, regId
 		';
 		
-		$params = array(
-			'eventId' => $eventId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId'));
 		
 		return $this->rawQuery($sql, $params, 'Find all reg to date values.');
 	}
 	
-	public function findOptionCounts($eventId) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function findOptionCounts($params) {
 		$sql = '
 			(
 				SELECT
@@ -838,14 +907,16 @@ class db_ReportManager extends db_Manager
 				optionCode, price
 		';
 		
-		$params = array(
-			'eventId' => $eventId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId'));
 		
 		return $this->rawQuery($sql, $params, 'Find option counts.');
 	}
 	
-	public function findRegTypeBreakdown($eventId) {
+	/**
+	 * 
+	 * @param array $eventId [eventId]
+	 */
+	public function findRegTypeBreakdown($params) {
 		$sql = '
 			SELECT
 				Registration.regTypeId AS regTypeId, 
@@ -865,22 +936,28 @@ class db_ReportManager extends db_Manager
 				Registration.regTypeId
 		';
 		
-		$params = array(
-			'eventId' => $eventId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId'));
 		
 		return $this->rawQuery($sql, $params, 'Find reg type breakdown.');
 	}
 	
-	public function deleteByEventId($eventId) {
-		$reports = $this->findByEventId($eventId);
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function deleteByEventId($params) {
+		$reports = $this->findByEventId($params);
 		
 		foreach($reports as $r) {
 			$this->deleteReport($r);
 		}
 	}
 	
-	public function findInfoByEventId($eventId) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function findInfoByEventId($params) {
 		return $this->select(
 			'Report', 
 			array(
@@ -889,7 +966,7 @@ class db_ReportManager extends db_Manager
 				'name'
 			), 
 			array(
-				'eventId' => $eventId
+				'eventId' => $params['eventId']
 			)
 		);
 	}
@@ -899,21 +976,17 @@ class db_ReportManager extends db_Manager
 	 * @param array $params ['eventId', 'reportIds']
 	 */
 	public function deleteReports($params) {
-		$sql = '
-			DELETE FROM
-				Report
-			WHERE
-				id in (:[reportIds])
-			AND
-				eventId = :eventId
-		';
-		
-		$this->execute($sql, $params, 'Delete reports.');
+		foreach($params['reportIds'] as $reportId) {
+			$this->deleteReport(array(
+				'eventId' => $params['eventId'],
+				'reportId' => $reportId
+			));
+		}
 	}
 	
 	/**
 	 * Find report. 
-	 * @param array $params ['eventId', 'id']
+	 * @param array $params [eventId, id]
 	 */
 	public function findReport($params) {
 		$sql = '
@@ -939,6 +1012,8 @@ class db_ReportManager extends db_Manager
 			AND
 				id = :id
 		';
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->queryUnique($sql, $params, 'Find report.');
 	}

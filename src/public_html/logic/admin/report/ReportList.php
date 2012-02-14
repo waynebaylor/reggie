@@ -21,7 +21,7 @@ class logic_admin_report_ReportList extends logic_Performer
 	}
 	
 	public function listReports($params) {
-		$reportInfos = db_ReportManager::getInstance()->findInfoByEventId($params['eventId']);
+		$reportInfos = db_ReportManager::getInstance()->findInfoByEventId($params);
 		
 		return array(
 			'eventId' => $params['eventId'],
@@ -30,12 +30,9 @@ class logic_admin_report_ReportList extends logic_Performer
 	}
 	
 	public function deleteReports($params) {
-		db_ReportManager::getInstance()->deleteReports(array(
-			'eventId' => $params['eventId'],
-			'reportIds' => $params['reportIds']
-		));
+		db_ReportManager::getInstance()->deleteReports($params);
 		
-		return array('eventId' => $params['eventId']);
+		return $params;
 	}
 }
 

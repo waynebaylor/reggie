@@ -18,10 +18,11 @@ class db_EventTemplate extends db_Manager
 	
 	public function createDefaults($eventId) {
 		// create built-in reports.
-		db_ReportManager::getInstance()->createPaymentsToDate($eventId);
-		db_ReportManager::getInstance()->createAllRegToDate($eventId);
-		db_ReportManager::getInstance()->createOptionCount($eventId);
-		db_ReportManager::getInstance()->createRegTypeBreakdown($eventId);
+		$params = array('eventId' => $eventId);
+		db_ReportManager::getInstance()->createPaymentsToDate($params);
+		db_ReportManager::getInstance()->createAllRegToDate($params);
+		db_ReportManager::getInstance()->createOptionCount($params);
+		db_ReportManager::getInstance()->createRegTypeBreakdown($params);
 		
 		// create event pages.
 		$visibleToCategoryIds = array(1); // attendee only.

@@ -9,7 +9,7 @@ class viewConverter_admin_report_Results extends viewConverter_admin_AdminConver
 	public function getView($properties) {
 		$this->setProperties($properties);
 		
-		$json = $this->getFileContents('page_admin_data_ReportResults');
+		$json = $this->getFileContents('page_admin_data_ReportResults'); 
 		return new template_TemplateWrapper($json);
 	}
 }

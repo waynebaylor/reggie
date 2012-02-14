@@ -507,7 +507,7 @@ class db_BadgeCellManager extends db_OrderableManager
 	
 	/**
 	 * 
-	 * @param array $params [eventId, badgeCellId]
+	 * @param array $params [eventId, badgeCellId, id]
 	 */
 	public function moveCellContentUp($params) {
 		$this->checkBadgeCellTextContentPermission(ArrayUtil::keyIntersect($params, array('eventId', 'badgeCellId')));
@@ -517,7 +517,7 @@ class db_BadgeCellManager extends db_OrderableManager
 	
 	/**
 	 * 
-	 * @param array $params [eventId, badgeCellId]
+	 * @param array $params [eventId, badgeCellId, id]
 	 */
 	public function moveCellContentDown($params) {
 		$this->checkBadgeCellTextContentPermission(ArrayUtil::keyIntersect($params, array('eventId', 'badgeCellId')));

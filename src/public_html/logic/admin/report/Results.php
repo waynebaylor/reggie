@@ -12,7 +12,10 @@ class logic_admin_report_Results extends logic_Performer
 		$searchTerm = isset($params['term'])? $params['term'] : '';
 		$searchFieldId = isset($params['contactFieldId'])? $params['contactFieldId'] : 0;
 		
-		$report = db_ReportManager::getInstance()->findReport(array('eventId' => $eventId, 'id' => $reportId));
+		$report = db_ReportManager::getInstance()->findReport(array(
+			'eventId' => $eventId, 
+			'id' => $reportId
+		));
 		
 		$info = $this->getBaseInfo($report, $searchTerm, $searchFieldId);
 		$info['event'] = db_EventManager::getInstance()->find($info['eventId']);
@@ -47,13 +50,22 @@ class logic_admin_report_Results extends logic_Performer
 	}
 	
 	private function getBaseInfo($report, $searchTerm, $searchFieldId) {
-		$fieldHeadings = db_ReportManager::getInstance()->findReportFieldHeadings($report['id']);
+		$fieldHeadings = db_ReportManager::getInstance()->findReportFieldHeadings(array('reportId' => $report['id']));
 		
-		$fieldValues = db_ReportManager::getInstance()->findReportFieldValues($report['id']); 
-		$registrationValues = db_ReportManager::getInstance()->findReportRegistrationValues($report['id']); 
-		$paymentValues = db_ReportManager::getInstance()->findReportPaymentValues($report['id']); 
+		$fieldValues = db_ReportManager::getInstance()->findReportFieldValues(array(
+			'eventId' => $report['eventId'],
+			'reportId' => $report['id']
+		)); 
+		
+		$registrationValues = db_ReportManager::getInstance()->findReportRegistrationValues(array('reportId' => $report['id'])); 
+		
+		$paymentValues = db_ReportManager::getInstance()->findReportPaymentValues(array(
+			'eventId' => $report['eventId'],
+			'reportId' => $report['id']
+		)); 
 		
 		$headings = $this->getHeadings($report, $fieldHeadings); 
+		
 		$values = $this->getValues(array(
 			'report' => $report,
 			'registrationValues' => $registrationValues,

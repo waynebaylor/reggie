@@ -36,6 +36,8 @@ class action_admin_report_GenerateReport extends action_ValidatorAction
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $params['eventId']);
 		
+		$params['user'] = $user;
+		
 		$info = $this->logic->csv($params);
 		return $this->converter->getCsv($info);
 	}

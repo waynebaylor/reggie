@@ -7,7 +7,7 @@ class logic_admin_report_OptionCountHelper
 		
 		$info['headings'] = array('Option Code', 'Option Name', 'Price Name', 'Option Price', 'Count', 'Expected Revenue');
 		
-		$values = db_ReportManager::getInstance()->findOptionCounts($report['eventId']);
+		$values = db_ReportManager::getInstance()->findOptionCounts($report);
 		foreach($values as $value) {
 			$newRows[] = array(
 				'data' => array(

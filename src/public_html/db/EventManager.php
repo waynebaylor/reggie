@@ -22,7 +22,7 @@ class db_EventManager extends db_Manager
 		$obj['emailTemplates'] = db_EmailTemplateManager::getInstance()->findByEvent($obj);
 		$obj['groupRegistration'] = db_GroupRegistrationManager::getInstance()->findByEvent($obj);
 		
-		$obj['reports'] = db_ReportManager::getInstance()->findByEvent($obj);
+		$obj['reports'] = db_ReportManager::getInstance()->findByEvent(array('eventId' => $obj['id']));
 		
 		$obj['paymentTypes'] = db_payment_PaymentTypeManager::getInstance()->findByEvent($obj);
 		
@@ -363,7 +363,7 @@ class db_EventManager extends db_Manager
 		
 		/////////////////////////////////////////////////////////////////////////////////
 		// delete reports.
-		db_ReportManager::getInstance()->deleteByEventId($eventId);
+		db_ReportManager::getInstance()->deleteByEventId(array('eventId' => $eventId));
 		
 		/////////////////////////////////////////////////////////////////////////////////
 		// delete badge templates

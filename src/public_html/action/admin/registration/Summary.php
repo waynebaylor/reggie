@@ -31,8 +31,7 @@ class action_admin_registration_Summary extends action_ValidatorAction
 	public function view() {
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0,
-			'regGroupId' => 0,
-			'reportId' => 0
+			'regGroupId' => 0
 		));
 		
 		$user = SessionUtil::getUser();

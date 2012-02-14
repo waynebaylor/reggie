@@ -24,7 +24,8 @@
 					'parameters' => array(
 						'a' => 'removeField',
 						'id' => 'date_registered',
-						'reportId' => $this->report['id']
+						'reportId' => $this->report['id'],
+						'eventId' => $this->report['eventId']
 					),
 					'class' => 'remove'
 				)) ?>
@@ -43,7 +44,8 @@
 					'parameters' => array(
 						'a' => 'removeField',
 						'id' => 'date_cancelled',
-						'reportId' => $this->report['id']
+						'reportId' => $this->report['id'],
+						'eventId' => $this->report['eventId']
 					),
 					'class' => 'remove'
 				)) ?>
@@ -62,7 +64,8 @@
 					'parameters' => array(
 						'a' => 'removeField',
 						'id' => 'category',
-						'reportId' => $this->report['id']
+						'reportId' => $this->report['id'],
+						'eventId' => $this->report['eventId']
 					),
 					'class' => 'remove'
 				)) ?>
@@ -81,7 +84,8 @@
 					'parameters' => array(
 						'a' => 'removeField',
 						'id' => 'registration_type',
-						'reportId' => $this->report['id']
+						'reportId' => $this->report['id'],
+						'eventId' => $this->report['eventId']
 					),
 					'class' => 'remove'
 				)) ?>
@@ -95,7 +99,8 @@
 				<?php echo $this->arrows(array(
 					'href' => '/admin/report/EditReport',
 					'parameters' => array(
-						'reportId' => $this->report['id']
+						'reportId' => $this->report['id'],
+						'eventId' => $this->report['eventId']
 					),
 					'up' => array(
 						'a' => 'moveFieldUp',
@@ -116,7 +121,9 @@
 					'href' => '/admin/report/EditReport',
 					'parameters' => array(
 						'a' => 'removeField',
-						'id' => $field['id']
+						'id' => $field['id'],
+						'reportId' => $this->report['id'],
+						'eventId' => $this->report['eventId']
 					),
 					'class' => 'remove'
 				)) ?>
@@ -135,7 +142,8 @@
 					'parameters' => array(
 						'a' => 'removeField',
 						'id' => 'total_cost',
-						'reportId' => $this->report['id']
+						'reportId' => $this->report['id'],
+						'eventId' => $this->report['eventId']
 					),
 					'class' => 'remove'
 				)) ?>
@@ -154,7 +162,8 @@
 					'parameters' => array(
 						'a' => 'removeField',
 						'id' => 'total_paid',
-						'reportId' => $this->report['id']
+						'reportId' => $this->report['id'],
+						'eventId' => $this->report['eventId']
 					),
 					'class' => 'remove'
 				)) ?>
@@ -173,7 +182,8 @@
 					'parameters' => array(
 						'a' => 'removeField',
 						'id' => 'remaining_balance',
-						'reportId' => $this->report['id']
+						'reportId' => $this->report['id'],
+						'eventId' => $this->report['eventId']
 					),
 					'class' => 'remove'
 				)) ?>

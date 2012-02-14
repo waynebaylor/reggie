@@ -14,7 +14,7 @@ class logic_admin_report_AllRegToDateHelper
 			array('Option Code', 'Date Option Added', 'Date Option Cancelled', 'Quantity Last Modified', 'Option Name', 'Price Name', 'Option Price', 'Quantity')
 		);
 	
-		$values = db_ReportManager::getInstance()->findAllRegToDateValues($report['eventId']);
+		$values = db_ReportManager::getInstance()->findAllRegToDateValues(array('eventId' => $report['eventId']));
 		foreach($values as $value) {
 			// skip reg ids not in search resuluts.
 			if(isset($info['registrationIds']) && !in_array($value['regId'], $info['registrationIds'])) {

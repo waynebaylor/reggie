@@ -8,7 +8,7 @@ class logic_admin_report_RegTypeBreakdownHelper
 		
 		$info['headings'] = array('Registration Type ID', 'Registration Type Name', 'Count');
 		
-		$values = db_ReportManager::getInstance()->findRegTypeBreakdown($report['eventId']);
+		$values = db_ReportManager::getInstance()->findRegTypeBreakdown($report);
 		foreach($values as $value) {
 			$newRows[] = array(
 				'data' => array($value['regTypeId'], $value['regTypeName'], $value['regTypeCount'])

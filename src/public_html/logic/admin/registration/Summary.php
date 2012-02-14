@@ -7,41 +7,22 @@ class logic_admin_registration_Summary extends logic_Performer
 	}
 	
 	public function view($params) {
-		$group = $this->strictFindById(db_reg_GroupManager::getInstance(), $params['regGroupId']);
-		$reportId = $params['reportId'];
+		$group = db_reg_GroupManager::getInstance()->find($params['regGroupId']);
 		
-		$r = reset($group['registrations']);
-		$event = $this->strictFindById(db_EventManager::getInstance(), $r['eventId']);
-		
-		if(empty($reportId)) {
-			$report = reset($event['reports']); 
-		}
-		else {
-			$report = db_ReportManager::getInstance()->find($reportId);
-		}
+		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
 			'actionMenuEventLabel' => $event['code'],
 			'eventId' => $event['id'],
 			'event' => $event,
-			'report' => $report,
 			'group' => $group,
 			'showDetailsLink' => $this->getShowDetailsLink($params['user'], $params['eventId'])
 		);
 	}
 	
 	private function getShowDetailsLink($user, $eventId) {
-		$showDetailsLink = model_Role::userHasRole($user, array(
-			model_Role::$SYSTEM_ADMIN, 
-			model_Role::$EVENT_ADMIN
-		));
-		
-		$showDetailsLink = $showDetailsLink || model_Role::userHasRoleForEvent($user, array(
-			model_Role::$EVENT_MANAGER,
-			model_Role::$EVENT_REGISTRAR
-		), $eventId);
-		
-		return $showDetailsLink;
+		$a = new action_admin_registration_Registration();
+		return $a->hasRole($user, $eventId);
 	}
 }
 

@@ -12,7 +12,10 @@ class logic_admin_report_GenerateReport extends logic_Performer
 		
 		$eventInfo = db_EventManager::getInstance()->findInfoById($eventId);
 		
-		$report = db_ReportManager::getInstance()->findReport(array('eventId' => $eventId, 'id' => $reportId));
+		$report = db_ReportManager::getInstance()->findReport(array(
+			'eventId' => $eventId, 
+			'id' => $reportId
+		));
 		
 		return array( 
 			'actionMenuEventLabel' => $eventInfo['code'],
