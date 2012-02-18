@@ -22,6 +22,11 @@ abstract class db_OrderableManager extends db_Manager
 		return max(1, $maxOrder+1);
 	}
 	
+	/**
+	 * 
+	 * @param array $obj1 [id, displayOrder]
+	 * @param array $obj2 [id, displayOrder]
+	 */
 	public function swapOrder($obj1, $obj2) {
 		// set obj1 order to -1.
 		$sql = "
@@ -65,6 +70,10 @@ abstract class db_OrderableManager extends db_Manager
 		$this->execute($sql, $params, 'Swapping display order.');
 	}
 	
+	/**
+	 * 
+	 * @param array $obj [id, displayOrder, <restrictField>]
+	 */
 	public function moveUp($obj, $restrictField, $restrictValue) {
 		$sql = "
 			SELECT
@@ -94,6 +103,10 @@ abstract class db_OrderableManager extends db_Manager
 		}
 	}
 	
+	/**
+	 * 
+	 * @param array $obj [id, displayOrder, <restrictField>]
+	 */
 	public function moveDown($obj, $restrictField, $restrictValue) {
 		$sql = "
 			SELECT

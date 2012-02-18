@@ -51,7 +51,11 @@ class db_EventTemplate extends db_Manager
 	}
 	
 	private function createRegTypeTemplatePage($eventId, $categoryIds) {
-		$pageId = db_PageManager::getInstance()->createPage($eventId, 'Registration Type', $categoryIds);
+		$pageId = db_PageManager::getInstance()->createPage(array(
+			'eventId' => $eventId, 
+			'title' => 'Registration Type', 
+			'categoryIds' => $categoryIds
+		));
 		
 		$textSectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'reg type text', model_ContentType::$TEXT);
 		db_PageSectionManager::getInstance()->save(array(
@@ -69,7 +73,11 @@ class db_EventTemplate extends db_Manager
 	}
 
 	private function createContactInfoTemplatePage($eventId, $categoryIds) {
-		$pageId = db_PageManager::getInstance()->createPage($eventId, 'Contact Information', $categoryIds);
+		$pageId = db_PageManager::getInstance()->createPage(array(
+			'eventId' => $eventId, 
+			'title' => 'Contact Information', 
+			'categoryIds' => $categoryIds
+		));
 		
 		$contactInfoSectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'contact info', model_ContentType::$CONTACT_FIELD);
 		
@@ -118,7 +126,11 @@ class db_EventTemplate extends db_Manager
 	}
 
 	private function createConferenceRegTemplatePage($eventId, $categoryIds) {
-		$pageId = db_PageManager::getInstance()->createPage($eventId, 'Conference Registration', $categoryIds);
+		$pageId = db_PageManager::getInstance()->createPage(array(
+			'eventId' => $eventId, 
+			'title' => 'Conference Registration', 
+			'categoryIds' => $categoryIds
+		));
 		
 		$sectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'reg options', model_ContentType::$REG_OPTION);
 		
@@ -176,7 +188,11 @@ class db_EventTemplate extends db_Manager
 	}
 
 	private function createSpecialEventsTemplatePage($eventId, $categoryIds) {
-		$pageId = db_PageManager::getInstance()->createPage($eventId, 'Special Events', $categoryIds);
+		$pageId = db_PageManager::getInstance()->createPage(array(
+			'eventId' => $eventId, 
+			'title' => 'Special Events', 
+			'categoryIds' => $categoryIds
+		));
 		
 		$sectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'special', model_ContentType::$VAR_QUANTITY_OPTION);
 		
@@ -200,7 +216,11 @@ class db_EventTemplate extends db_Manager
 	}
 
 	private function createSurveyTemplatePage($eventId, $categoryIds) {
-		$pageId = db_PageManager::getInstance()->createPage($eventId, 'Survey', $categoryIds);
+		$pageId = db_PageManager::getInstance()->createPage(array(
+			'eventId' => $eventId, 
+			'title' => 'Survey', 
+			'categoryIds' => $categoryIds
+		));
 
 		$sectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'survey questions', model_ContentType::$CONTACT_FIELD);
 		db_PageSectionManager::getInstance()->save(array(

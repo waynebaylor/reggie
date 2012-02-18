@@ -15,7 +15,7 @@ class db_EventManager extends db_Manager
 		$obj['regOpen'] = substr($obj['regOpen'], 0, -3);
 		$obj['regClosed'] = substr($obj['regClosed'], 0, -3);
 	
-		$obj['pages'] = db_PageManager::getInstance()->findByEvent($obj);
+		$obj['pages'] = db_PageManager::getInstance()->findByEvent(array('eventId' => $obj['id']));
 		$obj['regTypes'] = db_RegTypeManager::getInstance()->findByEvent($obj);
 		
 		$obj['appearance'] = db_AppearanceManager::getInstance()->findByEvent($obj);
@@ -398,7 +398,7 @@ class db_EventManager extends db_Manager
 		
 		/////////////////////////////////////////////////////////////////////////////////
 		// delete event pages.
-		db_PageManager::getInstance()->deleteByEventId($eventId);
+		db_PageManager::getInstance()->deleteByEventId(array('eventId' => $eventId));
 		
 		///////////////////////////////////////////////////////////////////////////////
 		// delete static pages.

@@ -53,7 +53,8 @@
 					'href' => '/admin/event/EditEvent',
 					'parameters' => array(
 						'action' => 'removePage',
-						'id' => $page['id']
+						'id' => $page['id'],
+						'eventId' => $this->event['id']
 					),
 					'class' => 'remove'
 				)) ?>

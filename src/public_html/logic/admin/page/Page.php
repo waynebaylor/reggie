@@ -7,7 +7,7 @@ class logic_admin_page_Page extends logic_Performer
 	}
 	
 	public function view($params) {
-		$page = $this->strictFindById(db_PageManager::getInstance(), $params['id']);
+		$page = db_PageManager::getInstance()->find($params);
 		$event = $this->strictFindById(db_EventManager::getInstance(), $params['eventId']);
 		
 		return array(
@@ -23,14 +23,9 @@ class logic_admin_page_Page extends logic_Performer
 	}
 	
 	public function savePage($params) {
-		$page = $this->strictFindById(db_PageManager::getInstance(), $params['id']);
+		db_PageManager::getInstance()->savePage($params);
 		
-		$page['title'] = $params['title'];
-		$categoryIds = $params['categoryIds'];
-		
-		db_PageManager::getInstance()->savePage($page, $categoryIds);
-		
-		return array();
+		return $params;
 	}
 }
 

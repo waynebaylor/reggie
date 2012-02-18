@@ -32,7 +32,10 @@ class logic_admin_section_Section extends logic_Performer
 	public function addSection($params) {
 		db_PageSectionManager::getInstance()->createSection($params['eventId'], $params['pageId'], $params['name'], $params['contentTypeId']);
 	
-		$page = db_PageManager::getInstance()->find($params['pageId']);
+		$page = db_PageManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['pageId']
+		));
 		
 		return array(
 			'eventId' => $params['eventId'],
@@ -45,7 +48,10 @@ class logic_admin_section_Section extends logic_Performer
 
 		db_PageSectionManager::getInstance()->delete($section);
 
-		$page = db_PageManager::getInstance()->find($section['pageId']);
+		$page = db_PageManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $section['pageId']
+		));
 
 		return array(
 			'eventId' => $params['eventId'],
@@ -58,7 +64,10 @@ class logic_admin_section_Section extends logic_Performer
 
 		db_PageSectionManager::getInstance()->moveSectionUp($section);
 
-		$page = db_PageManager::getInstance()->find($section['pageId']);
+		$page = db_PageManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $section['pageId']
+		));
 
 		return array(
 			'eventId' => $params['eventId'],
@@ -71,7 +80,10 @@ class logic_admin_section_Section extends logic_Performer
 
 		db_PageSectionManager::getInstance()->moveSectionDown($section);
 
-		$page = db_PageManager::getInstance()->find($section['pageId']);
+		$page = db_PageManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $section['pageId']
+		));
 
 		return array(
 			'eventId' => $params['eventId'],

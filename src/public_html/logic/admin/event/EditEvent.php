@@ -30,7 +30,7 @@ class logic_admin_event_EditEvent extends logic_Performer
 	}
 	
 	public function addPage($params) {
-		db_PageManager::getInstance()->createPage($params['eventId'], $page['title'], $params['categoryIds']);
+		db_PageManager::getInstance()->createPage($params);
 
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
@@ -41,7 +41,7 @@ class logic_admin_event_EditEvent extends logic_Performer
 	}
 	
 	public function removePage($params) {
-		$page = $this->strictFindById(db_PageManager::getInstance(), $params['pageId']);
+		$page = db_PageManager::getInstance()->find($params);
 
 		db_PageManager::getInstance()->deletePage($page);
 		
@@ -54,9 +54,7 @@ class logic_admin_event_EditEvent extends logic_Performer
 	}
 	
 	public function movePageUp($params) {
-		$page = $this->strictFindById(db_PageManager::getInstance(), $params['pageId']);
-
-		db_PageManager::getInstance()->movePageUp($page);
+		db_PageManager::getInstance()->movePageUp($params);
 		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
@@ -66,10 +64,8 @@ class logic_admin_event_EditEvent extends logic_Performer
 		);
 	}
 	
-	public function movePageDown($pageId) {
-		$page = $this->strictFindById(db_PageManager::getInstance(), $params['pageId']);
-
-		db_PageManager::getInstance()->movePageDown($page);
+	public function movePageDown($params) {
+		db_PageManager::getInstance()->movePageDown($params);
 		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		

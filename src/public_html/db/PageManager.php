@@ -29,7 +29,11 @@ class db_PageManager extends db_OrderableManager
 		return self::$instance;
 	}
 	
-	public function find($id) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function find($params) {
 		$sql = '
 			SELECT 
 				id,
@@ -39,21 +43,53 @@ class db_PageManager extends db_OrderableManager
 			FROM
 				Page
 			WHERE
-				id=:id
+				id = :id
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $id
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->queryUnique($sql, $params, 'Find page.');
 	}
 	
-	public function findByEvent($event) {
-		return $this->findByEventId($event['id']);
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function findPageInfo($params) {
+		$sql = '
+			SELECT
+				id,
+				eventId,
+				title,
+				displayOrder
+			FROM
+				Page
+			WHERE
+				id = :id
+			AND
+				eventId = :eventId
+		';
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
+		
+		return $this->rawQueryUnique($sql, $params, 'Find raw page.');
 	}
 	
-	public function findByEventId($eventId) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function findByEvent($params) {
+		return $this->findByEventId($params);
+	}
+	
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function findByEventId($params) {
 		$sql = '
 			SELECT 
 				id,
@@ -68,14 +104,16 @@ class db_PageManager extends db_OrderableManager
 				displayOrder
 		';
 		
-		$params = array(
-			'eventId' => $eventId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId'));
 		
 		return $this->query($sql, $params, 'Find pages by event.');
 	}
 	
-	public function createPage($eventId, $title, $categories) {
+	/**
+	 * 
+	 * @param array $params [eventId, title, categoryIds]
+	 */	
+	public function createPage($params) {
 		// create the Page row.
 		$sql = '
 			INSERT INTO
@@ -91,60 +129,68 @@ class db_PageManager extends db_OrderableManager
 			)
 		';
 
-		$params = array(
-			'eventId' => $eventId,
-			'title' => $title,
+		$p = array(
+			'eventId' => $params['eventId'],
+			'title' => $params['title'],
 			'displayOrder' => $this->getNextOrder()
 		);
 		
-		$this->execute($sql, $params, 'Create page.');
+		$this->execute($sql, $p, 'Create page.');
 		
 		$pageId = $this->lastInsertId();
 		
 		// create the mapping rows.
-		$this->makePageAvailableTo($pageId, $categories);
+		$this->makePageAvailableTo(array(
+			'eventId' => $params['eventId'],
+			'pageId' => $pageId, 
+			'categoryIds' => $params['categoryIds']
+		));
 		
 		return $pageId;
 	}
 	
-	public function savePage($page, $categoryIds) {
+	/**
+	 * 
+	 * @param array $params [eventId, id, title, categoryIds]
+	 */
+	public function savePage($params) {
 		$sql = '
 			UPDATE 
 				Page
 			SET
-				title=:title
+				title = :title
 			WHERE
-				id=:id
+				id = :id
+			AND
+				eventId = :eventId
 		';
 
-		$params = array(
-			'title' => $page['title'],
-			'id' => $page['id']
-		);
+		$p = ArrayUtil::keyIntersect($params, array('eventId', 'id', 'title'));
 		
-		$this->execute($sql, $params, 'Save page.');
+		$this->execute($sql, $p, 'Save page.');
 		
 		// update category mappings.
-		$this->makePageAvailableTo($page['id'], $categoryIds);
+		$this->makePageAvailableTo(array(
+			'eventId' => $params['eventId'],
+			'pageId' => $params['id'], 
+			'categoryIds' => $params['categoryIds']
+		));
 	}
 	
-	public function deletePage($page) {
+	/**
+	 * 
+	 * @param array $params [eventId, id, sections]
+	 */
+	public function deletePage($params) {
 		// delete category page associations.
-		$sql = '
-			DELETE FROM
-				Category_Page
-			WHERE
-				pageId = :pageId
-		';
+		$this->makePageAvailableTo(array(
+			'eventId' => $params['eventId'],
+			'pageId' => $params['id'], 
+			'categoryIds' => array()
+		));
 		
-		$params = array(
-			'pageId' => $page['id']
-		);
-		
-		$this->execute($sql, $params, 'Delete category page associations.');
-		
-		// delte sections.
-		foreach($page['sections'] as $section) {
+		// delete sections.
+		foreach($params['sections'] as $section) {
 			db_PageSectionManager::getInstance()->delete($section);
 		}
 		
@@ -153,38 +199,60 @@ class db_PageManager extends db_OrderableManager
 			DELETE FROM
 				Page
 			WHERE
-				id=:id
+				id = :id
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $page['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		$this->execute($sql, $params, 'Delete page.');
 	}
 	
-	public function movePageUp($page) {
-		$this->moveUp($page, 'eventId', $page['eventId']);
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function movePageUp($params) {
+		$pageInfo = $this->findPageInfo($params);
+		$this->moveUp($pageInfo, 'eventId', $params['eventId']);
 	}
 	
-	public function movePageDown($page) {
-		$this->moveDown($page, 'eventId', $page['eventId']);
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function movePageDown($params) {
+		$pageInfo = db_PageManager::getInstance()->find($params);
+		$this->moveDown($pageInfo, 'eventId', $params['eventId']);
 	}
 	
-	private function makePageAvailableTo($pageId, $categoryIds) {
+	/**
+	 * 
+	 * @param array $params [eventId, pageId, categoryIds]
+	 */
+	private function makePageAvailableTo($params) {
 		// remove existing mappings.
 		$sql = '
 			DELETE FROM
 				Category_Page
 			WHERE
-				pageId=:pageId
+				Category_Page.pageId = :pageId
+			AND
+				Category_Page.pageId 
+			IN (
+				SELECT Page.id
+				FROM Page
+				WHERE Page.eventId = :eventId
+			)
 		';
 		
-		$params = array(
-			'pageId' => $pageId
-		);
+		$p = ArrayUtil::keyIntersect($params, array('eventId', 'pageId'));
 		
-		$this->execute($sql, $params, 'Make page unavailable.');
+		$this->execute($sql, $p, 'Make page unavailable.');
+		
+		// check page permission before inserting category page rows.
+		$this->checkPagePermission($params);
 		
 		// add new mappings.
 		$sql = '
@@ -199,21 +267,45 @@ class db_PageManager extends db_OrderableManager
 			)
 		';
 		
-		foreach($categoryIds as $categoryId) {
-			$params = array(
+		foreach($params['categoryIds'] as $categoryId) {
+			$p = array(
 				'categoryId' => $categoryId,
-				'pageId' => $pageId
+				'pageId' => $params['pageId']
 			);
 			
-			$this->execute($sql, $params, 'Make page available to category.');
+			$this->execute($sql, $p, 'Make page available to category.');
 		}
 	}
 	
-	public function deleteByEventId($eventId) {
-		$pages = $this->findByEventId($eventId);
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function deleteByEventId($params) {
+		$pages = $this->findByEventId($params);
 		
 		foreach($pages as $page) {
 			db_PageManager::getInstance()->deletePage($page);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param array $params [pageId]
+	 */
+	private function checkPagePermission($params) {
+		$results = $this->rawSelect(
+			'Page', 
+			array(
+				'eventId', 
+				'id'), 
+			array(
+				'eventId' => $params['eventId']
+			)
+		);
+		
+		if(count($results) === 0) {
+			throw new Exception("Permission denied to page. (event id, page id) -> ({$params['eventId']}, {$params['pageId']}).");
 		}
 	}
 }
