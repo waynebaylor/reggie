@@ -57,15 +57,27 @@ class db_EventTemplate extends db_Manager
 			'categoryIds' => $categoryIds
 		));
 		
-		$textSectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'reg type text', model_ContentType::$TEXT);
+		$textSectionId = db_PageSectionManager::getInstance()->createSection(array(
+			'eventId' => $eventId, 
+			'pageId' => $pageId, 
+			'name' => 'reg type text', 
+			'contentTypeId' => model_ContentType::$TEXT
+		));
+		
 		db_PageSectionManager::getInstance()->save(array(
+			'eventId' => $eventId,
 			'id' => $textSectionId,
 			'name' => 'reg type text',
 			'text' => 'Plese choose a registration type below.',
 			'numbered' => 'F'
 		));
 		
-		$regTypeSectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'reg types', model_ContentType::$REG_TYPE);
+		$regTypeSectionId = db_PageSectionManager::getInstance()->createSection(array(
+			'eventId' => $eventId, 
+			'pageId' => $pageId, 
+			'name' => 'reg types', 
+			'contentTypeId' => model_ContentType::$REG_TYPE
+		));
 		
 		db_RegTypeManager::getInstance()->createRegType($eventId, $regTypeSectionId, 'Member', 'M', $categoryIds);
 		
@@ -79,7 +91,12 @@ class db_EventTemplate extends db_Manager
 			'categoryIds' => $categoryIds
 		));
 		
-		$contactInfoSectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'contact info', model_ContentType::$CONTACT_FIELD);
+		$contactInfoSectionId = db_PageSectionManager::getInstance()->createSection(array(
+			'eventId' => $eventId, 
+			'pageId' => $pageId, 
+			'name' => 'contact info', 
+			'contentTypeId' => model_ContentType::$CONTACT_FIELD
+		));
 		
 		db_ContactFieldManager::getInstance()->createContactField(array(
 			'eventId' => $eventId,
@@ -132,7 +149,12 @@ class db_EventTemplate extends db_Manager
 			'categoryIds' => $categoryIds
 		));
 		
-		$sectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'reg options', model_ContentType::$REG_OPTION);
+		$sectionId = db_PageSectionManager::getInstance()->createSection(array(
+			'eventId' => $eventId, 
+			'pageId' => $pageId, 
+			'name' => 'reg options', 
+			'contentTypeId' => model_ContentType::$REG_OPTION
+		));
 		
 		// option group.
 		$optGroupId = db_GroupManager::getInstance()->createGroupUnderSection(array(
@@ -194,7 +216,12 @@ class db_EventTemplate extends db_Manager
 			'categoryIds' => $categoryIds
 		));
 		
-		$sectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'special', model_ContentType::$VAR_QUANTITY_OPTION);
+		$sectionId = db_PageSectionManager::getInstance()->createSection(array(
+			'eventId' => $eventId, 
+			'pageId' => $pageId, 
+			'name' => 'special', 
+			'contentTypeId' => model_ContentType::$VAR_QUANTITY_OPTION
+		));
 		
 		$varOptId = db_VariableQuantityOptionManager::getInstance()->createOption(array(
 			'eventId' => $eventId,
@@ -222,8 +249,15 @@ class db_EventTemplate extends db_Manager
 			'categoryIds' => $categoryIds
 		));
 
-		$sectionId = db_PageSectionManager::getInstance()->createSection($eventId, $pageId, 'survey questions', model_ContentType::$CONTACT_FIELD);
+		$sectionId = db_PageSectionManager::getInstance()->createSection(array(
+			'eventId' => $eventId, 
+			'pageId' => $pageId, 
+			'name' => 'survey questions',
+			'contentTypeId' => model_ContentType::$CONTACT_FIELD
+		));
+		
 		db_PageSectionManager::getInstance()->save(array(
+			'eventId' => $eventId,
 			'id' => $sectionId,
 			'name' => 'survey questions',
 			'text' => '',

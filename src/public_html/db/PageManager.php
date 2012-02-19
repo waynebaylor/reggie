@@ -16,7 +16,10 @@ class db_PageManager extends db_OrderableManager
 		parent::populate($obj, $arr);
 				
 		$obj['visibleTo'] = db_CategoryManager::getInstance()->findByPage($obj);
-		$obj['sections'] = db_PageSectionManager::getInstance()->findByPage($obj);
+		$obj['sections'] = db_PageSectionManager::getInstance()->findByPage(array(
+			'eventId' => $obj['eventId'],
+			'pageId' => $obj['id']
+		));
 		
 		return $obj;
 	}
@@ -223,7 +226,7 @@ class db_PageManager extends db_OrderableManager
 	 * @param array $params [eventId, id]
 	 */
 	public function movePageDown($params) {
-		$pageInfo = db_PageManager::getInstance()->find($params);
+		$pageInfo = $this->findPageInfo($params);
 		$this->moveDown($pageInfo, 'eventId', $params['eventId']);
 	}
 	

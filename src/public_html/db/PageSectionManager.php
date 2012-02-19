@@ -40,7 +40,11 @@ class db_PageSectionManager extends db_OrderableManager
 		return self::$instance;
 	}
 	
-	public function find($id) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function find($params) {
 		$sql = '
 			SELECT
 				Section.id,
@@ -57,19 +61,23 @@ class db_PageSectionManager extends db_OrderableManager
 			INNER JOIN
 				ContentType
 			ON
-				Section.contentTypeId=ContentType.id
+				Section.contentTypeId = ContentType.id
 			WHERE
-				Section.id=:id
+				Section.id = :id
+			AND
+				Section.eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $id
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->queryUnique($sql, $params, 'Find page section.');
 	}
 	
-	public function findByPage($page) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function findSectionInfo($params) {
 		$sql = '
 			SELECT
 				Section.id,
@@ -86,21 +94,58 @@ class db_PageSectionManager extends db_OrderableManager
 			INNER JOIN
 				ContentType
 			ON
-				Section.contentTypeId=ContentType.id
+				Section.contentTypeId = ContentType.id
 			WHERE
-				pageId=:pageId
+				Section.id = :id
+			AND
+				Section.eventId = :eventId
+		';
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
+		
+		return $this->rawQueryUnique($sql, $params, 'Find page section info.');
+	}
+	
+	/**
+	 * 
+	 * @param array $params [eventId, pageId]
+	 */
+	public function findByPage($params) {
+		$sql = '
+			SELECT
+				Section.id,
+				Section.eventId,
+				Section.pageId,
+				Section.name,
+				Section.text,
+				Section.numbered,
+				ContentType.id as contentType_id,
+				ContentType.name as contentType_name,
+				Section.displayOrder
+			FROM
+				Section
+			INNER JOIN
+				ContentType
+			ON
+				Section.contentTypeId = ContentType.id
+			WHERE
+				pageId = :pageId
+			AND
+				Section.eventId = :eventId
 			ORDER BY
 				displayOrder
 		';
 		
-		$params = array(
-			'pageId' => $page['id']	
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'pageId'));
 		
 		return $this->query($sql, $params, 'Find page sections.');
 	}	
 	
-	public function createSection($eventId, $pageId, $name, $contentTypeId) {
+	/**
+	 * 
+	 * @param array $params [eventId, pageId, name, contentTypeId]
+	 */
+	public function createSection($params) {
 		$sql = '
 			INSERT INTO
 				Section(
@@ -119,20 +164,24 @@ class db_PageSectionManager extends db_OrderableManager
 			)
 		';	
 		
-		$params = array(
-			'eventId' => $eventId,
-			'pageId' => $pageId,
-			'name' => $name,
-			'contentTypeId' => $contentTypeId,
-			'displayOrder' => $this->getNextOrder()
-		);
+		$params = ArrayUtil::keyIntersect($params, array(
+			'eventId',
+			'pageId',
+			'name',
+			'contentTypeId'	
+		));
+		$params['displayOrder'] = $this->getNextOrder();
 		
 		$this->execute($sql, $params, 'Create page section.');
 		
 		return $this->lastInsertId();
 	}
 	
-	public function save($section) {
+	/**
+	 * 
+	 * @param array $params [eventId, id, name, text, numbered]
+	 */
+	public function save($params) {
 		$sql = '
 			UPDATE
 				Section
@@ -141,37 +190,52 @@ class db_PageSectionManager extends db_OrderableManager
 				text = :text,
 				numbered = :numbered
 			WHERE
-				id=:id				
+				id = :id
+			AND
+				eventId = :eventId				
 		';
 		
-		$params = array(
-			'id' => $section['id'],
-			'name' => $section['name'],
-			'text' => $section['text'],
-			'numbered' => $section['numbered']
-		);
+		$params = ArrayUtil::keyIntersect($params, array(
+			'eventId',
+			'id',
+			'name',
+			'text',
+			'numbered'
+		));
 		
 		$this->execute($sql, $params, 'Save page section.');
 	}
 	
-	public function delete($section) {
-		if(model_Section::containsContactFields($section)) {
-			foreach($section['content'] as $field) {
+	/**
+	 * 
+	 * @param array $params [eventId, id, contentType, content]
+	 */
+	public function delete($params) {
+		if(model_Section::containsContactFields($params)) {
+			foreach($params['content'] as $field) {
+				// overwrite eventId to ensure security checks are consistent.
+				$field['eventId'] = $params['eventId'];  
 				db_ContactFieldManager::getInstance()->delete($field);
 			}
 		}
-		else if(model_Section::containsRegOptions($section)) {
-			foreach($section['content'] as $optGroup) {
+		else if(model_Section::containsRegOptions($params)) {
+			foreach($params['content'] as $optGroup) {
+				// overwrite eventId to ensure security checks are consistent.
+				$optGroup['eventId'] = $params['eventId'];
 				db_GroupManager::getInstance()->delete($optGroup);
 			}
 		}
-		else if(model_Section::containsRegTypes($section)) {
-			foreach($section['content'] as $regType) {
+		else if(model_Section::containsRegTypes($params)) {
+			foreach($params['content'] as $regType) {
+				// overwrite eventId to ensure security checks are consistent.
+				$regType['eventId'] = $params['eventId'];
 				db_RegTypeManager::getInstance()->delete($regType);
 			}
 		}
-		else if(model_Section::containsVariableQuantityOptions($section)) {
-			foreach($section['content'] as $opt) {
+		else if(model_Section::containsVariableQuantityOptions($params)) {
+			foreach($params['content'] as $opt) {
+				// overwrite eventId to ensure security checks are consistent.
+				$opt['eventId'] = $params['eventId'];
 				db_VariableQuantityOptionManager::getInstance()->delete($opt);
 			}
 		}
@@ -181,22 +245,32 @@ class db_PageSectionManager extends db_OrderableManager
 			DELETE FROM
 				Section
 			WHERE
-				id=:id
+				id = :id
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $section['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		$this->execute($sql, $params, 'Delete page section.');
 	}
 	
-	public function moveSectionUp($section) {
-		$this->moveUp($section, 'pageId', $section['pageId']);
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function moveSectionUp($params) {
+		$sectionInfo = $this->findSectionInfo($params);
+		$this->moveUp($sectionInfo, 'pageId', $sectionInfo['pageId']);
 	}
 	
-	public function moveSectionDown($section) {
-		$this->moveDown($section, 'pageId', $section['pageId']);
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function moveSectionDown($params) {
+		$sectionInfo = $this->findSectionInfo($params);
+		$this->moveDown($sectionInfo, 'pageId', $sectionInfo['pageId']);
 	}
 }
 

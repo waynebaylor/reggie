@@ -20,7 +20,10 @@ class logic_admin_regOption_VariableQuantity extends logic_Performer
 	}
 	
 	public function addOption($params) {
-		$section = $this->strictFindById(db_PageSectionManager::getInstance(), $params['sectionId']);
+		$section = db_PageSectionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['sectionId']
+		));
 		
 		$newVarOptId = db_VariableQuantityOptionManager::getInstance()->createOption($params);
 		
@@ -38,7 +41,11 @@ class logic_admin_regOption_VariableQuantity extends logic_Performer
 		));
 		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($section['id']);
+		
+		$section = db_PageSectionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $section['id']
+		));
 
 		return array(
 			'eventId' => $params['eventId'],
@@ -53,7 +60,11 @@ class logic_admin_regOption_VariableQuantity extends logic_Performer
 		db_VariableQuantityOptionManager::getInstance()->delete($option);
 		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($option['sectionId']);
+		
+		$section = db_PageSectionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $option['sectionId']
+		));
 
 		return array(
 			'eventId' => $params['eventId'],
@@ -74,7 +85,11 @@ class logic_admin_regOption_VariableQuantity extends logic_Performer
 		db_VariableQuantityOptionManager::getInstance()->moveOptionUp($option);
 		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($option['sectionId']);
+		
+		$section = db_PageSectionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $option['sectionId']
+		));
 
 		return array(
 			'eventId' => $params['eventId'],
@@ -89,7 +104,11 @@ class logic_admin_regOption_VariableQuantity extends logic_Performer
 		db_VariableQuantityOptionManager::getInstance()->moveOptionDown($option);
 		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($option['sectionId']);
+		
+		$section = db_PageSectionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $option['sectionId']
+		));
 
 		return array(
 			'eventId' => $params['eventId'],

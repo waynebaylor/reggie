@@ -31,7 +31,11 @@ class logic_admin_regOption_SectionRegOptionGroup extends logic_Performer
 	public function addGroup($params) {
 		db_GroupManager::getInstance()->createGroupUnderSection($params);
 		
-		$section = db_PageSectionManager::getInstance()->find($params['sectionId']);
+		$section = db_PageSectionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['sectionId']
+		));
+		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
@@ -46,7 +50,11 @@ class logic_admin_regOption_SectionRegOptionGroup extends logic_Performer
 		
 		db_GroupManager::getInstance()->deleteById($group['id']);
 		
-		$section = db_PageSectionManager::getInstance()->find($group['sectionId']);
+		$section = db_PageSectionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $group['sectionId']
+		));
+		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
@@ -76,7 +84,11 @@ class logic_admin_regOption_SectionRegOptionGroup extends logic_Performer
 		
 		db_GroupManager::getInstance()->moveGroupDown($group);
 		
-		$section = db_PageSectionManager::getInstance()->find($group['sectionId']);
+		$section = db_PageSectionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $group['sectionId']
+		));
+		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(

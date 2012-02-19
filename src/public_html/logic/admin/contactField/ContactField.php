@@ -34,7 +34,10 @@ class logic_admin_contactField_ContactField extends logic_Performer
 		db_ContactFieldManager::getInstance()->createContactField($field);
 
 		$event = db_EventManager::getInstance()->find($params['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($params['sectionId']);
+		$section = db_PageSectionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['sectionId']
+		));
 		
 		return array(
 			'eventId' => $params['eventId'],
@@ -51,7 +54,10 @@ class logic_admin_contactField_ContactField extends logic_Performer
 		db_ContactFieldManager::getInstance()->delete($field);
 		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($sectionId);
+		$section = db_PageSectionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $sectionId
+		));
 		
 		return array(
 			'eventId' => $params['eventId'],
@@ -66,7 +72,10 @@ class logic_admin_contactField_ContactField extends logic_Performer
 		db_ContactFieldManager::getInstance()->moveFieldUp($field);
 		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($field['sectionId']);
+		$section = db_PageSectionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $field['sectionId']
+		));
 		
 		return array(
 			'eventId' => $params['eventId'],
@@ -81,7 +90,10 @@ class logic_admin_contactField_ContactField extends logic_Performer
 		db_ContactFieldManager::getInstance()->moveFieldDown($field);
 		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($field['sectionId']);
+		$section = db_PageSectionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $field['sectionId']
+		));
 		
 		return array(
 			'eventId' => $params['eventId'],

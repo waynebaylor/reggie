@@ -39,13 +39,17 @@ class logic_admin_regType_RegType extends logic_Performer
 	}
 	
 	public function addRegType($params) {
-		$section = $this->strictFindById(db_PageSectionManager::getInstance(), $params['sectionId']);
+		$section = db_PageSectionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['sectionId']
+		));
 
 		db_RegTypeManager::getInstance()->createRegType(
 			$params['eventId'], $section['id'], $params['description'], $params['code'], $params['categoryIds']);
 
 		$event = db_EventManager::getInstance()->find($params['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($section['id']);
+		
+		$section = db_PageSectionManager::getInstance()->find($section);
 		
 		return array(
 			'eventId' => $params['eventId'],
@@ -60,7 +64,11 @@ class logic_admin_regType_RegType extends logic_Performer
 		db_RegTypeManager::getInstance()->delete($regType);
 
 		$event = db_EventManager::getInstance()->find($params['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($regType['sectionId']);
+		
+		$section = db_PageSectionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $regType['sectionId']
+		));
 
 		return array(
 			'eventId' => $event['id'],
@@ -75,7 +83,11 @@ class logic_admin_regType_RegType extends logic_Performer
 		db_RegTypeManager::getInstance()->moveRegTypeUp($regType);
 
 		$event = db_EventManager::getInstance()->find($params['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($regType['sectionId']);
+		
+		$section = db_PageSectionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $regType['sectionId']
+		));
 
 		return array(
 			'eventId' => $event['id'],
@@ -90,7 +102,11 @@ class logic_admin_regType_RegType extends logic_Performer
 		db_RegTypeManager::getInstance()->moveRegTypeDown($regType);
 
 		$event = db_EventManager::getInstance()->find($params['eventId']);
-		$section = db_PageSectionManager::getInstance()->find($regType['sectionId']);
+		
+		$section = db_PageSectionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $regType['sectionId']
+		));
 
 		return array(
 			'eventId' => $event['id'],
