@@ -16,7 +16,11 @@ class db_RegOptionPriceManager extends db_Manager
 		$obj['endDate'] = substr($obj['endDate'], 0, -3);
 		
 		$obj['visibleToAll'] = $this->isVisibleToAllRegTypes($obj);     
-		$regTypes = db_RegTypeManager::getInstance()->findByPrice($obj);
+		$regTypes = db_RegTypeManager::getInstance()->findByPrice(array(
+			'eventId' => $obj['eventId'],
+			'priceId' => $obj['id'],
+			'visibleToAll' => $obj['visibleToAll']
+		));
 		$obj['visibleTo'] = $regTypes;
 		
 		return $obj;

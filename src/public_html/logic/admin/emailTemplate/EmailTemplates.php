@@ -13,7 +13,7 @@ class logic_admin_emailTemplate_EmailTemplates extends logic_Performer
 	}
 	
 	public function listTemplates($params) {
-		$templates = db_EmailTemplateManager::getInstance()->findByEventId($params['eventId']);
+		$templates = db_EmailTemplateManager::getInstance()->findByEventId($params);
 		
 		return array(
 			'eventId' => $params['eventId'],
@@ -22,10 +22,7 @@ class logic_admin_emailTemplate_EmailTemplates extends logic_Performer
 	}
 	
 	public function deleteTemplates($params) {
-		db_EmailTemplateManager::getInstance()->deleteTemplates(array(
-			'eventId' => $params['eventId'],
-			'emailTemplateIds' => $params['emailTemplateIds']
-		));
+		db_EmailTemplateManager::getInstance()->deleteTemplates($params);
 		
 		return array('eventId' => $params['eventId']);
 	}

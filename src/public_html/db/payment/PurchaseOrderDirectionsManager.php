@@ -16,7 +16,11 @@ class db_payment_PurchaseOrderDirectionsManager extends db_Manager
 		return self::$instance;
 	}
 	
-	public function find($id) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function find($params) {
 		$sql = '
 			SELECT
 				PurchaseOrderDirections.id as id,
@@ -31,17 +35,21 @@ class db_payment_PurchaseOrderDirectionsManager extends db_Manager
 			ON
 				PurchaseOrderDirections.paymentTypeId = PaymentType.id
 			WHERE
-				PurchaseOrderDirections.id=:id
+				PurchaseOrderDirections.id = :id
+			AND
+				PurchaseOrderDirections.eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $id
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->queryUnique($sql, $params, 'Find purchase order payment directions.');
 	}
 	
-	public function findByEvent($event) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function findByEvent($params) {
 		$sql = '
 			SELECT
 				PurchaseOrderDirections.id as id,
@@ -56,21 +64,23 @@ class db_payment_PurchaseOrderDirectionsManager extends db_Manager
 			ON
 				PurchaseOrderDirections.paymentTypeId = PaymentType.id	
 			WHERE
-				eventId=:eventId
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'eventId' => $event['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId'));
 		
 		return $this->queryUnique($sql, $params, 'Find event purchase order payment directions.');
 	}
 	
-	public function create($directions) {
+	/**
+	 * 
+	 * @param array $params [eventId, instructions]
+	 */
+	public function create($params) {
 		// directions cannot be updated once created. if changes need to be made
 		// then a new row must replace the existing row. that's why we delete 
 		// any existing rows before creating the new one.
-		$this->delete($directions);
+		$this->delete($params);
 		
 		$sql = '
 			INSERT INTO
@@ -84,31 +94,34 @@ class db_payment_PurchaseOrderDirectionsManager extends db_Manager
 			)
 		';
 		
-		$params = array(
-			'eventId' => $directions['eventId'],
-			'instructions' => $directions['instructions']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'instructions'));
 		
 		$this->execute($sql, $params, 'Create purchase order payment directions.');
 	}
 	
-	public function deleteByEventId($eventId) { 
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function deleteByEventId($params) { 
 		$sql = '
 			DELETE FROM
 				PurchaseOrderDirections
 			WHERE
-				eventId=:eventId
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'eventId' => $eventId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId'));
 		
 		$this->execute($sql, $params, 'Delete purchase order payment directions.');
 	}
 	
-	public function delete($directions) { 
-		$this->deleteByEventId($directions['eventId']);
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function delete($params) { 
+		$this->deleteByEventId($params);
 	}
 }
 

@@ -8,7 +8,11 @@ class logic_admin_emailTemplate_EditEmailTemplate extends logic_Performer
 	
 	public function view($params) {
 		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
-		$template = db_EmailTemplateManager::getInstance()->find($params['emailTemplateId']);
+		
+		$template = db_EmailTemplateManager::getInstance()->find(array(
+			'eventId' => $params['eventId'], 
+			'id' => $params['emailTemplateId']
+		));
 
 		$regTypeIds = array();
 		
@@ -31,10 +35,7 @@ class logic_admin_emailTemplate_EditEmailTemplate extends logic_Performer
 	}
 	
 	public function saveEmailTemplate($params) {
-		$regTypeIds = $params['regTypeIds'];
-		unset($params['regTypeIds']);
-		
-		db_EmailTemplateManager::getInstance()->save($params, $regTypeIds);
+		db_EmailTemplateManager::getInstance()->save($params);
 		
 		return array(
 			'eventId' => $params['eventId']
@@ -42,7 +43,7 @@ class logic_admin_emailTemplate_EditEmailTemplate extends logic_Performer
 	}
 	
 	public function sendTestEmail($params) {
-		$template = $this->strictFindById(db_EmailTemplateManager::getInstance(), $params['id']);
+		$template = db_EmailTemplateManager::getInstance()->find($params);
 
 		$text = $template['header'].'<div>[Registration Summary]</div>'.$template['footer'];
 

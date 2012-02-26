@@ -7,7 +7,7 @@ class logic_admin_regType_RegType extends logic_Performer
 	}
 	
 	public function view($params) {
-		$regType = $this->strictFindById(db_RegTypeManager::getInstance(), $params['id']);
+		$regType = db_RegTypeManager::getInstance()->find($params);
 		$event = $this->strictFindById(db_EventManager::getInstance(), $params['eventId']);
 		
 		$bc = db_BreadcrumbManager::getInstance()->findRegTypeCrumbs($params['id']);
@@ -27,29 +27,26 @@ class logic_admin_regType_RegType extends logic_Performer
 	}
 	
 	public function saveRegType($params) {
-		$regType = $this->strictFindById(db_RegTypeManager::getInstance(), $params['id']);
-		
-		$regType['description'] = $params['description'];
-		$regType['code'] = $params['code'];
-		$categoryIds = $params['categoryIds'];
-
-		db_RegTypeManager::getInstance()->save($regType, $categoryIds);
+		db_RegTypeManager::getInstance()->save($params);
 		
 		return $params;
 	}
 	
 	public function addRegType($params) {
+		db_RegTypeManager::getInstance()->createRegType(array(
+			'eventId' => $params['eventId'], 
+			'sectionId' => $params['sectionId'], 
+			'description' => $params['description'], 
+			'code' => $params['code'], 
+			'categoryIds' => $params['categoryIds']
+		));
+
+		$event = db_EventManager::getInstance()->find($params['eventId']);
+		
 		$section = db_PageSectionManager::getInstance()->find(array(
 			'eventId' => $params['eventId'],
 			'id' => $params['sectionId']
 		));
-
-		db_RegTypeManager::getInstance()->createRegType(
-			$params['eventId'], $section['id'], $params['description'], $params['code'], $params['categoryIds']);
-
-		$event = db_EventManager::getInstance()->find($params['eventId']);
-		
-		$section = db_PageSectionManager::getInstance()->find($section);
 		
 		return array(
 			'eventId' => $params['eventId'],
@@ -59,9 +56,12 @@ class logic_admin_regType_RegType extends logic_Performer
 	}
 	
 	public function removeRegType($params) {
-		$regType = $this->strictFindById(db_RegTypeManager::getInstance(), $params['id']);
+		$regType = db_RegTypeManager::getInstance()->find($params);
 
-		db_RegTypeManager::getInstance()->delete($regType);
+		db_RegTypeManager::getInstance()->delete(array(
+			'eventId' => $params['eventId'],
+			'regTypeId' => $regType['id']
+		));
 
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
@@ -78,7 +78,7 @@ class logic_admin_regType_RegType extends logic_Performer
 	}
 	
 	public function moveRegTypeUp($params) {
-		$regType = $this->strictFindById(db_RegTypeManager::getInstance(), $params['id']);
+		$regType = db_RegTypeManager::getInstance()->find($params);
 
 		db_RegTypeManager::getInstance()->moveRegTypeUp($regType);
 
@@ -97,7 +97,7 @@ class logic_admin_regType_RegType extends logic_Performer
 	}
 	
 	public function moveRegTypeDown($params) {
-		$regType = $this->strictFindById(db_RegTypeManager::getInstance(), $params['id']);
+		$regType = db_RegTypeManager::getInstance()->find($params);
 		
 		db_RegTypeManager::getInstance()->moveRegTypeDown($regType);
 

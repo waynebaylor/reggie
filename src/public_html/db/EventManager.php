@@ -16,11 +16,11 @@ class db_EventManager extends db_Manager
 		$obj['regClosed'] = substr($obj['regClosed'], 0, -3);
 	
 		$obj['pages'] = db_PageManager::getInstance()->findByEvent(array('eventId' => $obj['id']));
-		$obj['regTypes'] = db_RegTypeManager::getInstance()->findByEvent($obj);
+		$obj['regTypes'] = db_RegTypeManager::getInstance()->findByEvent(array('eventId' => $obj['id']));
 		
 		$obj['appearance'] = db_AppearanceManager::getInstance()->findByEvent($obj);
-		$obj['emailTemplates'] = db_EmailTemplateManager::getInstance()->findByEvent($obj);
-		$obj['groupRegistration'] = db_GroupRegistrationManager::getInstance()->findByEvent($obj);
+		$obj['emailTemplates'] = db_EmailTemplateManager::getInstance()->findByEvent(array('eventId' => $obj['id']));
+		$obj['groupRegistration'] = db_GroupRegistrationManager::getInstance()->findByEvent(array('eventId' => $obj['id']));
 		
 		$obj['reports'] = db_ReportManager::getInstance()->findByEvent(array('eventId' => $obj['id']));
 		
@@ -261,7 +261,7 @@ class db_EventManager extends db_Manager
 		));
 		 
 		// create the event's group registration information.
-		db_GroupRegistrationManager::getInstance()->createGroupRegistration($id);
+		db_GroupRegistrationManager::getInstance()->createGroupRegistration(array('eventId' => $id));
 		
 		// create defaults based on template.
 		db_EventTemplate::getInstance()->createDefaults($id);
@@ -390,11 +390,11 @@ class db_EventManager extends db_Manager
 		/////////////////////////////////////////////////////////////////////////////////
 		// delete appearance, email templates, payment options, group registration.
 		db_AppearanceManager::getInstance()->deleteByEventId(array('eventId' => $eventId));    
-		db_EmailTemplateManager::getInstance()->deleteByEventId($eventId);
-		db_payment_CheckDirectionsManager::getInstance()->deleteByEventId($eventId);   
-		db_payment_PurchaseOrderDirectionsManager::getInstance()->deleteByEventId($eventId);
-		db_payment_AuthorizeNetDirectionsManager::getInstance()->deleteByEventId($eventId);
-		db_GroupRegistrationManager::getInstance()->deleteByEventId($eventId);
+		db_EmailTemplateManager::getInstance()->deleteByEventId(array('eventId' => $eventId));
+		db_payment_CheckDirectionsManager::getInstance()->deleteByEventId(array('eventId' => $eventId));   
+		db_payment_PurchaseOrderDirectionsManager::getInstance()->deleteByEventId(array('eventId' => $eventId));
+		db_payment_AuthorizeNetDirectionsManager::getInstance()->deleteByEventId(array('eventId' => $eventId));
+		db_GroupRegistrationManager::getInstance()->deleteByEventId(array('eventId' => $eventId));
 		
 		/////////////////////////////////////////////////////////////////////////////////
 		// delete event pages.

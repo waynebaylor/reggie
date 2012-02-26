@@ -16,7 +16,11 @@ class db_payment_AuthorizeNetDirectionsManager extends db_Manager
 		return self::$instance;
 	}
 	
-	public function find($id) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function find($params) {
 		$sql = '
 			SELECT
 				AuthorizeNetDirections.id as id,
@@ -33,17 +37,21 @@ class db_payment_AuthorizeNetDirectionsManager extends db_Manager
 			ON
 				AuthorizeNetDirections.paymentTypeId = PaymentType.id
 			WHERE
-				id=:id
+				AuthorizeNetDirections.id = :id
+			AND
+				AuthorizeNetDirections.eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $id
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->queryUnique($sql, $params, 'Find Authorize.NET payment directions.');
 	}
 	
-	public function findByEvent($event) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function findByEvent($params) {
 		$sql = '
 			SELECT
 				AuthorizeNetDirections.id as id,
@@ -60,21 +68,23 @@ class db_payment_AuthorizeNetDirectionsManager extends db_Manager
 			ON
 				AuthorizeNetDirections.paymentTypeId = PaymentType.id
 			WHERE
-				AuthorizeNetDirections.eventId=:eventId
+				AuthorizeNetDirections.eventId = :eventId
 		';
 		
-		$params = array(
-			'eventId' => $event['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId'));
 		
 		return $this->queryUnique($sql, $params, 'Find Authorize.NET payment directions by event.');
 	}
 	
-	public function create($directions) {
+	/**
+	 * 
+	 * @param array $params [eventId, instructions, login, transactionKey]
+	 */
+	public function create($params) {
 		// directions cannot be updated once created. if changes need to be made
 		// then a new row must replace the existing row. that's why we delete 
 		// any existing rows before creating the new one.
-		$this->delete($directions);
+		$this->delete($params);
 		
 		$sql = '
 			INSERT INTO
@@ -92,17 +102,21 @@ class db_payment_AuthorizeNetDirectionsManager extends db_Manager
 			)
 		';
 		
-		$params = array(
-			'eventId' => $directions['eventId'],
-			'instructions' => $directions['instructions'],
-			'login' => $directions['login'],
-			'transactionKey' => $directions['transactionKey']
-		);
+		$params = ArrayUtil::keyIntersect($params, array(
+			'eventId',
+			'instructions',
+			'login',
+			'transactionKey'
+		));
 		
 		$this->execute($sql, $params, 'Create Authorize.NET payment directions.');
 	}
 	
-	public function deleteByEventId($eventId) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function deleteByEventId($params) {
 		$sql = '
 			DELETE FROM
 				AuthorizeNetDirections
@@ -110,15 +124,17 @@ class db_payment_AuthorizeNetDirectionsManager extends db_Manager
 				eventId=:eventId
 		';
 		
-		$params = array(
-			'eventId' => $eventId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId'));
 		
 		$this->execute($sql, $params, 'Delete Authorize.NET payment directions.');
 	}
 	
-	public function delete($directions) {
-		$this->deleteByEventId($directions['eventId']);
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function delete($params) {
+		$this->deleteByEventId($params);
 	}
 }
 

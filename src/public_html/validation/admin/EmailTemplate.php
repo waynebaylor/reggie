@@ -15,7 +15,7 @@ class validation_admin_EmailTemplate
 		$errors = validation_Validator::validate(self::getConfig(), $values);
 
 		// check if there is overlap between templates.
-		$existingTemplates = db_EmailTemplateManager::getInstance()->findByEventId($values['eventId']);
+		$existingTemplates = db_EmailTemplateManager::getInstance()->findByEventId($values);
 		foreach($existingTemplates as $template) {
 			$differentTemplate = $template['id'] != $values['id'];
 			$regTypesOverlap = model_EmailTemplate::hasOverlap($template, $values['regTypeIds']);

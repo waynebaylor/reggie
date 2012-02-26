@@ -72,7 +72,7 @@ abstract class db_OrderableManager extends db_Manager
 	
 	/**
 	 * 
-	 * @param array $obj [id, displayOrder, <restrictField>]
+	 * @param array $obj [id, displayOrder, &lt;restrictField&gt;]
 	 */
 	public function moveUp($obj, $restrictField, $restrictValue) {
 		$sql = "

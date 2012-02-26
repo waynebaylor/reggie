@@ -45,7 +45,8 @@ _;
 							'href' => '/admin/event/EditGroupRegistration',
 							'parameters' => array(
 								'a' => 'removeField',
-								'id' => $field['id']
+								'id' => $field['id'],
+								'eventId' => $this->event['id']
 							),
 							'class' => 'remove'
 						))}

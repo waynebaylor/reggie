@@ -21,7 +21,10 @@ class fragment_reg_summary_RegType extends template_Template
 			return '';
 		}
 		
-		$regType = db_RegTypeManager::getInstance()->find($regTypeId);
+		$regType = db_RegTypeManager::getInstance()->find(array(
+			'eventId' => $this->event['id'],
+			'id' => $regTypeId
+		));
 		
 		return <<<_
 			<tr>

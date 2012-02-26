@@ -33,12 +33,19 @@ class logic_admin_event_EditGroupRegistration extends logic_Performer
 	}
 	
 	public function removeField($params) {
-		$field = $this->strictFindById(db_GroupRegistrationFieldManager::getInstance(), $params['id']);
+		$field = db_GroupRegistrationFieldManager::getInstance()->find($params);
 		
-		db_GroupRegistrationFieldManager::getInstance()->deleteField($field);
+		db_GroupRegistrationFieldManager::getInstance()->deleteField(array(
+			'eventId' => $params['eventId'],
+			'id' => $field['id']
+		));
 		
-		$groupReg = $this->strictFindById(db_GroupRegistrationManager::getInstance(), $field['groupRegistrationId']);
-		$event = $this->strictFindById(db_EventManager::getInstance(), $groupReg['eventId']);
+		$groupReg = db_GroupRegistrationManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $field['groupRegistrationId']
+		));
+		
+		$event = db_EventManager::getInstance()->find($groupReg['eventId']);
 		
 		return array(
 			'eventId' => $params['eventId'],

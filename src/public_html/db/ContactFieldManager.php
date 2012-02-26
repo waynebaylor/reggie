@@ -25,7 +25,12 @@ class db_ContactFieldManager extends db_OrderableManager
 		
 		// set field's visibleTo/visibleToAll properties.
 		$obj['visibleToAll'] = $this->isVisibleToAllRegTypes($obj);
-		$regTypes = db_RegTypeManager::getInstance()->findRegTypesForField($obj);
+		$regTypes = db_RegTypeManager::getInstance()->findRegTypesForField(array(
+			'eventId' => $obj['eventId'],
+			'contactFieldId' => $obj['id'],
+			'sectionId' => $obj['sectionId'],
+			'visibleToAll' => $obj['visibleToAll']
+		));
 		$obj['visibleTo'] = $regTypes;
 		
 		// set field's options (if any)
@@ -59,9 +64,9 @@ class db_ContactFieldManager extends db_OrderableManager
 			INNER JOIN
 				FormInput
 			ON
-				ContactField.formInputId=FormInput.id
+				ContactField.formInputId = FormInput.id
 			WHERE
-				ContactField.sectionId=:id
+				ContactField.sectionId = :id
 			ORDER BY
 				ContactField.displayOrder				
 		';

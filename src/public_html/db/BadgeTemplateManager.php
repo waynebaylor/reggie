@@ -20,7 +20,11 @@ class db_BadgeTemplateManager extends db_Manager
 		parent::populate($obj, $arr);
 		
 		$obj['appliesToAll'] = $this->isAppliedToAll($obj); 
-		$obj['appliesTo'] = db_RegTypeManager::getInstance()->findForBadgeTemplate($obj);
+		$obj['appliesTo'] = db_RegTypeManager::getInstance()->findForBadgeTemplate(array(
+			'eventId' => $obj['eventId'],
+			'badgeTemplateId' => $obj['id'],
+			'appliesToAll' => $obj['appliesToAll']
+		));
 		$obj['cells'] = db_BadgeCellManager::getInstance()->findByBadgeTemplateId(array(
 			'eventId' => $obj['eventId'],
 			'badgeTemplateId' => $obj['id']

@@ -17,7 +17,7 @@ class fragment_regType_HTML
 			);	
 		}
 		
-		$regTypes = db_RegTypeManager::getInstance()->findByEventId($eventId);
+		$regTypes = db_RegTypeManager::getInstance()->findByEventId(array('eventId' => $eventId));
 		foreach($regTypes as $regType) {
 			$items[] = array(
 				'label' => "({$regType['code']}) {$regType['description']}",

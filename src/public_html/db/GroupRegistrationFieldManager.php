@@ -16,7 +16,11 @@ class db_GroupRegistrationFieldManager extends db_Manager
 		return self::$instance;
 	}
 	
-	public function find($id) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function find($params) {
 		$sql = '
 			SELECT
 				GroupRegistration_ContactField.id,
@@ -31,16 +35,20 @@ class db_GroupRegistrationFieldManager extends db_Manager
 				GroupRegistration_ContactField.contactFieldId = ContactField.id
 			WHERE
 				GroupRegistration_ContactField.id = :id
+			AND
+				ContactField.eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $id
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->queryUnique($sql, $params, 'Find group reg field.');
 	}
 	
-	public function findByGroupRegistration($groupReg) {
+	/**
+	 * 
+	 * @param array $params [eventId, groupRegistrationId]
+	 */
+	public function findByGroupRegistration($params) {
 		$sql = '
 			SELECT
 				GroupRegistration_ContactField.id,
@@ -55,16 +63,22 @@ class db_GroupRegistrationFieldManager extends db_Manager
 				GroupRegistration_ContactField.contactFieldId = ContactField.id
 			WHERE
 				GroupRegistration_ContactField.groupRegistrationId = :groupRegistrationId 
+			AND
+				ContactField.eventId = :eventId
 		';
 		
-		$params = array(
-			'groupRegistrationId' => $groupReg['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'groupRegistrationId'));
 		
 		return $this->query($sql, $params, 'Find group reg fields.');
 	}
 	
-	public function createField($field) {
+	/**
+	 * 
+	 * @param array $params [eventId, groupRegistrationId, contactFieldId]
+	 */
+	public function createField($params) {
+		$this->checkGroupRegistrationPermission($params);
+		
 		$sql = '
 			INSERT INTO
 				GroupRegistration_ContactField(
@@ -77,7 +91,7 @@ class db_GroupRegistrationFieldManager extends db_Manager
 			)
 		';
 		
-		$params = ArrayUtil::keyIntersect($field, array(
+		$params = ArrayUtil::keyIntersect($params, array(
 			'groupRegistrationId', 
 			'contactFieldId')
 		);
@@ -85,17 +99,54 @@ class db_GroupRegistrationFieldManager extends db_Manager
 		$this->execute($sql, $params, 'Create group reg field.');
 	}
 	
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
 	public function deleteField($field) {
 		$sql = '
 			DELETE FROM
 				GroupRegistration_ContactField
 			WHERE
-				id = :id
+				GroupRegistration_ContactField.id = :id
+			AND
+				GroupRegistration_ContactField.groupRegistrationId
+			IN (
+				SELECT GroupRegistration.id
+				FROM GroupRegistration
+				WHERE GroupRegistration.eventId = :eventId
+			)
 		';
 		
-		$params = ArrayUtil::keyIntersect($field, array('id'));
+		$params = ArrayUtil::keyIntersect($field, array('eventId', 'id'));
 		
 		$this->execute($sql, $params, 'Delete group reg field.');
+	}
+	
+	/**
+	 * 
+	 * @param array $params [eventId, groupRegistrationId]
+	 */
+	private function checkGroupRegistrationPermission($params) {
+		$sql = '
+			SELECT
+				id,
+				eventId
+			FROM
+				GroupRegistration
+			WHERE
+				id = :groupRegistrationId
+			AND
+				eventId = :eventId
+		';
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'groupRegistrationId'));
+		
+		$results = $this->rawQuery($sql, $params, 'Check group registration permission.');
+		
+		if(count($results) === 0) {
+			throw new Exception("Permission denied to modify GroupRegistration. (event id, group reg id) -> ({$params['eventId']}, {$params['groupRegistrationId']}).");
+		}
 	}
 }
 

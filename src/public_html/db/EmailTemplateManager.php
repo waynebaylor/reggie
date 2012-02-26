@@ -20,12 +20,20 @@ class db_EmailTemplateManager extends db_Manager
 		parent::populate($obj, $arr);
 
 		$obj['availableToAll'] = $this->isAvailableToAll($obj);
-		$obj['availableTo'] = db_RegTypeManager::getInstance()->findForEmailTemplate($obj);
+		$obj['availableTo'] = db_RegTypeManager::getInstance()->findForEmailTemplate(array(
+			'eventId' => $obj['eventId'],
+			'emailTemplateId' => $obj['id'],
+			'availableToAll' => $obj['availableToAll']
+		));
 		
 		return $obj;
 	}
 	
-	public function find($id) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function find($params) {
 		$sql = '
 			SELECT
 				id,
@@ -41,16 +49,20 @@ class db_EmailTemplateManager extends db_Manager
 				EmailTemplate
 			WHERE
 				id = :id
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $id
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->queryUnique($sql, $params, 'Find email template.');		
 	}
 	
-	public function findByEventId($eventId) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function findByEventId($params) {
 		$sql = '
 			SELECT
 				id,
@@ -68,18 +80,24 @@ class db_EmailTemplateManager extends db_Manager
 				eventId = :eventId
 		';
 		
-		$params = array(
-			'eventId' => $eventId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId'));
 		
 		return $this->query($sql, $params, 'Find email template by event.');
 	}
 	
-	public function findByEvent($event) {
-		return $this->findByEventId($event['id']);
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function findByEvent($params) {
+		return $this->findByEventId($params);
 	}
 	
-	public function findByRegTypeId($eventId, $regTypeId) {
+	/**
+	 * 
+	 * @param array $params [eventId, regTypeId]
+	 */
+	public function findByRegTypeId($params) {
 		$sql = '
 			SELECT
 				EmailTemplate.id,
@@ -106,7 +124,7 @@ class db_EmailTemplateManager extends db_Manager
 		';	
 		
 		$params = array(
-			'eventId' => $eventId,
+			'eventId' => $params['eventId'],
 			'enabled' => 'T'
 		);
 		
@@ -139,9 +157,9 @@ class db_EmailTemplateManager extends db_Manager
 			';
 			
 			$params = array(
-				'eventId' => $eventId,
+				'eventId' => $params['eventId'],
 				'enabled' => 'T',
-				'regTypeId' => $regTypeId
+				'regTypeId' => $params['regTypeId']
 			);
 			
 			$template = $this->queryUnique($sql, $params, 'Find email template by reg type id.');
@@ -150,11 +168,11 @@ class db_EmailTemplateManager extends db_Manager
 		return $template;
 	}
 	
+	/**
+	 * 
+	 * @param array $params [eventId, regTypeIds, contactFieldId, enabled, fromAddress, bcc, subject, header, footer]
+	 */
 	public function createEmailTemplate($params) {
-		$regTypeIds = $params['regTypeIds'];
-		unset($params['regTypeIds']);
-		unset($params['id']);
-		
 		$sql = '
 			INSERT INTO
 				EmailTemplate(
@@ -179,17 +197,33 @@ class db_EmailTemplateManager extends db_Manager
 			)
 		';
 		
+		$p = ArrayUtil::keyIntersect($params, array(
+			'eventId',
+			'contactFieldId',
+			'enabled',
+			'fromAddress',
+			'bcc',
+			'subject',
+			'header',
+			'footer'
+		));
+		
 		$this->execute($sql, $params, 'Create email template.');
 		
 		$emailTemplateId = $this->lastInsertId();
 		
 		// create reg type associations.
-		$this->createRegTypeAssociation($emailTemplateId, $regTypeIds);
+		$params['id'] = $emailTemplateId;
+		$this->createRegTypeAssociation($params);
 		
 		return $emailTemplateId;
 	}
 	
-	public function save($params, $regTypeIds) {
+	/**
+	 * 
+	 * @param array $params [eventId, id, regTypeIds, enabled, contactFieldId, fromAddress, bcc, subject, header, footer]
+	 */
+	public function save($params) {
 		$sql = '
 			UPDATE
 				EmailTemplate
@@ -207,50 +241,93 @@ class db_EmailTemplateManager extends db_Manager
 				eventId = :eventId
 		';
 		
-		$this->execute($sql, $params, 'Save email template.');
+		$p = ArrayUtil::keyIntersect($params, array(
+			'eventId',
+			'id',
+			'contactFieldId',
+			'enabled',
+			'fromAddress',
+			'bcc',
+			'subject',
+			'header',
+			'footer'
+		));
 		
-		$this->removeRegTypeAssociations($params['id']);
-		$this->createRegTypeAssociation($params['id'], $regTypeIds);
+		$this->execute($sql, $p, 'Save email template.');
+		
+		$this->removeRegTypeAssociations(array(
+			'eventId' => $params['eventId'],
+			'emailTemplateId' => $params['id']
+		));
+		
+		$this->createRegTypeAssociation(array(
+			'eventId' => $params['eventId'],
+			'emailTemplateId' => $params['id'],
+			'regTypeIds' => $params['regTypeIds']
+		));
 	}
 	
-	private function isAvailableToAll($template) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	private function isAvailableToAll($params) {
 		$sql = '
 			SELECT
-				emailTemplateId
+				RegType_EmailTemplate.emailTemplateId
 			FROM 
 				RegType_EmailTemplate
+			INNER JOIN
+				EmailTemplate
+			ON
+				RegType_EmailTemplate.emailTemplateId = EmailTemplate.id
 			WHERE
-				emailTemplateId = :id
+				RegType_EmailTemplate.emailTemplateId = :id
 			AND
-				regTypeId is NULL
+				EmailTemplate.eventId = :eventId
+			AND
+				RegType_EmailTemplate.regTypeId is NULL
 		';
 		
-		$params = array(
-			'id' => $template['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		$result = $this->rawQueryUnique($sql, $params, 'Check if email template is visible to all reg types.');
 		
 		return !empty($result);
 	}
 	
-	private function removeRegTypeAssociations($emailTemplateId) {
+	/**
+	 * 
+	 * @param array $params [eventId, emailTemplateId]
+	 */
+	private function removeRegTypeAssociations($params) {
 		$sql = '
 			DELETE FROM
 				RegType_EmailTemplate
 			WHERE
-				emailTemplateId = :emailTemplateId
+				RegType_EmailTemplate.emailTemplateId = :emailTemplateId
+			AND
+				RegType_EmailTemplate.emailTemplateId
+			IN (
+				SELECT EmailTemplate.id
+				FROM EmailTemplate
+				WHERE EmailTemplate.eventId = :eventId
+			)
 		';	
 		
-		$params = array(
-			'emailTemplateId' => $emailTemplateId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'emailTemplateId'));
 		
 		$this->execute($sql, $params, 'Remove reg type associations for email template.');
 	}
 	
-	private function createRegTypeAssociation($emailTemplateId, $regTypeIds) {
-		if(in_array(-1, $regTypeIds)) {
+	/**
+	 * 
+	 * @param array $params [eventId, emailTemplateId, regTypeIds]
+	 */
+	private function createRegTypeAssociation($params) {
+		$this->checkEmailTemplatePermission($params);
+		
+		if(in_array(-1, $params['regTypeIds'])) {
 			$sql = '
 				INSERT INTO
 					RegType_EmailTemplate(
@@ -261,11 +338,9 @@ class db_EmailTemplateManager extends db_Manager
 				)
 			';
 			
-			$params = array(
-				'emailTemplateId' => $emailTemplateId
-			);
+			$p = ArrayUtil::keyIntersect($params, array('emailTemplateId'));
 			
-			$this->execute($sql, $params, 'Set email template available to all reg types.');
+			$this->execute($sql, $p, 'Set email template available to all reg types.');
 		}
 		else {
 			$sql = '
@@ -280,39 +355,56 @@ class db_EmailTemplateManager extends db_Manager
 				)
 			';
 			
-			foreach($regTypeIds as $regTypeId) {
-				$params = array(
+			foreach($params['regTypeIds'] as $regTypeId) {
+				$p = array(
 					'regTypeId' => $regTypeId,
-					'emailTemplateId' => $emailTemplateId
+					'emailTemplateId' => $params['emailTemplateId']
 				);	
 				
-				$this->execute($sql, $params, 'Create reg type associations for email template.');
+				$this->execute($sql, $p, 'Create reg type associations for email template.');
 			}
 		}
 	}
 	
-	public function delete($id) {
-		$this->removeRegTypeAssociations($id);
+	/**
+	 * 
+	 * @param array $params [eventId, emailTemplateId]
+	 */
+	public function delete($params) {
+		$this->removeRegTypeAssociations($params);
 		
 		$sql = '
 			DELETE FROM
 				EmailTemplate
 			WHERE
-				id = :id
+				id = :emailTemplateId
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array('id' => $id);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'emailTemplateId'));
 		
 		$this->execute($sql, $params, 'Delete email template.');
 	}
 	
-	public function deleteByEventId($eventId) {
-		$templates = $this->findByEventId($eventId);
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function deleteByEventId($params) {
+		$templates = $this->findByEventId($params);
 		foreach($templates as $t) {
-			$this->delete($t['id']);
+			$this->delete(array(
+				'eventId' => $params['eventId'],
+				'emailTemplateId' => $t['id']
+			));
 		}
 	}
 	
+	/**
+	 * 
+	 * @param array $params [eventId, emailTemplateIds]
+	 */
 	public function deleteTemplates($params) {
 		// delete reg type associations.
 		$sql = '
@@ -331,7 +423,9 @@ class db_EmailTemplateManager extends db_Manager
 				)
 		';
 		
-		$this->execute($sql, $params, 'Delete email template reg type associations.');
+		$p = ArrayUtil::keyIntersect($params, array('eventId', 'emailTemplateIds'));
+		
+		$this->execute($sql, $p, 'Delete email template reg type associations.');
 		
 		$sql = '
 			DELETE FROM
@@ -342,7 +436,35 @@ class db_EmailTemplateManager extends db_Manager
 				id IN (:[emailTemplateIds])
 		';
 		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'emailTemplateIds'));
+		
 		$this->execute($sql, $params, 'Delete email templates.');
+	}
+	
+	/**
+	 * 
+	 * @param array $params [eventId, emailTemplateId]
+	 */
+	private function checkEmailTemplatePermission($params) {
+		$sql = '
+			SELECT
+				id,
+				eventId
+			FROM
+				EmailTemplate
+			WHERE
+				id = :emailTemplateId
+			AND
+				eventId = :eventId
+		';
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'emailTemplateId'));
+		
+		$results = $this->rawQuery($sql, $params, 'Check email template permission.');
+		
+		if(count($results) === 0) {
+			throw new Exception("Permission denied to EmailTemplate. (event id, email template id) -> ({$params['eventId']}, {$params['emailTemplateId']})");
+		}
 	}
 }
 

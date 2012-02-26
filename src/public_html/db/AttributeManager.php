@@ -29,7 +29,7 @@ class db_AttributeManager extends db_Manager
 			FROM
 				Attribute
 			WHERE
-				id=:id
+				id = :id
 		';
 		
 		$params = array(
@@ -64,9 +64,9 @@ class db_AttributeManager extends db_Manager
 			INNER JOIN
 				Attribute
 			ON
-				ContactFieldAttribute.attributeId=Attribute.id
+				ContactFieldAttribute.attributeId = Attribute.id
 			WHERE
-				ContactFieldAttribute.contactFieldId=:id
+				ContactFieldAttribute.contactFieldId = :id
 		';
 		
 		$params = array(
@@ -87,9 +87,9 @@ class db_AttributeManager extends db_Manager
 			INNER JOIN
 				FormInputAttribute
 			ON
-				FormInputAttribute.attributeId=Attribute.id
+				FormInputAttribute.attributeId = Attribute.id
 			WHERE
-				FormInputAttribute.formInputId=:id
+				FormInputAttribute.formInputId = :id
 		';
 		
 		$params = array(

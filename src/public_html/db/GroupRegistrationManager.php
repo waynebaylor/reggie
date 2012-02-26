@@ -19,12 +19,19 @@ class db_GroupRegistrationManager extends db_Manager
 	protected function populate(&$obj, $arr) {
 		parent::populate($obj, $arr);
 
-		$obj['fields'] = db_GroupRegistrationFieldManager::getInstance()->findByGroupRegistration($obj);
+		$obj['fields'] = db_GroupRegistrationFieldManager::getInstance()->findByGroupRegistration(array(
+			'eventId' => $obj['eventId'],
+			'groupRegistrationId' => $obj['id']
+		));
 		
 		return $obj;
 	}
 	
-	public function find($id) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function find($params) {
 		$sql = '
 			SELECT
 				id,
@@ -35,20 +42,28 @@ class db_GroupRegistrationManager extends db_Manager
 				GroupRegistration
 			WHERE
 				id = :id
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $id
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->queryUnique($sql, $params, 'Find event group registration.');
 	}
 	
-	public function findByEvent($event) {
-		return $this->findByEventId($event['id']);
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function findByEvent($params) {
+		return $this->findByEventId($params);
 	}
 	
-	public function findByEventId($eventId) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function findByEventId($params) {
 		$sql = '
 			SELECT
 				id,
@@ -61,14 +76,16 @@ class db_GroupRegistrationManager extends db_Manager
 				eventId = :eventId
 		';
 		
-		$params = array(
-			'eventId' => $eventId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId'));
 		
 		return $this->queryUnique($sql, $params, 'Find event group registration by event.');
 	}
 	
-	public function createGroupRegistration($eventId) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function createGroupRegistration($params) {
 		$sql = '
 			INSERT INTO
 				GroupRegistration(
@@ -84,7 +101,7 @@ class db_GroupRegistrationManager extends db_Manager
 		';
 		
 		$params = array(
-			'eventId' => $eventId,
+			'eventId' => $params['eventId'],
 			'enabled' => 'F',
 			'defaultRegType' => 'T'
 		);
@@ -92,7 +109,11 @@ class db_GroupRegistrationManager extends db_Manager
 		$this->execute($sql, $params, 'Create event group registration.');
 	}
 	
-	public function save($groupReg) {
+	/**
+	 * 
+	 * @param array $params [eventId, id, enabled, defaultRegType]
+	 */
+	public function save($params) {
 		$sql = '
 			UPDATE
 				GroupRegistration
@@ -105,16 +126,23 @@ class db_GroupRegistrationManager extends db_Manager
 				eventId = :eventId
 		';
 		
-		$params = ArrayUtil::keyIntersect($groupReg, array('id', 'eventId', 'enabled', 'defaultRegType'));
+		$params = ArrayUtil::keyIntersect($params, array('id', 'eventId', 'enabled', 'defaultRegType'));
 		
 		$this->execute($sql, $params, 'Save event group registration.');
 	}
 	
-	public function deleteByEventId($eventId) {
-		$gr = $this->findByEvent(array('id' => $eventId));
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function deleteByEventId($params) {
+		$gr = $this->findByEvent($params);
 		
 		foreach($gr['fields'] as $field) {
-			db_GroupRegistrationFieldManager::getInstance()->deleteField($field);
+			db_GroupRegistrationFieldManager::getInstance()->deleteField(array(
+				'eventId' => $params['eventId'],
+				'id' => $field['id']
+			));
 		}
 		
 		$sql = '

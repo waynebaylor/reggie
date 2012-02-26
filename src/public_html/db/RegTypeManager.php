@@ -27,7 +27,11 @@ class db_RegTypeManager extends db_OrderableManager
 		return self::$instance;
 	}
 	
-	public function find($id) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function find($params) {
 		$sql = '
 			SELECT
 				id,
@@ -39,17 +43,21 @@ class db_RegTypeManager extends db_OrderableManager
 			FROM
 				RegType
 			WHERE
-				id=:id
+				id = :id
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array(
-			':id' => $id
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->queryUnique($sql, $params, 'Find reg type.');
 	}
 	
-	public function createRegType($eventId, $sectionId, $description, $code, $categories) {
+	/**
+	 * 
+	 * @param array $params [eventId, sectionId, code, description, categoryIds]
+	 */
+	public function createRegType($params) { 
 		$sql = '
 			INSERT INTO
 				RegType(
@@ -68,22 +76,25 @@ class db_RegTypeManager extends db_OrderableManager
 			)
 		';
 
-		$params = array(
-			'eventId' => $eventId,
-			'sectionId' => $sectionId,
-			'description' => $description,
-			'code' => $code,
-			'displayOrder' => $this->getNextOrder()
-		);
+		$p = ArrayUtil::keyIntersect($params, array('eventId', 'sectionId', 'code', 'description'));
+		$p['displayOrder'] = $this->getNextOrder();
 		
-		$this->execute($sql, $params, 'Create registration type.');
+		$this->execute($sql, $p, 'Create registration type.');
 		
 		// create the mapping rows.
 		$regTypeId = $this->lastInsertId();
-		$this->makeRegTypeAvailableTo($regTypeId, $categories);
+		$this->makeRegTypeAvailableTo(array(
+			'eventId' => $params['eventId'], 
+			'regTypeId' => $regTypeId, 
+			'categoryIds' => $params['categoryIds']
+		));
 	}
 	
-	public function findBySection($section) {
+	/**
+	 * 
+	 * @param array $params [eventId, sectionId]
+	 */
+	public function findBySection($params) {
 		$sql = '
 			SELECT
 				id,
@@ -95,23 +106,31 @@ class db_RegTypeManager extends db_OrderableManager
 			FROM
 				RegType
 			WHERE
-				sectionId=:sectionId	
+				sectionId = :sectionId
+			AND
+				eventId = :eventId	
 			ORDER BY
 				displayOrder		
 		';
 		
-		$params = array(
-			'sectionId' => $section['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'sectionId'));
 		
 		return $this->query($sql, $params, 'Find reg type by section.');
 	}
 	
-	public function findByEvent($event) {
-		return $this->findByEventId($event['id']);	
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function findByEvent($params) {
+		return $this->findByEventId($params);	
 	}
 	
-	public function findByEventId($eventId) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function findByEventId($params) {
 		$sql = '
 			SELECT
 				id,
@@ -128,51 +147,64 @@ class db_RegTypeManager extends db_OrderableManager
 				displayOrder
 		';
 		
-		$params = array(
-			'eventId' => $eventId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId'));
 		
 		return $this->query($sql, $params, 'Find reg type by event.');
 	}
 	
-	public function save($regType, $categoryIds) {
+	/**
+	 * 
+	 * @param array $params [eventId, id, code, description, categoryIds]
+	 */
+	public function save($params) {
 		$sql = '
 			UPDATE
 				RegType
 			SET
-				description=:description,
-				code=:code
+				description = :description,
+				code = :code
 			WHERE
-				id=:id
+				id = :id
+			AND
+				eventId = :eventId
 		';
 
-		$params = array(
-			'description' => $regType['description'],
-			'code' => $regType['code'],
-			'id' => $regType['id']
-		);
+		$p = ArrayUtil::keyIntersect($params, array('eventId', 'id', 'code', 'description'));
 		
-		$this->execute($sql, $params, 'Save reg type.');
+		$this->execute($sql, $p, 'Save reg type.');
 		
 		// update category mappings.
-		$this->makeRegTypeAvailableTo($regType['id'], $categoryIds);
+		$this->makeRegTypeAvailableTo(array(
+			'eventId' => $params['eventId'],
+			'regTypeId' => $params['id'],
+			'categoryIds' => $params['categoryIds']
+		));
 	}
 	
-	public function delete($regType) {
+	/**
+	 * 
+	 * @param array $params [eventId, regTypeId]
+	 */
+	public function delete($params) {
 		/////////////////////////////////////////////////////////////////////////////////
 		// delete information field associations.
 		$sql = '
 			DELETE FROM
 				RegTypeContactField
 			WHERE
-				regTypeId = :regTypeId
+				RegTypeContactField.regTypeId = :regTypeId
+			AND
+				RegTypeContactField.regTypeId
+			IN (
+				SELECT RegType.id 
+				FROM RegType
+				WHERE RegType.eventId = :eventId
+			)
 		';
 		
-		$params = array(
-			'regTypeId' => $regType['id']
-		);
+		$p = ArrayUtil::keyIntersect($params, array('eventId', 'regTypeId'));
 		
-		$this->execute($sql, $params, 'Delete information field associations.');
+		$this->execute($sql, $p, 'Delete information field associations.');
 		
 		/////////////////////////////////////////////////////////////////////////////////
 		// delete email template associations.
@@ -180,10 +212,19 @@ class db_RegTypeManager extends db_OrderableManager
 			DELETE FROM
 				RegType_EmailTemplate
 			WHERE
-				regTypeId = :regTypeId
+				RegType_EmailTemplate.regTypeId = :regTypeId
+			AND
+				RegType_EmailTemplate.regTypeId 
+			IN (
+				SELECT RegType.id
+				FROM RegType
+				WHERE RegType.eventId = :eventId
+			)
 		';
 		
-		$this->execute($sql, $params, 'Delete email template associations.');
+		$p = ArrayUtil::keyIntersect($params, array('eventId', 'regTypeId'));
+		
+		$this->execute($sql, $p, 'Delete email template associations.');
 		
 		/////////////////////////////////////////////////////////////////////////////////
 		// delete reg option price associations.
@@ -191,14 +232,23 @@ class db_RegTypeManager extends db_OrderableManager
 			DELETE FROM
 				RegType_RegOptionPrice
 			WHERE
-				regTypeId = :regTypeId
+				RegType_RegOptionPrice.regTypeId = :regTypeId
+			AND
+				RegType_RegOptionPrice.regTypeId
+			IN (
+				SELECT RegType.id
+				FROM RegType
+				WHERE RegType.eventId = :eventId
+			)
 		';
 		
-		$this->execute($sql, $params, 'Delete reg option price associations.');
+		$p = ArrayUtil::keyIntersect($params, array('eventId', 'regTypeId'));
+		
+		$this->execute($sql, $p, 'Delete reg option price associations.');
 		
 		/////////////////////////////////////////////////////////////////////////////////
 		// delete category associations.
-		$this->removeRegTypeCategories($regType['id']);
+		$this->removeRegTypeCategories($params);
 		
 		/////////////////////////////////////////////////////////////////////////////////
 		// delete reg type.
@@ -206,42 +256,67 @@ class db_RegTypeManager extends db_OrderableManager
 			DELETE FROM
 				RegType
 			WHERE
-				id=:id
+				id = :regTypeId
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $regType['id']
-		);
+		$p = ArrayUtil::keyIntersect($params, array('eventId', 'regTypeId'));
 		
 		$this->execute($sql, $params, 'Delete registration type.');
 	}
 	
-	public function moveRegTypeUp($regType) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function moveRegTypeUp($params) {
+		$regType = $this->find($params);
 		$this->moveUp($regType, 'sectionId', $regType['sectionId']);
 	}
 	
-	public function moveRegTypeDown($regType) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function moveRegTypeDown($params) {
+		$regType = $this->find($params);
 		$this->moveDown($regType, 'sectionId', $regType['sectionId']);
 	}
 	
-	private function removeRegTypeCategories($regTypeId) {
+	/**
+	 * 
+	 * @param array $params [eventId, regTypeId]
+	 */
+	private function removeRegTypeCategories($params) {
 		$sql = '
 			DELETE FROM
 				CategoryRegType
 			WHERE
-				regTypeId=:regTypeId
+				CategoryRegType.regTypeId = :regTypeId
+			AND
+				CategoryRegType.regTypeId 
+			IN (
+				SELECT RegType.id
+				FROM RegType
+				WHERE RegType.eventId = :eventId
+			)
 		';
 		
-		$params = array(
-			'regTypeId' => $regTypeId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'regTypeId'));
 		
 		$this->execute($sql, $params, 'Make reg type unavailable.');
 	}
 	
-	private function makeRegTypeAvailableTo($regTypeId, $categoryIds) {
+	/**
+	 * 
+	 * @param array $params [eventId, regTypeId, categoryIds]
+	 */
+	private function makeRegTypeAvailableTo($params) { 
+		$this->checkRegTypePermission($params);
+		
 		// remove existing mappings.
-		$this->removeRegTypeCategories($regTypeId);
+		$this->removeRegTypeCategories($params);
 		
 		// add new mappings.
 		$sql = '
@@ -256,19 +331,23 @@ class db_RegTypeManager extends db_OrderableManager
 			)
 		';
 		
-		foreach($categoryIds as $categoryId) {
-			$params = array(
+		foreach($params['categoryIds'] as $categoryId) {
+			$p = array(
 				'categoryId' => $categoryId,
-				'regTypeId' => $regTypeId
+				'regTypeId' => $params['regTypeId']
 			);
 			
-			$this->execute($sql, $params, 'Make reg type available to category.');
+			$this->execute($sql, $p, 'Make reg type available to category.');
 		}
 	}
 	
-	public function findRegTypesForField($field) {
+	/**
+	 * 
+	 * @param array $params [eventId, contactFieldId, visibleToAll, sectionId]
+	 */
+	public function findRegTypesForField($params) {
 		// check if field is visible to all reg types.
-		if(!$field['visibleToAll']) {
+		if(!$params['visibleToAll']) {
 			$sql = '
 				SELECT
 					RegType.id,
@@ -279,16 +358,16 @@ class db_RegTypeManager extends db_OrderableManager
 				INNER JOIN
 					RegTypeContactField
 				ON
-					RegType.id=RegTypeContactField.regTypeId
+					RegType.id = RegTypeContactField.regTypeId
 				WHERE
-					RegTypeContactField.contactFieldId=:id
+					RegTypeContactField.contactFieldId = :contactFieldId
+				AND
+					RegType.eventId = :eventId
 			';
 		
-			$params = array(
-				'id' => $field['id']
-			);
+			$p = ArrayUtil::keyIntersect($params, array('eventId', 'contactFieldId'));
 
-			return $this->query($sql, $params, 'Find reg types for which contact field is visible.');
+			return $this->query($sql, $p, 'Find reg types for which contact field is visible.');
 		}
 		else {
 			// have to use the field's sectionId to work our way 
@@ -303,30 +382,34 @@ class db_RegTypeManager extends db_OrderableManager
 				INNER JOIN
 					Event
 				ON
-					Event.id=RegType.eventId
+					Event.id = RegType.eventId
 				INNER JOIN
 					Page
 				ON
-					Event.id=Page.eventId
+					Event.id = Page.eventId
 				INNER JOIN
 					Section
 				ON
-					Page.id=Section.pageId
+					Page.id = Section.pageId
 				WHERE
-					Section.id=:sectionId
+					Section.id = :sectionId
+				AND
+					RegType.eventId = :eventId
 			';
 			
-			$params = array(
-				'sectionId' => $field['sectionId']
-			);
+			$p = ArrayUtil::keyIntersect($params, array('eventId', 'sectionId'));
 			
-			return $this->query($sql, $params, 'Contact field visible for all reg types. Find all event reg types.');	
+			return $this->query($sql, $p, 'Contact field visible for all reg types. Find all event reg types.');	
 		}	
 	}
 	
-	public function findByPrice($price) {
+	/**
+	 * 
+	 * @param array $params [eventId, priceId, visibleToAll]
+	 */
+	public function findByPrice($params) {
 		// check if price is visible to all reg types.
-		if(!$price['visibleToAll']) {
+		if(!$params['visibleToAll']) {
 			$sql = '
 				SELECT
 					RegType.id,
@@ -337,23 +420,27 @@ class db_RegTypeManager extends db_OrderableManager
 				INNER JOIN
 					RegType_RegOptionPrice
 				ON
-					RegType.id=RegType_RegOptionPrice.regTypeId
+					RegType.id = RegType_RegOptionPrice.regTypeId
 				WHERE
-					RegType_RegOptionPrice.regOptionPriceId=:id
+					RegType_RegOptionPrice.regOptionPriceId = :priceId
+				AND
+					RegType.eventId = :eventId
 			';
 			
-			$params = array(
-				'id' => $price['id']
-			);
+			$params = ArrayUtil::keyIntersect($params, array('eventId', 'priceId'));
 
 			return $this->query($sql, $params, 'Find reg types for which reg option price is visible.');
 		}
 		else {
-			return $this->findByEventId($price['eventId']);
+			return $this->findByEventId($params);
 		}
 	}
 	
-	private function getPriceGroupId($price) {
+	/**
+	 * 
+	 * @param array $params [eventId, priceId]
+	 */
+	private function getPriceGroupId($params) {
 		$sql = '
 				SELECT
 					RegOptionGroup.id as groupId	
@@ -362,29 +449,34 @@ class db_RegTypeManager extends db_OrderableManager
 				INNER JOIN
 					RegOption_RegOptionPrice
 				ON
-					RegOptionPrice.id=RegOption_RegOptionPrice.regOptionPriceId
+					RegOptionPrice.id = RegOption_RegOptionPrice.regOptionPriceId
 				INNER JOIN
 					RegOption
 				ON
-					RegOption.id=RegOption_RegOptionPrice.regOptionId
+					RegOption.id = RegOption_RegOptionPrice.regOptionId
 				INNER JOIN
 					RegOptionGroup
 				ON
-					RegOption.parentGroupId=RegOptionGroup.id
+					RegOption.parentGroupId = RegOptionGroup.id
 				WHERE
-					RegOptionPrice.id=:id
+					RegOptionPrice.id = :priceId
+				AND
+					RegOption.eventId = :eventId
 					
 			';
 			
-			$params = array(
-				'id' => $price['id']
-			);
+			$params = ArrayUtil::keyIntersect($params, array('eventId', 'priceId'));
 			
 			$result = $this->rawQueryUnique($sql, $params, 'Find reg option group for price.');
+			
 			return $result['groupId'];
 	}
 	
-	private function getSectionId($groupId) {
+	/**
+	 * 
+	 * @param array $params [eventId, regOptionGroupId]
+	 */
+	private function getSectionId($params) {
 		$sql = '
 			SELECT
 				id,
@@ -392,19 +484,23 @@ class db_RegTypeManager extends db_OrderableManager
 			FROM
 				RegOptionGroup
 			WHERE
-				id = :id
+				id = :regOptionGroupId
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $groupId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'regOptionGroupId'));
 		
 		$result = $this->rawQueryUnique($sql, $params, 'Check if section option-group.');
 		
 		return $result['sectionId'];
 	}
 	
-	private function getOptionId($groupId) {
+	/**
+	 * 
+	 * @param array $params [eventId, regOptionGroupId]
+	 */
+	private function getOptionId($params) {
 		$sql = '
 			SELECT
 				id,
@@ -412,40 +508,48 @@ class db_RegTypeManager extends db_OrderableManager
 			FROM
 				RegOptionGroup
 			WHERE
-				id = :id
+				id = :regOptionGroupId
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $groupId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'regOptionGroupId'));
 		
 		$result = $this->rawQueryUnique($sql, $params, 'Check if reg option option-group.');
 		
 		return $result['regOptionId'];
 	}
 	
-	private function getOptionGroupId($optionId) {
+	/**
+	 * 
+	 * @param array $params [eventId, regOptionId]
+	 */
+	private function getOptionGroupId($params) {
 		$sql = '
 			SELECT
 				parentGroupId
 			FROM
 				RegOption
 			WHERE
-				id=:id
+				id = :regOptionId
+			ANd
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $optionId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'regOptionId'));
 		
 		$result = $this->rawQueryUnique($sql, $params, 'Get group id for option.');
 		
 		return $result['parentGroupId'];
 	}
 	
-	public function findForEmailTemplate($template) {
-		if($template['availableToAll']) {
-			return $this->findByEventId($template['eventId']);
+	/**
+	 * 
+	 * @param array $params [eventId, emailTemplateId, availableToAll]
+	 */
+	public function findForEmailTemplate($params) {
+		if($params['availableToAll']) {
+			return $this->findByEventId($params);
 		}
 		else {
 			$sql = '
@@ -461,27 +565,38 @@ class db_RegTypeManager extends db_OrderableManager
 					RegType.id = RegType_EmailTemplate.regTypeId
 				WHERE
 					RegType_EmailTemplate.emailTemplateId = :emailTemplateId
+				AND
+					RegType.eventId = :eventId
 			';
 			
-			$params = array(
-				'emailTemplateId' => $template['id']
-			);
+			$params = ArrayUtil::keyIntersect($params, array('eventId', 'emailTemplateId'));
 			
 			return $this->rawQuery($sql, $params, 'Find reg types for which email template is available.');
 		}
 	}
 	
-	public function deleteByEventId($eventId) {
-		$regTypes = $this->findByEventId($eventId);
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function deleteByEventId($params) {
+		$regTypes = $this->findByEventId($params);
 		
 		foreach($regTypes as $regType) {
-			$this->delete($regType);
+			$this->delete(array(
+				'eventId' => $params['eventId'],
+				'regTypeId' => $regType['id']
+			));
 		}
 	}
 	
-	public function findForBadgeTemplate($template) {
-		if($template['appliesToAll']) {
-			return $this->findByEventId($template['eventId']);
+	/**
+	 * 
+	 * @param array $params [eventId, badgeTemplateId, appliesToAll]
+	 */
+	public function findForBadgeTemplate($params) {
+		if($params['appliesToAll']) {
+			return $this->findByEventId($params);
 		}
 		else {
 			$sql = '
@@ -497,13 +612,39 @@ class db_RegTypeManager extends db_OrderableManager
 					RegType.id = BadgeTemplate_RegType.regTypeId
 				WHERE
 					BadgeTemplate_RegType.badgeTemplateId = :badgeTemplateId
+				AND
+					Regtype.eventId = :eventId
 			';
 			
-			$params = array(
-				'badgeTemplateId' => $template['id']
-			);
+			$params = ArrayUtil::keyIntersect($params, array('eventId', 'badgeTemplateId'));
 			
 			return $this->rawQuery($sql, $params, 'Find reg types for which badge template is applied.');
+		}
+	}
+	
+	/**
+	 * 
+	 * @param array $params [eventId, regTypeId]
+	 */
+	private function checkRegTypePermission($params) {
+		$sql = '
+			SELECT
+				id,
+				eventId
+			FROM
+				RegType
+			WHERE
+				id = :regTypeId
+			AND
+				eventId = :eventId
+		';	
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'regTypeId'));
+		
+		$results = $this->rawQuery($sql, $params, 'Check reg type permission.');
+		
+		if(count($results) === 0) {
+			throw new Exception("Permission denied to modify RegType. (event id, reg type id) -> ({$params['eventId']}, {$params['regTypeId']}).");
 		}
 	}
 }

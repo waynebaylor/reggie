@@ -106,10 +106,7 @@ class logic_admin_registration_Registration extends logic_Performer
 	}
 	
 	public function sendConfirmationEmail($event, $regGroup, $registration) {
-		$emailTemplate = db_EmailTemplateManager::getInstance()->findByRegTypeId(
-			$registration['eventId'], 
-			$registration['regTypeId']
-		);
+		$emailTemplate = db_EmailTemplateManager::getInstance()->findByRegTypeId($registration);
 		
 		if(!empty($emailTemplate)) {
 			$to = model_Registrant::getEmailFieldValue($emailTemplate, $registration);

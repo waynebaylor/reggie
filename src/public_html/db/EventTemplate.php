@@ -79,9 +79,21 @@ class db_EventTemplate extends db_Manager
 			'contentTypeId' => model_ContentType::$REG_TYPE
 		));
 		
-		db_RegTypeManager::getInstance()->createRegType($eventId, $regTypeSectionId, 'Member', 'M', $categoryIds);
+		db_RegTypeManager::getInstance()->createRegType(array(
+			'eventId' => $eventId, 
+			'sectionId' => $regTypeSectionId, 
+			'description' => 'Member', 
+			'code' => 'M', 
+			'categoryIds' => $categoryIds
+		));
 		
-		db_RegTypeManager::getInstance()->createRegType($eventId, $regTypeSectionId, 'Non-Member', 'NM', $categoryIds);
+		db_RegTypeManager::getInstance()->createRegType(array(
+			'eventId' => $eventId, 
+			'sectionId' => $regTypeSectionId, 
+			'description' => 'Non-Member', 
+			'code' => 'NM', 
+			'categoryIds' => $categoryIds
+		));
 	}
 
 	private function createContactInfoTemplatePage($eventId, $categoryIds) {

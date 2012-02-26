@@ -31,6 +31,10 @@ _;
 						'name' => 'id',
 						'value' => $this->regType['id']
 					))}
+					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $this->regType['eventId']
+					))}
 					{$this->HTML->text(array(
 						'name' => 'description',
 						'value' => $this->regType['description']

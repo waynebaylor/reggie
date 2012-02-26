@@ -24,7 +24,7 @@ class db_payment_PaymentTypeManager extends db_Manager
 			FROM
 				PaymentType
 			WHERE
-				id=:id
+				id = :id
 		';
 		
 		$params = array(
@@ -47,9 +47,9 @@ class db_payment_PaymentTypeManager extends db_Manager
 	}
 	
 	public function findByEvent($event) {
-		$check = db_payment_CheckDirectionsManager::getInstance()->findByEvent($event);
-		$po = db_payment_PurchaseOrderDirectionsManager::getInstance()->findByEvent($event);
-		$authNet = db_payment_AuthorizeNetDirectionsManager::getInstance()->findByEvent($event);
+		$check = db_payment_CheckDirectionsManager::getInstance()->findByEvent(array('eventId' => $event['id']));
+		$po = db_payment_PurchaseOrderDirectionsManager::getInstance()->findByEvent(array('eventId' => $event['id']));
+		$authNet = db_payment_AuthorizeNetDirectionsManager::getInstance()->findByEvent(array('eventId' => $event['id']));
 		
 		$types = array();
 		

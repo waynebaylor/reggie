@@ -15,7 +15,10 @@ class fragment_registration_summary_Individual extends template_Template
 	}
 	
 	public function html() {
-		$regType = db_RegTypeManager::getInstance()->find($this->registration['regTypeId']);
+		$regType = db_RegTypeManager::getInstance()->find(array(
+			'eventId' => $this->event['id'],
+			'id' => $this->registration['regTypeId']
+		));
 		
 		return <<<_
 			<div class="sub-divider"></div>
@@ -58,7 +61,10 @@ _;
 	private function getInformation($event, $registration) {
 		$date = substr($registration['dateRegistered'], 0, 10);
 		
-		$regType = db_RegTypeManager::getInstance()->find($registration['regTypeId']);
+		$regType = db_RegTypeManager::getInstance()->find(array(
+			'eventId' => $this->event['id'],
+			'id' => $registration['regTypeId']
+		));
 		
 		$confirmationNumber = model_Registrant::getConfirmationNumber($registration);
 		

@@ -33,7 +33,10 @@ _;
 	private function getInformation($event, $registration) {
 		$date = substr($registration['dateRegistered'], 0, 10);
 		
-		$regType = db_RegTypeManager::getInstance()->find($registration['regTypeId']);
+		$regType = db_RegTypeManager::getInstance()->find(array(
+			'eventId' => $registration['eventId'],
+			'id' => $registration['regTypeId']
+		));
 		
 		$confirmationNumber = model_Registrant::getConfirmationNumber($registration);
 		

@@ -18,7 +18,11 @@ class logic_admin_registration_CreateRegistration extends logic_Performer
 	public function createRegistration($params) {
 		$regGroupId = db_reg_GroupManager::getInstance()->createGroup();
 		
-		$regType = db_RegTypeManager::getInstance()->find($params['regTypeId']);
+		$regType = db_RegTypeManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['regTypeId']
+		));
+		
 		$category = reset($regType['visibleTo']);
 		
 		$newReg = array(

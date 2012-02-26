@@ -158,7 +158,12 @@ _;
 					'eventId' => $this->event['id']
 				)
 			));
-			$emailTemplate = db_EmailTemplateManager::getInstance()->findByRegTypeId($this->event['id'], $r['regTypeId']);
+			
+			$emailTemplate = db_EmailTemplateManager::getInstance()->findByRegTypeId(array(
+				'eventId' => $this->event['id'], 
+				'regTypeId' => $r['regTypeId']
+			));
+			
 			if(!empty($emailTemplate)) {
 				$sendEmailLink = $this->HTML->link(array(
 					'label' => 'Send Confirmation',

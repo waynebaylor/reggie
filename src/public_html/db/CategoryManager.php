@@ -24,7 +24,7 @@ class db_CategoryManager extends db_Manager
 			FROM
 				Category
 			WHERE
-				id=:id
+				id = :id
 		';
 		
 		$params = array(
@@ -56,9 +56,9 @@ class db_CategoryManager extends db_Manager
 			INNER JOIN
 				Category_Page
 			ON
-				Category_Page.categoryId=Category.id
+				Category_Page.categoryId = Category.id
 			WHERE
-				Category_Page.pageId=:pageId
+				Category_Page.pageId = :pageId
 		';
 		
 		$params = array(
@@ -78,9 +78,9 @@ class db_CategoryManager extends db_Manager
 			INNER JOIN
 				CategoryRegType
 			ON
-				CategoryRegType.categoryId=Category.id
+				CategoryRegType.categoryId = Category.id
 			WHERE
-				CategoryRegType.regTypeId=:id
+				CategoryRegType.regTypeId = :id
 		';
 		
 		$params = array(

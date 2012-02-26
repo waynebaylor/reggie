@@ -101,7 +101,10 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 		
 		foreach($cell['content'] as $index => $subCell) {
 			if($subCell['showRegType'] === 'T') {
-				$regType = db_RegTypeManager::getInstance()->find($registration['regTypeId']);
+				$regType = db_RegTypeManager::getInstance()->find(array(
+					'eventId' => $registration['eventId'],
+					'id' => $registration['regTypeId']
+				));
 				$text .= $regType['description'];
 			}
 			else if($subCell['showLeadNumber'] === 'T') {

@@ -83,7 +83,7 @@ class db_reg_RegistrationManager extends db_Manager
 		
 		// get the contact field ids included in the event's group reg configuration.
 		$groupRegInfoFieldIds = array();
-		$groupRegData = db_GroupRegistrationManager::getInstance()->findByEventId($reg['eventId']);
+		$groupRegData = db_GroupRegistrationManager::getInstance()->findByEventId($reg);
 		foreach($groupRegData['fields'] as $groupRegField) {
 			$groupRegInfoFieldIds[] = $groupRegField['contactFieldId'];
 		}
@@ -354,7 +354,11 @@ class db_reg_RegistrationManager extends db_Manager
 	
 	public function changeRegType($registration, $newRegTypeId) {
 		// 1. set new reg type and category.
-		$newRegType = db_RegTypeManager::getInstance()->find($newRegTypeId);
+		$newRegType = db_RegTypeManager::getInstance()->find(array(
+			'eventId' => $registration['eventId'],
+			'id' => $newRegTypeId
+		));
+		
 		$category = reset($newRegType['visibleTo']); //use first valid category.
 		
 		$sql = '

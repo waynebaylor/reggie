@@ -17,7 +17,10 @@ class db_PageSectionManager extends db_OrderableManager
 				
 		// set content
 		if(model_Section::containsRegTypes($obj)) {
-			$obj['content'] = db_RegTypeManager::getInstance()->findBySection($obj);
+			$obj['content'] = db_RegTypeManager::getInstance()->findBySection(array(
+				'eventId' => $obj['eventId'],
+				'sectionId' => $obj['id']
+			));
 		}
 		else if(model_Section::containsContactFields($obj)) {
 			$obj['content'] = db_ContactFieldManager::getInstance()->findBySection($obj);	
@@ -229,7 +232,10 @@ class db_PageSectionManager extends db_OrderableManager
 			foreach($params['content'] as $regType) {
 				// overwrite eventId to ensure security checks are consistent.
 				$regType['eventId'] = $params['eventId'];
-				db_RegTypeManager::getInstance()->delete($regType);
+				db_RegTypeManager::getInstance()->delete(array(
+					'eventId' => $regType['eventId'],
+					'regTypeId' => $regType['id']
+				));
 			}
 		}
 		else if(model_Section::containsVariableQuantityOptions($params)) {
