@@ -7,7 +7,8 @@ class logic_admin_contactField_ContactField extends logic_Performer
 	}
 	
 	public function view($params) {
-		$field = $this->strictFindById(db_ContactFieldManager::getInstance(), $params['id']);
+		$field = db_ContactFieldManager::getInstance()->find($params);
+		
 		$event = $this->strictFindById(db_EventManager::getInstance(), $params['eventId']);
 		
 		$bc = db_BreadcrumbManager::getInstance()->findContactFieldCrumbs($params['id']);
@@ -47,7 +48,7 @@ class logic_admin_contactField_ContactField extends logic_Performer
 	}
 	
 	public function removeField($params) {
-		$field = $this->strictFindById(db_ContactFieldManager::getInstance(), $params['id']);
+		$field = db_ContactFieldManager::getInstance()->find($params);
 
 		$sectionId = $field['sectionId'];
 		
@@ -67,7 +68,7 @@ class logic_admin_contactField_ContactField extends logic_Performer
 	}
 	
 	public function moveFieldUp($params) {
-		$field = $this->strictFindById(db_ContactFieldManager::getInstance(), $params['id']);
+		$field = db_ContactFieldManager::getInstance()->find($params);
 		
 		db_ContactFieldManager::getInstance()->moveFieldUp($field);
 		
@@ -85,7 +86,7 @@ class logic_admin_contactField_ContactField extends logic_Performer
 	}
 	
 	public function moveFieldDown($params) {
-		$field = $this->strictFindById(db_ContactFieldManager::getInstance(), $params['id']);
+		$field = db_ContactFieldManager::getInstance()->find($params);
 		
 		db_ContactFieldManager::getInstance()->moveFieldDown($field);
 		

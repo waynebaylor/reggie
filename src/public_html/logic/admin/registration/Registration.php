@@ -32,9 +32,9 @@ class logic_admin_registration_Registration extends logic_Performer
 	}
 	
 	public function save($params) {
-	// remove all values in given section. this is necessary because
+		// remove all values in given section. this is necessary because
 		// checkboxes/radio buttons may not return a value if not selected.
-		db_reg_InformationManager::getInstance()->deleteBySection($params['registrationId'], $params['sectionId']);
+		db_reg_InformationManager::getInstance()->deleteBySection($params);
 		
 		// save values.
 		foreach($params['request'] as $key => $value) {

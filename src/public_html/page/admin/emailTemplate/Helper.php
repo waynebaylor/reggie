@@ -11,7 +11,11 @@ class page_admin_emailTemplate_Helper
 			$template->id = $t['id'];
 			$template->enabled = $t['enabled'] === 'T'? 'Enabled' : 'Disabled';
 			
-			$field = db_ContactFieldManager::getInstance()->find($t['contactFieldId']);
+			$field = db_ContactFieldManager::getInstance()->find(array(
+				'eventId' => $t['eventId'],
+				'id' => $t['contactFieldId']
+			));
+			
 			$template->fieldName = $field['displayName'];
 			
 			$template->fromAddress = $t['fromAddress'];

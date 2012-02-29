@@ -217,7 +217,7 @@ class db_BadgeCellManager extends db_OrderableManager
 		
 		$params = ArrayUtil::keyIntersect($params, array('eventId', 'badgeCellId'));
 		
-		$results = $this->rawQuery($sql, $params, 'Add badge cell text permission check.');
+		$results = $this->rawQuery($sql, $params, 'Badge cell text permission check.');
 		
 		if(count($results) === 0) {
 			throw new Exception("Permission denied to modify BadgeCell_TextContent: (event id, badge cell id) -> ({$params['eventId']}, {$params['badgeCellId']}).");

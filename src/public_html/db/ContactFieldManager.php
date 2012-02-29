@@ -47,7 +47,11 @@ class db_ContactFieldManager extends db_OrderableManager
 		return self::$instance;
 	}
 	
-	public function findBySection($section) {
+	/**
+	 * 
+	 * @param array $params [eventId, sectionId]
+	 */
+	public function findBySection($params) {
 		$sql = '
 			SELECT
 				ContactField.id,
@@ -66,19 +70,24 @@ class db_ContactFieldManager extends db_OrderableManager
 			ON
 				ContactField.formInputId = FormInput.id
 			WHERE
-				ContactField.sectionId = :id
+				ContactField.sectionId = :sectionId
+			AND
+				ContactField.eventId = :eventId
 			ORDER BY
 				ContactField.displayOrder				
 		';
 		
-		$params = array(
-			'id' => $section['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'sectionId'));
 		
 		return $this->query($sql, $params, 'Find section contact fields.');
 	}
 	
-	public function find($id) {
+	/**
+	 * 
+	 * Enter description here ...
+	 * @param array $params [eventId, id]
+	 */
+	public function find($params) {
 		$sql = '
 			SELECT
 				ContactField.id,
@@ -95,19 +104,24 @@ class db_ContactFieldManager extends db_OrderableManager
 			INNER JOIN
 				FormInput
 			ON
-				ContactField.formInputId=FormInput.id
+				ContactField.formInputId = FormInput.id
 			WHERE
-				ContactField.id=:id
+				ContactField.id = :id
+			AND
+				ContactField.eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $id
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->queryUnique($sql, $params, 'Find contact field.');
 	}
 	
-	public function createContactField($properties) {
+	/**
+	 * 
+	 * @param array $params [eventId, sectionId, code, displayName, formInputId, 
+	 * 						 attributes, validationRules, regTypeIds]
+	 */
+	public function createContactField($params) {
 		$sql = '
 			INSERT INTO
 				ContactField(
@@ -128,16 +142,16 @@ class db_ContactFieldManager extends db_OrderableManager
 			)
 		';
 		
-		$params = array(
-			'eventId' => $properties['eventId'],
-			'sectionId' => $properties['sectionId'],
-			'code' => $properties['code'],
-			'displayName' => $properties['displayName'],
-			'displayOrder' => $this->getNextOrder(),
-			'formInputId' => $properties['formInputId']
-		);
+		$p = ArrayUtil::keyIntersect($params, array(
+			'eventId',
+			'sectionId',
+			'code',
+			'displayName',
+			'formInputId'
+		));
+		$p['displayOrder'] = $this->getNextOrder();
 		
-		$this->execute($sql, $params, 'Create contact field.');
+		$this->execute($sql, $p, 'Create contact field.');
 		
 		//
 		// save contact field associations
@@ -146,34 +160,50 @@ class db_ContactFieldManager extends db_OrderableManager
 		$contactFieldId = $this->lastInsertId();
 		
 		// map to Attributes.
-		$attributes = $properties['attributes'];
-		$this->setAttributes($contactFieldId, $attributes);
+		$attributes = $params['attributes'];
+		$this->setAttributes(array(
+			'eventId' => $params['eventId'],
+			'contactFieldId' => $contactFieldId, 
+			'attributes' => $attributes
+		));
 		
 		// map to Validation rules.
-		$rules = $properties['validationRules'];
-		$this->setValidationRules($contactFieldId, $rules);
+		$rules = $params['validationRules'];
+		$this->setValidationRules(array(
+			'eventId' => $params['eventId'],
+			'contactFieldId' => $contactFieldId, 
+			'validationRules' => $rules
+		));
 		
 		// map to RegType.
-		$typeIds = $properties['regTypeIds'];
-		$this->setRegTypes($contactFieldId, $typeIds);
+		$typeIds = $params['regTypeIds'];
+		$this->setRegTypes(array(
+			'eventId' => $params['eventId'],
+			'contactFieldId' => $contactFieldId, 
+			'regTypeIds' => $typeIds
+		));
 		
 		return $contactFieldId;
 	}
 	
-	private function isVisibleToAllRegTypes($field) {
+	/**
+	 * 
+	 * @param array $params [id]
+	 */
+	private function isVisibleToAllRegTypes($params) {
 		$sql = '
 			SELECT
 				contactFieldId
 			FROM 
 				RegTypeContactField
 			WHERE
-				contactFieldId=:id
+				contactFieldId = :id
 			AND
-				regTypeId is NULL
+				regTypeId IS NULL
 		';
 		
 		$params = array(
-			'id' => $field['id']
+			'id' => $params['id']
 		);
 		
 		$result = $this->rawQueryUnique($sql, $params, 'Check if contact field is visible to all reg types.');
@@ -181,8 +211,17 @@ class db_ContactFieldManager extends db_OrderableManager
 		return !empty($result);
 	}
 	
-	private function setAttributes($contactFieldId, $attributes) {
-		foreach($attributes as $id => $value) {
+	/**
+	 * 
+	 * @param array $params [eventId, contactFildId, attributes]
+	 */
+	private function setAttributes($params) {
+		$this->checkContactFieldPermission(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['contactFieldId']
+		));
+		
+		foreach($params['attributes'] as $id => $value) {
 			if(is_numeric($id) && !empty($value)) {
 				$sql = '
 					INSERT INTO
@@ -199,7 +238,7 @@ class db_ContactFieldManager extends db_OrderableManager
 				';
 			
 				$params = array(
-					'contactFieldId' => $contactFieldId,
+					'contactFieldId' => $params['contactFieldId'],
 					'attributeId' => $id,
 					'attrValue' => $value
 				);
@@ -209,8 +248,17 @@ class db_ContactFieldManager extends db_OrderableManager
 		}
 	}
 	
-	private function setValidationRules($contactFieldId, $validationRules) {
-		foreach($validationRules as $id => $value) {
+	/**
+	 * 
+	 * @param array $params [eventId, contactFieldId, validationRules]
+	 */
+	private function setValidationRules($params) {
+		$this->checkContactFieldPermission(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['contactFieldId']
+		));
+		
+		foreach($$params['validationRules'] as $id => $value) {
 			if(is_numeric($id) && !empty($value)) {
 				$sql = '
 					INSERT INTO
@@ -227,7 +275,7 @@ class db_ContactFieldManager extends db_OrderableManager
 				';
 					
 				$params = array(
-					'contactFieldId' => $contactFieldId,
+					'contactFieldId' => $$params['contactFieldId'],
 					'validationId' => $id,
 					'validationValue' => $value
 				);
@@ -237,8 +285,17 @@ class db_ContactFieldManager extends db_OrderableManager
 		}
 	}
 	
-	private function setRegTypes($contactFieldId, $regTypeIds) {
-		if(in_array(-1, $regTypeIds)) {
+	/**
+	 * 
+	 * @param array $params [eventId, contactFieldId, regTypeIds]
+	 */
+	private function setRegTypes($params) {
+		$this->checkContactFieldPermission(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['contactFieldId']
+		));
+		
+		if(in_array(-1, $params['regTypeIds'])) {
 			// contact field visible to ALL reg types. so we
 			// want the regTypeId to be NULL.
 			$sql = '
@@ -251,14 +308,14 @@ class db_ContactFieldManager extends db_OrderableManager
 				)
 			';
 				
-			$params = array(
-				'contactFieldId' => $contactFieldId
+			$p = array(
+				'contactFieldId' => $params['contactFieldId']
 			);
 			
-			$this->execute($sql, $params, 'Set contact field visible to reg types.');
+			$this->execute($sql, $p, 'Set contact field visible to reg types.');
 		}
 		else {
-			foreach($regTypeIds as $regTypeId) {
+			foreach($params['regTypeIds'] as $regTypeId) {
 				$sql = '
 					INSERT INTO
 						RegTypeContactField(
@@ -271,49 +328,50 @@ class db_ContactFieldManager extends db_OrderableManager
 					)
 				';
 			
-				$params = array(
+				$p = array(
 					'regTypeId' => $regTypeId,
-					'contactFieldId' => $contactFieldId
+					'contactFieldId' => $params['contactFieldId']
 				);
 			
-				$this->execute($sql, $params, 'Set contact field visible to reg types.');
+				$this->execute($sql, $p, 'Set contact field visible to reg types.');
 			}
 		}		
 	}
 	
-	public function save($field) {
-		$this->removeAttributes($field);
-		$this->removeValidationRules($field);
-		$this->removeRegTypes($field);
+	/**
+	 * 
+	 * @param array $params [eventId, id, code, displayName, formInputId, attributes, validationRules, regTypeIds]
+	 */
+	public function save($params) {
+		$this->removeAttributes($params);
+		$this->removeValidationRules($params);
+		$this->removeRegTypes($params);
 		
 		// remove options if necessary.
-		$inputType = intval($field['formInputId'], 10);
+		$inputType = intval($params['formInputId'], 10);
 		$needsOptions = $inputType === model_FormInput::$CHECKBOX || 
 						$inputType === model_FormInput::$RADIO || 
 						$inputType === model_FormInput::$SELECT; 
 		if(!$needsOptions) {
-			db_ContactFieldOptionManager::getInstance()->removeOptions($field);
+			db_ContactFieldOptionManager::getInstance()->removeOptions($params);
 		}
 		
 		$sql = '
 			UPDATE
 				ContactField
 			SET
-				code=:code,
-				formInputId=:formInputId,
-				displayName=:displayName
+				code = :code,
+				formInputId = :formInputId,
+				displayName = :displayName
 			WHERE
-				id=:id
+				id = :id
+			AND
+				eventId = :eventId
 		';
 
-		$params = array(
-			'id' => $field['id'],
-			'code' => $field['code'],
-			'formInputId' => $field['formInputId'],
-			'displayName' => $field['displayName']
-		);
+		$p = ArrayUtil::keyIntersect($params, array('eventId', 'id', 'code', 'displayName', 'formInputId'));
 		
-		$this->execute($sql, $params, 'Save contact field.');
+		$this->execute($sql, $p, 'Save contact field.');
 		
 		//
 		// save contact field associations
@@ -322,76 +380,119 @@ class db_ContactFieldManager extends db_OrderableManager
 		$contactFieldId = $field['id'];
 		
 		// map to Attributes.
-		$this->setAttributes($contactFieldId, $field['attributes']);
+		$this->setAttributes(array(
+			'eventId' => $params['eventId'],
+			'contactFieldId' => $params['id'],
+			'attributes' => $params['attributes']
+		));
 		
 		// map to Validation rules.
-		$this->setValidationRules($contactFieldId, $field['validationRules']);
+		$this->setValidationRules(array(
+			'eventId' => $params['eventId'],
+			'contactFieldId' => $params['id'],
+			'validationRules' => $params['validationRules']
+		));
 		
 		// map to RegType.
-		$this->setRegTypes($contactFieldId, $field['regTypeIds']);
+		$this->setRegTypes(array(
+			'eventId' => $params['eventId'],
+			'contactFieldId' => $params['id'],
+			'regTypeIds' => $params['regTypeIds']
+		));
 	}
 	
-	public function removeAttributes($field) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function removeAttributes($params) {
 		$sql = '
 			DELETE FROM
 				ContactFieldAttribute
 			WHERE
-				contactFieldId=:id
+				ContactFieldAttribute.contactFieldId = :id
+			AND
+				ContactFieldAttribute.contactFieldId
+			IN (
+				SELECT ContactField.id
+				FROM ContactField
+				WHERE ContactField.eventId = :eventId
+			)
 		';
 		
-		$params = array(
-			'id' => $field['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		$this->execute($sql, $params, 'Remove contact field attributes.');
 	}
 	
-	public function removeValidationRules($field) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function removeValidationRules($params) {
 		$sql = '
 			DELETE FROM
 				ContactFieldValidation
 			WHERE
-				contactFieldId=:id
+				ContactFieldValidation.contactFieldId = :id
+			AND
+				ContactFieldValidation.contactFieldId
+			IN (
+				SELECT ContactField.id
+				FROM ContactField
+				WHERE ContactField.eventId = :eventId
+			)
 		';
 		
-		$params = array(
-			'id' => $field['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		$this->execute($sql, $params, 'Remove contact field validation rules.');
 	}
 	
-	public function removeRegTypes($field) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function removeRegTypes($params) {
 		$sql = '
 			DELETE FROM
 				RegTypeContactField
 			WHERE
-				contactFieldId=:id
+				RegTypeContactField.contactFieldId = :id
+			AND
+				RegTypeContactField.contactFieldId 
+			IN (
+				SELECT ContactField.id
+				FROM ContactField
+				WHERE ContactField.eventId = :eventId
+			)
 		';
 		
-		$params = array(
-			'id' => $field['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		$this->execute($sql, $params, 'Remove contact field from reg types.');
 	}
 	
-	public function delete($field) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function delete($params) {
 		////////////////////////////////////////////////////////////////////
 		// delete attributes.
-		$this->removeAttributes($field);
+		$this->removeAttributes($params);
 		
 		////////////////////////////////////////////////////////////////////
 		// delete validation rules.
-		$this->removeValidationRules($field);
+		$this->removeValidationRules($params);
 		
 		////////////////////////////////////////////////////////////////////
 		// delete reg type associations.
-		$this->removeRegTypes($field);
+		$this->removeRegTypes($params);
 		
 		////////////////////////////////////////////////////////////////////
 		// delete field options.
-		db_ContactFieldOptionManager::getInstance()->removeOptions($field);
+		db_ContactFieldOptionManager::getInstance()->removeOptions($params);
 		
 		//////////////////////////////////////////////////////////////////////
 		// delete group registration associations.
@@ -399,14 +500,22 @@ class db_ContactFieldManager extends db_OrderableManager
 			DELETE FROM
 				GroupRegistration_ContactField
 			WHERE
-				contactFieldId = :contactFieldId
+				GroupRegistration_ContactField.contactFieldId = :contactFieldId
+			AND
+				GroupRegistration_ContactField.contactFieldId
+			IN (
+				SELECT ContactField.id
+				FROM ContactField
+				WHERE ContactField.eventId = :eventId
+			)
 		';
 		
-		$params = array(
-			'contactFieldId' => $field['id']
+		$p = array(
+			'eventId' => $params['eventId'],
+			'contactFieldId' => $params['id']
 		);
 		
-		$this->execute($sql, $params, 'Delete group registration associations.');
+		$this->execute($sql, $p, 'Delete group registration associations.');
 		
 		////////////////////////////////////////////////////////////////////
 		// delete report associations.
@@ -414,14 +523,22 @@ class db_ContactFieldManager extends db_OrderableManager
 			DELETE FROM
 				Report_ContactField
 			WHERE
-				contactFieldId = :contactFieldId
+				Report_ContactField.contactFieldId = :contactFieldId
+			AND
+				Report_ContactField.contactFieldId 
+			IN (
+				SELECT ContactField.id
+				FROM ContactField
+				WHERE ContactField.eventId = :eventId
+			)
 		';
 		
-		$params = array(
-			'contactFieldId' => $field['id']
+		$p = array(
+			'eventId' => $params['eventId'],
+			'contactFieldId' => $params['id']
 		);
 		
-		$this->execute($sql, $params, 'Delete report associations.');
+		$this->execute($sql, $p, 'Delete report associations.');
 		
 		////////////////////////////////////////////////////////////////////
 		// delete field.
@@ -429,25 +546,41 @@ class db_ContactFieldManager extends db_OrderableManager
 			DELETE FROM
 				ContactField
 			WHERE
-				id=:id
+				id = :id
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $field['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		$this->execute($sql, $params, 'Delete contact field.');
 	}
 	
-	public function moveFieldUp($field) {
-		$this->moveUp($field, 'sectionId', $field['sectionId']);
+	/**
+	 * 
+	 * @param array $params [eventId, id, sectionId]
+	 */
+	public function moveFieldUp($params) {
+		$this->checkContactFieldPermission($params);
+		
+		$this->moveUp($params, 'sectionId', $params['sectionId']);
 	}
 	
-	public function moveFieldDown($field) {
-		$this->moveDown($field, 'sectionId', $field['sectionId']);
+	/**
+	 * 
+	 * @param array $params [eventId, id, sectionId]
+	 */
+	public function moveFieldDown($params) {
+		$this->checkContactFieldPermission($params);
+		
+		$this->moveDown($params, 'sectionId', $params['sectionId']);
 	}
 	
-	public function findTextFieldsByEventId($eventId) {
+	/**
+	 * 
+	 * @param array $params [eventId]
+	 */
+	public function findTextFieldsByEventId($params) {
 		$sql = '
 			SELECT
 				ContactField.id,
@@ -475,11 +608,37 @@ class db_ContactFieldManager extends db_OrderableManager
 		';
 		
 		$params = array(
-			'eventId' => $eventId,
+			'eventId' => $params['eventId'],
 			'formInputId' => model_FormInput::$TEXT
 		);
 		
 		return $this->query($sql, $params, 'Find text fields by event.');
+	}
+	
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	private function checkContactFieldPermission($params) {
+		$sql = '
+			SELECT
+				id,
+				eventId
+			FROM
+				ContactField
+			WHERE
+				id = :id
+			AND
+				eventId = :eventId
+		';
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
+		
+		$results = $this->rawQuery($sql, $params, 'Check contact field permission.');
+		
+		if(count($results) === 0) {
+			throw new Exception("Permission denied to ContactField: (event id, contact field id) -> ({$params['eventId']}, {$params['id']}).");
+		}
 	}
 }
 

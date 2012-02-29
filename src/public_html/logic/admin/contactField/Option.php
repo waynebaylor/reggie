@@ -30,7 +30,11 @@ class logic_admin_contactField_Option extends logic_Performer
 	public function addOption($params) {
 		db_ContactFieldOptionManager::getInstance()->createOption($params);
 		
-		$field = db_ContactFieldManager::getInstance()->find($params['contactFieldId']);
+		$field = db_ContactFieldManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['contactFieldId']
+		));
+		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
@@ -45,7 +49,11 @@ class logic_admin_contactField_Option extends logic_Performer
 
 		db_ContactFieldOptionManager::getInstance()->delete($option);
 
-		$field = db_ContactFieldManager::getInstance()->find($option['contactFieldId']);
+		$field = db_ContactFieldManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $option['contactFieldId']
+		));
+		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
@@ -66,7 +74,11 @@ class logic_admin_contactField_Option extends logic_Performer
 		
 		db_ContactFieldOptionManager::getInstance()->moveOptionUp($option);
 		
-		$field = db_ContactFieldManager::getInstance()->find($option['contactFieldId']);
+		$field = db_ContactFieldManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $option['contactFieldId']
+		));
+		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
@@ -81,7 +93,11 @@ class logic_admin_contactField_Option extends logic_Performer
 		
 		db_ContactFieldOptionManager::getInstance()->moveOptionDown($option);
 		
-		$field = db_ContactFieldManager::getInstance()->find($option['contactFieldId']);
+		$field = db_ContactFieldManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $option['contactFieldId']
+		));
+		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(

@@ -23,7 +23,10 @@ class db_PageSectionManager extends db_OrderableManager
 			));
 		}
 		else if(model_Section::containsContactFields($obj)) {
-			$obj['content'] = db_ContactFieldManager::getInstance()->findBySection($obj);	
+			$obj['content'] = db_ContactFieldManager::getInstance()->findBySection(array(
+				'eventId' => $obj['eventId'],
+				'sectionId' => $obj['id']
+			));	
 		}
 		else if(model_Section::containsRegOptions($obj)) {
 			$obj['content'] = db_GroupManager::getInstance()->findBySectionId($obj['id']);

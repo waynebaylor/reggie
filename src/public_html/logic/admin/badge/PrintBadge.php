@@ -110,34 +110,6 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 			else if($subCell['showLeadNumber'] === 'T') {
 				$text .= model_Registrant::getLeadNumber($registration);
 			}
-			// -------------------------------------------------
-			// hard coded text customization for MM
-			// -------------------------------------------------
-			else if($cell['id'] == 4) {
-				$sdo = array();
-				
-				$singleDayOnlyText = array(
-					'54' => 'MON',
-					'55' => 'TUE',
-					'56' => 'WED',
-					'57' => 'THU',
-					'173' => 'MON EXHO',
-					'174' => 'TUE EXHO',
-					'175' => 'WED EXHO',
-					'176' => 'THU EXHO'
-				);
-				
-				$optIds = model_Registrant::getRegOptionIds($registration);
-				foreach($optIds as $optId) {
-					if(in_array($optId, array_keys($singleDayOnlyText))) {
-						$sdo[] = $singleDayOnlyText[$optId];
-					}
-				}
-				
-				$text .= $subCell['text'].join('/', $sdo);
-				
-			}
-			// ------------------------------------------------
 			else if(empty($subCell['contactFieldId'])) {
 				if($prevFieldInfo['index'] !== ($index-1) || !StringUtil::isBlank($prevFieldInfo['value'])) {
 					$text .= $subCell['text'];
@@ -145,7 +117,11 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 			}
 			else {
 				// get registrant value for contact field.
-				$field = $this->strictFindById(db_ContactFieldManager::getInstance(), $subCell['contactFieldId']);
+				$field = db_ContactFieldManager::getInstance()->find(array(
+					'eventId' => $registration['eventId'],
+					'id' =>	$subCell['contactFieldId']
+				));
+				
 				$value = model_Registrant::getInformationValue($registration, $field);
 			
 				// option fields may have multiple values selected.
@@ -168,7 +144,11 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 		$registration = $this->strictFindById(db_reg_RegistrationManager::getInstance(), $registrationId);
 		
 		foreach($cell['barcodeFields'] as $barcodeField) {
-			$field = $this->strictFindById(db_ContactFieldManager::getInstance(), $barcodeField['contactFieldId']);
+			$field = db_ContactFieldManager::getInstance()->find(array(
+				'eventId' => $registration['eventId'],
+				'id' => $barcodeField['contactFieldId']
+			));
+			
 			$value = model_Registrant::getInformationValue($registration, $field);
 			
 			// option fields may have multiple values selected.

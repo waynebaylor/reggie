@@ -101,8 +101,12 @@ class db_reg_InformationManager extends db_Manager
 		}
 	}
 	
-	public function deleteBySection($registrationId, $sectionId) {
-		$fields = db_ContactFieldManager::getInstance()->findBySection(array('id' => $sectionId));
+	/**
+	 * 
+	 * @param array $params [eventId, registrationId, sectionId]
+	 */
+	public function deleteBySection($params) {
+		$fields = db_ContactFieldManager::getInstance()->findBySection($params);
 		foreach($fields as $field) {
 			$sql = '
 				DELETE FROM

@@ -7,7 +7,7 @@ class fragment_contactField_HTML
 		$config['value'] = ArrayUtil::getValue($config, 'value', '');
 		
 		$items = array();
-		$fields = db_ContactFieldManager::getInstance()->findTextFieldsByEventId($eventId);
+		$fields = db_ContactFieldManager::getInstance()->findTextFieldsByEventId(array('eventId' => $eventId));
 		foreach($fields as $field) {
 			if($field['formInput']['id'] == model_FormInput::$TEXT) {
 				$items[] = array(
