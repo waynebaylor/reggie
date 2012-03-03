@@ -29,13 +29,21 @@ class fragment_reg_summary_Information extends template_Template
 					if(is_array($value)) {
 						$optionNames = '';
 						foreach($value as $optionId) {
-							$option = db_ContactFieldOptionManager::getInstance()->find($optionId);
+							$option = db_ContactFieldOptionManager::getInstance()->find(array(
+								'eventId' => $this->event['id'],
+								'id' => $optionId
+							));
+							
 							$optionNames .= $option['displayName'].'<br/>';
 						}
 						$value = $optionNames;	
 					}
 					else if(!empty($value)) {
-						$option = db_ContactFieldOptionManager::getInstance()->find($value);
+						$option = db_ContactFieldOptionManager::getInstance()->find(array(
+							'eventId' => $this->event['id'],
+							'id' => $value
+						));
+						
 						$value = $option['displayName'];
 					}
 				}

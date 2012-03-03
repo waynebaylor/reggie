@@ -3,7 +3,7 @@
 class db_ContactFieldOptionManager extends db_OrderableManager
 {
 	private static $instance;
-	
+
 	protected function __construct() {
 		parent::__construct();
 	}
@@ -11,62 +11,89 @@ class db_ContactFieldOptionManager extends db_OrderableManager
 	protected function getTableName() {
 		return 'ContactFieldOption';
 	}
-	
+
 	public static function getInstance() {
 		if(empty(self::$instance)) {
 			self::$instance = new db_ContactFieldOptionManager();
 		}
-		
+
 		return self::$instance;
 	}
 
-	public function find($id) {
+	/**
+	 *
+	 * @param array $params [eventId, id]
+	 */
+	public function find($params) {
 		$sql = '
 			SELECT
-				id,
-				contactFieldId,
-				displayName,
-				defaultSelected,
-				displayOrder
+				ContactFieldOption.id,
+				ContactFieldOption.contactFieldId,
+				ContactFieldOption.displayName,
+				ContactFieldOption.defaultSelected,
+				ContactFieldOption.displayOrder
 			FROM
 				ContactFieldOption
 			WHERE
-				id=:id
+				ContactFieldOption.id = :id
+			AND
+				ContactFieldOption.contactFieldId
+			IN (
+				SELECT ContactField.id 
+				FROM ContactField
+				WHERE ContactField.eventId = :eventId
+			)
 			ORDER BY
-				displayOrder
+				ContactFieldOption.displayOrder
 		';
 
-		$params = array(
-			'id' => $id
-		);
-		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
+
 		return $this->queryUnique($sql, $params, 'Find contact field option.');
 	}
-	
-	public function findByField($field) {
+
+	/**
+	 *
+	 * @param array $params [eventId, contactFieldId]
+	 */
+	public function findByField($params) {
 		$sql = '
 			SELECT
-				id,
-				contactFieldId,
-				displayName,
-				defaultSelected,
-				displayOrder
+				ContactFieldOption.id,
+				ContactFieldOption.contactFieldId,
+				ContactFieldOption.displayName,
+				ContactFieldOption.defaultSelected,
+				ContactFieldOption.displayOrder
 			FROM
 				ContactFieldOption
 			WHERE
-				contactFieldId=:id
+				ContactFieldOption.contactFieldId = :contactFieldId
+			AND
+				ContactFieldOption.contactFieldId
+			IN (
+				SELECT ContactField.id 
+				FROM ContactField
+				WHERE ContactField.eventId = :eventId
+			)	
 			ORDER BY
-				displayOrder
+				ContactFieldOption.displayOrder
 		';
-		
-		$params = array(
-			'id' => $field['id']
-		);
-		
+
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'contactFieldId'));
+
 		return $this->query($sql, $params, 'Find contact field options.');
 	}
-	
-	public function createOption($option) {
+
+	/**
+	 *
+	 * @param array $params [eventId, contactFieldId, displayName, defaultSelected]
+	 */
+	public function createOption($params) {
+		$field = db_ContactFieldManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['contactFieldId']
+		));
+
 		$sql = '
 			INSERT INTO
 				ContactFieldOption(
@@ -83,50 +110,69 @@ class db_ContactFieldOptionManager extends db_OrderableManager
 			)
 		';
 
-		$params = array(
-			'contactFieldId' => $option['contactFieldId'],
-			'displayName' => $option['displayName'],
-			'defaultSelected' => $option['defaultSelected'],
-			'displayOrder' => $this->getNextOrder()
-		);
-		
-		$this->execute($sql, $params, 'Create contact field option.');
+		$params = ArrayUtil::keyIntersect($params, array(
+			'displayName',
+			'defaultSelected'		
+			));
+			$params['contactFieldId'] = $field['id'];
+			$params['displayOrder'] = $this->getNextOrder();
+
+			$this->execute($sql, $params, 'Create contact field option.');
 	}
-	
-	public function delete($option) {
+
+	/**
+	 *
+	 * @param array $params [eventId, id]
+	 */
+	public function delete($params) {
 		$sql = '
 			DELETE FROM
 				ContactFieldOption
 			WHERE
-				id=:id
+				ContactFieldOption.id = :id
+			AND
+				ContactFieldOption.contactFieldId
+			IN (
+				SELECT ContactField.id
+				FROM ContactField
+				WHERE ContactField.eventId = :eventId
+			)
 		';
 
-		$params = array(
-			'id' => $option['id']
-		);
-		
-		$this->execute($sql, $params, 'Delete contact field option.');		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
+
+		$this->execute($sql, $params, 'Delete contact field option.');
 	}
-	
-	public function removeOptions($field) {
+
+	/**
+	 *
+	 * @param array $params [eventId, contactFieldId]
+	 */
+	public function removeOptions($params) {
 		$sql = '
 			DELETE FROM
 				ContactFieldOption
 			WHERE
-				contactFieldId=:id
+				ContactFieldOption.contactFieldId = :contactFieldId
+			AND
+				ContactFieldOption.contactFieldId
+			IN (
+				SELECT ContactField.id
+				FROM ContactField
+				WHERE ContactField.eventId = :eventId
+			)
 		';
 
-		$params = array(
-			'id' => $field['id']
-		);
-		
-		$this->execute($sql, $params, 'Remove all contact field options.');		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'contactFieldId'));
+
+		$this->execute($sql, $params, 'Remove all contact field options.');
 	}
-	
+
+	/**
+	 *
+	 * @param array $params [eventId, id, displayName, defaultSelected]
+	 */
 	public function save($params) {
-		// includes some funky sql to perform event permission check.
-		// since ContactFieldOption doesn't have an eventId column we have to use
-		// ContactField's eventId column.
 		$sql = '
 			UPDATE
 				ContactFieldOption
@@ -134,31 +180,43 @@ class db_ContactFieldOptionManager extends db_OrderableManager
 				ContactFieldOption.displayName = :displayName,
 				ContactFieldOption.defaultSelected = :defaultSelected
 			WHERE
-				ContactFieldOption.contactFieldId = (
-					SELECT ContactField.id 
-					FROM ContactField 
-					WHERE ContactField.eventId = :eventId 
-					AND ContactField.id = ContactFieldOption.contactFieldId
-				)
-			AND
 				ContactFieldOption.id = :id
+			AND
+				ContactFieldOption.contactFieldId
+			IN (
+				SELECT ContactField.id 
+				FROM ContactField 
+				WHERE ContactField.eventId = :eventId 
+			)
 		';	
-		
+
 		$params = ArrayUtil::keyIntersect($params, array(
 			'eventId', 
 			'id', 
 			'displayName', 
 			'defaultSelected'
-		));
-		
-		$this->execute($sql, $params, 'Save field option.');
+			));
+
+			$this->execute($sql, $params, 'Save field option.');
 	}
-	
-	public function moveOptionUp($option) {
+
+	/**
+	 *
+	 * @param array $params [eventId, id]
+	 */
+	public function moveOptionUp($params) {
+		$option = $this->find($params);
+
 		$this->moveUp($option, 'contactFieldId', $option['contactFieldId']);
 	}
-	
-	public function moveOptionDown($option) {
+
+	/**
+	 *
+	 * @param array $params [eventId, id]
+	 */
+	public function moveOptionDown($params) {
+		$option = $this->find($params);
+
 		$this->moveDown($option, 'contactFieldId', $option['contactFieldId']);
 	}
 }

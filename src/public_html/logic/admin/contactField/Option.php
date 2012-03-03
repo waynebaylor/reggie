@@ -7,7 +7,7 @@ class logic_admin_contactField_Option extends logic_Performer
 	}
 	
 	public function view($params) {
-		$option = db_ContactFieldOptionManager::getInstance()->find($params['id']);
+		$option = db_ContactFieldOptionManager::getInstance()->find($params);
 		$event = db_EventManager::getInstance()->findInfoById($params['eventId']);
 		
 		$bc = db_BreadcrumbManager::getInstance()->findContactFieldCrumbs($option['contactFieldId']);
@@ -45,9 +45,12 @@ class logic_admin_contactField_Option extends logic_Performer
 	}
 	
 	public function removeOption($params) {
-		$option = $this->strictFindById(db_ContactFieldOptionManager::getInstance(), $params['id']);
-
-		db_ContactFieldOptionManager::getInstance()->delete($option);
+		$option = db_ContactFieldOptionManager::getInstance()->find($params);
+		
+		db_ContactFieldOptionManager::getInstance()->delete(array(
+			'eventId' => $params['eventId'],
+			'id' => $option['id']
+		));
 
 		$field = db_ContactFieldManager::getInstance()->find(array(
 			'eventId' => $params['eventId'],
@@ -70,9 +73,13 @@ class logic_admin_contactField_Option extends logic_Performer
 	}
 	
 	public function moveOptionUp($params) {
-		$option = $this->strictFindById(db_ContactFieldOptionManager::getInstance(), $params['id']);
+		$option = db_ContactFieldOptionManager::getInstance()->find($params);
 		
-		db_ContactFieldOptionManager::getInstance()->moveOptionUp($option);
+		db_ContactFieldOptionManager::getInstance()->moveOptionUp(array(
+			'eventId' => $params['eventId'],
+			'id' => $option['id'],
+			'contactFieldId' => $option['contactFieldId']
+		));
 		
 		$field = db_ContactFieldManager::getInstance()->find(array(
 			'eventId' => $params['eventId'],
@@ -89,9 +96,13 @@ class logic_admin_contactField_Option extends logic_Performer
 	}
 	
 	public function moveOptionDown($params) {
-		$option = $this->strictFindById(db_ContactFieldOptionManager::getInstance(), $params['id']);
+		$option = db_ContactFieldOptionManager::getInstance()->find($params);
 		
-		db_ContactFieldOptionManager::getInstance()->moveOptionDown($option);
+		db_ContactFieldOptionManager::getInstance()->moveOptionDown(array(
+			'eventId' => $params['eventId'],
+			'id' => $option['id'],
+			'contactFieldId' => $option['contactFieldId']
+		));
 		
 		$field = db_ContactFieldManager::getInstance()->find(array(
 			'eventId' => $params['eventId'],

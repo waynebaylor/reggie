@@ -76,13 +76,21 @@ _;
 		if(is_array($value)) {
 			$optionNames = array();
 			foreach($value as $optionId) {
-				$option = db_ContactFieldOptionManager::getInstance()->find($optionId);
+				$option = db_ContactFieldOptionManager::getInstance()->find(array(
+					'eventId' => $this->page['eventId'],
+					'id' => $optionId
+				));
+				
 				$optionNames[] = $option['displayName'];
 			}
 			$value = implode('<br/>', $optionNames);
 		}
 		else if(!StringUtil::isBlank($value)) {
-			$option = db_ContactFieldOptionManager::getInstance()->find($value);
+			$option = db_ContactFieldOptionManager::getInstance()->find(array(
+				'eventId' => $page['eventId'],
+				'id' => $value
+			));
+			
 			$value = $option['displayName'];
 		}
 		

@@ -34,7 +34,10 @@ class db_ContactFieldManager extends db_OrderableManager
 		$obj['visibleTo'] = $regTypes;
 		
 		// set field's options (if any)
-		$obj['options'] = db_ContactFieldOptionManager::getInstance()->findByField($obj);
+		$obj['options'] = db_ContactFieldOptionManager::getInstance()->findByField(array(
+			'eventId' => $obj['eventId'],
+			'contactFieldId' => $obj['id']
+		));
 	
 		return $obj;
 	}
@@ -84,7 +87,6 @@ class db_ContactFieldManager extends db_OrderableManager
 	
 	/**
 	 * 
-	 * Enter description here ...
 	 * @param array $params [eventId, id]
 	 */
 	public function find($params) {
@@ -353,7 +355,10 @@ class db_ContactFieldManager extends db_OrderableManager
 						$inputType === model_FormInput::$RADIO || 
 						$inputType === model_FormInput::$SELECT; 
 		if(!$needsOptions) {
-			db_ContactFieldOptionManager::getInstance()->removeOptions($params);
+			db_ContactFieldOptionManager::getInstance()->removeOptions(array(
+				'eventId' => $params['eventId'],
+				'contactFieldId' => $params['id']
+			));
 		}
 		
 		$sql = '
@@ -492,7 +497,10 @@ class db_ContactFieldManager extends db_OrderableManager
 		
 		////////////////////////////////////////////////////////////////////
 		// delete field options.
-		db_ContactFieldOptionManager::getInstance()->removeOptions($params);
+		db_ContactFieldOptionManager::getInstance()->removeOptions(array(
+			'eventId' => $params['eventId'],
+			'contactFieldId' => $params['id']
+		));
 		
 		//////////////////////////////////////////////////////////////////////
 		// delete group registration associations.
@@ -558,7 +566,7 @@ class db_ContactFieldManager extends db_OrderableManager
 	
 	/**
 	 * 
-	 * @param array $params [eventId, id, sectionId]
+	 * @param array $params [eventId, id, sectionId, displayOrder]
 	 */
 	public function moveFieldUp($params) {
 		$this->checkContactFieldPermission($params);
@@ -568,7 +576,7 @@ class db_ContactFieldManager extends db_OrderableManager
 	
 	/**
 	 * 
-	 * @param array $params [eventId, id, sectionId]
+	 * @param array $params [eventId, id, sectionId, displayOrder]
 	 */
 	public function moveFieldDown($params) {
 		$this->checkContactFieldPermission($params);

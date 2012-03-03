@@ -198,13 +198,21 @@ class logic_admin_badge_PrintBadge extends logic_Performer
 		if(is_array($value)) {
 			$optionNames = array();
 			foreach($value as $optionId) {
-				$option = db_ContactFieldOptionManager::getInstance()->find($optionId);
+				$option = db_ContactFieldOptionManager::getInstance()->find(array(
+					'eventId' => $field['eventId'],
+					'id' => $optionId
+				));
+				
 				$optionNames[] = $option['displayName'];
 			}
 			$value = implode(', ', $optionNames);
 		}
 		else if(!StringUtil::isBlank($value)) {
-			$option = db_ContactFieldOptionManager::getInstance()->find($value);
+			$option = db_ContactFieldOptionManager::getInstance()->find(array(
+				'eventId' => $field['eventId'],
+				'id' => $value
+			));
+			
 			$value = $option['displayName'];
 		}
 		

@@ -613,7 +613,7 @@ class db_RegTypeManager extends db_OrderableManager
 				WHERE
 					BadgeTemplate_RegType.badgeTemplateId = :badgeTemplateId
 				AND
-					Regtype.eventId = :eventId
+					RegType.eventId = :eventId
 			';
 			
 			$params = ArrayUtil::keyIntersect($params, array('eventId', 'badgeTemplateId'));
