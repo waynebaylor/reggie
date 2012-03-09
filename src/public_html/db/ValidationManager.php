@@ -33,7 +33,11 @@ class db_ValidationManager extends db_Manager
 		return $this->query($sql, array(), 'Find all validation rules.');
 	}
 	
-	public function findContactFieldRules($contactField) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function findContactFieldRules($params) {
 		$sql = '
 			SELECT
 				Validation.id,
@@ -45,14 +49,18 @@ class db_ValidationManager extends db_Manager
 			INNER JOIN
 				Validation
 			ON
-				ContactFieldValidation.validationId=Validation.id
+				ContactFieldValidation.validationId = Validation.id
+			INNER JOIN
+				ContactField
+			ON
+				ContactField.id = ContactFieldValidation.contactFieldId
 			WHERE
-				ContactFieldValidation.contactFieldId=:id
+				ContactFieldValidation.contactFieldId = :id
+			AND
+				ContactField.eventId = :eventId
 		';
 
-		$params = array(
-			'id' => $contactField['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->query($sql, $params, 'Find contact field validation rules.');
 	}

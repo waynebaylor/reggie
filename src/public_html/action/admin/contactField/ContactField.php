@@ -96,6 +96,7 @@ class action_admin_contactField_ContactField extends action_ValidatorAction
 			'displayName' => '',
 			'code' => '',
 			'formInputId' => 0,
+			'regTypeIds' => array(),
 			'request' => $_REQUEST
 		));
 		
