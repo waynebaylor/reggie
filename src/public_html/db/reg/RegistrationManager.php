@@ -172,7 +172,12 @@ class db_reg_RegistrationManager extends db_Manager
 
 		db_reg_InformationManager::getInstance()->createInformation($regId, $newRegInfo);
 		
-		db_reg_RegOptionManager::getInstance()->createOptions($r['regTypeId'], $regId, $r['regOptionIds']);
+		db_reg_RegOptionManager::getInstance()->createOptions(array(
+			'eventId' => $r['eventId'],
+			'regTypeId' => $r['regTypeId'], 
+			'regId' => $regId, 
+			'regOptionIds' => $r['regOptionIds']
+		));
 		
 		db_reg_VariableQuantityManager::getInstance()->createOptions($r['regTypeId'], $regId, $r['variableQuantity']);
 		

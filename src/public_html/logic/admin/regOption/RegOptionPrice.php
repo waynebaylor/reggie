@@ -22,7 +22,11 @@ class logic_admin_regOption_RegOptionPrice extends logic_Performer
 	public function addRegOptionPrice($params) {
 		db_RegOptionPriceManager::getInstance()->createRegOptionPrice($params);
 		
-		$option = db_RegOptionManager::getInstance()->find($params['regOptionId']);
+		$option = db_RegOptionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['regOptionId']
+		));
+		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
@@ -50,7 +54,11 @@ class logic_admin_regOption_RegOptionPrice extends logic_Performer
 		
 		db_RegOptionPriceManager::getInstance()->delete($price);
 		
-		$option = db_RegOptionManager::getInstance()->find($price['regOptionId']);
+		$option = db_RegOptionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $price['regOptionId']
+		));
+		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(

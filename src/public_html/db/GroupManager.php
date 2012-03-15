@@ -23,7 +23,10 @@ class db_GroupManager extends db_OrderableManager
 	protected function populate(&$obj, $arr) {
 		parent::populate($obj, $arr);
 
-		$obj['options'] = db_RegOptionManager::getInstance()->findByGroup($obj);
+		$obj['options'] = db_RegOptionManager::getInstance()->findByGroup(array(
+			'eventId' => $obj['eventId'],
+			'parentGroupId' => $obj['id']
+		));
 		
 		return $obj;
 	}

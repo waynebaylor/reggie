@@ -2,6 +2,13 @@
 
 class action_admin_registration_RegOption extends action_ValidatorAction
 {
+	function __construct() {
+		parent::__construct();
+		
+		$this->logic = new logic_admin_registration_RegOption();
+		$this->converter = new viewConverter_admin_registration_RegOption();
+	}
+	
 	public function view() {
 		throw new Exception("Action not implemented: view");	
 	}

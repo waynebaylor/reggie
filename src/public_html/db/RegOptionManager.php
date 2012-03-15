@@ -31,7 +31,11 @@ class db_RegOptionManager extends db_OrderableManager
 		return self::$instance;
 	}
 	
-	public function find($id) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function find($params) {
 		$sql = '
 			SELECT
 				id,
@@ -47,17 +51,21 @@ class db_RegOptionManager extends db_OrderableManager
 			FROM
 				RegOption
 			WHERE
-				id=:id
+				id = :id
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $id
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->queryUnique($sql, $params, 'Find reg option.');
 	}
 	
-	public function findByGroup($group) {
+	/**
+	 * 
+	 * @param array $params [eventId, parentGroupId]
+	 */
+	public function findByGroup($params) {
 		$sql = '
 			SELECT
 				id,
@@ -73,19 +81,23 @@ class db_RegOptionManager extends db_OrderableManager
 			FROM
 				RegOption
 			WHERE
-				parentGroupId=:id
+				parentGroupId = :parentGroupId
+			AND
+				eventId = :eventId
 			ORDER BY
 				displayOrder
 		';
 		
-		$params = array(
-			'id' => $group['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'parentGroupId'));
 		
 		return $this->query($sql, $params, 'Find reg options by group.');
 	}
 	
-	public function createRegOption($option) {
+	/**
+	 * 
+	 * @param array $params [eventId, parentGroupId, code, description, capacity, defaultSelected, showPrice]
+	 */
+	public function createRegOption($params) {
 		$sql = '
 			INSERT INTO
 				RegOption(
@@ -110,65 +122,83 @@ class db_RegOptionManager extends db_OrderableManager
 			)
 		';
 		
-		$params = array(
-			'eventId' => $option['eventId'],
-			'parentGroupId' => $option['parentGroupId'],
-			'code' => $option['code'],
-			'description' => $option['description'],
-			'capacity' => $option['capacity'],
-			'defaultSelected' => $option['defaultSelected'],
-			'showPrice' => $option['showPrice'],
-			'displayOrder' => $this->getNextOrder()
-		);
+		$params = ArrayUtil::keyIntersect($params, array(
+			'eventId',
+			'parentGroupId',
+			'code',
+			'description',
+			'capacity',
+			'defaultSelected',
+			'showPrice'
+		));
+		$params['displayOrder'] = $this->getNextOrder();
 		
 		$this->execute($sql, $params, 'Create reg option.');
 		
 		return $this->lastInsertId();
 	}
 	
-	public function save($option) {
-		if(empty($option['text'])) {
-			$sql = '
-				UPDATE
-					RegOption
-				SET
-					code=:code,
-					description=:description,
-					capacity=:capacity,
-					defaultSelected=:defaultSelected,
-					showPrice=:showPrice
-				WHERE
-					id=:id
-			';
-			
-			$params = ArrayUtil::keyIntersect($params, array(
-				'id', 
-				'code', 
-				'description', 
-				'capacity', 
-				'defaultSelected', 
-				'showPrice'
-			)); 
-		}
-		else {
-			$sql = '
-				UPDATE
-					RegOption
-				SET
-					text = :text
-				WHERE
-					id = :id
-			';
+	/**
+	 * 
+	 * @param array $params [eventId, id, text]
+	 */
+	public function saveText($params) {
+		$sql = '
+			UPDATE
+				RegOption
+			SET
+				text = :text
+			WHERE
+				id = :id
+			AND
+				eventId = :eventId
+		';
 
-			$params = ArrayUtil::keyIntersect($option, array('id', 'text'));
-		}
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id', 'text'));
 		
 		$this->execute($sql, $params, 'Save reg option.');
 	}
 	
-	public function delete($option) {
+	/**
+	 * 
+	 * @param array $params [eventId, id, code, description, capacity, defaultSelected, showPrice]
+	 */
+	public function save($params) {
+		$sql = '
+			UPDATE
+				RegOption
+			SET
+				code = :code,
+				description = :description,
+				capacity = :capacity,
+				defaultSelected = :defaultSelected,
+				showPrice = :showPrice
+			WHERE
+				id = :id
+			AND
+				eventId = :eventId
+		';
+		
+		$params = ArrayUtil::keyIntersect($params, array(
+			'id', 
+			'eventId',
+			'code', 
+			'description', 
+			'capacity', 
+			'defaultSelected', 
+			'showPrice'
+		)); 
+		
+		$this->execute($sql, $params, 'Save reg option.');
+	}
+	
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function delete($params) {
 		// delete the option's groups.
-		$option = $this->find($option['id']);
+		$option = $this->find($params);
 		foreach($option['groups'] as $group) {
 			db_GroupManager::getInstance()->deleteById($group['id']);
 		}		
@@ -178,14 +208,22 @@ class db_RegOptionManager extends db_OrderableManager
 			DELETE FROM
 				RegOption_RegOptionPrice
 			WHERE
-				regOptionId = :regOptionId
+				RegOption_RegOptionPrice.regOptionId = :regOptionId
+			AND
+				RegOption_RegOptionPrice.regOptionId
+			IN (
+				SELECT RegOption.id
+				FROM RegOption
+				WHERE RegOption.eventId = :eventId
+			)
 		';
 		
-		$params = array(
-			'regOptionId' => $option['id']
+		$p = array(
+			'eventId' => $params['eventId'],
+			'regOptionId' => $params['id']
 		);
 		
-		$this->execute($sql, $params, 'Delete option price associations.');
+		$this->execute($sql, $p, 'Delete option price associations.');
 		
 		// delete the option's prices.
 		foreach($option['prices'] as $price) {
@@ -197,24 +235,40 @@ class db_RegOptionManager extends db_OrderableManager
 			DELETE FROM
 				RegOption
 			WHERE
-				id=:id
+				id = :id
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $option['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		$this->execute($sql, $params, 'Delete reg option.');
 	}
 	
-	public function moveOptionUp($option) {
-		$this->moveUp($option, 'parentGroupId', $option['parentGroupId']);
+	/**
+	 * 
+	 * @param array $params [eventId, id, parentGroupId, displayOrder]
+	 */
+	public function moveOptionUp($params) {
+		$this->checkRegOptionPermission($params);
+		
+		$this->moveUp($params, 'parentGroupId', $params['parentGroupId']);
 	}
 	
-	public function moveOptionDown($option) {
-		$this->moveDown($option, 'parentGroupId', $option['parentGroupId']);
+	/**
+	 * 
+	 * @param array $params [eventId, id, parentGroupId, displayOrder]
+	 */
+	public function moveOptionDown($params) {
+		$this->checkRegOptionPermission($params);
+		
+		$this->moveDown($params, 'parentGroupId', $params['parentGroupId']);
 	}
 	
+	/**
+	 * 
+	 * @param array $params [eventId, parentGroupId, text]
+	 */
 	public function createText($params) {
 		$sql = '
 			INSERT INTO
@@ -257,6 +311,32 @@ class db_RegOptionManager extends db_OrderableManager
 		$this->execute($sql, $params, 'Create text.');
 		
 		return $this->lastInsertId();
+	}
+	
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	private function checkRegOptionPermission($params) {
+		$sql = '
+			SELECT
+				id,
+				eventId
+			FROM
+				RegOption
+			WHERE
+				id = :id
+			AND
+				eventId = :eventId
+		';
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
+		
+		$results = $this->rawQuery($sql, $params, 'Check reg option permission.');
+		
+		if(count($results) === 0) {
+			throw new Exception("Permission denied to access RegOption. (event id, reg opt id) -> ({$params['eventId']}, {$params['id']}).");
+		}
 	}
 } 
 

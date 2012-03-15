@@ -48,15 +48,18 @@ class db_reg_RegOptionManager extends db_Manager
 	 * creates the reg option rows associated with the given 
 	 * reg id.
 	 * 
-	 * @param $id
-	 * @param $optionIds
+	 * @param array $params [eventId, regTypeId, regId, optionIds]
 	 */
-	public function createOptions($regTypeId, $regId, $optionIds) {
-		foreach($optionIds as $optionId) {
-			$option = db_RegOptionManager::getInstance()->find($optionId);
-			$price = model_RegOption::getPrice(array('id' => $regTypeId), $option);
+	public function createOptions($params) {
+		foreach($params['optionIds'] as $optionId) {
+			$option = db_RegOptionManager::getInstance()->find(array(
+				'eventId' => $params['eventId'],
+				'id' => $optionId
+			));
 			
-			$this->createOption($regId, $option['id'], $price['id']);
+			$price = model_RegOption::getPrice(array('id' => $params['regTypeId']), $option);
+			
+			$this->createOption($params['regId'], $option['id'], $price['id']);
 		}
 	}
 	

@@ -7,7 +7,7 @@ class logic_admin_regOption_RegOption extends logic_Performer
 	}
 	
 	public function view($params) {
-		$option = $this->strictFindById(db_RegOptionManager::getInstance(), $params['id']);
+		$option = db_RegOptionManager::getInstance()->find($params);
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
@@ -15,7 +15,10 @@ class logic_admin_regOption_RegOption extends logic_Performer
 			'eventId' => $params['eventId'],
 			'event' => $event,
 			'option' => $option,
-			'breadcrumbsParams' => db_BreadcrumbManager::getInstance()->findRegOptionCrumbs($params['id'])
+			'breadcrumbsParams' => db_BreadcrumbManager::getInstance()->findRegOptionCrumbs(array(
+				'eventId' => $params['eventId'],
+				'regOptionId' => $params['id']
+			))
 		);
 	}
 	
@@ -46,7 +49,7 @@ class logic_admin_regOption_RegOption extends logic_Performer
 	}
 	
 	public function removeOption($params) {
-		$option = $this->strictFindById(db_RegOptionManager::getInstance(), $params['id']);
+		$option = db_RegOptionManager::getInstance()->find($params);
 		
 		db_RegOptionManager::getInstance()->delete($option);
 		
@@ -61,7 +64,7 @@ class logic_admin_regOption_RegOption extends logic_Performer
 	}
 	
 	public function moveOptionUp($params) {
-		$option = $this->strictFindById(db_RegOptionManager::getInstance(), $params['id']);
+		$option = db_RegOptionManager::getInstance()->find($params);
 		
 		db_RegOptionManager::getInstance()->moveOptionUp($option);
 		
@@ -76,7 +79,7 @@ class logic_admin_regOption_RegOption extends logic_Performer
 	}
 	
 	public function moveOptionDown($params) {
-		$option = $this->strictFindById(db_RegOptionManager::getInstance(), $params['id']);
+		$option = db_RegOptionManager::getInstance()->find($params);
 		
 		db_RegOptionManager::getInstance()->moveOptionDown($option);
 		
@@ -91,7 +94,12 @@ class logic_admin_regOption_RegOption extends logic_Performer
 	}
 	
 	public function saveOption($params) {
-		db_RegOptionManager::getInstance()->save($params);
+		if($params['isText'] === 'true') {
+			db_RegOptionManager::getInstance()->saveText($params);
+		}
+		else {
+			db_RegOptionManager::getInstance()->save($params);
+		}
 		
 		return $params;
 	}

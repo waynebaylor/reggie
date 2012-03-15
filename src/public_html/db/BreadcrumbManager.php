@@ -170,10 +170,18 @@ class db_BreadcrumbManager extends db_Manager
 		return $this->rawQueryUnique($sql, $params, 'Find generate report breadcrumbs.');
 	}
 	
-	public function findRegOptionGroupCrumbs($regOptionGroupId) {
-		$group = db_GroupManager::getInstance()->find($regOptionGroupId);
+	/**
+	 * 
+	 * @param array $params [eventId, regOptionGroupId]
+	 */
+	public function findRegOptionGroupCrumbs($params) {
+		$group = db_GroupManager::getInstance()->find($params['regOptionGroupId']);
 
-		$groupsAndOpts = $this->getGroupsAndOpts($group['regOptionId']);
+		$groupsAndOpts = $this->getGroupsAndOpts(array(
+			'eventId' => $params['eventId'],
+			'regOptionId' => $group['regOptionId']
+		));
+		
 		$groupsAndOpts[] = $group['id'];
 		
 		// the first id in $groupsAndOpts is the section group.
@@ -188,8 +196,12 @@ class db_BreadcrumbManager extends db_Manager
 		);
 	}
 	
-	public function findRegOptionCrumbs($regOptionId) {
-		$groupsAndOpts = $this->getGroupsAndOpts($regOptionId);
+	/**
+	 * 
+	 * @param array $params [eventId, regOptionId]
+	 */
+	public function findRegOptionCrumbs($params) {
+		$groupsAndOpts = $this->getGroupsAndOpts($params);
 		
 		// the first id in $groupsAndOpts is the section group.
 		$group = db_GroupManager::getInstance()->find($groupsAndOpts[0]);
@@ -222,7 +234,7 @@ class db_BreadcrumbManager extends db_Manager
 			$bc = db_BreadcrumbManager::getInstance()->findVariableRegOptionCrumbs($price['regOptionId']);
 		}
 		else {
-			$bc = db_BreadcrumbManager::getInstance()->findRegOptionCrumbs($price['regOptionId']);
+			$bc = db_BreadcrumbManager::getInstance()->findRegOptionCrumbs($price);
 		}
 		
 		$bc['regOptionPriceId'] = $regOptionPriceId;
@@ -234,17 +246,26 @@ class db_BreadcrumbManager extends db_Manager
 	 * returns an array of reg group and reg option ids. ids are ordered by
 	 * placement in the hierarchy ending with the given reg option id and 
 	 * working backward up the hierarchy from there.
-	 * @param number $regOptionId the reg option to start with
+	 * 
+	 * @param array $params [eventId, regOptionId]
 	 */
-	private function getGroupsAndOpts($regOptionId) {
-		$ids = array($regOptionId);
+	private function getGroupsAndOpts($params) {
+		$ids = array($params['regOptionId']);
 		
-		$option = db_RegOptionManager::getInstance()->find($regOptionId);
+		$option = db_RegOptionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['regOptionId']
+		));
+		
 		$group = db_GroupManager::getInstance()->find($option['parentGroupId']);
 		$ids[] = $group['id'];
 		
 		if(!model_RegOptionGroup::isSectionGroup($group)) {
-			$tmp = $this->getGroupsAndOpts($group['regOptionId']);
+			$tmp = $this->getGroupsAndOpts(array(
+				'eventId' => $params['eventId'],
+				'regOptionId' => $group['regOptionId']
+			));
+			
 			$tmp = array_reverse($tmp);
 			$ids = array_merge($ids, $tmp);
 		}

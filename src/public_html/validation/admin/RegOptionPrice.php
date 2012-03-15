@@ -34,7 +34,10 @@ class validation_admin_RegOptionPrice
 			$option = db_VariableQuantityOptionManager::getInstance()->find($optionId);    
 		}
 		else {
-			$option = db_RegOptionManager::getInstance()->find($optionId);
+			$option = db_RegOptionManager::getInstance()->find(array(
+				'eventId' => $values['eventId'],
+				'id' => $optionId
+			));
 		}
                 
 		// check that the start date doesn't overlap with any existing prices.

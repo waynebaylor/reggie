@@ -6,7 +6,7 @@ class logic_admin_registration_RegOption extends logic_Performer
 		parent::__construct();
 	}
 	
-	public function addRegOptions($params) {
+	public function addRegOptions($params) { 
 		foreach($params['regOpts'] as $optionId) { 
 			db_reg_RegOptionManager::getInstance()->createOption($params['registrationId'], $optionId, $params['regOptPrice_'.$optionId]);
 		}

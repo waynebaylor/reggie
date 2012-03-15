@@ -57,6 +57,10 @@ _;
 				<td></td>
 				<td>
 					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $this->event['id']
+					))}
+					{$this->HTML->hidden(array(
 						'name' => 'registrationId',
 						'value' => $this->registration['id']
 					))}

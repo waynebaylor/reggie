@@ -15,7 +15,10 @@ class logic_admin_regOption_RegOptionGroup extends logic_Performer
 			'eventId' => $params['eventId'],
 			'event' => $event,
 			'group' => $group,
-			'breadcrumbsParams' => db_BreadcrumbManager::getInstance()->findRegOptionGroupCrumbs($params['id'])
+			'breadcrumbsParams' => db_BreadcrumbManager::getInstance()->findRegOptionGroupCrumbs(array(
+				'eventId' => $params['eventId'],
+				'regOptionGroupId' => $params['id']
+			))
 		);
 	}
 	
@@ -25,7 +28,11 @@ class logic_admin_regOption_RegOptionGroup extends logic_Performer
 		
 		db_GroupManager::getInstance()->createGroupUnderOption($params);
 		
-		$option = db_RegOptionManager::getInstance()->find($params['regOptionId']);
+		$option = db_RegOptionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['regOptionId']
+		));
+		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
@@ -40,7 +47,11 @@ class logic_admin_regOption_RegOptionGroup extends logic_Performer
 		
 		db_GroupManager::getInstance()->deleteById($group['id']);
 		
-		$option = db_RegOptionManager::getInstance()->find($group['regOptionId']);
+		$option = db_RegOptionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $group['regOptionId']
+		));
+		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
@@ -55,7 +66,11 @@ class logic_admin_regOption_RegOptionGroup extends logic_Performer
 		
 		db_GroupManager::getInstance()->moveGroupUp($group);
 		
-		$option = db_RegOptionManager::getInstance()->find($group['regOptionId']);
+		$option = db_RegOptionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $group['regOptionId']
+		));
+		
 		$event = db_EventManager::getInstance()->find($group['eventId']);
 		
 		return array(
@@ -70,7 +85,11 @@ class logic_admin_regOption_RegOptionGroup extends logic_Performer
 		
 		db_GroupManager::getInstance()->moveGroupDown($group);
 		
-		$option = db_RegOptionManager::getInstance()->find($group['regOptionId']);
+		$option = db_RegOptionManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $group['regOptionId']
+		));
+		
 		$event = db_EventManager::getInstance()->find($group['eventId']);
 		
 		return array(
