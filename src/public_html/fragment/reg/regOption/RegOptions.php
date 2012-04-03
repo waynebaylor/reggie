@@ -48,7 +48,7 @@ _;
 				}				
 			}
 			else {
-				$html .= $option['text'];
+				$html .= '<tr><td colspan="2">'.$option['text'].'</td></tr>';
 			}
 		}	
 
