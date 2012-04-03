@@ -33,6 +33,10 @@ _;
 				<td class="required label">Description</td>
 				<td>
 					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $this->escapeHtml($this->price['eventId'])
+					))}
+					{$this->HTML->hidden(array(
 						'name' => 'id',
 						'value' => $this->escapeHtml($this->price['id'])
 					))}

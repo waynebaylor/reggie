@@ -34,17 +34,25 @@ class db_RegOptionPriceManager extends db_Manager
 		return self::$instance;
 	}
 	
-	public function find($id) {
-		$price = $this->findRegOptionPrice($id);
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function find($params) {
+		$price = $this->findRegOptionPrice($params);
 		
 		if(empty($price)) {
-			$price = $this->findVariableQuantityPrice($id);
+			$price = $this->findVariableQuantityPrice($params);
 		}
 		
 		return $price;
 	}
 	
-	public function findByVariableQuantityOption($option) {
+	/**
+	 * 
+	 * @param array $params [eventId, variableQuantityId]
+	 */
+	public function findByVariableQuantityOption($params) {
 		$sql = '
 			SELECT
 				RegOptionPrice.id,
@@ -61,19 +69,23 @@ class db_RegOptionPriceManager extends db_Manager
 			ON
 				RegOptionPrice.id = VariableQuantityOption_RegOptionPrice.regOptionPriceId
 			WHERE
-				VariableQuantityOption_RegOptionPrice.variableQuantityId = :id
+				VariableQuantityOption_RegOptionPrice.variableQuantityId = :variableQuantityId
+			AND
+				RegOptionPrice.eventId = :eventId
 			ORDER BY
 				RegOptionPrice.startDate
 		';
 
-		$params = array(
-			'id' => $option['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'variableQuantityId'));
 		
 		return $this->query($sql, $params, 'Find prices by variable quantity option.');
 	}
 	
-	public function findByRegOption($option) {
+	/**
+	 * 
+	 * @param array $params [eventId, regOptionId]
+	 */
+	public function findByRegOption($params) {
 		$sql = '
 			SELECT
 				RegOptionPrice.id,
@@ -90,47 +102,73 @@ class db_RegOptionPriceManager extends db_Manager
 			ON
 				RegOptionPrice.id = RegOption_RegOptionPrice.regOptionPriceId
 			WHERE
-				RegOption_RegOptionPrice.regOptionId = :id
+				RegOption_RegOptionPrice.regOptionId = :regOptionId
+			AND
+				RegOptionPrice.eventId = :eventId
 			ORDER BY
 				RegOptionPrice.startDate
 		';
 		
-		$params = array(
-			'id' => $option['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'regOptionId'));
 		
 		return $this->query($sql, $params, 'Find prices by reg option.');
 	}
 	
-	public function createVariableQuantityPrice($price) {
-		$priceId = $this->createPrice($price);
+	/**
+	 * 
+	 * @param array $params [eventId, regOptionId, description, startDate, endDate, price, regTypeIds]
+	 */
+	public function createVariableQuantityPrice($params) {
+		$priceId = $this->createPrice($params);
 		
 		//
 		// create price variable quantity option association.
-		$this->setVariableQuantity($price['regOptionId'], $priceId);
+		$this->setVariableQuantity(array(
+			'eventId' => $params['eventId'],
+			'optionId' => $params['regOptionId'], 
+			'priceId' => $priceId
+		));
 
 		//
 		// create price reg type associations.
-		$regTypeIds = $price['regTypeIds'];
-		$this->setRegTypes($priceId, $regTypeIds);	
+		$this->setRegTypes(array(
+			'eventId' => $params['eventId'],
+			'priceId' => $priceId,
+			'regTypeIds' => $params['regTypeIds']
+		));	
 	}
 	
-	public function createRegOptionPrice($price) {
-		$priceId = $this->createPrice($price);
+	/**
+	 * 
+	 * @param array $params [eventId, regOptionId, description, startDate, endDate, price, regTypeIds]
+	 */
+	public function createRegOptionPrice($params) {
+		$priceId = $this->createPrice($params);
 		
 		//
 		// create price reg option association.
 		//
-		$this->setRegOption($price['regOptionId'], $priceId);
-		
+		$this->setRegOption(array(
+			'eventId' => $params['eventId'],
+			'priceId' => $priceId,
+			'regOptionId' => $params['regOptionId']
+		));
+	
 		//
 		// create price reg type associations.
 		//
-		$regTypeIds = $price['regTypeIds'];
-		$this->setRegTypes($priceId, $regTypeIds);
+		$this->setRegTypes(array(
+			'eventId' => $params['eventId'],
+			'priceId' => $priceId,
+			'regTypeIds' => $params['regTypeIds']
+		));
 	}
 	
-	private function createPrice($price) {
+	/**
+	 * 
+	 * @param array $params [eventId, description, startDate, endDate, price]
+	 */
+	private function createPrice($params) {
 		$sql = '
 			INSERT INTO
 				RegOptionPrice(
@@ -149,149 +187,208 @@ class db_RegOptionPriceManager extends db_Manager
 			)	
 		';
 		
-		$params = array(
-			'eventId' => $price['eventId'],
-			'description' => $price['description'],
-			'startDate' => $price['startDate'],
-			'endDate' => $price['endDate'],
-			'price' => $price['price']
-		);
+		$params = ArrayUtil::keyIntersect($params, array(
+			'eventId',
+			'description',
+			'startDate',
+			'endDate',
+			'price'
+		));
 		
 		$this->execute($sql, $params, 'Create reg option price.');
 
 		return $this->lastInsertId();
 	}
 	
-	public function delete($price) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function delete($params) {
 		// delete reg type associations.
-		$this->removeRegTypes($price['id']);		
+		$this->removeRegTypes($params);		
 		
 		// delete reg option association.
 		$sql = '
 			DELETE FROM
 				RegOption_RegOptionPrice
 			WHERE
-				regOptionPriceId = :id
+				RegOption_RegOptionPrice.regOptionPriceId = :id
+			AND
+				RegOption_RegOptionPrice.regOptionPriceId
+			IN (
+				SELECT RegOptionPrice.id
+				FROM RegOptionPrice
+				WHERE RegOptionPrice.eventId = :eventId
+			)
 		';
 		
-		$params = array(
-			'id' => $price['id']
-		);
+		$p = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
-		$this->execute($sql, $params, 'Delete reg option association.');
+		$this->execute($sql, $p, 'Delete reg option association.');
 		
 		// delete var quantity option association.
 		$sql = '
 			DELETE FROM
 				VariableQuantityOption_RegOptionPrice
 			WHERE
-				regOptionPriceId = :id
+				VariableQuantityOption_RegOptionPrice.regOptionPriceId = :id
+			AND
+				VariableQuantityOption_RegOptionPrice.regOptionPriceId
+			IN (
+				SELECT VariableQuantityOption.id
+				FROM VariableQuantityOption
+				WHERE VariableQuantityOption.eventId = :eventId
+			)
 		';
 		
-		$params = array(
-			'id' => $price['id']
-		);
+		$p = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
-		$this->execute($sql, $params, 'Delete var quantity option association.');
+		$this->execute($sql, $p, 'Delete var quantity option association.');
 		
 		// delete price.
 		$sql = '
 			DELETE FROM
 				RegOptionPrice
 			WHERE
-				id=:id
+				id = :id
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $price['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		$this->execute($sql, $params, 'Delete reg option price.');
 	}
 	
-	public function save($price) {
+	/**
+	 * 
+	 * @param array $params [eventId, id, description, startDate, endDate, price, regTypeIds]
+	 */
+	public function save($params) {
 		$sql = '
 			UPDATE
 				RegOptionPrice
 			SET
-				description=:description,
-				startDate=:startDate,
-				endDate=:endDate,
-				price=:price
+				description = :description,
+				startDate = :startDate,
+				endDate = :endDate,
+				price = :price
 			WHERE
-				id=:id
+				id = :id
+			AND
+				eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $price['id'],
-			'description' => $price['description'],
-			'startDate' => $price['startDate'],
-			'endDate' => $price['endDate'],
-			'price' => $price['price']
-		);
+		$p = ArrayUtil::keyIntersect($params, array(
+			'eventId',
+			'id',
+			'description',
+			'startDate',
+			'endDate',
+			'price'
+		));
 		
-		$this->execute($sql, $params, 'Save reg option price.');
+		$this->execute($sql, $p, 'Save reg option price.');
 		
-		$this->removeRegTypes($price['id']);
-		$this->setRegTypes($price['id'], $price['regTypeIds']);
+		$this->removeRegTypes($params);
+		$this->setRegTypes(array(
+			'eventId' => $params['eventId'],
+			'priceId' => $params['id'],
+			'regTypeIds' => $params['regTypeIds']
+		));
 	}
 	
-	public function isVariableQuantityPrice($price) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function isVariableQuantityPrice($params) {
 		$sql = '
 			SELECT 
 				count(*) as count
 			FROM
 				VariableQuantityOption_RegOptionPrice
+			INNER JOIN
+				RegOptionPrice
+			ON
+				VariableQuantityOption_RegOptionPrice.regOptionPriceId = RegOptionPrice.id
 			WHERE
-				regOptionPriceId = :id
+				VariableQuantityOption_RegOptionPrice.regOptionPriceId = :id
+			AND
+				RegOptionPrice.eventId = :eventId
 		';
 
-		$params = array(
-			'id' => $price['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		$result = $this->rawQueryUnique($sql, $params, 'Check if price is associated with a variable quantity option.');
 		return ($result['count'] > 0);
 	}
 	
-	private function isVisibleToAllRegTypes($price) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	private function isVisibleToAllRegTypes($params) {
 		$sql = '
 			SELECT
-				regOptionPriceId
+				RegType_RegOptionPrice.regOptionPriceId
 			FROM 
 				RegType_RegOptionPrice
+			INNER JOIN
+				RegOptionPrice
+			ON
+				RegType_RegOptionPrice.regOptionPriceId = RegOptionPrice.id
 			WHERE
-				regOptionPriceId = :id
+				RegType_RegOptionPrice.regOptionPriceId = :id
 			AND
-				regTypeId is NULL
+				RegType_RegOptionPrice.regTypeId is NULL
+			AND
+				RegOptionPrice.eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $price['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		$result = $this->rawQueryUnique($sql, $params, 'Check if reg option price is visible to all reg types.');
 
 		return !empty($result);
 	}
 	
-	private function removeRegTypes($priceId) {
+	/**
+	 * 
+	 * @param array $params [eventId , id]
+	 */
+	private function removeRegTypes($params) {
 		$sql = '
 			DELETE FROM
 				RegType_RegOptionPrice
 			WHERE
-				regOptionPriceId = :id
+				RegType_RegOptionPrice.regOptionPriceId = :id
+			AND
+				RegType_RegOptionPrice.regOptionPriceId 
+			IN (
+				SELECT RegOptionPrice.id
+				FROM RegOptionPrice
+				WHERE RegOptionPrice.eventId = :eventId
+			)
 		';
 		
-		$params = array(
-			'id' => $priceId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		$this->execute($sql, $params, 'Remove all reg types from reg option price visibility.');
 	}
 	
-	private function setRegTypes($priceId, $regTypeIds) {
-		if(in_array(-1, $regTypeIds)) {
+	/**
+	 * 
+	 * @param array $params [eventId, priceId, regTypeIds]
+	 */
+	private function setRegTypes($params) {
+		$this->checkRegOptionPricePermission(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['priceId']
+		));
+		
+		if(in_array(-1, $params['regTypeIds'])) {
 			// price visible to ALL reg types. so we
 			// want the regTypeId to be NULL.
 			$sql = '
@@ -305,13 +402,13 @@ class db_RegOptionPriceManager extends db_Manager
 			';
 			
 			$params = array(
-				'regOptionPriceId' => $priceId
+				'regOptionPriceId' => $params['priceId']
 			);
 			
 			$this->execute($sql, $params, 'Set reg option price visibile to reg types.');
 		}
 		else {
-			foreach($regTypeIds as $regTypeId) {
+			foreach($params['regTypeIds'] as $regTypeId) {
 				$sql = '
 					INSERT INTO
 						RegType_RegOptionPrice(
@@ -326,7 +423,7 @@ class db_RegOptionPriceManager extends db_Manager
 				
 				$params = array(
 					'regTypeId' => $regTypeId,
-					'regOptionPriceId' => $priceId
+					'regOptionPriceId' => $params['priceId']
 				);
 				
 				$this->execute($sql, $params, 'Set reg option price visibile to reg types.');
@@ -334,7 +431,16 @@ class db_RegOptionPriceManager extends db_Manager
 		}
 	}
 	
-	private function setRegOption($regOptionId, $priceId) {
+	/**
+	 * 
+	 * @param array $params [eventId, priceId, regOptionId]
+	 */
+	private function setRegOption($params) {
+		$this->checkRegOptionPricePermission(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['priceId']
+		));
+		
 		$sql = '
 			INSERT INTO
 				RegOption_RegOptionPrice(
@@ -348,14 +454,23 @@ class db_RegOptionPriceManager extends db_Manager
 		';
 		
 		$params = array(
-			'regOptionId' => $regOptionId,
-			'regOptionPriceId' => $priceId
+			'regOptionId' => $params['regOptionId'],
+			'regOptionPriceId' => $params['priceId']
 		);
 		
 		$this->execute($sql, $params, 'Create reg option/price association.');
 	}
 	
-	private function setVariableQuantity($optionId, $priceId) {
+	/**
+	 * 
+	 * @param array $params [eventId, optionId, priceId]
+	 */
+	private function setVariableQuantity($params) {
+		$this->checkRegOptionPricePermission(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['priceId']
+		));
+		
 		$sql = '
 			INSERT INTO
 				VariableQuantityOption_RegOptionPrice(
@@ -376,7 +491,11 @@ class db_RegOptionPriceManager extends db_Manager
 		$this->execute($sql, $params, '');
 	}
 	
-	private function findVariableQuantityPrice($id) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	private function findVariableQuantityPrice($params) {
 		$sql = '
 			SELECT
 				RegOptionPrice.id,
@@ -394,16 +513,20 @@ class db_RegOptionPriceManager extends db_Manager
 				RegOptionPrice.id = VariableQuantityOption_RegOptionPrice.regOptionPriceId
 			WHERE
 				RegOptionPrice.id = :id
+			AND
+				RegOptionPrice.eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $id
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->queryUnique($sql, $params, 'Find variable quantity option price.');
 	}
 	
-	private function findRegOptionPrice($id) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	private function findRegOptionPrice($params) {
 		$sql = '
 			SELECT
 				RegOptionPrice.id,
@@ -421,13 +544,39 @@ class db_RegOptionPriceManager extends db_Manager
 				RegOptionPrice.id = RegOption_RegOptionPrice.regOptionPriceId
 			WHERE
 				RegOptionPrice.id = :id
+			AND
+				RegOptionPrice.eventId = :eventId
 		';
 		
-		$params = array(
-			'id' => $id
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->queryUnique($sql, $params, 'Find reg option price.');
+	}
+	
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	private function checkRegOptionPricePermission($params) {
+		$sql = '
+			SELECT
+				id,
+				eventId
+			FROM
+				RegOptionPrice
+			WHERE
+				id = :id
+			AND
+				eventId = :eventId
+		';
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
+		
+		$results = $this->rawQuery($sql, $params, 'Check reg option price permission.');
+		
+		if(count($results) === 0) {
+			throw new Exception("Permission denied to access RegOptionPrice. (event id, price id) -> ({$params['eventId']}, {$params['id']}).");
+		}
 	}
 }
 

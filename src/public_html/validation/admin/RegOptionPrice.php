@@ -22,7 +22,11 @@ class validation_admin_RegOptionPrice
 			$optionId = $values['regOptionId'];  
 		}
 		else {
-			$price = db_RegOptionPriceManager::getInstance()->find($values['id']);
+			$price = db_RegOptionPriceManager::getInstance()->find(array(
+				'eventId' => $values['eventId'],
+				'id' => $values['id']
+			));
+			
 			$optionId = $price['regOptionId'];
 		}
 
@@ -39,7 +43,7 @@ class validation_admin_RegOptionPrice
 				'id' => $optionId
 			));
 		}
-                
+                		
 		// check that the start date doesn't overlap with any existing prices.
 		if(empty($errors['startDate']) && empty($errors['endDate'])) {
 			if(model_RegOptionPrice::hasOverlap($option, $values)) {

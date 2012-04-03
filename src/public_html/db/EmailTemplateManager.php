@@ -123,12 +123,12 @@ class db_EmailTemplateManager extends db_Manager
 				RegType_EmailTemplate.regTypeId is NULL
 		';	
 		
-		$params = array(
+		$p = array(
 			'eventId' => $params['eventId'],
 			'enabled' => 'T'
 		);
 		
-		$template = $this->queryUnique($sql, $params, 'Find email template available to all.');
+		$template = $this->queryUnique($sql, $p, 'Find email template available to all.');
 		
 		if(empty($template)) {
 			$sql = '
@@ -156,13 +156,13 @@ class db_EmailTemplateManager extends db_Manager
 					RegType_EmailTemplate.regTypeId = :regTypeId
 			';
 			
-			$params = array(
+			$p = array(
 				'eventId' => $params['eventId'],
 				'enabled' => 'T',
 				'regTypeId' => $params['regTypeId']
 			);
 			
-			$template = $this->queryUnique($sql, $params, 'Find email template by reg type id.');
+			$template = $this->queryUnique($sql, $p, 'Find email template by reg type id.');
 		}
 		
 		return $template;

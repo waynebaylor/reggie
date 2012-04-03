@@ -108,7 +108,10 @@ _;
 			$opts[] = array(
 				'label' => $option['description'],
 				'value' => $option['id'],
-				'prices' => db_RegOptionPriceManager::getInstance()->findByRegOption($option)
+				'prices' => db_RegOptionPriceManager::getInstance()->findByRegOption(array(
+					'eventId' => $option['eventId'],
+					'regOptionId' => $option['id']
+				))
 			);
 			
 			foreach($option['groups'] as $subGroup) {

@@ -155,6 +155,8 @@ class db_EventTemplate extends db_Manager
 	}
 
 	private function createConferenceRegTemplatePage($eventId, $categoryIds) {
+		$eventInfo = db_EventManager::getInstance()->findInfoById($eventId);
+		
 		$pageId = db_PageManager::getInstance()->createPage(array(
 			'eventId' => $eventId, 
 			'title' => 'Conference Registration', 
@@ -193,8 +195,8 @@ class db_EventTemplate extends db_Manager
 			'eventId' => $eventId,
 			'regOptionId' => $optOneId,
 			'description' => 'full price',
-			'startDate' => date(db_Manager::$DATE_FORMAT),
-			'endDate' => date(db_Manager::$DATE_FORMAT, time()+604800),
+			'startDate' => $eventInfo['regOpen'],
+			'endDate' => $eventInfo['regClosed'],
 			'price' => '100.00',
 			'regTypeIds' => array(-1)
 		));
@@ -214,14 +216,16 @@ class db_EventTemplate extends db_Manager
 			'eventId' => $eventId,
 			'regOptionId' => $optTwoId,
 			'description' => 'full price',
-			'startDate' => date(db_Manager::$DATE_FORMAT),
-			'endDate' => date(db_Manager::$DATE_FORMAT, time()+604800),
+			'startDate' => $eventInfo['regOpen'],
+			'endDate' => $eventInfo['regClosed'],
 			'price' => '1.99',
 			'regTypeIds' => array(-1)
 		));
 	}
 
 	private function createSpecialEventsTemplatePage($eventId, $categoryIds) {
+		$eventInfo = db_EventManager::getInstance()->findInfoById($eventId);
+		
 		$pageId = db_PageManager::getInstance()->createPage(array(
 			'eventId' => $eventId, 
 			'title' => 'Special Events', 
@@ -247,8 +251,8 @@ class db_EventTemplate extends db_Manager
 			'eventId' => $eventId,
 			'regOptionId' => $varOptId,
 			'description' => 'full price',
-			'startDate' => date(db_Manager::$DATE_FORMAT),
-			'endDate' => date(db_Manager::$DATE_FORMAT, time()+604800),
+			'startDate' => $eventInfo['regOpen'],
+			'endDate' => $eventInfo['regClosed'],
 			'price' => '25.00',
 			'regTypeIds' => array(-1)
 		));

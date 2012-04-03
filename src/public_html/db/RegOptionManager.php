@@ -18,7 +18,10 @@ class db_RegOptionManager extends db_OrderableManager
 		parent::populate($obj, $arr);
 		
 		$obj['groups'] = db_GroupManager::getInstance()->findByOptionId($obj['id']);
-		$obj['prices'] = db_RegOptionPriceManager::getInstance()->findByRegOption($obj);
+		$obj['prices'] = db_RegOptionPriceManager::getInstance()->findByRegOption(array(
+			'eventId' => $obj['eventId'],
+			'regOptionId' => $obj['id']
+		));
 
 		return $obj;
 	}

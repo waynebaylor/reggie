@@ -7,7 +7,7 @@ class logic_admin_regOption_RegOptionPrice extends logic_Performer
 	}
 	
 	public function view($params) {
-		$price = $this->strictFindById(db_RegOptionPriceManager::getInstance(), $params['id']);
+		$price = db_RegOptionPriceManager::getInstance()->find($params);
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
@@ -15,7 +15,10 @@ class logic_admin_regOption_RegOptionPrice extends logic_Performer
 			'eventId' => $params['eventId'],
 			'event' => $event,
 			'price' => $price,
-			'breadcrumbsParams' => db_BreadcrumbManager::getInstance()->findRegOptionPriceCrumbs($params['id'])
+			'breadcrumbsParams' => db_BreadcrumbManager::getInstance()->findRegOptionPriceCrumbs(array(
+				'eventId' => $params['eventId'],
+				'regOptionPriceId' => $params['id']
+			))
 		);
 	}
 	
@@ -50,7 +53,7 @@ class logic_admin_regOption_RegOptionPrice extends logic_Performer
 	}
 	
 	public function removePrice($params) {
-		$price = $this->strictFindById(db_RegOptionPriceManager::getInstance(), $params['id']);
+		$price = db_RegOptionPriceManager::getInstance()->find($params);
 		
 		db_RegOptionPriceManager::getInstance()->delete($price);
 		

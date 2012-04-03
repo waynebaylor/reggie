@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * 
+ * For info on the x_line_item field see: http://developer.authorize.net/guides/AIM/Transaction_Data_Requirements/Itemized_Order_Information.htm
+ * 
+ * @author wtaylor
+ *
+ */
 class payment_AuthorizeNET
 {
 	private $logger;
@@ -74,7 +81,7 @@ class payment_AuthorizeNET
 		
 			'x_login' => $login,
 			'x_tran_key' => $transactionKey,
-			'x_description' => $this->event['code'].' Registration',
+			'x_description' => "{$this->event['code']} Registration",
 			'x_amount' => $amount,
 			'x_card_num' => $this->info['cardNumber'],
 			'x_exp_date' => $this->info['month'].$this->info['year'],
@@ -87,17 +94,196 @@ class payment_AuthorizeNET
 			'x_country' => ArrayUtil::getValue($this->info, 'country', 'US')
 		);
 		
+		if($type === 'AUTH_CAPTURE') {
+			$fields['x_line_item'] = $this->getLineItems();	
+			
+			// overwrite description.
+			$fields['x_description'] = substr($this->getDescription(), 0, 255);
+		}
+
 		return $fields;
+	}
+	
+	private function getDescription() {
+		$lineItems = array();
+		
+		$registrations = model_reg_Registration::getConvertedRegistrationsFromSession();
+		foreach($registrations as $reg) {
+			$regLineItems = $this->getRegistrationLineItems($this->event, $reg);
+			$lineItems = array_merge($lineItems, $regLineItems);
+		}
+		
+		$desc = array();
+		
+		foreach($lineItems as $item) {
+			$cost = $item['quantity']*$item['unitPrice'];
+			// don't show zero-dollar options and variable quantity options with zero quantity.
+			if($cost > 0) {
+				$desc[] = "{$item['code']}: \${$cost}";
+			}
+		}
+		
+		return implode('; ', $desc);
+	}
+	
+	private function getLineItems() {
+		$lineItems = array();
+		
+		$registrations = model_reg_Registration::getConvertedRegistrationsFromSession();
+		foreach($registrations as $reg) {
+			$regLineItems = $this->getRegistrationLineItems($this->event, $reg);
+			$lineItems = array_merge($lineItems, $regLineItems);
+		}
+		
+		// auth.net will only accept 30 line items.
+		$lineItemCount = count($lineItems);
+		if($lineItemCount > 30) {
+			$lineItems = array_slice($lineItems, 0, 29);
+			$lineItems[] = $this->getSanitizedLineItem(
+				0, 
+				'ATTENTION', 
+				"Showing 29 of {$lineItemCount} line items.", 
+				1, 
+				0.00
+			);
+		}
+		
+		// convert to auth.net "<|>" delimited strings.
+		$authNetLineItems = array();
+		foreach($lineItems as $item) {
+			$authNetLineItems[] = implode('<|>', $item);
+		}
+		
+		return $authNetLineItems;
+	}
+	
+	private function getRegistrationLineItems($event, $registration) {
+		$lineItems = array();
+		
+		$regOptLineItems = $this->getRegOptionLineItems($event, $registration);
+		$lineItems = array_merge($lineItems, $regOptLineItems);
+		
+		$varQuantOptLineItems = $this->getVarQuantityOptionLineItems($event, $registration);
+		$lineItems = array_merge($lineItems, $varQuantOptLineItems);
+		
+		return $lineItems;
+	}
+	
+	private function getRegOptionLineItems($event, $registration) {
+		$lineItems = array();
+		
+		$regOptionGroups = model_Event::getRegOptionGroups($event);
+		foreach($regOptionGroups as $regOptGroup) {
+			$regOptGroupLineItems = $this->getRegOptionGroupLineItems($registration, $regOptGroup);
+			$lineItems = array_merge($lineItems, $regOptGroupLineItems);
+		}
+		
+		return $lineItems;
+	}
+	
+	private function getVarQuantityOptionLineItems($event, $registration) {
+		$lineItems = array();
+		
+		$variableQuantityOptions = model_Event::getVariableQuantityOptions($event);
+		foreach($variableQuantityOptions as $varQuantOpt) {
+			foreach($registration['variableQuantity'] as $v) {
+				if($v['id'] == $varQuantOpt['id']) {
+					$price = model_RegOption::getPrice(
+						array('id' => $registration['regTypeId']), 
+						$varQuantOpt
+					);
+					
+					$line = $this->getSanitizedLineItem(
+						$varQuantOpt['id'], 
+						$varQuantOpt['code'], 
+						$varQuantOpt['description'], 
+						$v['quantity'], 
+						$price['price']
+					);
+					
+					$lineItems[] = $line;
+				}
+			}
+		}
+		
+		return $lineItems;
+	}
+	
+	private function getRegOptionGroupLineItems($registration, $regOptGroup) {
+		$lineItems = array();
+		
+		foreach($regOptGroup['options'] as $regOption) {
+			if(in_array($regOption['id'], $registration['regOptionIds'])) {
+				$price = model_RegOption::getPrice($registration['regTypeId'], $regOption);
+				if(!empty($price)) {
+					$line = $this->getSanitizedLineItem(
+						$regOption['id'], 
+						$regOption['code'], 
+						$regOption['description'], 
+						1, 
+						$price['price']
+					);
+					
+					$lineItems[] = $line;					
+				}
+				
+				foreach($regOption['groups'] as $subGroup) {
+					$subGroupLineItems = $this->getRegOptionGroupLineItems($registration, $subGroup);
+					$lineItems = array_merge($lineItems, $subGroupLineItems);
+				}
+			}	
+		}
+		
+		return $lineItems;
+	}
+	
+	private function getSanitizedLineItem($id, $name, $desc, $quantity, $price) {
+		$disallowedCharsPattern = '/[^0-9a-zA-Z.]/'; // only allow 0-9, a-z, A-Z, and period.
+		$extraWhitespacePattern = '/\s+/';
+		
+		$id = preg_replace($disallowedCharsPattern, ' ', $id);
+		$name = preg_replace($disallowedCharsPattern, ' ', $name);
+		$desc = preg_replace($disallowedCharsPattern, ' ', $desc);
+		$quantity = preg_replace($disallowedCharsPattern, ' ', $quantity);
+		$price = preg_replace($disallowedCharsPattern, ' ', $price);
+		
+		$id = preg_replace($extraWhitespacePattern, ' ', $id);
+		$name = preg_replace($extraWhitespacePattern, ' ', $name);
+		$desc = preg_replace($extraWhitespacePattern, ' ', $desc);
+		$quantity = preg_replace($extraWhitespacePattern, ' ', $quantity);
+		$price = preg_replace($extraWhitespacePattern, ' ', $price);
+		
+		$id = substr($id, 0, 31);
+		$name = substr($name, 0, 31);
+		$desc = substr($desc, 0, 255);
+			
+		// put into array and add the final 'is taxable' field.
+		$line = array(
+			'id' => $id, 
+			'code' => $name, 
+			'description' => $desc, 
+			'quantity' => $quantity, 
+			'unitPrice' => $price, 
+			'taxable' => 'NO');
+			
+		return $line;
 	}
 	
 	private function submitTransaction($fields) {
 		// escape the fields for use as URL parameters.
 		$paramString = '';
 		foreach($fields as $key => $value) {
-			$paramString .= $key.'='.urlencode($value).'&';
+			if(is_array($value)) {
+				foreach($value as $val) {
+					$paramString .= $key.'='.urlencode($val).'&';
+				}	
+			}
+			else {
+				$paramString .= $key.'='.urlencode($value).'&';
+			}
 		}
 		$paramString = rtrim($paramString, '&');
-		
+
 		// submit the data to authorize.net.
 		$transaction = curl_init($this->url);
 		

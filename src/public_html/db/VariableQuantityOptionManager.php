@@ -15,7 +15,10 @@ class db_VariableQuantityOptionManager extends db_OrderableManager
 	protected function populate(&$obj, $arr) {
 		parent::populate($obj, $arr);
 		
-		$obj['prices'] = db_RegOptionPriceManager::getInstance()->findByVariableQuantityOption($obj);
+		$obj['prices'] = db_RegOptionPriceManager::getInstance()->findByVariableQuantityOption(array(
+			'eventId' => $obj['eventId'],
+			'variableQuantityId' => $obj['id']
+		));
 		
 		return $obj;
 	}

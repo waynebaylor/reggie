@@ -117,7 +117,10 @@ _;
 	}
 	
 	private function getVarQuantityPrice($option, $priceId) {
-		$prices = db_RegOptionPriceManager::getInstance()->findByVariableQuantityOption(array('id' => $option['id']));
+		$prices = db_RegOptionPriceManager::getInstance()->findByVariableQuantityOption(array(
+			'eventId' => $option['eventId'],
+			'variableQuantityId' => $option['id']
+		));
 		
 		$dropDownOpts = array();
 		foreach($prices as $price) {

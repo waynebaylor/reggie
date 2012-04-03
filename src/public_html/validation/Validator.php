@@ -25,7 +25,7 @@ class validation_Validator
 	private static function isValid($restriction, $value) {
 		switch($restriction->validationType) {
 			case 'required': 
-				return $value === 0 || $value === '0' || !empty($value);
+				return isset($value) && $value !== '';
 			case 'pattern':
 				return preg_match($restriction->regex, $value);
 			default:

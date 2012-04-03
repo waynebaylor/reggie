@@ -139,7 +139,8 @@ class db_reg_RegistrationManager extends db_Manager
 			'comments' => '',
 			'confirmationNumber' => '00000000'
 		));
-		
+		$params['regGroupId'] = $regGroupId;
+
 		$this->execute($sql, $params, 'Create registration.');
 		
 		$regId = $this->lastInsertId();
@@ -176,7 +177,7 @@ class db_reg_RegistrationManager extends db_Manager
 			'eventId' => $r['eventId'],
 			'regTypeId' => $r['regTypeId'], 
 			'regId' => $regId, 
-			'regOptionIds' => $r['regOptionIds']
+			'optionIds' => $r['regOptionIds']
 		));
 		
 		db_reg_VariableQuantityManager::getInstance()->createOptions($r['regTypeId'], $regId, $r['variableQuantity']);

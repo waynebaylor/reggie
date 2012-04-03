@@ -53,7 +53,11 @@ _;
 
 		foreach($registration['regOptions'] as $regOption) {
 			if($option['id'] == $regOption['regOptionId']) {
-				$price = db_RegOptionPriceManager::getInstance()->find($regOption['priceId']);
+				$price = db_RegOptionPriceManager::getInstance()->find(array(
+					'eventId' => $registration['eventId'],
+					'id' => $regOption['priceId']
+				));
+				
 				$priceDisplayed = ($option['showPrice'] === 'T')? '$'.number_format($price['price'], 2) : '';
 				$cancelled = empty($regOption['dateCancelled'])? '' : '( Cancelled on '.substr($regOption['dateCancelled'], 0, 10).' )';
 				

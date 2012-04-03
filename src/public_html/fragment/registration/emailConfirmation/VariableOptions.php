@@ -33,7 +33,11 @@ class fragment_registration_emailConfirmation_VariableOptions extends template_T
 		
 		if(!empty($quantity) && $quantity > 0) {
 			$priceId = model_Registrant::getVariableQuantityPriceId($registration, $option['id']);
-			$price = db_RegOptionPriceManager::getInstance()->find($priceId);
+			$price = db_RegOptionPriceManager::getInstance()->find(array(
+				'eventId' => $registration['eventId'],
+				'id' => $priceId
+			));
+			
 			$priceDisplay = '$'.number_format($price['price'], 2);
 
 			$total = '$'.number_format($price['price']*$quantity, 2);

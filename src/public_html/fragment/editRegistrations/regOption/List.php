@@ -65,7 +65,11 @@ _;
 		// the registrant may have the same option multiple times if they have cancelled and re-registered.
 		foreach($registration['regOptions'] as $o) {
 			if($o['regOptionId'] == $regOption['id']) {
-				$price = db_RegOptionPriceManager::getInstance()->find($o['priceId']);
+				$price = db_RegOptionPriceManager::getInstance()->find(array(
+					'eventId' => $this->event['id'],
+					'id' => $o['priceId']
+				));
+				
 				$priceDisplay = '$'.number_format($price['price'], 2);
 				$dateAdded = date_format(date_create($o['dateAdded']), 'Y-m-d');
 				
