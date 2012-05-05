@@ -236,9 +236,9 @@ class db_RegOptionPriceManager extends db_Manager
 			AND
 				VariableQuantityOption_RegOptionPrice.regOptionPriceId
 			IN (
-				SELECT VariableQuantityOption.id
-				FROM VariableQuantityOption
-				WHERE VariableQuantityOption.eventId = :eventId
+				SELECT RegOptionPrice.id
+				FROM RegOptionPrice
+				WHERE RegOptionPrice.eventId = :eventId
 			)
 		';
 		
@@ -401,11 +401,11 @@ class db_RegOptionPriceManager extends db_Manager
 				)
 			';
 			
-			$params = array(
+			$p = array(
 				'regOptionPriceId' => $params['priceId']
 			);
 			
-			$this->execute($sql, $params, 'Set reg option price visibile to reg types.');
+			$this->execute($sql, $p, 'Set reg option price visibile to reg types.');
 		}
 		else {
 			foreach($params['regTypeIds'] as $regTypeId) {
@@ -421,12 +421,12 @@ class db_RegOptionPriceManager extends db_Manager
 					)
 				';
 				
-				$params = array(
+				$p = array(
 					'regTypeId' => $regTypeId,
 					'regOptionPriceId' => $params['priceId']
 				);
 				
-				$this->execute($sql, $params, 'Set reg option price visibile to reg types.');
+				$this->execute($sql, $p, 'Set reg option price visibile to reg types.');
 			}
 		}
 	}

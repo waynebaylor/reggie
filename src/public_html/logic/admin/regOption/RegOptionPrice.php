@@ -43,7 +43,7 @@ class logic_admin_regOption_RegOptionPrice extends logic_Performer
 		db_RegOptionPriceManager::getInstance()->createVariableQuantityPrice($params);
 		
 		$option = db_VariableQuantityOptionManager::getInstance()->find(array(
-			'evntId' => $params['eventId'],
+			'eventId' => $params['eventId'],
 			'id' => $params['regOptionId']
 		));
 		
@@ -61,10 +61,18 @@ class logic_admin_regOption_RegOptionPrice extends logic_Performer
 		
 		db_RegOptionPriceManager::getInstance()->delete($price);
 		
+		// find the option. it could be a RegOption or a VariableQuantityOption.
 		$option = db_RegOptionManager::getInstance()->find(array(
 			'eventId' => $params['eventId'],
 			'id' => $price['regOptionId']
 		));
+		
+		if(empty($option)) {
+			$option = db_VariableQuantityOptionManager::getInstance()->find(array(
+				'eventId' => $params['eventId'],
+				'id' => $price['regOptionId']
+			));	
+		}
 		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
