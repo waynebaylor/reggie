@@ -175,7 +175,10 @@ class db_BreadcrumbManager extends db_Manager
 	 * @param array $params [eventId, regOptionGroupId]
 	 */
 	public function findRegOptionGroupCrumbs($params) {
-		$group = db_GroupManager::getInstance()->find($params['regOptionGroupId']);
+		$group = db_GroupManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['regOptionGroupId']
+		));
 
 		$groupsAndOpts = $this->getGroupsAndOpts(array(
 			'eventId' => $params['eventId'],
@@ -185,7 +188,11 @@ class db_BreadcrumbManager extends db_Manager
 		$groupsAndOpts[] = $group['id'];
 		
 		// the first id in $groupsAndOpts is the section group.
-		$sectionGroup = db_GroupManager::getInstance()->find($groupsAndOpts[0]);
+		$sectionGroup = db_GroupManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $groupsAndOpts[0]
+		));
+		
 		$bc =$this->findSectionCrumbs($sectionGroup['sectionId']);
 			
 		return array(
@@ -204,7 +211,11 @@ class db_BreadcrumbManager extends db_Manager
 		$groupsAndOpts = $this->getGroupsAndOpts($params);
 		
 		// the first id in $groupsAndOpts is the section group.
-		$group = db_GroupManager::getInstance()->find($groupsAndOpts[0]);
+		$group = db_GroupManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $groupsAndOpts[0]
+		));
+		
 		$bc = db_BreadcrumbManager::getInstance()->findSectionCrumbs($group['sectionId']);
 			
 		return array(
@@ -215,15 +226,19 @@ class db_BreadcrumbManager extends db_Manager
 		);
 	}
 	
-	public function findVariableRegOptionCrumbs($variableQuantityId) {
-		$variableQuantityOption = db_VariableQuantityOptionManager::getInstance()->find($variableQuantityId);
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function findVariableRegOptionCrumbs($params) {
+		$variableQuantityOption = db_VariableQuantityOptionManager::getInstance()->find($params);
 		$bc = self::findSectionCrumbs($variableQuantityOption['sectionId']);
 		
 		return array(
 			'eventId' => $bc['eventId'],
 			'pageId' => $bc['pageId'],
 			'sectionId' => $bc['sectionId'],
-			'variableQuantityOptionId' => $variableQuantityId
+			'variableQuantityOptionId' => $params['id']
 		);
 	}
 	
@@ -238,7 +253,10 @@ class db_BreadcrumbManager extends db_Manager
 		));
 		
 		if(db_RegOptionPriceManager::getInstance()->isVariableQuantityPrice($price)) {
-			$bc = db_BreadcrumbManager::getInstance()->findVariableRegOptionCrumbs($price['regOptionId']);
+			$bc = db_BreadcrumbManager::getInstance()->findVariableRegOptionCrumbs(array(
+				'eventId' => $params['eventId'],
+				'id' => $price['regOptionId']
+			));
 		}
 		else {
 			$bc = db_BreadcrumbManager::getInstance()->findRegOptionCrumbs($price);
@@ -264,7 +282,10 @@ class db_BreadcrumbManager extends db_Manager
 			'id' => $params['regOptionId']
 		));
 		
-		$group = db_GroupManager::getInstance()->find($option['parentGroupId']);
+		$group = db_GroupManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $option['parentGroupId']
+		));
 		$ids[] = $group['id'];
 		
 		if(!model_RegOptionGroup::isSectionGroup($group)) {

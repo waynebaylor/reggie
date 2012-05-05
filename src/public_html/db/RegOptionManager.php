@@ -17,7 +17,11 @@ class db_RegOptionManager extends db_OrderableManager
 	protected function populate(&$obj, $arr) {
 		parent::populate($obj, $arr);
 		
-		$obj['groups'] = db_GroupManager::getInstance()->findByOptionId($obj['id']);
+		$obj['groups'] = db_GroupManager::getInstance()->findByOptionId(array(
+			'eventId' => $obj['eventId'],
+			'optionId' => $obj['id']
+		));
+		
 		$obj['prices'] = db_RegOptionPriceManager::getInstance()->findByRegOption(array(
 			'eventId' => $obj['eventId'],
 			'regOptionId' => $obj['id']
@@ -203,7 +207,7 @@ class db_RegOptionManager extends db_OrderableManager
 		// delete the option's groups.
 		$option = $this->find($params);
 		foreach($option['groups'] as $group) {
-			db_GroupManager::getInstance()->deleteById($group['id']);
+			db_GroupManager::getInstance()->deleteById($group);
 		}		
 		
 		// delete the price associations.

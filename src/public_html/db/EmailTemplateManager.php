@@ -208,12 +208,12 @@ class db_EmailTemplateManager extends db_Manager
 			'footer'
 		));
 		
-		$this->execute($sql, $params, 'Create email template.');
+		$this->execute($sql, $p, 'Create email template.');
 		
 		$emailTemplateId = $this->lastInsertId();
 		
 		// create reg type associations.
-		$params['id'] = $emailTemplateId;
+		$params['emailTemplateId'] = $emailTemplateId;
 		$this->createRegTypeAssociation($params);
 		
 		return $emailTemplateId;

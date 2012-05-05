@@ -367,7 +367,7 @@ class db_EventManager extends db_Manager
 		/////////////////////////////////////////////////////////////////////////////////
 		// delete reports.
 		db_ReportManager::getInstance()->deleteByEventId(array('eventId' => $eventId));
-		
+	
 		/////////////////////////////////////////////////////////////////////////////////
 		// delete badge templates
 		db_BadgeTemplateManager::getInstance()->deleteByEventId(array('eventId' => $eventId));

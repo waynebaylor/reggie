@@ -38,7 +38,10 @@ class logic_admin_regOption_RegOption extends logic_Performer
 			'regTypeIds' => array(-1)
 		));
 		
-		$group = db_GroupManager::getInstance()->find($params['parentGroupId']);
+		$group = db_GroupManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['parentGroupId']
+		));
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
@@ -53,7 +56,10 @@ class logic_admin_regOption_RegOption extends logic_Performer
 		
 		db_RegOptionManager::getInstance()->delete($option);
 		
-		$group = db_GroupManager::getInstance()->find($option['parentGroupId']);
+		$group = db_GroupManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $option['parentGroupId']
+		));
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
@@ -68,7 +74,10 @@ class logic_admin_regOption_RegOption extends logic_Performer
 		
 		db_RegOptionManager::getInstance()->moveOptionUp($option);
 		
-		$group = db_GroupManager::getInstance()->find($option['parentGroupId']);
+		$group = db_GroupManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $option['parentGroupId']
+		));
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
@@ -83,7 +92,10 @@ class logic_admin_regOption_RegOption extends logic_Performer
 		
 		db_RegOptionManager::getInstance()->moveOptionDown($option);
 		
-		$group = db_GroupManager::getInstance()->find($option['parentGroupId']);
+		$group = db_GroupManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $option['parentGroupId']
+		));
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
@@ -109,7 +121,10 @@ class logic_admin_regOption_RegOption extends logic_Performer
 		
 		$eventInfo = db_EventManager::getInstance()->findInfoById($params['eventId']);
 		
-		$group = db_GroupManager::getInstance()->find($params['parentGroupId']);
+		$group = db_GroupManager::getInstance()->find(array(
+			'eventId' => $params['eventId'],
+			'id' => $params['parentGroupId']
+		));
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(

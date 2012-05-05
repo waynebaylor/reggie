@@ -42,7 +42,11 @@ class logic_admin_regOption_RegOptionPrice extends logic_Performer
 	public function addVariableQuantityPrice($params) {
 		db_RegOptionPriceManager::getInstance()->createVariableQuantityPrice($params);
 		
-		$option = db_VariableQuantityOptionManager::getInstance()->find($params['regOptionId']);
+		$option = db_VariableQuantityOptionManager::getInstance()->find(array(
+			'evntId' => $params['eventId'],
+			'id' => $params['regOptionId']
+		));
+		
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(

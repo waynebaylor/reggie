@@ -29,10 +29,16 @@ class db_PageSectionManager extends db_OrderableManager
 			));	
 		}
 		else if(model_Section::containsRegOptions($obj)) {
-			$obj['content'] = db_GroupManager::getInstance()->findBySectionId($obj['id']);
+			$obj['content'] = db_GroupManager::getInstance()->findBySectionId(array(
+				'eventId' => $obj['eventId'],
+				'sectionId' => $obj['id']
+			));
 		}
 		else if(model_Section::containsVariableQuantityOptions($obj)) {
-			$obj['content'] = db_VariableQuantityOptionManager::getInstance()->findBySection($obj);
+			$obj['content'] = db_VariableQuantityOptionManager::getInstance()->findBySection(array(
+				'eventId' => $obj['eventId'],
+				'sectionId' => $obj['id']
+			));
 		}
 		
 		return $obj;

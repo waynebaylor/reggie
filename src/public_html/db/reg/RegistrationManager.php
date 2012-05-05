@@ -180,7 +180,12 @@ class db_reg_RegistrationManager extends db_Manager
 			'optionIds' => $r['regOptionIds']
 		));
 		
-		db_reg_VariableQuantityManager::getInstance()->createOptions($r['regTypeId'], $regId, $r['variableQuantity']);
+		db_reg_VariableQuantityManager::getInstance()->createOptions(array(
+			'eventId' => $r['eventId'],
+			'regTypeId' => $r['regTypeId'], 
+			'registrationId' => $regId, 
+			'options' => $r['variableQuantity']
+		));
 		
 		return $regId;
 	}

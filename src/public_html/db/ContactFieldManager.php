@@ -260,7 +260,7 @@ class db_ContactFieldManager extends db_OrderableManager
 			'id' => $params['contactFieldId']
 		));
 		
-		foreach($$params['validationRules'] as $id => $value) {
+		foreach($params['validationRules'] as $id => $value) {
 			if(is_numeric($id) && !empty($value)) {
 				$sql = '
 					INSERT INTO
@@ -277,7 +277,7 @@ class db_ContactFieldManager extends db_OrderableManager
 				';
 					
 				$params = array(
-					'contactFieldId' => $$params['contactFieldId'],
+					'contactFieldId' => $params['contactFieldId'],
 					'validationId' => $id,
 					'validationValue' => $value
 				);
@@ -381,9 +381,7 @@ class db_ContactFieldManager extends db_OrderableManager
 		//
 		// save contact field associations
 		//
-			
-		$contactFieldId = $field['id'];
-		
+
 		// map to Attributes.
 		$this->setAttributes(array(
 			'eventId' => $params['eventId'],

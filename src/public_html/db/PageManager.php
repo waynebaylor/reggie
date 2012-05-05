@@ -294,7 +294,7 @@ class db_PageManager extends db_OrderableManager
 	
 	/**
 	 * 
-	 * @param array $params [pageId]
+	 * @param array $params [eventId, pageId]
 	 */
 	private function checkPagePermission($params) {
 		$results = $this->rawSelect(

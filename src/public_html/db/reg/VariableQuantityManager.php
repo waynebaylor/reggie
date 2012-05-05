@@ -44,9 +44,17 @@ class db_reg_VariableQuantityManager extends db_Manager
 		return $this->query($sql, $params, 'Find variable quantity options by registration.');
 	}
 	
-	public function createOptions($regTypeId, $registrationId, $options) {
+	/**
+	 * 
+	 * @param array $params [eventId, regTypeId, registrationId, options]
+	 */
+	public function createOptions($params) {
+		$regTypeId = $params['regTypeId'];
+		$registrationId = $params['registrationId'];
+		$options = $params['options'];
+		
 		foreach($options as $opt) {
-			$option = db_VariableQuantityOptionManager::getInstance()->find($opt['id']);
+			$option = db_VariableQuantityOptionManager::getInstance()->find(array('eventId' => $params['eventId'], 'id' => $opt['id']));
 			$price = model_RegOption::getPrice(array('id' => $regTypeId), $option);
 				
 			$this->createOption(array(

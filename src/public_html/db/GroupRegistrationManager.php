@@ -152,9 +152,7 @@ class db_GroupRegistrationManager extends db_Manager
 				eventId = :eventId
 		';
 		
-		$params = array(
-			'eventId' => $eventId
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId'));
 		
 		$this->execute($sql, $params, 'Delete group registration for event.');
 	}

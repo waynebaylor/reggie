@@ -170,7 +170,7 @@ class db_ReportManager extends db_Manager
 	
 	/**
 	 * 
-	 * @param array $params [eventId, reportId]
+	 * @param array $params [eventId, id]
 	 */
 	public function deleteReport($params) {
 		// delete report fields.
@@ -178,32 +178,34 @@ class db_ReportManager extends db_Manager
 			DELETE FROM
 				Report_ContactField
 			WHERE
-				Report_ContactField.reportId = :reportId
+				Report_ContactField.reportId = :id
 			AND
 				Report_ContactField.reportId
 			IN (
 				SELECT Report.id 
 				FROM Report
-				WHERE Report.id = :reportId
+				WHERE Report.id = :id
 				AND Report.eventId = :eventId
 			)
 		';
 		
-		$params = ArrayUtil::keyIntersect($params, array('eventId', 'reportId'));
+		$p = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
-		$this->execute($sql, $params, 'Delete report fields.');
+		$this->execute($sql, $p, 'Delete report fields.');
 		
 		// delete report.
 		$sql = '
 			DELETE FROM
 				Report
 			WHERE
-				id = :reportId
+				id = :id
 			AND
 				eventId = :eventId
 		';
 		
-		$this->execute($sql, $params, 'Delete report.');
+		$p = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
+		
+		$this->execute($sql, $p, 'Delete report.');
 	}
 	
 	/**

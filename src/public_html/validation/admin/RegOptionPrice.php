@@ -35,7 +35,10 @@ class validation_admin_RegOptionPrice
 		//  2) when saving, the price can be checked by its manager.
 		$isVariableQuantityPrice = isset($price) && db_RegOptionPriceManager::getInstance()->isVariableQuantityPrice($price);
 		if($values['action'] === 'addVariableQuantityPrice' || $isVariableQuantityPrice) {
-			$option = db_VariableQuantityOptionManager::getInstance()->find($optionId);    
+			$option = db_VariableQuantityOptionManager::getInstance()->find(array(
+				'eventId' => $values['eventId'],
+				'id' => $optionId
+			));    
 		}
 		else {
 			$option = db_RegOptionManager::getInstance()->find(array(

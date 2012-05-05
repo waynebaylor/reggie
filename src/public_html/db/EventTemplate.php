@@ -33,7 +33,7 @@ class db_EventTemplate extends db_Manager
 		$this->createSurveyTemplatePage($eventId, $visibleToCategoryIds);
 		
 		// create default email template.
-		$this->createEmailTemplate($eventId, $emailFieldId);
+		$this->createEmailTemplate($eventId, $emailFieldId); 
 	}
 	
 	private function createEmailTemplate($eventId, $emailFieldId) {

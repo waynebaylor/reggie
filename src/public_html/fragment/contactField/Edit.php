@@ -36,6 +36,10 @@ _;
 						'name' => 'id',
 						'value' => $this->field['id']
 					))}
+					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $this->field['eventId']
+					))}
 					{$this->HTML->textarea(array(
 						'class' => 'expanding',
 						'name' => 'displayName',

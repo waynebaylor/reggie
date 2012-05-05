@@ -97,7 +97,7 @@ class action_admin_contactField_ContactField extends action_ValidatorAction
 			'code' => '',
 			'formInputId' => 0,
 			'regTypeIds' => array(),
-			'request' => $_REQUEST
+			'request' => $_REQUEST		// the logic component uses the request
 		));
 		
 		$user = SessionUtil::getUser();

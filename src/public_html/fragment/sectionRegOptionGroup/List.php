@@ -104,9 +104,12 @@ _;
 		$html = '';
 		
 		foreach($group['options'] as $option) {
-			$html .= <<<_
-				<div>({$this->escapeHtml($option['code'])}) {$this->escapeHtml($option['description'])}</div>		
-_;
+			if(isset($option['text'])) {
+				$html .= substr($option['text'], 0, 50).'...';
+			}
+			else {
+				$html .= "<div>({$this->escapeHtml($option['code'])}) {$this->escapeHtml($option['description'])}</div>";
+			}
 		}
 		
 		if(empty($html)) {

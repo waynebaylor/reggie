@@ -31,7 +31,11 @@ class db_VariableQuantityOptionManager extends db_OrderableManager
 		return self::$instance;
 	}
 	
-	public function find($id) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function find($params) {
 		$sql = '
 			SELECT
 				id,
@@ -44,17 +48,21 @@ class db_VariableQuantityOptionManager extends db_OrderableManager
 			FROM
 				VariableQuantityOption
 			WHERE
-				id=:id
+				eventId = :eventId
+			AND
+				id = :id
 		';
 		
-		$params = array(
-			'id' => $id
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		return $this->queryUnique($sql, $params, 'Find variable quantity option.');
 	}
 	
-	public function findBySection($section) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function findInfo($params) {
 		$sql = '
 			SELECT
 				id,
@@ -67,19 +75,50 @@ class db_VariableQuantityOptionManager extends db_OrderableManager
 			FROM
 				VariableQuantityOption
 			WHERE
-				sectionId=:sectionId
+				eventId = :eventId
+			AND
+				id = :id
+		';
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
+		
+		return $this->rawQueryUnique($sql, $params, 'Find variable quantity option info.');
+	}
+	
+	/**
+	 * 
+	 * @param array $params [eventId, sectionId]
+	 */
+	public function findBySection($params) {
+		$sql = '
+			SELECT
+				id,
+				eventId,
+				sectionId,
+				code,
+				description,
+				capacity,
+				displayOrder
+			FROM
+				VariableQuantityOption
+			WHERE
+				eventId = :eventId
+			AND
+				sectionId = :sectionId
 			ORDER BY
 				displayOrder
 		';
 		
-		$params = array(
-			'sectionId' => $section['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'sectionId'));
 		
 		return $this->query($sql, $params, 'Find variable quantity options in section.');
 	}
 	
-	public function createOption($option) {
+	/**
+	 * 
+	 * @param array $params [eventId, sectionId, code, description, capacity]
+	 */
+	public function createOption($params) {
 		$sql = '
 			INSERT INTO
 				VariableQuantityOption(
@@ -100,31 +139,49 @@ class db_VariableQuantityOptionManager extends db_OrderableManager
 			)
 		';
 		
-		$option['displayOrder'] = $this->getNextOrder();
-		$params = $option;
+		$params = ArrayUtil::keyIntersect($params, array(
+			'eventId',
+			'sectionId',
+			'code',
+			'description',
+			'capacity'
+		));
+		$params['displayOrder'] = $this->getNextOrder();
 		
 		$this->execute($sql, $params, 'Create variable quantity option.');
 		
 		return $this->lastInsertId();
 	}
 	
-	public function delete($option) {
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function delete($params) {
+		$varOpt = db_VariableQuantityOptionManager::getInstance()->find($params);
+		
 		// delete price associations.
 		$sql = '
 			DELETE FROM
 				VariableQuantityOption_RegOptionPrice
 			WHERE
-				variableQuantityId = :variableQuantityId
+				variableQuantityId = :id
+			AND
+				variableQuantityId 
+			IN (
+				SELECT id 
+				FROM VariableQuantityOption
+				WHERE eventId = :eventId
+				AND id = :id
+			)
 		';
 		
-		$params = array(
-			'variableQuantityId' => $option['id']
-		);
+		$p = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
-		$this->execute($sql, $params, 'Delete option price associations.');
+		$this->execute($sql, $p, 'Delete option price associations.');
 		
 		// delete prices.
-		foreach($option['prices'] as $price) {
+		foreach($varOpt['prices'] as $price) {
 			db_RegOptionPriceManager::getInstance()->delete($price);
 		}
 		
@@ -133,40 +190,55 @@ class db_VariableQuantityOptionManager extends db_OrderableManager
 			DELETE FROM
 				VariableQuantityOption
 			WHERE
-				id=:id
+				eventId = :eventId
+			AND
+				id = :id
 		';
 		
-		$params = array(
-			'id' => $option['id']
-		);
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id'));
 		
 		$this->execute($sql, $params, 'Delete variable quantity option.');
 	}
 	
+	/**
+	 * 
+	 * @param array $params [eventId, id, code, description, capacity]
+	 */
 	public function save($option) {
 		$sql = '
 			UPDATE
 				VariableQuantityOption
 			SET
-				code=:code,
-				description=:description,
-				capacity=:capacity
+				code = :code,
+				description = :description,
+				capacity = :capacity
 			WHERE
-				id=:id
+				eventId = :eventId
+			AND
+				id = :id
 		';
 		
-		$params = ArrayUtil::keyIntersect($option, array('id', 'code', 'description', 'capacity'));
+		$params = ArrayUtil::keyIntersect($option, array('eventId', 'id', 'code', 'description', 'capacity'));
 		
 		$this->execute($sql, $params, 'Save variable quantity option.');
 	}
 	
-	public function moveOptionUp($option) {
-		$this->moveUp($option, 'sectionId', $option['sectionId']);
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function moveOptionUp($params) {
+		$varOpt = db_VariableQuantityOptionManager::getInstance()->findInfo($params);
+		$this->moveUp($varOpt, 'sectionId', $varOpt['sectionId']);
 	}
 	
-	public function moveOptionDown($option) {
-		$this->moveDown($option, 'sectionId', $option['sectionId']);
-		
+	/**
+	 * 
+	 * @param array $params [eventId, id]
+	 */
+	public function moveOptionDown($params) {
+		$varOpt = db_VariableQuantityOptionManager::getInstance()->findInfo($params);
+		$this->moveDown($params, 'sectionId', $params['sectionId']);
 	}
 }
 

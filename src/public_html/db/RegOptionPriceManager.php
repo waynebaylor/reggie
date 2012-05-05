@@ -484,8 +484,8 @@ class db_RegOptionPriceManager extends db_Manager
 		';
 
 		$params = array(
-			'variableQuantityId' => $optionId,
-			'regOptionPriceId' => $priceId
+			'variableQuantityId' => $params['optionId'],
+			'regOptionPriceId' => $params['priceId']
 		);
 		
 		$this->execute($sql, $params, '');

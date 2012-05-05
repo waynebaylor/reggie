@@ -7,7 +7,7 @@ class logic_admin_regOption_SectionRegOptionGroup extends logic_Performer
 	}
 	
 	public function view($params) {
-		$group = $this->strictFindById(db_GroupManager::getInstance(), $params['id']);
+		$group = db_GroupManager::getInstance()->find($params);
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		$bc = db_BreadcrumbManager::getInstance()->findSectionCrumbs($group['sectionId']);
@@ -46,9 +46,9 @@ class logic_admin_regOption_SectionRegOptionGroup extends logic_Performer
 	}
 	
 	public function removeGroup($params) {
-		$group = $this->strictFindById(db_GroupManager::getInstance(), $params['id']);
+		$group = db_GroupManager::getInstance()->find($params);
 		
-		db_GroupManager::getInstance()->deleteById($group['id']);
+		db_GroupManager::getInstance()->deleteById($group);
 		
 		$section = db_PageSectionManager::getInstance()->find(array(
 			'eventId' => $params['eventId'],
@@ -65,7 +65,7 @@ class logic_admin_regOption_SectionRegOptionGroup extends logic_Performer
 	}
 	
 	public function moveGroupUp($params) {
-		$group = $this->strictFindById(db_GroupManager::getInstance(), $params['id']);
+		$group = db_GroupManager::getInstance()->find($params);
 		
 		db_GroupManager::getInstance()->moveGroupUp($group);
 		
@@ -80,7 +80,7 @@ class logic_admin_regOption_SectionRegOptionGroup extends logic_Performer
 	}
 	
 	public function moveGroupDown($params) {
-		$group = $this->strictFindById(db_GroupManager::getInstance(), $params['id']);
+		$group = db_GroupManager::getInstance()->find($params);
 		
 		db_GroupManager::getInstance()->moveGroupDown($group);
 		

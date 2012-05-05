@@ -7,7 +7,7 @@ class logic_admin_regOption_VariableQuantity extends logic_Performer
 	}
 	
 	public function view($params) {
-		$option = $this->strictFindById(db_VariableQuantityOptionManager::getInstance(), $params['id']);
+		$option = db_VariableQuantityOptionManager::getInstance()->find($params);
 		$event = db_EventManager::getInstance()->find($params['eventId']);
 		
 		return array(
@@ -15,7 +15,10 @@ class logic_admin_regOption_VariableQuantity extends logic_Performer
 			'eventId' => $params['eventId'],
 			'event' => $event,
 			'option' => $option,
-			'breadcrumbsParams' => db_BreadcrumbManager::getInstance()->findVariableRegOptionCrumbs($params['id'])
+			'breadcrumbsParams' => db_BreadcrumbManager::getInstance()->findVariableRegOptionCrumbs(array(
+				'eventId' => $params['eventId'],
+				'id' => $params['id']
+			))
 		);
 	}
 	
@@ -55,7 +58,7 @@ class logic_admin_regOption_VariableQuantity extends logic_Performer
 	}
 	
 	public function removeOption($params) {
-		$option = $this->strictFindById(db_VariableQuantityOptionManager::getInstance(), $params['id']);
+		$option = db_VariableQuantityOptionManager::getInstance()->find($params);
 		
 		db_VariableQuantityOptionManager::getInstance()->delete($option);
 		
@@ -80,7 +83,7 @@ class logic_admin_regOption_VariableQuantity extends logic_Performer
 	}
 	
 	public function moveOptionUp($params) {
-		$option = $this->strictFindById(db_VariableQuantityOptionManager::getInstance(), $params['id']);
+		$option = db_VariableQuantityOptionManager::getInstance()->find($params);
 		
 		db_VariableQuantityOptionManager::getInstance()->moveOptionUp($option);
 		
@@ -99,7 +102,7 @@ class logic_admin_regOption_VariableQuantity extends logic_Performer
 	}
 	
 	public function moveOptionDown($params) {
-		$option = $this->strictFindById(db_VariableQuantityOptionManager::getInstance(), $params['id']);
+		$option = db_VariableQuantityOptionManager::getInstance()->find($params);
 		
 		db_VariableQuantityOptionManager::getInstance()->moveOptionDown($option);
 		
