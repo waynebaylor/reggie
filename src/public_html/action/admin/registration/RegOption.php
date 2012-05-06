@@ -66,7 +66,7 @@ class action_admin_registration_RegOption extends action_ValidatorAction
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $params['eventId']);
 		
-		$info = $this->logic->saveVairableQuantity($params);
+		$info = $this->logic->saveVariableQuantity($params);
 		return $this->converter->getSaveVariableQuantity($info);
 	}
 }

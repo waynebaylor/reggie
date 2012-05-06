@@ -38,6 +38,8 @@ class logic_admin_registration_RegOption extends logic_Performer
 				$this->saveVariableQuantityOption($currentOpts, $params['registrationId'], $optId, $priceId, $value);
 			}
 		}
+		
+		return $params;
 	}
 	
 	private function saveVariableQuantityOption($currentOpts, $registrationId, $optId, $priceId, $value) {
