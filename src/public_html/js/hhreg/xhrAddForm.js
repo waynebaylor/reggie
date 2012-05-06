@@ -38,7 +38,9 @@ dojo.require("dojox.form.BusyButton");
 			});
 			
 			// select first option.
-			item.options[0].selected = true;
+			if(item.options.length > 0) {
+				item.options[0].selected = true;
+			}
 		});
 		
 		// uncheck all checkboxes.

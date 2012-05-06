@@ -105,17 +105,19 @@ _;
 		$opts = array();
 		
 		foreach($group['options'] as $option) {
-			$opts[] = array(
-				'label' => $option['description'],
-				'value' => $option['id'],
-				'prices' => db_RegOptionPriceManager::getInstance()->findByRegOption(array(
-					'eventId' => $option['eventId'],
-					'regOptionId' => $option['id']
-				))
-			);
+			if(empty($option['text'])) {
+				$opts[] = array(
+					'label' => $option['description'],
+					'value' => $option['id'],
+					'prices' => db_RegOptionPriceManager::getInstance()->findByRegOption(array(
+						'eventId' => $option['eventId'],
+						'regOptionId' => $option['id']
+					))
+				);
 			
-			foreach($option['groups'] as $subGroup) {
-				$opts = array_merge($opts, $this->getGroupOptions($subGroup));
+				foreach($option['groups'] as $subGroup) {
+					$opts = array_merge($opts, $this->getGroupOptions($subGroup));
+				}
 			}
 		}
 
