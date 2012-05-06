@@ -193,7 +193,7 @@ class db_PageSectionManager extends db_OrderableManager
 	 * 
 	 * @param array $params [eventId, id, name, text, numbered]
 	 */
-	public function save($params) {
+	public function save($params) { 
 		$sql = '
 			UPDATE
 				Section

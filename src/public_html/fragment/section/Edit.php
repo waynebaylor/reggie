@@ -38,6 +38,10 @@ _;
 						'value' => $this->escapeHtml($this->section['id'])
 					))}
 					{$this->HTML->hidden(array(
+						'name' => 'eventId',
+						'value' => $this->escapeHtml($this->section['eventId'])
+					))}
+					{$this->HTML->hidden(array(
 						'name' => 'contentTypeId',
 						'value' => $this->escapeHtml($this->section['contentType']['id'])
 					))}

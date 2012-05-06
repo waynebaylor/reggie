@@ -167,9 +167,13 @@ class db_reg_RegistrationManager extends db_Manager
 		//
 		// populate registration associations.
 		//
+		// get default values from group registration settings.
 		$groupRegistrations = self::findByRegistrationGroupId($regGroupId);
 		$sampleRegistration = reset($groupRegistrations);
 		$newRegInfo = $this->getNewRegistrationInfo($sampleRegistration['id']); 
+
+		// overwrite/augment with entered values.
+		$newRegInfo = array_merge($newRegInfo, $r['information']);
 
 		db_reg_InformationManager::getInstance()->createInformation($regId, $newRegInfo);
 		

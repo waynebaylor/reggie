@@ -118,7 +118,7 @@ class db_reg_InformationManager extends db_Manager
 			';
 			
 			$params = array(
-				'registrationId' => $registrationId,
+				'registrationId' => $params['registrationId'],
 				'contactFieldId' => $field['id']
 			);
 			
