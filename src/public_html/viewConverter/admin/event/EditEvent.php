@@ -5,7 +5,7 @@ class viewConverter_admin_event_EditEvent extends viewConverter_admin_AdminConve
 	function __construct() {
 		parent::__construct();
 		
-		$this->title = 'Edit Event';
+		$this->title = 'Event Registration Form';
 	}
 	
 	protected function body() {

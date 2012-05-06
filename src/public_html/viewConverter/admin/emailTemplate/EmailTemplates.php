@@ -4,8 +4,13 @@ class viewConverter_admin_emailTemplate_EmailTemplates extends viewConverter_adm
 {
 	function __construct() {
 		parent::__construct();
+		
+		$this->title = 'Email Templates';
 	}
 	
+	/**
+	 * email templates are viewed from within a dijit tab.
+	 */
 	public function getView($properties) {
 		$this->setProperties($properties);
 		

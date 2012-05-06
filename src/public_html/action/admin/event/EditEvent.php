@@ -28,7 +28,8 @@ class action_admin_event_EditEvent extends action_ValidatorAction
 	
 	public function view() {
 		$params = RequestUtil::getValues(array(
-			'eventId' => 0
+			'eventId' => 0,
+			'showTab' => ''
 		));
 		
 		$user = SessionUtil::getUser();

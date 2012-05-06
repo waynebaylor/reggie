@@ -152,10 +152,11 @@ _;
 			$sendEmailLink = $this->HTML->link(array(
 				'label' => 'Create/Enable Email Template',
 				'title' => 'An email template must be enabled to send email confirmations',
-				'href' => '/admin/emailTemplate/EmailTemplates',
+				'href' => '/admin/event/EditEvent',
 				'parameters' => array(
 					'a' => 'view',
-					'eventId' => $this->event['id']
+					'eventId' => $this->event['id'],
+					'showTab' => 'emailTemplates'
 				)
 			));
 			

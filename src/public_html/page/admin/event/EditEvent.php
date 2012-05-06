@@ -38,10 +38,11 @@
 			href: hhreg.util.contextUrl("/admin/event/EditPaymentOptions?")+dojo.objectToQuery({"eventId": eventId})
 		}));
 
-		tabContainer.addChild(new dojox.layout.ContentPane({
+		var emailTemplatesPane = new dojox.layout.ContentPane({
 			title: "Email Templates",
 			href: hhreg.util.contextUrl("/admin/emailTemplate/EmailTemplates?")+dojo.objectToQuery({"eventId": eventId})
-		}));
+		});
+		tabContainer.addChild(emailTemplatesPane);
 
 		tabContainer.addChild(new dojox.layout.ContentPane({
 			title: "Group Registration",
@@ -49,6 +50,10 @@
 		}));
 		
 		tabContainer.startup();
+
+		<?php if($this->showTab == 'emailTemplates'): ?>
+		tabContainer.selectChild(emailTemplatesPane);
+		<?php endif; ?>
 	});
 </script>
 
