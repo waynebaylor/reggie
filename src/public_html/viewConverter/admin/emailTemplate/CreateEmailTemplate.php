@@ -15,7 +15,7 @@ class viewConverter_admin_emailTemplate_CreateEmailTemplate extends viewConverte
 			'url' => '/admin/emailTemplate/CreateEmailTemplate',
 			'action' => 'createTemplate',
 			'rows' => $this->getFileContents('page_admin_emailTemplate_Edit'),
-			'redirectUrl' => "/admin/event/EditEvent?eventId={$this->eventId}"
+			'redirectUrl' => "/admin/event/EditEvent?eventId={$this->eventId}&showTab=emailTemplates"
 		));
 		
 		$body .= <<<_
