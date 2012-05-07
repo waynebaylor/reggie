@@ -49,9 +49,14 @@ RewriteRule ^(.*)$ index.php [L]
 ExpiresActive On
 ExpiresDefault "access plus 1 hours"
 
-SetOutputFilter DEFLATE
+Header unset Last-Modified
+Header unset ETag
+FileETag None
 
-Header set Cache-Control "max-age=3600, public, must-revalidate"
+Header set Pragma ""
+Header set Cache-Control "public"
+
+SetOutputFilter DEFLATE
 </FilesMatch>
 
 AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript

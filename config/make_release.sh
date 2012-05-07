@@ -58,16 +58,8 @@ rm -rf $1 $1-sql
 echo "======================================================================="
 echo "= TODO AFTER SITE UPLOAD"
 echo "======================================================================="
-
-echo ".htaccess: comment out the magic quotes line."
-
-echo "create file: /home/web/users/10514.baylorsc/sites/baylorsc/reggie.log"
-
-echo "Config.php: set ERROR_LOG and PAYMENT_LOG."
-echo "Config.php: set DB_HOST = f1-udb02.adhost.com"
-echo "Config.php: set DB_NAME = baylorsc__reggie"
-echo "Config.php: set DB_USERNAME = 10514.sql"
-echo "Config.php: set DB_PASSWORD = 0F96Swwr"
-
+echo "1. Create log files (error and payment)"
+echo "2. Set database properties"
+echo "3. Configure SSL in .htaccess"
 echo "======================================================================="
 
