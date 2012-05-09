@@ -81,6 +81,7 @@ class payment_AuthorizeNET
 		
 			'x_login' => $login,
 			'x_tran_key' => $transactionKey,
+			'x_invoice_num' => substr("{$this->event['code']} Registration", 0, 20),
 			'x_description' => "{$this->event['code']} Registration",
 			'x_amount' => $amount,
 			'x_card_num' => $this->info['cardNumber'],
@@ -119,7 +120,7 @@ class payment_AuthorizeNET
 			$cost = $item['quantity']*$item['unitPrice'];
 			// don't show zero-dollar options and variable quantity options with zero quantity.
 			if($cost > 0) {
-				$desc[] = "{$item['code']}: \${$cost}";
+				$desc[] = "{$item['code']}: {$cost}";
 			}
 		}
 		
@@ -159,7 +160,7 @@ class payment_AuthorizeNET
 	
 	private function getRegistrationLineItems($event, $registration) {
 		$lineItems = array();
-		
+
 		$regOptLineItems = $this->getRegOptionLineItems($event, $registration);
 		$lineItems = array_merge($lineItems, $regOptLineItems);
 		
@@ -212,9 +213,13 @@ class payment_AuthorizeNET
 	private function getRegOptionGroupLineItems($registration, $regOptGroup) {
 		$lineItems = array();
 		
-		foreach($regOptGroup['options'] as $regOption) {
+		foreach($regOptGroup['options'] as $regOption) {			
 			if(in_array($regOption['id'], $registration['regOptionIds'])) {
-				$price = model_RegOption::getPrice($registration['regTypeId'], $regOption);
+				$price = model_RegOption::getPrice(
+					array('id' => $registration['regTypeId']), 
+					$regOption
+				);
+
 				if(!empty($price)) {
 					$line = $this->getSanitizedLineItem(
 						$regOption['id'], 
