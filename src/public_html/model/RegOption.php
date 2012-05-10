@@ -4,7 +4,7 @@ class model_RegOption
 {
 	/**
 	 * works for both RegOptions and VariableQuantityOptions.
-	 * @param $regType
+	 * @param $regType [id]
 	 * @param $option
 	 */
 	public static function getPrice($regType, $option) {

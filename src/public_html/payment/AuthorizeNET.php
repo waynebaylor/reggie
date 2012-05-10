@@ -9,8 +9,6 @@
  */
 class payment_AuthorizeNET
 {
-	private $logger;
-	
 	private $event;
 	private $info;
 	private $amount;
