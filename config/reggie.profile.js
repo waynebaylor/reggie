@@ -25,6 +25,7 @@ dependencies = {
 	    {
 			name: "reggie_admin.js",
 			dependencies: [
+			    "dijit.Editor",
 				"dijit.Calendar",
 				"dijit._Widget",
 				"dijit.Dialog",
@@ -33,6 +34,7 @@ dependencies = {
 				"dojox.grid.EnhancedGrid",
 				"dojox.grid.enhanced.plugins.Pagination",
 				"hhreg.admin.widget.ActionMenuBar",
+				"hhreg.admin.widget.EventsGrid",
 				"hhreg.validation",
 				"hhreg.list",
 				"hhreg.xhrTableForm",
