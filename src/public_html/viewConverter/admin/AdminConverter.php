@@ -42,6 +42,12 @@ abstract class viewConverter_admin_AdminConverter extends viewConverter_ViewConv
 	   		model_Role::$VIEW_EVENT	
 		))? 'true' : 'false';
 		
+		$this->showCreateEvent = model_Role::userHasRole(SessionUtil::getUser(), array(
+			model_Role::$SYSTEM_ADMIN,
+			model_Role::$EVENT_ADMIN,
+			model_Role::$EVENT_MANAGER
+		))? 'true' : 'false';
+		
 		if(!empty($this->eventId)) {
 			$this->showEventMenu = 'true';
 			$this->showReportMenu = $this->getShowReportMenu(SessionUtil::getUser(), $this->eventId);
@@ -104,6 +110,7 @@ _;
 						new hhreg.admin.widget.ActionMenuBar({
 							showUsers: {$this->showUsersMenu},
 							showEvents: {$this->showEventsMenu},
+							showCreateEvent: {$this->showCreateEvent},
 							showEventMenu: {$this->showEventMenu},
 							eventLabel: "{$this->actionMenuEventLabel}",
 							showReports: {$this->showReportMenu},

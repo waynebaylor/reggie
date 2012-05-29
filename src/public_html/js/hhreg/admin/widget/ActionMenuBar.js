@@ -13,6 +13,7 @@ dojo.provide("hhreg.admin.widget.ActionMenuBar");
 dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Templated], {
 	showUsers: false,
 	showEvents: false,
+	showCreateEvent: false,
 	showEventMenu: false,
 	eventLabel: "",
 	showReports: false,
@@ -61,12 +62,16 @@ dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Template
 		var eventsMenu
 		if(_this.showEvents) {
 			eventsMenu = new dijit.Menu({});
-			eventsMenu.addChild(new dijit.MenuItem({
-				label: "Create Event",
-				onClick: function() {
-					window.location.href = hhreg.util.contextUrl("/admin/event/CreateEvent");
-				}
-			}));
+			
+			if(_this.showCreateEvent) {
+				eventsMenu.addChild(new dijit.MenuItem({
+					label: "Create Event",
+					onClick: function() {
+						window.location.href = hhreg.util.contextUrl("/admin/event/CreateEvent");
+					}
+				}));
+			}
+			
 			eventsMenu.addChild(new dijit.MenuItem({
 				label: "Manage Events",
 				onClick: function() {
