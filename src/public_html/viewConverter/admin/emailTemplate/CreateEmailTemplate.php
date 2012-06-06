@@ -5,7 +5,7 @@ class viewConverter_admin_emailTemplate_CreateEmailTemplate extends viewConverte
 	function __construct() {
 		parent::__construct();
 		
-		$this->title = 'Create Badge Template';
+		$this->title = 'Create Email Template';
 	}
 	
 	protected function body() {
