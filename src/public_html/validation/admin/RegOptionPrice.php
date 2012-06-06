@@ -8,7 +8,7 @@ class validation_admin_RegOptionPrice
 			validation_Validator::required('startDate', 'Start Date/Time is required.'),
 			validation_Validator::required('endDate', 'End Date/Time is required.'),
 			validation_Validator::required('price', 'Price is required.'),
-			validation_Validator::pattern('price', '/^[0-9]*\.?[0-9]*$/', 'Price can contain numbers and a single decimal.'),
+			validation_Validator::pattern('price', '/^-?[0-9]*\.?[0-9]*$/', 'Price can contain numbers and a single decimal.'),
 			validation_Validator::required('regTypeIds[]', 'Visible To is required.')
 		);
 	}
