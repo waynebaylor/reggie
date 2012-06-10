@@ -147,6 +147,7 @@ dojo.require("dojox.form.BusyButton");
 				label: button.value,
 				busyLabel: "Processing...",
 				onClick: function() {
+					saveButton.makeBusy();
 					form.submit();
 				}
 			}, button);

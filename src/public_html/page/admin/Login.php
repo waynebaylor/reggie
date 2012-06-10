@@ -35,7 +35,8 @@
 			'rows' => $this->getFormRows(),
 			'buttonText' => 'Submit',
 			'errorText' => 'There was a problem. Please try again.',
-			'redirectUrl' => '/admin/Login'
+			'redirectUrl' => '/admin/Login',
+			'autocomplete' => false
 		)) ?>
 	</div>
 </div>

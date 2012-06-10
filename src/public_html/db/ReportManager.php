@@ -981,7 +981,7 @@ class db_ReportManager extends db_Manager
 		foreach($params['reportIds'] as $reportId) {
 			$this->deleteReport(array(
 				'eventId' => $params['eventId'],
-				'reportId' => $reportId
+				'id' => $reportId
 			));
 		}
 	}

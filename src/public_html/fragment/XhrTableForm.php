@@ -11,7 +11,7 @@ class fragment_XhrTableForm extends template_Template
 	
 	function __construct($urlOrConfig, $action = '', $rows = '', 
 						 $buttonText = 'Save', $errorText = 'There was a problem saving. Please try again.', 
-						 $useAjax = true, $redirectUrl = '') 
+						 $useAjax = true, $redirectUrl = '', $autocomplete = true) 
 	{
 		parent::__construct();
 
@@ -34,6 +34,9 @@ class fragment_XhrTableForm extends template_Template
 			if(isset($urlOrConfig['redirectUrl'])) {
 				$redirectUrl = $urlOrConfig['redirectUrl'];
 			}
+			if(isset($urlOrConfig['autocomplete'])) {
+				$autocomplete = $urlOrConfig['autocomplete'];
+			}
 		}
 		
 		$this->url = $url;
@@ -43,15 +46,18 @@ class fragment_XhrTableForm extends template_Template
 		$this->errorText = $errorText;
 		$this->useAjax = $useAjax;
 		$this->redirectUrl = $redirectUrl;
+		$this->autocomplete = $autocomplete;
 	}
 	
 	public function html() {
+		$autocomplete = $this->autocomplete? '' : ' autocomplete="off" ';
+		
 		return <<<_
 			<script type="text/javascript">
 				dojo.require("hhreg.xhrTableForm");
 			</script>
 			
-			<form method="post" name="{$this->action}" action="{$this->contextUrl($this->url)}">
+			<form method="post" name="{$this->action}" action="{$this->contextUrl($this->url)}" {$autocomplete}>
 				{$this->HTML->hidden(array(
 					'name' => 'useAjax',
 					'value' => $this->useAjax? 'true' : 'false'
