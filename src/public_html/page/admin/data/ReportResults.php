@@ -12,20 +12,24 @@
 	],
 	"items": [
 		<?php foreach($this->info['rows'] as $rowIndex => $row): ?>
-		{
-			"index": <?php echo $rowIndex ?>,
-			<?php if($this->showSummaryLink || $this->showDetailsLink): ?>
-			"detailsUrl": "<?php echo $this->contextUrl("/admin/registration/Registration?eventId={$this->eventId}&id={$row['regGroupId']}") ?>",
-			"summaryUrl": "<?php echo $this->contextUrl("/admin/registration/Summary?eventId={$this->eventId}&regGroupId={$row['regGroupId']}") ?>",
-			<?php endif; ?>
-			"data": [
-				<?php foreach($row['data'] as $dataIndex => $dataItem): ?>
-				"<?php echo str_replace("\n", ' ', $this->escapeHtml($dataItem)) ?>"
-				<?php echo ($dataIndex < count($row['data'])-1)? ',' : '' ?>
-				<?php endforeach; ?>
-			]
-		}
-		<?php echo ($rowIndex < count($this->info['rows'])-1)? ',' : '' ?>
+			<?php 
+				$data = array();
+				foreach($row['data'] as $dataIndex => $dataItem) {
+					$data[] = str_replace("\n", ' ', $this->escapeHtml($dataItem));
+				}
+				
+				$unencoded = array(
+					'index' => $rowIndex,
+					'data' => $data
+				);
+				
+				if($this->showSummaryLink || $this->showDetailsLink) {
+					$unencoded['detailsUrl'] = $this->contextUrl("/admin/registration/Registration?eventId={$this->eventId}&id={$row['regGroupId']}");
+					$unencoded['summaryUrl'] = $this->contextUrl("/admin/registration/Summary?eventId={$this->eventId}&regGroupId={$row['regGroupId']}");
+				}
+			?>
+			<?php echo json_encode($unencoded) ?>
+			<?php echo ($rowIndex < count($this->info['rows'])-1)? ',' : '' ?>
 		<?php endforeach; ?>
 	]
 }

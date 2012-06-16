@@ -3,19 +3,19 @@
 	"identifier": "id",
 	"items": [
 		<?php foreach($this->results as $index => $result): ?>
-		{
-			"id": <?php echo $index ?>,
-			"registrationId": <?php echo $result['registrationId'] ?>,
-			"eventId": <?php echo $this->eventId ?>,
-			"regGroupId": <?php echo $result['regGroupId'] ?>,
-			"searchTerm": "<?php echo $this->searchTerm ?>",
-			"fieldName": "<?php echo $result['displayName'] ?>",
-			"fieldValue": "<?php echo $result['value'] ?>",
-			"showDetailsLink": <?php echo $this->showDetailsLink? 'true' : 'false' ?>,
-			"detailsUrl": "<?php echo $this->contextUrl("/admin/registration/Registration?eventId={$this->eventId}&id={$result['regGroupId']}") ?>",
-			"summaryUrl": "<?php echo $this->contextUrl("/admin/registration/Summary?eventId={$this->eventId}&regGroupId={$result['regGroupId']}") ?>"
-		}
-		<?php echo ($index < count($this->results)-1)? ',' : '' ?>
+			<?php echo json_encode(array(
+				'id' => $index,
+				'registrationId' => $result['registrationId'],
+				'eventId' => $this->eventId,
+				'regGroupId' => $result['regGroupId'],
+				'searchTerm' => $this->searchTerm,
+				'fieldName' => $result['displayName'],
+				'fieldValue' => $result['value'],
+				'showDetailsLink' => $this->showDetailsLink? 'true' : 'false',
+				'detailsUrl' => $this->contextUrl("/admin/registration/Registration?eventId={$this->eventId}&id={$result['regGroupId']}"),
+				'summaryUrl' => $this->contextUrl("/admin/registration/Summary?eventId={$this->eventId}&regGroupId={$result['regGroupId']}")
+			)) ?>
+			<?php echo ($index < count($this->results)-1)? ',' : '' ?>
 		<?php endforeach; ?>
 	]
 }

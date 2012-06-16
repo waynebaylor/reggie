@@ -8,14 +8,14 @@
 			"email": "<?php echo $u['email'] ?>",
 			"roles": [
 				<?php foreach($u['roles'] as $roleIndex => $role): ?>
-				{
-					"roleId": <?php echo $role['id'] ?>,
-					"name": "<?php echo $role['name'] ?>",
-					"eventId": <?php echo empty($role['eventId'])? 'null' : $role['eventId'] ?>,
-					"eventCode": "<?php echo $role['eventCode'] ?>",
-					"eventDisplayName": "<?php echo $role['eventDisplayName'] ?>"
-				}
-				<?php echo ($roleIndex < count($u['roles'])-1)? ',' : '' ?>
+					<?php echo json_encode(array(
+						'roleId' => $role['id'],
+						'name' => $role['name'],
+						'eventId' => empty($role['eventId'])? 'null' : $role['eventId'],
+						'eventCode' => $role['eventCode'],
+						'eventDisplayName' => $role['eventDisplayName']
+					)) ?>
+					<?php echo ($roleIndex < count($u['roles'])-1)? ',' : '' ?>
 				<?php endforeach; ?>
 			]
 		}
