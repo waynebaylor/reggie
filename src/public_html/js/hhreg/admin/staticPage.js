@@ -16,7 +16,7 @@ dojo.addOnLoad(function() {
 		buttonSave: "Preview",
 		autoSave: false,
 		renderAsHtml: true,
-		noValueIndicator: '<span style="color:#666;"><b>Click to enter content.</b> Any HTML you type will be rendered when you click &quot;Preview&quot;.</span>',
+		noValueIndicator: '<span style="color:#666;"><b>Click to enter content.</b><br>Any HTML you type will be rendered when you click the Preview button.</span>',
 		onChange: function(text) {
 			input.value = text;
 		}
