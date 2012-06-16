@@ -11,11 +11,12 @@ class fragment_editRegistrations_payment_Edit extends template_Template
 	}
 	
 	public function html() {
-		$form = new fragment_XhrTableForm(
-			'/admin/registration/Payment', 
-			'savePayment', 
-			$this->getFormRows()
-		);
+		$form = new fragment_XhrTableForm(array(
+			'url' => '/admin/registration/Payment', 
+			'action' => 'savePayment', 
+			'rows' => $this->getFormRows(),
+			'redirectUrl' => "/admin/registration/Registration?eventId={$this->payment['eventId']}&id={$this->payment['regGroupId']}"
+		));
 		
 		return <<<_
 			<div class="fragment-edit">
