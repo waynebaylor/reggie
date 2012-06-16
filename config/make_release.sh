@@ -4,11 +4,11 @@
 # usage: $> make_release.sh <release-name>
 #
 
-dojo="dojo-release-1.5.0-src"
+dojo="dojo-release-1.6.1-src"
 curr_dir=$(pwd)
  
 # create the tag for the release.
-#svn copy svn://dino/baylorsc/reggie/trunk svn://dino/baylorsc/reggie/tags/$1 -m "making another release"
+svn copy svn://dino/baylorsc/reggie/trunk svn://dino/baylorsc/reggie/tags/$1 -m "making another release"
 
 # check out the tag.
 svn checkout svn://dino/baylorsc/reggie/tags/$1 $1-tmp
