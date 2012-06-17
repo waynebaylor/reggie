@@ -87,7 +87,7 @@ _;
 		}
 		else if(!StringUtil::isBlank($value)) {
 			$option = db_ContactFieldOptionManager::getInstance()->find(array(
-				'eventId' => $page['eventId'],
+				'eventId' => $this->page['eventId'],
 				'id' => $value
 			));
 			
