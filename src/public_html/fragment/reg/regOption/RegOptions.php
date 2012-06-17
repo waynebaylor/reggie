@@ -25,7 +25,8 @@ _;
 	
 	private function getGroupRows() {
 		$html = '';
-
+		$textHtml = '';
+		
 		foreach($this->group['options'] as $option) { 
 			if(empty($option['text'])) {
 				$price = $this->getPrice($option);
@@ -33,6 +34,9 @@ _;
 				if(!empty($price)) {
 					$groupsTemplate = new fragment_reg_regOptionGroup_RegOptionGroups($option['groups'], $this->regTypeId, $this->selectedOptions, $this->pageId);
 					$optionGroupsHtml = $groupsTemplate->html();
+					
+					$html .= $textHtml;
+					$textHtml = '';
 					
 					$html .= <<<_
 						<tr>
@@ -48,7 +52,7 @@ _;
 				}				
 			}
 			else {
-				$html .= '<tr><td colspan="2">'.$option['text'].'</td></tr>';
+				$textHtml .= '<tr><td colspan="2">'.$option['text'].'</td></tr>';
 			}
 		}	
 
