@@ -87,9 +87,21 @@ class logic_admin_registration_Registration extends logic_Performer
 		$groupRegistrations = db_reg_RegistrationManager::getInstance()->findByRegistrationGroupId($params['regGroupId']);
 		$sampleRegistration = reset($groupRegistrations);
 		
-		// these can be changed after the registration is created.
-		$newReg['regTypeId'] = $sampleRegistration['regTypeId'];
-		$newReg['categoryId'] = $sampleRegistration['categoryId'];
+		// if there are no registrants in the group, then use the first
+		// reg type for the event. these can be changed after the registration is created.
+		if($sampleRegistration === FALSE) {
+			$eventRegTypes = db_RegTypeManager::getInstance()->findByEventId($params);
+			$defaultRegType = reset($eventRegTypes);
+			$newReg['regTypeId'] = $defaultRegType['id'];
+			
+			$eventCategories = db_CategoryManager::getInstance()->findByRegType($defaultRegType);
+			$defaultCategory = reset($eventCategories);
+			$newReg['categoryId'] = $defaultCategory['id'];
+		}
+		else {
+			$newReg['regTypeId'] = $sampleRegistration['regTypeId'];
+			$newReg['categoryId'] = $sampleRegistration['categoryId'];
+		}
 		
 		$newRegId = db_reg_RegistrationManager::getInstance()->createRegistration($params['regGroupId'], $newReg);
 		
