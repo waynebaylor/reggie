@@ -173,8 +173,8 @@ class db_reg_RegistrationManager extends db_Manager
 		$newRegInfo = $this->getNewRegistrationInfo($sampleRegistration['id']); 
 
 		// overwrite/augment with entered values.
-		$newRegInfo = array_merge($newRegInfo, $r['information']);
-
+		$newRegInfo = $this->mergeGroupRegInfoWithEnteredValues($newRegInfo, $r['information']);
+		
 		db_reg_InformationManager::getInstance()->createInformation($regId, $newRegInfo);
 		
 		db_reg_RegOptionManager::getInstance()->createOptions(array(
@@ -192,6 +192,27 @@ class db_reg_RegistrationManager extends db_Manager
 		));
 		
 		return $regId;
+	}
+	
+	private function mergeGroupRegInfoWithEnteredValues($groupRegInfo, $regInformation) {
+		$processedIds = array();
+		$mergedInfo = array();
+		
+		// add the entered information.
+		foreach($regInformation as $info) {
+			$processedIds[] = $info['id'];
+			$mergedInfo[] = $info;	
+		}
+		
+		// add the info from default group reg settings if there wasn't a value already provided.
+		foreach($groupRegInfo as $groupInfo) {
+			if(!in_array($groupInfo['id'], $processedIds)) {
+				$processedIds[] = $groupInfo['id'];
+				$mergedInfo[] = $groupInfo;
+			}
+		}	
+		
+		return $mergedInfo;
 	}
 	
 	public function createRegistrations($regs, $payment) {
