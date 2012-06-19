@@ -60,13 +60,15 @@ class logic_admin_registration_RegOption extends logic_Performer
 			}
 		}
 
-		// it's a new option.
-		db_reg_VariableQuantityManager::getInstance()->createOption(array(
-			'registrationId' => $registrationId, 
-			'variableQuantityId' => $optId, 
-			'priceId' => $priceId, 
-			'quantity' => $value
-		));
+		// it's a new option, but only save if quantity is greater than 0.
+		if($value > 0) {
+			db_reg_VariableQuantityManager::getInstance()->createOption(array(
+				'registrationId' => $registrationId, 
+				'variableQuantityId' => $optId, 
+				'priceId' => $priceId, 
+				'quantity' => $value
+			));
+		}
 	}
 }
 
