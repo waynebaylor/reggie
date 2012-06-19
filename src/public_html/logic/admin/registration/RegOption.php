@@ -46,13 +46,16 @@ class logic_admin_registration_RegOption extends logic_Performer
 		// if the option already exists, then update it.
 		foreach($currentOpts as $currentOpt) {
 			if($currentOpt['variableQuantityId'] == $optId) {
-				// update option
-				db_reg_VariableQuantityManager::getInstance()->save(array(
-					'id' => $currentOpt['id'], 
-					'priceId' => $priceId,
-					'quantity' => $value
-				));
+				// only update if the price or quantity have changed.
+				$optChanged = ($currentOpt['priceId'] != $priceId) || ($currentOpt['quantity'] != $value); 
 				
+				if($optChanged) {
+					db_reg_VariableQuantityManager::getInstance()->save(array(
+						'id' => $currentOpt['id'], 
+						'priceId' => $priceId,
+						'quantity' => $value
+					));
+				}
 				return;
 			}
 		}
