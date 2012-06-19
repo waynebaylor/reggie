@@ -41,8 +41,10 @@ class fragment_reportField_HTML
 				$sectionFields[$section['id']] = array();
 			}
 			
+			$label = substr($field['displayName'], 0, 75);
+			$label .= strlen($field['displayName']) > 75? '...' :'';
 			$sectionFields[$section['id']][] = array(
-				'label' => $field['displayName'],
+				'label' => $label,
 				'value' => $field['id']
 			);
 		}
