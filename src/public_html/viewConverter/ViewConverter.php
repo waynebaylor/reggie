@@ -161,6 +161,7 @@ abstract class viewConverter_ViewConverter
 					{$this->HTML->css(array('href' => '/js/dojo/resources/dojo.css'))}
 					{$this->HTML->css(array('href' => '/js/dijit/themes/dijit.css'))}
 					{$this->HTML->css(array('href' => '/js/dijit/themes/claro/claro.css'))}
+					{$this->HTML->css(array('href' => '/js/dijit/themes/claro/document.css'))}
 					{$this->HTML->css(array('href' => '/js/dojox/form/resources/BusyButton.css'))}
 							
 					{$this->HTML->script(array('src' => '/js/dojo/dojo.js'))}
