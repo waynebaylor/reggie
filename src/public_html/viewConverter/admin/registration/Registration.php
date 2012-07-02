@@ -24,7 +24,7 @@ class viewConverter_admin_registration_Registration extends viewConverter_admin_
 				<div class="registrant-details-section">
 					<h3>Edit Registrations</h3>
 					
-					<div class="add-registrant">
+					<span class="add-registrant">
 						{$this->HTML->link(array(
 							'label' => 'Add Registrant To Group',
 							'href' => '/admin/registration/Registration',
@@ -34,7 +34,16 @@ class viewConverter_admin_registration_Registration extends viewConverter_admin_
 								'regGroupId' => $this->group['id']
 							)
 						))}
-					</div>
+					</span>
+					&nbsp;
+					{$this->HTML->link(array(
+						'label' => 'Summary',
+						'href' => '/admin/registration/Summary',
+						'parameters' => array(
+							'eventId' => $this->event['id'],
+							'regGroupId' => $this->group['id']
+						)
+					))}
 					
 					<div class="sub-divider"></div>
 					
