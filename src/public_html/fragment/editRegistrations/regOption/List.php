@@ -5,11 +5,12 @@ class fragment_editRegistrations_regOption_List extends template_Template
 	private $event;
 	private $registration;
 	
-	function __construct($event, $registration) {
+	function __construct($event, $registration, $registrantNum = 1) {
 		parent::__construct();
 		
 		$this->event = $event;
 		$this->registration = $registration;
+		$this->registrantNum = $registrantNum;
 	}
 	
 	public function html() {
@@ -85,7 +86,8 @@ _;
 							'id' => $o['id'],
 							'groupId' => $this->registration['regGroupId'],
 							'eventId' => $this->event['id']
-						)
+						),
+						'fragment' => "showTab=registrant{$this->registrantNum}&showSubTab=registrant{$this->registrantNum}-registration_options"
 					));
 				}
 				else {

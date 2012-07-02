@@ -17,7 +17,8 @@ class logic_admin_registration_RegOption extends logic_Performer
 		return array(
 			'eventId' => $params['eventId'],
 			'event' => $event,
-			'registration' => $registration
+			'registration' => $registration,
+			'registrantNum' => $params['registrantNum']
 		);
 	}
 	

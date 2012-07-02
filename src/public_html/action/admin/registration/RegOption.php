@@ -22,6 +22,7 @@ class action_admin_registration_RegOption extends action_ValidatorAction
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0,
 			'registrationId' => 0,
+			'registrantNum' => 1,
 			'regOpts' => array()
 		));
 		foreach($params['regOpts'] as $optionId) {

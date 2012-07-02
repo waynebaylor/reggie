@@ -21,23 +21,25 @@ class viewConverter_admin_registration_Registration extends viewConverter_admin_
 			{$breadcrumbs->html()}
 			
 			<div id="content">
-				<h3>Edit Registrations</h3>
-				
-				<div class="add-registrant">
-					{$this->HTML->link(array(
-						'label' => 'Add Registrant To Group',
-						'href' => '/admin/registration/Registration',
-						'parameters' => array(
-							'a' => 'addRegistrantToGroup',
-							'eventId' => $this->event['id'],
-							'regGroupId' => $this->group['id']
-						)
-					))}
+				<div class="registrant-details-section">
+					<h3>Edit Registrations</h3>
+					
+					<div class="add-registrant">
+						{$this->HTML->link(array(
+							'label' => 'Add Registrant To Group',
+							'href' => '/admin/registration/Registration',
+							'parameters' => array(
+								'a' => 'addRegistrantToGroup',
+								'eventId' => $this->event['id'],
+								'regGroupId' => $this->group['id']
+							)
+						))}
+					</div>
+					
+					<div class="sub-divider"></div>
+					
+					{$this->getRegistrants()}
 				</div>
-				
-				{$this->getRegistrants()}
-				
-				<div class="divider"></div>
 			</div>		
 _;
 
@@ -84,7 +86,7 @@ _;
 			</tr>
 			<tr>
 				<td>Balance Due</td>
-				<td>{$this->remainingBalance}</td>
+				<td id="payment-balance-due">{$this->remainingBalance}</td>
 			</tr>	
 _;
 
@@ -94,13 +96,13 @@ _;
 	public function getAddRegistrantToGroup($properties) {
 		$this->setProperties($properties);
 		
-		return new template_Redirect("/admin/registration/Registration?eventId={$this->eventId}&id={$this->groupId}#registrant{$this->newNumber}");		
+		return new template_Redirect("/admin/registration/Registration?eventId={$this->eventId}&id={$this->groupId}#showTab=registrant{$this->newNumber}");		
 	}
 	
 	public function getCancelRegistration($properties) {
 		$this->setProperties($properties);
 		
-		return new template_Redirect("/admin/registration/Registration?eventId={$this->eventId}&id={$this->regGroupId}#registrant{$this->registrantNumber}");
+		return new template_Redirect("/admin/registration/Registration?eventId={$this->eventId}&id={$this->regGroupId}#showTab=registrant{$this->registrantNumber}");
 	}
 	
 	private function getRegistrants() {
@@ -117,14 +119,8 @@ _;
 				$this->getRegistrantRow($r)
 			);
 
-			$html .= <<<_
-				<div class="sub-divider"></div>
-				<a name="registrant{$num}"></a>
-				<div class="sub-divider"></div>
-_;
-			
-			$regFragment = new fragment_editRegistrations_Registration($this->event, $this->group, $r);
-			$options = new fragment_editRegistrations_RegOptions($this->event, $r);
+			$regFragment = new fragment_editRegistrations_Registration($this->event, $this->group, $r, $num);
+			$options = new fragment_editRegistrations_RegOptions($this->event, $r, $num);
 			
 			if(empty($r['dateCancelled'])) {
 				$cancelLink = $this->HTML->link(array(
@@ -145,7 +141,7 @@ _;
 			}
 			else {
 				$cancelLink = '';
-				$cancelDate = '<span style="font-weight:bold; color:red;">( Cancelled )</span>'; 
+				$cancelDate = '<span style="color:red;">(Cancelled)</span>'; 
 				$cancelCss = 'cancelled';
 			}	
 			
@@ -174,7 +170,8 @@ _;
 						'a' => 'sendConfirmation',
 						'eventId' => $this->event['id'],
 						'registrationId' => $r['id']
-					)
+					),
+					'fragment' => "showTab=registrant{$num}"
 				));
 			}
 			
@@ -205,30 +202,36 @@ _;
 				));
 			}
 					
+			$tabId = "registrant{$num}";
+			$subTabId = "registrant{$num}-general_information";
+			
 			$html .= <<<_
-				<div class="registrant {$cancelCss}">
-					<div class="registrant-heading">
-						Registrant {$numDisplayed} {$cancelDate}
-					</div>	
-					<div class="registrant-links">
-						{$sendEmailLink} {$printBadgeLink} {$cancelLink} {$deleteLink}
+				<div id="{$tabId}" class="registrant-tab">
+					<span class="hide tab-label">Registrant {$numDisplayed} {$cancelDate}</span>
+					
+					<div class="registrant {$cancelCss}">
+						<div id="{$subTabId}" class="registrant-sub-tab">	
+							<span class="hide sub-tab-label">General Information</span>
+								
+							<div class="registrant-links">
+								{$sendEmailLink} {$printBadgeLink} {$cancelLink} {$deleteLink}
+								
+								{$printBadgeDialog}
+							</div>
+					
+							<div class="sub-divider"></div>
+							
+							<div class="fragment-edit">
+								<h3>General Registrant Information</h3>
+								
+								{$comments->html()}
+							</div>
+						</div>
+								
+						{$regFragment->html()}
 						
-						{$printBadgeDialog}
+						{$options->html()}
 					</div>
-					
-					<div class="sub-divider"></div>
-					
-					<div class="fragment-edit">
-						<h3>General Registrant Information</h3>
-						
-						{$comments->html()}
-					</div>
-					
-					<div class="sub-divider"></div>
-						
-					{$regFragment->html()}
-					
-					{$options->html()}
 				</div>
 _;
 		}
@@ -238,7 +241,10 @@ _;
 		return <<<_
 			{$html}
 			
-			{$payments->html()}
+			<div id="payments" class="registrant-tab">
+				<span class="hide tab-label">Payments</span>
+				{$payments->html()}
+			</div>
 _;
 	}
 	

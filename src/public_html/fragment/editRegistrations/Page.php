@@ -7,13 +7,14 @@ class fragment_editRegistrations_Page extends template_Template
 	private $group;
 	private $registration;
 	
-	function __construct($event, $page, $group, $registration) {
+	function __construct($event, $page, $group, $registration, $registrantNum = 1) {
 		parent::__construct();
 		
 		$this->event = $event;
 		$this->page = $page;
 		$this->group = $group;
 		$this->registration = $registration;
+		$this->registrantNum = $registrantNum;
 	}
 	
 	public function html() {
@@ -32,15 +33,21 @@ class fragment_editRegistrations_Page extends template_Template
 			}
 		}
 			
+		// replace non alpha-numeric with _ and then lowercase everything.
+		$subTabId = preg_replace('/[^0-9a-zA-Z_]/', '_', $this->page['title']);
+		$subTabId = "registrant{$this->registrantNum}-".strtolower($subTabId);
+		
 		if(!empty($html)) {
 			return <<<_
-				<div class="{$fragmentClass}">
-					<h3>{$this->page['title']}</h3>
+				<div id="{$subTabId}" class="registrant-sub-tab">
+					<span class="hide sub-tab-label">{$this->page['title']}</span>
 					
-					{$html}
+					<div class="{$fragmentClass}">
+						<h3>{$this->page['title']}</h3>
+						
+						{$html}
+					</div>
 				</div>
-				
-				<div class="sub-divider"></div>
 _;
 		}
 		else {
@@ -79,6 +86,9 @@ _;
 			);
 		}
 		
+		// used to make url unique, so redirect with # is forced to actually reload the page.
+		$timestamp = time();
+		
 		$rows = <<<_
 			<tr>
 				<td colspan="2">
@@ -91,7 +101,7 @@ _;
 				<td>
 					{$this->HTML->hidden(array(
 						'class' => 'change-reg-type-redirect',
-						'value' => "/admin/registration/Registration?eventId={$this->event['id']}&id={$registration['regGroupId']}"
+						'value' => "/admin/registration/Registration?eventId={$this->event['id']}&id={$registration['regGroupId']}&{$timestamp}#showTab=registrant{$this->registrantNum}&showSubTab=registrant{$this->registrantNum}-registration_type"
 					))}
 					
 					{$this->HTML->hidden(array(

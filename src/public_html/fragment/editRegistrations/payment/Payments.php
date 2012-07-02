@@ -25,12 +25,6 @@ class fragment_editRegistrations_payment_Payments extends template_Template
 		$remainingBalance = '$'.number_format($remainingBalance, 2);
 		
 		return <<<_
-			<div class="divider"></div>
-			
-			<div class="registrant-heading">
-				Payments
-			</div>
-			
 			<div class="registrant-details-section">
 				<h3>All Payments For Group</h3>
 				
@@ -45,7 +39,7 @@ class fragment_editRegistrations_payment_Payments extends template_Template
 					</tr>
 					<tr>
 						<td>Balance Due</td>
-						<td>{$remainingBalance}</td>
+						<td id="payment-balance-due">{$remainingBalance}</td>
 					</tr>
 				</table>
 				

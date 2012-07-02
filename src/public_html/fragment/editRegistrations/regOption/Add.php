@@ -5,11 +5,12 @@ class fragment_editRegistrations_regOption_Add extends template_Template
 	private $event;
 	private $registration;
 	
-	function __construct($event, $registration) {
+	function __construct($event, $registration, $registrantNum = 1) {
 		parent::__construct();
 		
 		$this->event = $event;
 		$this->registration = $registration;
+		$this->registrantNum = $registrantNum;
 	}
 	
 	public function html() {
@@ -63,6 +64,10 @@ _;
 					{$this->HTML->hidden(array(
 						'name' => 'registrationId',
 						'value' => $this->registration['id']
+					))}
+					{$this->HTML->hidden(array(
+						'name' => 'registrantNum',
+						'value' => $this->registrantNum
 					))}
 					
 					<table class="admin" style="border:none;">

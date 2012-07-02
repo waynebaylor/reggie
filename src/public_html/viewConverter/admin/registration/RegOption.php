@@ -8,7 +8,7 @@ class viewConverter_admin_registration_RegOption extends viewConverter_admin_Adm
 	
 	public function getAddRegOptions($properties) {
 		$this->setProperties($properties);
-		return new fragment_editRegistrations_regOption_List($this->event, $this->registration);
+		return new fragment_editRegistrations_regOption_List($this->event, $this->registration, $this->registrantNum);
 	}
 	
 	public function getCancelRegOption($properties) {

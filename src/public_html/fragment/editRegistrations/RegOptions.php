@@ -5,34 +5,39 @@ class fragment_editRegistrations_RegOptions extends template_Template
 	private $event;
 	private $registration;
 	
-	function __construct($event, $registration) {
+	function __construct($event, $registration, $registrantNum = 1) {
 		parent::__construct();
 		
 		$this->event = $event;
 		$this->registration = $registration;
+		$this->registrantNum = $registrantNum;
 	}
 	
 	public function html() {
-		$list = new fragment_editRegistrations_regOption_List($this->event, $this->registration);
-		$add = new fragment_editRegistrations_regOption_Add($this->event, $this->registration);
+		$list = new fragment_editRegistrations_regOption_List($this->event, $this->registration, $this->registrantNum);
+		$add = new fragment_editRegistrations_regOption_Add($this->event, $this->registration, $this->registrantNum);
 		
 		return <<<_
-			<div class="registrant-details-section">
-				<h3>Registration Options</h3>
+			<div id="registrant{$this->registrantNum}-registration_options" class="registrant-sub-tab">
+				<span class="hide sub-tab-label">Registration Options</span>
 				
-				<div class="fragment-reg-options">
-					<div>
-						{$list->html()}
-					</div>
-	
-					<div class="sub-divider"></div>
+				<div class="registrant-details-section">
+					<h3>Registration Options</h3>
 					
-					{$add->html()}
+					<div class="fragment-reg-options">
+						<div>
+							{$list->html()}
+						</div>
+		
+						<div class="sub-divider"></div>
+						
+						{$add->html()}
+					</div>
+					
+					<div class="divider"></div>
+					
+					{$this->getVariableOptions()}
 				</div>
-				
-				<div class="divider"></div>
-				
-				{$this->getVariableOptions()}
 			</div>
 _;
 	}
