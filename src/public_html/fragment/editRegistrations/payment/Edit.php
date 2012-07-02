@@ -15,7 +15,7 @@ class fragment_editRegistrations_payment_Edit extends template_Template
 			'url' => '/admin/registration/Payment', 
 			'action' => 'savePayment', 
 			'rows' => $this->getFormRows(),
-			'redirectUrl' => "/admin/registration/Registration?eventId={$this->payment['eventId']}&id={$this->payment['regGroupId']}"
+			'redirectUrl' => "/admin/registration/Registration?eventId={$this->payment['eventId']}&id={$this->payment['regGroupId']}#showTab=payments"
 		));
 		
 		return <<<_
