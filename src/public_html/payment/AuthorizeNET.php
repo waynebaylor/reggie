@@ -15,13 +15,17 @@ class payment_AuthorizeNET
 	
 	private $url;
 	
-	function __construct($event, $info, $amount) {
+	function __construct($event, $info, $amount, $isAdminPayment = FALSE) {
 		$this->url = in_array(Config::$MODE_DEVELOPMENT, Config::$SETTINGS['MODE'])? 
 							  Config::$SETTINGS['AUTH_NET_TEST_URL'] : Config::$SETTINGS['AUTH_NET_URL'];
 						
 		$this->event = $event;
 		$this->amount = $amount;
 		$this->info = $info;
+		
+		// if this is an admin payment, then we don't set the special values for payment description
+		// and payment line items.
+		$this->isAdminPayment = $isAdminPayment;
 	}
 	
 	private function avsCheck() {
@@ -93,7 +97,7 @@ class payment_AuthorizeNET
 			'x_country' => ArrayUtil::getValue($this->info, 'country', 'US')
 		);
 		
-		if($type === 'AUTH_CAPTURE') {
+		if($type === 'AUTH_CAPTURE' && !$this->isAdminPayment) {
 			$fields['x_line_item'] = $this->getLineItems();	
 			
 			// overwrite description.
@@ -103,6 +107,9 @@ class payment_AuthorizeNET
 		return $fields;
 	}
 	
+	/**
+	 * NOTE: this has a dependency on the attendee registration session object.
+	 */
 	private function getDescription() {
 		$lineItems = array();
 		
@@ -125,6 +132,9 @@ class payment_AuthorizeNET
 		return implode('; ', $desc);
 	}
 	
+	/**
+	 * NOTE: this has a dependency on the attendee registration session object.
+	 */
 	private function getLineItems() {
 		$lineItems = array();
 		
