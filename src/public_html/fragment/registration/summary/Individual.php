@@ -6,12 +6,13 @@ class fragment_registration_summary_Individual extends template_Template
 	private $registration;
 	private $num;
 	
-	function __construct($event, $registration, $num) {
+	function __construct($event, $registration, $num, $isPdfFormat = FALSE) {
 		parent::__construct();
 		
 		$this->event = $event;
 		$this->registration = $registration;
 		$this->num = $num;
+		$this->isPdfFormat = $isPdfFormat;
 	}
 	
 	public function html() {
@@ -20,12 +21,31 @@ class fragment_registration_summary_Individual extends template_Template
 			'id' => $this->registration['regTypeId']
 		));
 		
-		return <<<_
-			<div class="sub-divider"></div>
+		if($this->isPdfFormat) {
+			$heading = <<<_
+				<table>
+					<tr><td></td></tr>
+					<tr><td style="font-weight:bold; background-color:#ccc;">
+						<br><br>
+						&nbsp;Registrant {$this->num}
+						<br>
+					</td></tr>
+					<tr><td></td></tr>
+				</table>
+_;
+		}
+		else {
+			$heading = <<<_
+				<div class="sub-divider"></div>
 			
-			<div class="registrant-heading">
-				Registrant {$this->num}
-			</div>
+				<div class="registrant-heading">
+					Registrant {$this->num}
+				</div>
+_;
+		}
+		
+		return <<<_
+			{$heading}		
 			
 			<table class="summary">
 				<tr>
@@ -46,7 +66,11 @@ _;
 		$regOpts = new fragment_registration_summary_RegOptions($event, $registration);
 		$varOpts = new fragment_registration_summary_VariableOptions($event, $registration);
 		
+		$extraSpace = ($this->isPdfFormat)? '<br><br>' : '';
+		
 		return <<<_
+			{$extraSpace}
+			
 			<table>
 				{$regOpts->html()}
 				
@@ -94,7 +118,7 @@ _;
 					</td>
 				</tr>
 				<tr>
-					<td style="font-weight:bold;">Confirmation Number</td>
+					<td class="label">Confirmation Number</td>
 					<td>
 						{$confirmationNumber}
 					</td>
@@ -113,6 +137,10 @@ _;
 		$pages = model_EventPage::getVisiblePages($event, array('id' => $registration['categoryId']));
 		foreach($pages as $page) {
 			$fragment = new fragment_registration_summary_PageInformation($page, $registration);
+			
+			$extraPadding = ($this->isPdfFormat)? '<br>' : '';
+			
+			$html .= $extraPadding;
 			$html .= $fragment->html();
 		}
 		

@@ -5,11 +5,12 @@ class fragment_registration_summary_Payments extends template_Template
 	private $event;
 	private $group;
 	
-	function __construct($event, $group) {
+	function __construct($event, $group, $isPdfFormat = FALSE) {
 		parent::__construct();
 		
 		$this->event = $event;
 		$this->group = $group;
+		$this->isPdfFormat = $isPdfFormat;
 	}
 	
 	public function html() {
@@ -64,10 +65,29 @@ _;
 _;
 		}
 		
-		return <<<_
-			<div class="sub-divider"></div>
+		if($this->isPdfFormat) {
+			$heading = <<<_
+				<br><br>
+				<table>
+					<tr><td></td></tr>
+					<tr><td style="font-weight:bold; background-color:#ccc;">
+						<br><br>
+						&nbsp;Payments
+						<br>
+					</td></tr>
+				</table>
+_;
+		}
+		else {
+			$heading = <<<_
+				<div class="sub-divider"></div>
 			
-			<div class="registrant-heading">Payments</div>
+				<div class="registrant-heading">Payments</div>
+_;
+		}
+		
+		return <<<_
+			{$heading}
 			
 			<table style="border-collapse:separate; border-spacing:15px 5px;">
 				{$html}

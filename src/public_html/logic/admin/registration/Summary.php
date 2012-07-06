@@ -20,6 +20,16 @@ class logic_admin_registration_Summary extends logic_Performer
 		);
 	}
 	
+	public function printPdf($params) {
+		$group = db_reg_GroupManager::getInstance()->find($params['id']);
+		$event = db_EventManager::getInstance()->find($params['eventId']);
+		
+		return array(
+			'event' => $event,
+			'group' => $group
+		);
+	}
+	
 	private function getShowDetailsLink($user, $eventId) {
 		$a = new action_admin_registration_Registration();
 		return $a->hasRole($user, $eventId);

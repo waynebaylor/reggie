@@ -42,6 +42,19 @@ class action_admin_registration_Summary extends action_ValidatorAction
 		$info = $this->logic->view($params);
 		return $this->converter->getView($info);		
 	}
+	
+	public function printPdf() {
+		$params = RequestUtil::getValues(array(
+			'eventId' => 0,
+			'id' => 0
+		));
+		
+		$user = SessionUtil::getUser();
+		$this->checkRole($user, $params['eventId']);
+		
+		$info = $this->logic->printPdf($params);
+		return $this->converter->printPdf($info);
+	}
 }
 
 ?>
