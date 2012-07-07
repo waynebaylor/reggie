@@ -98,10 +98,11 @@ class logic_admin_badge_BadgeTemplates extends logic_Performer
 			$cellContent['badgeCellId'] = $copyId;
 			$cellContent['eventId'] = $params['eventId'];
 			
-			if(empty($cellContent['contactFieldId'])) { 
+			
+			if(!empty($cellContent['text'])) { 
 				db_BadgeCellManager::getInstance()->addText($cellContent);
 			}
-			else {
+			else { 
 				if($cellContent['showRegType'] === 'T') {
 					$cellContent['templateField'] = 'registration_type';
 				}
