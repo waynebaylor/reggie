@@ -78,6 +78,8 @@ _;
 		$pdf->setPrintHeader(FALSE);
 		$pdf->setPrintFooter(FALSE);
 		
+		$pdf->SetMargins(0.5, 1);
+		
 		$pdf->AddPage();
 		
 		$f = new fragment_registration_summary_Summary($this->event, $this->group, TRUE);
