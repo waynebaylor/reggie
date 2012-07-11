@@ -97,7 +97,7 @@ class payment_AuthorizeNET
 			'x_country' => ArrayUtil::getValue($this->info, 'country', 'US')
 		);
 		
-		if($type === 'AUTH_CAPTURE' && !$this->isAdminPayment) {
+		if($type === 'AUTH_CAPTURE' && !$this->isAdminPayment && in_array($this->event['id'], array(10, 17, 18))) {
 			$fields['x_line_item'] = $this->getLineItems();	
 			
 			// overwrite description.
