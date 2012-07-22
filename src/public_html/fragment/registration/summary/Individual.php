@@ -23,7 +23,7 @@ class fragment_registration_summary_Individual extends template_Template
 		
 		if($this->isPdfFormat) {
 			$heading = <<<_
-				<table>
+				<div style="page-break-inside:avoid;"><table>
 					<tr><td></td></tr>
 					<tr><td style="font-weight:bold; background-color:#ccc;">
 						<br><br>
@@ -31,7 +31,7 @@ class fragment_registration_summary_Individual extends template_Template
 						<br>
 					</td></tr>
 					<tr><td></td></tr>
-				</table>
+				</table></div>
 _;
 		}
 		else {

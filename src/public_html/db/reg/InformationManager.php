@@ -169,57 +169,83 @@ class db_reg_InformationManager extends db_Manager
 	}
 	
 	public function searchInformationValues($params) {
+		$extraSql = '
+			,
+			R.dateRegistered,
+			R.dateCancelled,
+			(
+		        select RI2.value 
+		        from Registration_Information RI2
+		        where RI2.contactFieldId=421 
+		        and RI2.registrationId = R.id
+		    ) as firstName,
+		    (
+		        select RI2.value 
+		        from Registration_Information RI2
+		        where RI2.contactFieldId=422
+		        and RI2.registrationId = R.id
+		    ) as lastName,
+		    (
+		        select RI2.value 
+		        from Registration_Information RI2
+		        where RI2.contactFieldId=423
+		        and RI2.registrationId = R.id
+		    ) as email
+		';	
+		
 		$sql = "
 			(
 				SELECT
-					Registration.id as registrationId,
-					Registration.regGroupId,
-					Registration_Information.value as value, 
-					ContactField.displayName
+					R.id as registrationId,
+					R.regGroupId,
+					RI.value as value, 
+					CF.displayName
+					{$extraSql}
 				FROM
-					Registration_Information
+					Registration_Information RI
 				INNER JOIN
-					Registration
+					Registration R
 				ON
-					Registration.id = Registration_Information.registrationId
+					R.id = RI.registrationId
 				INNER JOIN
-					ContactField
+					ContactField CF
 				ON
-					ContactField.id = Registration_Information.contactFieldId
+					CF.id = RI.contactFieldId
 				WHERE
-					Registration.eventId = :eventId
+					R.eventId = :eventId
 				AND
-					ContactField.formInputId IN (1, 2)
+					CF.formInputId IN (1, 2)
 				AND
-					Registration_Information.value LIKE CONCAT(:searchTerm, '%')
+					RI.value LIKE CONCAT(:searchTerm, '%')
 			)
 			UNION ALL
 			(
 				SELECT
-					Registration.id as registrationId,
-					Registration.regGroupId,
-					ContactField.displayName,
-					ContactFieldOption.displayName as value
+					R.id as registrationId,
+					R.regGroupId,
+					CF.displayName,
+					CFO.displayName as value
+					{$extraSql}
 				FROM
-					Registration_Information
+					Registration_Information RI
 				INNER JOIN
-					Registration
+					Registration R
 				ON
-					Registration.id = Registration_Information.registrationId
+					R.id = RI.registrationId
 				INNER JOIN
-					ContactField
+					ContactField CF
 				ON
-					ContactField.id = Registration_Information.contactFieldId
+					CF.id = RI.contactFieldId
 				INNER JOIN
-					ContactFieldOption 
+					ContactFieldOption CFO
 				ON
-					ContactField.id = ContactFieldOption.contactFieldId
+					CF.id = CFO.contactFieldId
 				WHERE
-					Registration.eventId = :eventId
+					R.eventId = :eventId
 				AND
-					ContactField.formInputId IN (3, 4, 5)
+					CF.formInputId IN (3, 4, 5)
 				AND
-					ContactFieldOption.displayName LIKE CONCAT(:searchTerm, '%')
+					CFO.displayName LIKE CONCAT(:searchTerm, '%')
 			)
 		";
 		

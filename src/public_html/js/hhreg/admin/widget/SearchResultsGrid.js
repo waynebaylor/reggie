@@ -21,6 +21,35 @@ dojo.declare("hhreg.admin.widget.SearchResultsGrid", [dijit._Widget, dijit._Temp
 		
 		_this.storeUrl = _this.storeUrl+"?"+dojo.objectToQuery({a: "listResults", eventId: _this.eventId, searchTerm: _this.searchTerm});
 		
+		var gridStructure = [
+		    {field: "fieldName", name: "Field", width: "100%"},
+		    {field: "fieldValue", name: "Value", width: "100%"},
+		    {name: "Options", width: "100%", get: function(rowIndex, storeItem) {
+		    	if(!storeItem) { return; }
+		    	
+		    	if(grid.store.getValue(storeItem, "showDetailsLink")) {
+		    		return dojo.string.substitute(
+		    			'<a href="${detailsUrl}">Details</a> <a href="${summaryUrl}">Summary</a>', 
+		    			{
+		    				detailsUrl: grid.store.getValue(storeItem, "detailsUrl"), 
+		    				summaryUrl: grid.store.getValue(storeItem, "summaryUrl")
+		    			}
+			    	);	
+		    	}
+		    	else {
+		    		return dojo.string.substitute('<a href="${summaryUrl}">Summary</a>', {summaryUrl: grid.store.getValue(storeItem, "summaryUrl")});
+		    	}
+		    }}
+		];
+		
+		if(_this.eventId == 12) {
+			gridStructure.unshift({field: "firstName", name: "First Name", width: "100%"});
+			gridStructure.unshift({field: "lastName", name: "Last Name", width: "100%"});
+			gridStructure.unshift({field: "email", name: "Email", width: "100%"});
+			gridStructure.unshift({field: "dateCancelled", name: "Date Cancelled", width: "100%"});
+			gridStructure.unshift({field: "dateRegistered", name: "Date Registered", width: "100%"});
+		}
+		
 		var grid = new dojox.grid.EnhancedGrid({
 			initialWidth: "100%",
 			autoHeight: true,
@@ -31,26 +60,7 @@ dojo.declare("hhreg.admin.widget.SearchResultsGrid", [dijit._Widget, dijit._Temp
 			plugins: {
 				pagination: {}
 			},
-			structure: [
-			    {field: "fieldName", name: "Field", width: "100%"},
-			    {field: "fieldValue", name: "Value", width: "100%"},
-			    {name: "Options", width: "100%", get: function(rowIndex, storeItem) {
-			    	if(!storeItem) { return; }
-			    	
-			    	if(grid.store.getValue(storeItem, "showDetailsLink")) {
-			    		return dojo.string.substitute(
-			    			'<a href="${detailsUrl}">Details</a> <a href="${summaryUrl}">Summary</a>', 
-			    			{
-			    				detailsUrl: grid.store.getValue(storeItem, "detailsUrl"), 
-			    				summaryUrl: grid.store.getValue(storeItem, "summaryUrl")
-			    			}
-				    	);	
-			    	}
-			    	else {
-			    		return dojo.string.substitute('<a href="${summaryUrl}">Summary</a>', {summaryUrl: grid.store.getValue(storeItem, "summaryUrl")});
-			    	}
-			    }}
-			]
+			structure: gridStructure
 		}, _this.gridNode);
 		
 		grid.startup();

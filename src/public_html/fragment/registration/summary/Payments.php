@@ -68,14 +68,14 @@ _;
 		if($this->isPdfFormat) {
 			$heading = <<<_
 				<br><br>
-				<table>
+				<div style="page-break-inside:avoid;"><table>
 					<tr><td></td></tr>
 					<tr><td style="font-weight:bold; background-color:#ccc;">
 						<br><br>
 						&nbsp;Payments
 						<br>
 					</td></tr>
-				</table>
+				</table></div>
 _;
 		}
 		else {

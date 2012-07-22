@@ -80,6 +80,8 @@ _;
 		
 		$pdf->SetMargins(0.5, 1);
 		
+		$pdf->SetFontSize(8);
+		
 		$pdf->AddPage();
 		
 		$f = new fragment_registration_summary_Summary($this->event, $this->group, TRUE);
