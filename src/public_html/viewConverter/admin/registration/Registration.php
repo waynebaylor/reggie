@@ -105,13 +105,13 @@ _;
 	public function getAddRegistrantToGroup($properties) {
 		$this->setProperties($properties);
 		
-		return new template_Redirect("/admin/registration/Registration?eventId={$this->eventId}&id={$this->groupId}#showTab=registrant{$this->newNumber}");		
+		return new template_Redirect("/admin/registration/Registration?eventId={$this->eventId}&id={$this->groupId}#showTab=registrant{$this->newRegId}");		
 	}
 	
 	public function getCancelRegistration($properties) {
 		$this->setProperties($properties);
 		
-		return new template_Redirect("/admin/registration/Registration?eventId={$this->eventId}&id={$this->regGroupId}#showTab=registrant{$this->registrantNumber}");
+		return new template_Redirect("/admin/registration/Registration?eventId={$this->eventId}&id={$this->regGroupId}#showTab=registrant{$this->regId}");
 	}
 	
 	private function getRegistrants() {
@@ -180,7 +180,7 @@ _;
 						'eventId' => $this->event['id'],
 						'registrationId' => $r['id']
 					),
-					'fragment' => "showTab=registrant{$num}"
+					'fragment' => "showTab=registrant{$r['id']}"
 				));
 			}
 			
@@ -211,8 +211,8 @@ _;
 				));
 			}
 					
-			$tabId = "registrant{$num}";
-			$subTabId = "registrant{$num}-general_information";
+			$tabId = "registrant{$r['id']}";
+			$subTabId = "registrant{$r['id']}-general_information";
 			
 			$html .= <<<_
 				<div id="{$tabId}" class="registrant-tab">

@@ -18,7 +18,7 @@ class fragment_editRegistrations_RegOptions extends template_Template
 		$add = new fragment_editRegistrations_regOption_Add($this->event, $this->registration, $this->registrantNum);
 		
 		return <<<_
-			<div id="registrant{$this->registrantNum}-registration_options" class="registrant-sub-tab">
+			<div id="registrant{$this->registration['id']}-registration_options" class="registrant-sub-tab">
 				<span class="hide sub-tab-label">Registration Options</span>
 				
 				<div class="registrant-details-section">

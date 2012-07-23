@@ -35,7 +35,7 @@ class fragment_editRegistrations_Page extends template_Template
 			
 		// replace non alpha-numeric with _ and then lowercase everything.
 		$subTabId = preg_replace('/[^0-9a-zA-Z_]/', '_', $this->page['title']);
-		$subTabId = "registrant{$this->registrantNum}-".strtolower($subTabId);
+		$subTabId = "registrant{$this->registration['id']}-".strtolower($subTabId);
 		
 		if(!empty($html)) {
 			return <<<_
@@ -101,7 +101,7 @@ _;
 				<td>
 					{$this->HTML->hidden(array(
 						'class' => 'change-reg-type-redirect',
-						'value' => "/admin/registration/Registration?eventId={$this->event['id']}&id={$registration['regGroupId']}&{$timestamp}#showTab=registrant{$this->registrantNum}&showSubTab=registrant{$this->registrantNum}-registration_type"
+						'value' => "/admin/registration/Registration?eventId={$this->event['id']}&id={$registration['regGroupId']}&{$timestamp}#showTab=registrant{$registration['id']}&showSubTab=registrant{$registration['id']}-registration_type"
 					))}
 					
 					{$this->HTML->hidden(array(

@@ -113,6 +113,7 @@ class logic_admin_registration_Registration extends logic_Performer
 		return array(
 			'eventId' => $params['eventId'],
 			'groupId' => $params['regGroupId'],
+			'newRegId' => $newRegId,
 			'newNumber' => $count
 		);
 	}
@@ -188,6 +189,7 @@ _;
 		return array(
 			'eventId' => $params['eventId'],
 			'regGroupId' => $registration['regGroupId'],
+			'regId' => $registration['id'],
 			'registrantNumber' => $params['registrantNumber']
 		);
 	}

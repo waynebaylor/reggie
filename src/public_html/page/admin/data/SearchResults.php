@@ -19,7 +19,7 @@
 				'dateCancelled' => ($this->eventId == 12)? $result['dateCancelled'] : '',
 			
 				'showDetailsLink' => $this->showDetailsLink? 'true' : 'false',
-				'detailsUrl' => $this->contextUrl("/admin/registration/Registration?eventId={$this->eventId}&id={$result['regGroupId']}"),
+				'detailsUrl' => $this->contextUrl("/admin/registration/Registration?eventId={$this->eventId}&id={$result['regGroupId']}#showTab=registrant{$result['registrationId']}"),
 				'summaryUrl' => $this->contextUrl("/admin/registration/Summary?eventId={$this->eventId}&regGroupId={$result['regGroupId']}")
 			)) ?>
 			<?php echo ($index < count($this->results)-1)? ',' : '' ?>

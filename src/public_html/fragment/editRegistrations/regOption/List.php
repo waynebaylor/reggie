@@ -87,7 +87,7 @@ _;
 							'groupId' => $this->registration['regGroupId'],
 							'eventId' => $this->event['id']
 						),
-						'fragment' => "showTab=registrant{$this->registrantNum}&showSubTab=registrant{$this->registrantNum}-registration_options"
+						'fragment' => "showTab=registrant{$registration['id']}&showSubTab=registrant{$registration['id']}-registration_options"
 					));
 				}
 				else {
