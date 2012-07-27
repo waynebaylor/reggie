@@ -19,8 +19,8 @@ class action_admin_badge_PrintBadge extends action_ValidatorAction
 			'eventId' => 0, 
 			'registrationId' => 0,
 			'badgeTemplateId' => 0,
-			'shiftRight' => 0,
-			'shiftDown' => 0
+			'shiftRight' => 0.0,
+			'shiftDown' => 0.0
 		));
 		
 		$user = SessionUtil::getUser();
