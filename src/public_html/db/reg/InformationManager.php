@@ -198,8 +198,8 @@ class db_reg_InformationManager extends db_Manager
 				SELECT
 					R.id as registrationId,
 					R.regGroupId,
-					RI.value as value, 
-					CF.displayName
+					CF.displayName,
+					RI.value as value
 					{$extraSql}
 				FROM
 					Registration_Information RI
@@ -246,6 +246,20 @@ class db_reg_InformationManager extends db_Manager
 					CF.formInputId IN (3, 4, 5)
 				AND
 					CFO.displayName LIKE CONCAT(:searchTerm, '%')
+			)
+			UNION ALL (
+				SELECT 
+					R.id as registrationId,
+					R.regGroupId,
+					'Lead Number' as displayName,
+					R.leadNumber as value
+					{$extraSql}
+				FROM
+					Registration R
+				WHERE
+					R.eventId = :eventId
+				AND
+					R.leadNumber = :searchTerm
 			)
 		";
 		
