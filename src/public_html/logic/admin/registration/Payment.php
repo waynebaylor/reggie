@@ -21,7 +21,8 @@ class logic_admin_registration_Payment extends logic_Performer
 			'breadcrumbsParams' => array(
 				'altEventId' => $params['eventId'], // don't want 'Event' link showing up
 				'regGroupId' => $group['id'],
-				'paymentId' => $payment['id']
+				'paymentId' => $payment['id'],
+				'urlFragment' => 'showTab=payments'
 			)
 		);
 	}

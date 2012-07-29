@@ -6,6 +6,15 @@ class fragment_Breadcrumbs extends template_Template
 		parent::__construct();
 		
 		$this->params = $params;
+		
+		// make sure there is always a value, even if it's an empty string.
+		if(empty($this->params['urlFragment'])) {
+			$this->params['urlFragment'] = '';
+		}
+		else {
+			// if it is set, then prefix it with a #.
+			$this->params['urlFragment'] = "#{$this->params['urlFragment']}";
+		}
 	}
 	
 	public function html() {
@@ -110,7 +119,7 @@ class fragment_Breadcrumbs extends template_Template
 			$html .= $this->HTML->hidden(array(
 				'class' => 'breadcrumb',
 				'name' => 'Registration',
-				'value' => "/admin/registration/Registration?eventId={$this->params['altEventId']}&id={$this->params['regGroupId']}#showTab=payments"
+				'value' => "/admin/registration/Registration?eventId={$this->params['altEventId']}&id={$this->params['regGroupId']}{$this->params['urlFragment']}"
 			));
 		}
 		
