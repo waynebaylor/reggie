@@ -6,53 +6,65 @@
 
 dojo="dojo-release-1.6.1-src"
 curr_dir=$(pwd)
+
+svntag=$1
  
 # create the tag for the release.
-svn copy svn://dino/baylorsc/reggie/trunk svn://dino/baylorsc/reggie/tags/$1 -m "making another release"
+if [ -n "$svntag" -a "$svntag" != "trunk" ]
+then
+    svn copy svn://dino/baylorsc/reggie/trunk svn://dino/baylorsc/reggie/tags/$svntag -m "making another release"
+else
+    svntag="trunk"
+fi
 
 # check out the tag.
-svn checkout svn://dino/baylorsc/reggie/tags/$1 $1-tmp
+if [ "$svntag" != "trunk" ]
+then
+    svn checkout svn://dino/baylorsc/reggie/tags/$svntag $svntag-tmp
+else
+    svn checkout svn://dino/baylorsc/reggie/trunk $svntag-tmp
+fi
 
 # build optimized js.
-mkdir $1-js
-tar -C $1-js -xvzf $1-tmp/config/$dojo.tar.gz
-cp $1-tmp/config/reggie.profile.js $1-js/$dojo/util/buildscripts/profiles
-cp -r $1-tmp/src/public_html/js/hhreg $1-js/$dojo
-cd $1-js/$dojo/util/buildscripts
+mkdir $svntag-js
+tar -C $svntag-js -xvzf $svntag-tmp/config/$dojo.tar.gz
+cp $svntag-tmp/config/reggie.profile.js $svntag-js/$dojo/util/buildscripts/profiles
+cp -r $svntag-tmp/src/public_html/js/hhreg $svntag-js/$dojo
+cd $svntag-js/$dojo/util/buildscripts
 ./build.sh profile=reggie
 cd $curr_dir
 
 # remove unoptimized js.
-rm -rf $1-tmp/src/public_html/js/dojo
-rm -rf $1-tmp/src/public_html/js/dojox
-rm -rf $1-tmp/src/public_html/js/dijit
+rm -rf $svntag-tmp/src/public_html/js/dojo
+rm -rf $svntag-tmp/src/public_html/js/dojox
+rm -rf $svntag-tmp/src/public_html/js/dijit
 
 # copy optimized js into proj.
-cp -r $1-js/build-output/js/dojo $1-tmp/src/public_html/js
-cp -r $1-js/build-output/js/dojox $1-tmp/src/public_html/js
-cp -r $1-js/build-output/js/dijit $1-tmp/src/public_html/js
+cp -r $svntag-js/build-output/js/dojo $svntag-tmp/src/public_html/js
+cp -r $svntag-js/build-output/js/dojox $svntag-tmp/src/public_html/js
+cp -r $svntag-js/build-output/js/dijit $svntag-tmp/src/public_html/js
 
 # clean up js working dir.
-rm -rf $1-js
+rm -rf $svntag-js
 
 # package up all the needed files.
-mv $1-tmp/src/public_html $1
-mv $1-tmp/config/.htaccess $1
-echo "$1" > $1/version.txt
+mv $svntag-tmp/src/public_html $svntag
+mv $svntag-tmp/config/.htaccess $svntag
+echo "$svntag" > $svntag/version.txt
 
-mkdir $1-sql
-mv $1-tmp/sql/*.sql $1-sql
+mkdir $svntag-sql
+mv $svntag-tmp/sql/*.sql $svntag-sql
 
-rm -rf $1-tmp
+rm -rf $svntag-tmp
 
 # remove svn dirs
-rm -rf `find ./$1 -type d -name .svn`
+rm -rf `find ./$svntag -type d -name .svn`
 
-tar -cvf $1.tar $1 $1-sql
+tar -cvf $svntag.tar $svntag $svntag-sql
 
-gzip $1.tar
+gzip $svntag.tar
 
-rm -rf $1 $1-sql
+rm -rf $svntag $svntag-sql
 
 # comments
 echo "======================================================================="
