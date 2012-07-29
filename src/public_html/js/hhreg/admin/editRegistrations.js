@@ -194,7 +194,10 @@ dojo.require("dojo.hash");
 			
 			dojo.connect(addLink, "onclick", function() {
 				var balanceText = dojo.byId("payment-balance-due").innerHTML;
-				amountInput.value = balanceText.replace(/[^0-9\.]/g, "");
+				var balance = balanceText.replace(/[^0-9\.\-]/g, "");
+				if(parseFloat(balance) > 0) {
+					amountInput.value = balance;
+				}
 			});
 		});
 	});

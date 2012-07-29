@@ -44,7 +44,7 @@ _;
 					
 					{$this->HTML->text(array(
 						'name' => 'amount',
-						'value' => '0.00',
+						'value' => '',
 						'size' => 10
 					))}
 					
