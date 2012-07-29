@@ -418,15 +418,29 @@ class db_reg_RegistrationManager extends db_Manager
 		// 2. remove irrelevant information fields.
 		db_reg_InformationManager::getInstance()->retainFieldsByRegType($registration['id'], $newRegTypeId);
 		
-		// 3. cancel all reg options.
+		// 3. cancel reg options that are invalid for new reg type (this is based on option price visibility).
 		foreach($registration['regOptions'] as $opt) {
-			db_reg_RegOptionManager::getInstance()->cancel($opt['id']);	
+			$regOptPrice = db_RegOptionPriceManager::getInstance()->find(array(
+				'eventId' => $registration['eventId'],
+				'id' => $opt['priceId']
+			));
+			
+			if(!model_RegOptionPrice::isVisibleTo($regOptPrice, $newRegType)) {
+				db_reg_RegOptionManager::getInstance()->cancel($opt['id']);	
+			}
 		}
 		
-		// 4. set quantity to 0 for all variable quantity options.
+		// 4. set quantity to 0 for all variable quantity options that are invalid for new reg type (this is based on option price visibility).
 		foreach($registration['variableQuantity'] as $varQuantity) {
-			$varQuantity['quantity'] = 0;
-			db_reg_VariableQuantityManager::getInstance()->save($varQuantity);
+			$regOptPrice = db_RegOptionPriceManager::getInstance()->find(array(
+				'eventId' => $registration['eventId'],
+				'id' => $varQuantity['priceId']
+			));
+			
+			if(!model_RegOptionPrice::isVisibleTo($regOptPrice, $newRegType)) {
+				$varQuantity['quantity'] = 0;
+				db_reg_VariableQuantityManager::getInstance()->save($varQuantity);
+			}
 		}
 	}
 	
