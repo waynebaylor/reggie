@@ -100,6 +100,9 @@ class logic_admin_report_Results extends logic_Performer
 		if($report['showRegType'] === 'T') {
 			$headings[] = 'Registration Type';
 		}
+		if($report['showLeadNumber'] === 'T') {
+			$headings[] = 'Lead Number';
+		}
 		// user selected fields.
 		foreach($fieldHeadings as $fieldHeading) {
 			$headings[] = $fieldHeading['displayName'];
@@ -136,6 +139,9 @@ class logic_admin_report_Results extends logic_Performer
 			}
 			if($params['report']['showRegType'] === 'T') {
 				$value[] = $reg['regTypeName'];
+			}
+			if($params['report']['showLeadNumber'] === 'T') {
+				$value[] = $reg['leadNumber'];
 			}
 			// user selected field values.
 			// field headings have the order.

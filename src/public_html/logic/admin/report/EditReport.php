@@ -10,6 +10,7 @@ class logic_admin_report_EditReport extends logic_Performer
 			'date_cancelled',
 			'category',
 			'registration_type',
+			'lead_number',
 			'total_cost',
 			'total_paid',
 			'remaining_balance'

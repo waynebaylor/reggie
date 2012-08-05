@@ -93,6 +93,26 @@
 		</tr>
 		<?php endif; ?>
 		
+		<?php if($this->report['showLeadNumber'] === 'T'): ?>
+		<tr>
+			<td></td>
+			<td>Lead Number</td>
+			<td>
+				<?php echo $this->HTML->link(array(
+					'label' => 'Remove',
+					'href' => '/admin/report/EditReport',
+					'parameters' => array(
+						'a' => 'removeField',
+						'id' => 'lead_number',
+						'reportId' => $this->report['id'],
+						'eventId' => $this->report['eventId']
+					),
+					'class' => 'remove'
+				)) ?>
+			</td>
+		</tr>
+		<?php endif; ?>
+		
 		<?php foreach($this->report['fields'] as $field): ?>
 		<tr>
 			<td>

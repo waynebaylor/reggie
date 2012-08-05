@@ -31,6 +31,11 @@ class db_ReportManager extends db_Manager
 			'dbValueColumn' => 'regTypeName',
 			'displayName' => 'Registration Type'
 		),
+		'lead_number' => array(
+			'dbColumn' => 'showLeadNumber',
+			'dbValueColumn' => 'leadNumber',
+			'displayName' => 'Lead Number'
+		),
 		'total_cost' => array(
 			'dbColumn' => 'showTotalCost',
 			'displayName' => 'Total Cost'
@@ -84,6 +89,7 @@ class db_ReportManager extends db_Manager
 				showDateCancelled,
 				showCategory,
 				showRegType,
+				showLeadNumber,
 				showTotalCost,
 				showTotalPaid,
 				showRemainingBalance,
@@ -126,6 +132,7 @@ class db_ReportManager extends db_Manager
 				showDateCancelled,
 				showCategory,
 				showRegType,
+				showLeadNumber,
 				showTotalCost,
 				showTotalPaid,
 				showRemainingBalance,
@@ -314,7 +321,7 @@ class db_ReportManager extends db_Manager
 		// prepend the general fields, if any. the order matters because they are prepended 
 		// to the front of the results array.
 		//
-		foreach(array('registration_type', 'category', 'date_cancelled', 'date_registered') as $specialFieldId) {
+		foreach(array('lead_number', 'registration_type', 'category', 'date_cancelled', 'date_registered') as $specialFieldId) {
 			$column = self::$SPECIAL_FIELDS[$specialFieldId]['dbColumn'];
 			if($report[$column] === 'T') {
 				$field = array(
@@ -578,7 +585,8 @@ class db_ReportManager extends db_Manager
 				Registration.dateRegistered,
 				Registration.dateCancelled,
 				Category.displayName AS categoryName,
-				RegType.description AS regTypeName
+				RegType.description AS regTypeName,
+				Registration.leadNumber
 			FROM
 				Registration
 			INNER JOIN
@@ -1000,6 +1008,7 @@ class db_ReportManager extends db_Manager
 				showDateCancelled,
 				showCategory,
 				showRegType,
+				showLeadNumber,
 				showTotalCost,
 				showTotalPaid,
 				showRemainingBalance,

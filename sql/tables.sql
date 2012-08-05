@@ -504,6 +504,7 @@ create table if not exists `Report` (
 	`showDateCancelled`	char(1)		not null default 'F',
 	`showCategory`		char(1)		not null default 'F',
 	`showRegType`		char(1)		not null default 'F',
+	`showLeadNumber`    char(1)     not null default 'F',
 	`showTotalCost`		char(1)		not null default 'F',
 	`showTotalPaid`		char(1)		not null default 'F',
 	`showRemainingBalance`	char(1)		not null default 'F',

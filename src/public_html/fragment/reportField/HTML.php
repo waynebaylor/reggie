@@ -25,6 +25,10 @@ class fragment_reportField_HTML
 					array(
 						'label' => 'Registration Type',
 						'value' => 'registration_type'
+					),
+					array(
+						'label' => 'Lead Number',
+						'value' => 'lead_number'
 					)
 				)
 			);
