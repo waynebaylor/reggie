@@ -471,7 +471,7 @@ class db_EventManager extends db_Manager
 	public function findInfoByUserId($userId) {
 		$user = db_UserManager::getInstance()->find($userId);
 		if(model_Role::userHasRole($user, array(model_Role::$SYSTEM_ADMIN, model_Role::$EVENT_ADMIN))) {
-			return $this->findAllInfo();
+			return $this->findAllInfoDateOrdered();
 		}
 		else {
 			$sql = '
@@ -495,7 +495,7 @@ class db_EventManager extends db_Manager
 				WHERE
 					User_Role.userId = :userId
 				ORDER BY
-					Event.displayName
+					Event.regClosed DESC
 			';
 			
 			$params = array(
@@ -525,6 +525,28 @@ class db_EventManager extends db_Manager
 		$results = $this->rawQueryUnique($sql, $params, 'Find if category can see any reg pages.');
 		
 		return ($results['count'] > 0);
+	}
+	
+	private function findAllInfoDateOrdered() {
+		$sql = '
+			SELECT
+				id,
+				code,
+				displayName,
+				regOpen,
+				regClosed,
+				capacity,
+				confirmationText,
+				cancellationPolicy,
+				regClosedText,
+				paymentInstructions
+			FROM
+				Event
+			ORDER BY
+				regClosed DESC
+		';
+		
+		return $this->rawQuery($sql, array(), 'Find all event infos.');
 	}
 }
 
