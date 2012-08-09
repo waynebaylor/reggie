@@ -34,6 +34,10 @@ _;
 					<td class="label required">Amount</td>
 					<td>
 						{$this->HTML->hidden(array(
+							'name' => 'eventId',
+							'value' => $this->payment['eventId']
+						))}
+						{$this->HTML->hidden(array(
 							'name' => 'id',
 							'value' => $this->payment['id']
 						))}
@@ -83,6 +87,10 @@ _;
 				<tr>
 					<td class="label required">Amount</td>
 					<td>
+						{$this->HTML->hidden(array(
+							'name' => 'eventId',
+							'value' => $this->payment['eventId']
+						))}
 						{$this->HTML->hidden(array(
 							'name' => 'id',
 							'value' => $this->payment['id']
