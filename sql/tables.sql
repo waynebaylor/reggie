@@ -1,6 +1,7 @@
 
 set foreign_key_checks = 0;
 
+drop table if exists Event_Metadata;
 drop table if exists User_Role;
 drop table if exists Role;
 drop table if exists BadgeBarcodeField;
@@ -649,18 +650,16 @@ create table if not exists `User_Role` (
     primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
-alter table User_Role
-    add constraint user_role_userId_fk
-    foreign key (userId) references User(id);
-    
-alter table User_Role
-    add constraint user_role_roleId_fk
-    foreign key (roleId) references Role(id);
-    
-alter table User_Role
-    add constraint user_role_eventId_fk
-    foreign key (eventId) references Event(id);
-    
+-- --------------------------------------------------
+
+create table if not exists `Event_Metadata` (
+    `id`                integer         not null auto_increment,
+    `eventId`           integer         not null,
+    `contactFieldId`    integer         not null,
+    `metadata`          varchar(255)    not null,
+    primary key(`id`)
+) ENGINE=InnoDB default CHARSET=utf8;
+
 
 -- -----------------------------------------
 -- ADD TABLE CONSTRAINTS
@@ -1248,9 +1247,30 @@ alter table BadgeBarcodeField
     
 -- --------------------------------------------------
 
-
-
+alter table User_Role
+    add constraint user_role_userId_fk
+    foreign key (userId) references User(id);
     
+alter table User_Role
+    add constraint user_role_roleId_fk
+    foreign key (roleId) references Role(id);
+    
+alter table User_Role
+    add constraint user_role_eventId_fk
+    foreign key (eventId) references Event(id);
+    
+-- --------------------------------------------------    
 
+alter table Event_Metadata
+    add constraint event_meta_eventId_fk
+    foreign key (eventId) references Event(id);
+    
+alter table Event_Metadata
+    add constraint event_meta_contactFieldId_fk
+    foreign key (contactFieldId) references ContactField(id);
+    
+alter table Event_Metadata
+    add constraint event_meta_event_cf_uni
+    unique (eventId, contactFieldId);
 
 

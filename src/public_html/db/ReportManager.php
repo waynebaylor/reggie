@@ -1028,6 +1028,33 @@ class db_ReportManager extends db_Manager
 		
 		return $this->queryUnique($sql, $params, 'Find report.');
 	}
+	
+	/**
+	 * @param array $params [eventId, regOptionId]
+	 */
+	public function regOptionRoster($params) {
+		$sql = '
+			SELECT
+				RRO.registrationId,
+				RRO.priceId
+			FROM
+				Registration_RegOption RRO
+			INNER JOIN
+				Registration R
+			ON
+				RRO.registrationId = R.id
+			WHERE
+				R.eventId = :eventId
+			AND
+				RRO.regOptionId = :regOptionId
+			AND
+				RRO.dateCancelled IS NULL
+		';
+		
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'regOptionId'));
+		
+		return $this->query($sql, $params, 'Reg Option Roster');
+	}
 }
 
 ?>

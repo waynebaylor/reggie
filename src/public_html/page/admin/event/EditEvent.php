@@ -34,6 +34,11 @@
 		}));
 
 		tabContainer.addChild(new dojox.layout.ContentPane({
+			title: "Metadata",
+			href: hhreg.util.contextUrl("/admin/event/EditMetadata?")+dojo.objectToQuery({"eventId": eventId})
+		}));
+
+		tabContainer.addChild(new dojox.layout.ContentPane({
 			title: "Payment Options",
 			href: hhreg.util.contextUrl("/admin/event/EditPaymentOptions?")+dojo.objectToQuery({"eventId": eventId})
 		}));
