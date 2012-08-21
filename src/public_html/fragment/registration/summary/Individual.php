@@ -21,13 +21,15 @@ class fragment_registration_summary_Individual extends template_Template
 			'id' => $this->registration['regTypeId']
 		));
 		
+		$registrantHeading = $this->HTML->escapeHtml($this->getRegistrantHeading());
+		
 		if($this->isPdfFormat) {
 			$heading = <<<_
 				<div style="page-break-inside:avoid;"><table>
 					<tr><td></td></tr>
 					<tr><td style="font-weight:bold; background-color:#ccc;">
 						<br><br>
-						&nbsp;Registrant {$this->num}
+						&nbsp;{$registrantHeading}
 						<br>
 					</td></tr>
 					<tr><td></td></tr>
@@ -39,7 +41,7 @@ _;
 				<div class="sub-divider"></div>
 			
 				<div class="registrant-heading">
-					Registrant {$this->num}
+					{$registrantHeading}
 				</div>
 _;
 		}
@@ -60,6 +62,28 @@ _;
 				</tr>
 			</table>
 _;
+	}
+	
+	private function getRegistrantHeading() {
+		$eventMetadata = db_EventMetadataManager::getInstance()->findMetadataByEventId($this->event['id']);
+		
+		foreach($eventMetadata as $m) {
+			if($m['metadata'] === db_EventMetadataManager::$FIRST_NAME) {
+				$contactFieldId = $m['contactFieldId'];
+				$firstName = model_Registrant::getInformationValue($this->registration, array('id' => $contactFieldId));
+			}
+			else if($m['metadata'] === db_EventMetadataManager::$LAST_NAME) {
+				$contactFieldId = $m['contactFieldId'];
+				$lastName = model_Registrant::getInformationValue($this->registration, array('id' => $contactFieldId));
+			}
+		}
+		
+		if(isset($firstName) && isset($lastName)) {
+			return $firstName.' '.$lastName;
+		}
+		else {
+			return "Registrant {$this->num}";			
+		}
 	}
 	
 	private function getOptions($event, $registration) {

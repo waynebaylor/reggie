@@ -2,7 +2,11 @@
 
 class db_EventMetadataManager extends db_Manager
 {
-private static $instance;
+	public static $FIRST_NAME = 'FIRST_NAME';
+	public static $LAST_NAME = 'LAST_NAME';
+	public static $EMAIL = 'EMAIL';
+	
+	private static $instance;
 	
 	protected function __construct() {
 		parent::__construct();
