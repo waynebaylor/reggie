@@ -20,7 +20,7 @@ class logic_admin_event_EditMetadata extends logic_Performer
 			db_EventMetadataManager::getInstance()->createMetadata(array(
 				'eventId' => $params['eventId'],
 				'contactFieldId' => $params['firstName'],
-				'metadata' => 'FIRST_NAME'
+				'metadata' => db_EventMetadataManager::$FIRST_NAME
 			));
 		}
 		
@@ -28,7 +28,7 @@ class logic_admin_event_EditMetadata extends logic_Performer
 			db_EventMetadataManager::getInstance()->createMetadata(array(
 				'eventId' => $params['eventId'],
 				'contactFieldId' => $params['lastName'],
-				'metadata' => 'LAST_NAME'
+				'metadata' => db_EventMetadataManager::$LAST_NAME
 			));
 		}
 		
@@ -36,7 +36,7 @@ class logic_admin_event_EditMetadata extends logic_Performer
 			db_EventMetadataManager::getInstance()->createMetadata(array(
 				'eventId' => $params['eventId'],
 				'contactFieldId' => $params['email'],
-				'metadata' => 'EMAIL'
+				'metadata' => db_EventMetadataManager::$EMAIL
 			));
 		}
 		
@@ -46,9 +46,9 @@ class logic_admin_event_EditMetadata extends logic_Performer
 	private function getMetadataToField($eventId) {
 		// defaults.
 		$metadataToField = array(
-			'FIRST_NAME' => 0,
-			'LAST_NAME' => 0,
-			'EMAIL' => 0
+			db_EventMetadataManager::$FIRST_NAME => 0,
+			db_EventMetadataManager::$LAST_NAME => 0,
+			db_EventMetadataManager::$EMAIL => 0
 		);
 		
 		$metadata = db_EventMetadataManager::getInstance()->findMetadataByEventId($eventId);

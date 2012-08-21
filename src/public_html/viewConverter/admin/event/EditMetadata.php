@@ -46,7 +46,7 @@ _;
 	private function getFormRows() {
 		$firstNameSelect = fragment_contactField_HTML::selectByEventId($this->eventId, array(
 			'name' => 'firstName',
-			'value' => $this->metadataToField['FIRST_NAME'],
+			'value' => $this->metadataToField[db_EventMetadataManager::$FIRST_NAME],
 			'items' => array(
 				array('label' => 'Choose a field...', 'value' => 0)
 			)
@@ -54,7 +54,7 @@ _;
 		
 		$lastNameSelect = fragment_contactField_HTML::selectByEventId($this->eventId, array(
 			'name' => 'lastName',
-			'value' => $this->metadataToField['LAST_NAME'],	
+			'value' => $this->metadataToField[db_EventMetadataManager::$LAST_NAME],	
 			'items' => array(
 				array('label' => 'Choose a field...', 'value' => 0)
 			)
@@ -62,7 +62,7 @@ _;
 		
 		$emailSelect = fragment_contactField_HTML::selectByEventId($this->eventId, array(
 			'name' => 'email',
-			'value' => $this->metadataToField['EMAIL'],
+			'value' => $this->metadataToField[db_EventMetadataManager::$EMAIL],
 			'items' => array(
 				array('label' => 'Choose a field...', 'value' => 0)
 			)
