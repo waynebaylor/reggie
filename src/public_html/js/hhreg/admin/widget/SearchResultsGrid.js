@@ -14,6 +14,7 @@ dojo.declare("hhreg.admin.widget.SearchResultsGrid", [dijit._Widget, dijit._Temp
 	storeUrl: hhreg.util.contextUrl("/admin/search/Search"),
 	eventId: 0,
 	searchTerm: "",
+	metadataFields: [],
 	baseClass: "hhreg-admin-SearchResultsGrid",
 	templateString: '<div><div data-dojo-attach-point="gridNode"></div></div>',
 	postCreate: function() {
@@ -42,13 +43,21 @@ dojo.declare("hhreg.admin.widget.SearchResultsGrid", [dijit._Widget, dijit._Temp
 		    }}
 		];
 		
-		if(_this.eventId == 12) {
-			gridStructure.unshift({field: "firstName", name: "First Name", width: "100%"});
-			gridStructure.unshift({field: "lastName", name: "Last Name", width: "100%"});
-			gridStructure.unshift({field: "email", name: "Email", width: "100%"});
-			gridStructure.unshift({field: "dateCancelled", name: "Date Cancelled", width: "100%"});
-			gridStructure.unshift({field: "dateRegistered", name: "Date Registered", width: "100%"});
-		}
+		// add metadata columns.
+		dojo.forEach(_this.metadataFields, function(mf) {
+			if(mf.metadataField == 'FIRST_NAME') {
+				gridStructure.unshift({field: "firstName", name: mf.displayName, width: "100%"});
+			}
+			else if(mf.metadataField == 'LAST_NAME') {
+				gridStructure.unshift({field: "lastName", name: mf.displayName, width: "100%"});
+			}
+			else if(mf.metadataField == 'EMAIL') {
+				gridStructure.unshift({field: "email", name: mf.displayName, width: "100%"});
+			}
+		});
+		
+		gridStructure.unshift({field: "dateCancelled", name: "Date Cancelled", width: "100%"});
+		gridStructure.unshift({field: "dateRegistered", name: "Date Registered", width: "100%"});
 		
 		var grid = new dojox.grid.EnhancedGrid({
 			initialWidth: "100%",

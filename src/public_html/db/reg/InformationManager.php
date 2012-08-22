@@ -169,29 +169,53 @@ class db_reg_InformationManager extends db_Manager
 	}
 	
 	public function searchInformationValues($params) {
-		$extraSql = '
-			,
-			R.dateRegistered,
-			R.dateCancelled,
-			(
-		        select RI2.value 
-		        from Registration_Information RI2
-		        where RI2.contactFieldId=421 
-		        and RI2.registrationId = R.id
-		    ) as firstName,
-		    (
-		        select RI2.value 
-		        from Registration_Information RI2
-		        where RI2.contactFieldId=422
-		        and RI2.registrationId = R.id
-		    ) as lastName,
-		    (
-		        select RI2.value 
-		        from Registration_Information RI2
-		        where RI2.contactFieldId=423
-		        and RI2.registrationId = R.id
-		    ) as email
-		';	
+		$params = ArrayUtil::keyIntersect($params, array('searchTerm', 'eventId'));
+		
+		$extraSql = '';
+		
+		// if set, add metadata info to SQL. 
+		$eventMetadata = db_EventMetadataManager::getInstance()->findMetadataByEventId($params['eventId']);
+		foreach($eventMetadata as $m) {
+			if($m['metadata'] === db_EventMetadataManager::$FIRST_NAME) {
+				$extraSql .= '
+					,
+					(
+				        select RI2.value 
+				        from Registration_Information RI2
+				        where RI2.contactFieldId = :firstNameFieldId
+				        and RI2.registrationId = R.id
+				    ) as firstName
+		    	';
+				
+				$params['firstNameFieldId'] = $m['contactFieldId'];
+			}	
+			else if($m['metadata'] === db_EventMetadataManager::$LAST_NAME) {
+				$extraSql .= '
+					,
+				    (
+				        select RI2.value 
+				        from Registration_Information RI2
+				        where RI2.contactFieldId = :lastNameFieldId
+				        and RI2.registrationId = R.id
+				    ) as lastName
+				';
+				
+				$params['lastNameFieldId'] = $m['contactFieldId'];
+			}
+			else if($m['metadata'] === db_EventMetadataManager::$EMAIL) {
+				$extraSql .= '
+					,
+				    (
+				        select RI2.value 
+				        from Registration_Information RI2
+				        where RI2.contactFieldId = :emailFieldId
+				        and RI2.registrationId = R.id
+				    ) as email
+				';
+				
+				$params['emailFieldId'] = $m['contactFieldId'];
+			}
+		}
 		
 		$sql = "
 			(
@@ -199,7 +223,9 @@ class db_reg_InformationManager extends db_Manager
 					R.id as registrationId,
 					R.regGroupId,
 					CF.displayName,
-					RI.value as value
+					RI.value as value,
+					R.dateRegistered,
+					R.dateCancelled
 					{$extraSql}
 				FROM
 					Registration_Information RI
@@ -224,7 +250,9 @@ class db_reg_InformationManager extends db_Manager
 					R.id as registrationId,
 					R.regGroupId,
 					CF.displayName,
-					CFO.displayName as value
+					CFO.displayName as value,
+					R.dateRegistered,
+					R.dateCancelled
 					{$extraSql}
 				FROM
 					Registration_Information RI
@@ -252,7 +280,9 @@ class db_reg_InformationManager extends db_Manager
 					R.id as registrationId,
 					R.regGroupId,
 					'Lead Number' as displayName,
-					R.leadNumber as value
+					R.leadNumber as value,
+					R.dateRegistered,
+					R.dateCancelled
 					{$extraSql}
 				FROM
 					Registration R
@@ -262,8 +292,6 @@ class db_reg_InformationManager extends db_Manager
 					R.leadNumber = :searchTerm
 			)
 		";
-		
-		$params = ArrayUtil::keyIntersect($params, array('searchTerm', 'eventId'));
 		
 		return $this->rawQuery($sql, $params, 'Search registration information.');
 	}

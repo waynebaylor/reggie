@@ -12,7 +12,8 @@ class logic_admin_search_Search extends logic_Performer
 		return array(
 			'actionMenuEventLabel' => $eventInfo['code'],
 			'eventId' => $params['eventId'],
-			'searchTerm' => $params['searchTerm']
+			'searchTerm' => $params['searchTerm'],
+			'metadataFields' => $this->getMetadataFields($params['eventId'])
 		);
 	}
 	
@@ -33,6 +34,25 @@ class logic_admin_search_Search extends logic_Performer
 			'results' => $results,
 			'showDetailsLink' => $this->getShowDetailsLink($params['user'], $params['eventId'])
 		);	
+	}
+	
+	private function getMetadataFields($eventId) {
+		$fields = array();
+		
+		$eventMetadata = db_EventMetadataManager::getInstance()->findMetadataByEventId($eventId);
+		foreach($eventMetadata as $m) {
+			$contactField = db_ContactFieldManager::getInstance()->find(array(
+				'eventId' => $eventId,
+				'id' => $m['contactFieldId']
+			));
+			
+			$fields[] = array(
+				'metadataField' => $m['metadata'],
+				'displayName' => $contactField['displayName']
+			);
+		}
+		
+		return json_encode($fields);
 	}
 	
 	private function getShowDetailsLink($user, $eventId) {

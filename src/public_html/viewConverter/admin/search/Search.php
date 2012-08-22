@@ -18,6 +18,7 @@ class viewConverter_admin_search_Search extends viewConverter_admin_AdminConvert
 				dojo.addOnLoad(function() {
 					new hhreg.admin.widget.SearchResultsGrid({
 						eventId: {$this->eventId},
+						metadataFields: {$this->metadataFields},
 						searchTerm: "{$this->searchTerm}"
 					}, dojo.place("<div></div>", dojo.byId("results-grid"), "replace")).startup();
 				});
