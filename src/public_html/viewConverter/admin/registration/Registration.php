@@ -214,9 +214,11 @@ _;
 			$tabId = "registrant{$r['id']}";
 			$subTabId = "registrant{$r['id']}-general_information";
 			
+			$tabHeading = $this->escapeHtml($this->getTabHeading($r, $numDisplayed));
+			
 			$html .= <<<_
 				<div id="{$tabId}" class="registrant-tab">
-					<span class="hide tab-label">Registrant {$numDisplayed} {$cancelDate}</span>
+					<span class="hide tab-label">{$tabHeading} {$cancelDate}</span>
 					
 					<div class="registrant {$cancelCss}">
 						<div id="{$subTabId}" class="registrant-sub-tab">	
@@ -255,6 +257,28 @@ _;
 				{$payments->html()}
 			</div>
 _;
+	}
+	
+	private function getTabHeading($registrant, $numDisplayed) {
+		$eventMetadata = db_EventMetadataManager::getInstance()->findMetadataByEventId($registrant['eventId']);
+		
+		foreach($eventMetadata as $m) {
+			if($m['metadata'] === db_EventMetadataManager::$FIRST_NAME) {
+				$contactFieldId = $m['contactFieldId'];
+				$firstName = model_Registrant::getInformationValue($registrant, array('id' => $contactFieldId));
+			}
+			else if($m['metadata'] === db_EventMetadataManager::$LAST_NAME) {
+				$contactFieldId = $m['contactFieldId'];
+				$lastName = model_Registrant::getInformationValue($registrant, array('id' => $contactFieldId));
+			}
+		}
+		
+		if(isset($firstName) && isset($lastName)) {
+			return $firstName.' '.$lastName;
+		}
+		else {
+			return "Registrant {$numDisplayed}";				
+		}
 	}
 	
 	private function getRegistrantRow($r) {
