@@ -501,19 +501,22 @@ create table if not exists `Report` (
 	`id`			integer		not null auto_increment,
 	`eventId`		integer		not null,
 	`name`			varchar(255)	not null,
-	`showDateRegistered`	char(1)		not null default 'F',
-	`showDateCancelled`	char(1)		not null default 'F',
-	`showCategory`		char(1)		not null default 'F',
-	`showRegType`		char(1)		not null default 'F',
-	`showLeadNumber`    char(1)     not null default 'F',
-	`showTotalCost`		char(1)		not null default 'F',
-	`showTotalPaid`		char(1)		not null default 'F',
-	`showRemainingBalance`	char(1)		not null default 'F',
 	`isPaymentsToDate`	char(1)		not null default 'F',
 	`isAllRegToDate`	char(1)		not null default 'F',
 	`isOptionCount`		char(1)		not null default 'F',
 	`isRegTypeBreakdown`	char(1)		not null default 'F',
+	`type`                  varchar(255)    not null,
 	primary key(`id`)
+) ENGINE=InnoDB default CHARSET=utf8;
+
+-- --------------------------------------------------
+
+create table if not exists `Report_SpecialField` (
+    `id`                integer         not null auto_increment,
+    `reportId`          integer         not null,
+    `name`              varchar(255)    not null,
+    `displayName`       varchar(255)    not null,
+    primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
 -- --------------------------------------------------
@@ -657,6 +660,16 @@ create table if not exists `Event_Metadata` (
     `eventId`           integer         not null,
     `contactFieldId`    integer         not null,
     `metadata`          varchar(255)    not null,
+    primary key(`id`)
+) ENGINE=InnoDB default CHARSET=utf8;
+
+-- --------------------------------------------------
+
+create table if not exists `Feedback` (
+    `id`                integer         not null auto_increment,
+    `feedback`          text            not null,
+    `type`              varchar(255)    not null,
+    `status`            varchar(255)    not null,
     primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 
@@ -1273,4 +1286,16 @@ alter table Event_Metadata
     add constraint event_meta_event_cf_uni
     unique (eventId, contactFieldId);
 
+-- --------------------------------------------------    
 
+alter table Report_SpecialField
+    add constraint rpt_spclFld_rptId_fk
+    foreign key (reportId) references Report(id);
+    
+alter table Report_SpecialField
+    add constraint rpt_sclFld_rpt_name_uni
+    unique (reportId, name);    
+    
+    
+    
+    

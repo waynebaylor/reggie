@@ -8,6 +8,7 @@ dojo.require("dijit.PopupMenuBarItem");
 dojo.require("dijit.MenuBarItem");
 dojo.require("dijit.TooltipDialog");
 dojo.require("dojox.form.BusyButton");
+dojo.require("dojox.widget.DialogSimple");
 dojo.require("hhreg.admin.widget.SearchForm");
 dojo.require("hhreg.util");
 
@@ -191,53 +192,15 @@ dojo.declare("hhreg.admin.widget.ActionMenuBar", [dijit._Widget, dijit._Template
 		
 		var m = new dijit.MenuBar({}, _this.userMenuNode);
 		
-		var feedbackFormHtml = '<div><form id="feedback_form"><textarea name="feedback"></textarea><div class="divider"></div><input type="button">&nbsp;&nbsp;<a href="#">Cancel</a></form></div>';
-		var feedbackNode = dojo.place(feedbackFormHtml, dojo.body(), "last");
-		
-		var feedbackTextarea = new dijit.form.Textarea({
-			style: "width: 500px; min-height: 100px;"
-		}, dojo.query("textarea", feedbackNode)[0]);
-		
-		var feedbackButton = new dojox.form.BusyButton({
-			label: "Submit",
-			busyLabel: "Processing...",
-			onClick: function() {
-				dojo.query("#feedback_form img").orphan();
-				
-				dojo.xhrPost({
-					url: hhreg.util.contextUrl("/admin/Feedback"),
-					content: dojo.formToObject(dojo.byId("feedback_form")),
-					handleAs: "text",
-					load: function() {
-						setTimeout(function() {
-							feedbackButton.cancel();
-							feedbackDialog.hide();
-							feedbackTextarea.set("value", "");
-						}, 1000);
-					},
-					error: function() {
-						feedbackButton.cancel();
-						
-						var src = hhreg.util.contextUrl("/images/ex.gif");
-						dojo.place('<img style="vertical-align:middle;" src="'+src+'">', feedbackButton.domNode, "after");
-					}
-				});
-			}
-		}, dojo.query("input[type=button]", feedbackNode)[0]);
-		
-		dojo.connect(dojo.query("a", feedbackNode)[0], "onclick", function(event) {
-			dojo.stopEvent(event);
-			feedbackTextarea.set("value", "");
-			dojo.query("#feedback_form img").orphan();
-			feedbackDialog.hide();
-		});
-		
-		var feedbackDialog = new dijit.Dialog({
+		var feedbackDialog = new dojox.widget.DialogSimple({
+			id: "feedback-dialog",
 			title: "Feedback",
-			content: feedbackNode,
+			href: hhreg.util.contextUrl("/admin/Feedback"),
+			executeScripts: true,
 			onCancel: function() {
-				feedbackTextarea.set("value", "");
-				dojo.query("#feedback_form img").orphan();
+				dojo.query("textarea", feedbackDialog.domNode).forEach(function(node) {
+					dijit.byId(node.id).set('value', '');
+				});
 			}
 		});
 		

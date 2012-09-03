@@ -2,54 +2,6 @@
 
 class db_ReportManager extends db_Manager
 {
-	//
-	// dbColumn = the Registration table column name.
-	// dbValueColumn = the field name from the sql select. 
-	// displayName = the column text on the report page.
-	//
-	// some of the payment fields don't have a dbValueColumn because
-	// they must be computed outside of a sql query.
-	//
-	private static $SPECIAL_FIELDS = array(
-		'date_registered' => array(
-			'dbColumn' => 'showDateRegistered',
-			'dbValueColumn' => 'dateRegistered',
-			'displayName' => 'Date Registered'
-		),
-		'date_cancelled' => array(
-			'dbColumn' => 'showDateCancelled',
-			'dbValueColumn' => 'dateCancelled',
-			'displayName' => 'Date Cancelled'
-		),
-		'category' => array(
-			'dbColumn' => 'showCategory',
-			'dbValueColumn' => 'categoryName',
-			'displayName' => 'Category'
-		),
-		'registration_type' => array(
-			'dbColumn' => 'showRegType',
-			'dbValueColumn' => 'regTypeName',
-			'displayName' => 'Registration Type'
-		),
-		'lead_number' => array(
-			'dbColumn' => 'showLeadNumber',
-			'dbValueColumn' => 'leadNumber',
-			'displayName' => 'Lead Number'
-		),
-		'total_cost' => array(
-			'dbColumn' => 'showTotalCost',
-			'displayName' => 'Total Cost'
-		),
-		'total_paid' => array(
-			'dbColumn' => 'showTotalPaid',
-			'displayName' => 'Total Paid'
-		),
-		'remaining_balance' => array(
-			'dbColumn' => 'showRemainingBalance',
-			'displayName' => 'Remaining Balance'
-		)
-	);
-	
 	private static $instance;
 	
 	protected function __construct() {
@@ -63,6 +15,21 @@ class db_ReportManager extends db_Manager
 			'eventId' => $obj['eventId'], 
 			'reportId' => $obj['id']
 		));
+		
+		$obj['specialFields'] = db_ReportSpecialFieldManager::getInstance()->findByReport(array(
+			'eventId' => $obj['eventId'],
+			'reportId' => $obj['id']
+		));
+		
+		// fake columns.
+		$obj['showDateRegistered'] = model_Report::hasSpecialField($obj, model_ReportSpecialField::$DATE_REGISTERED)? 'T' : 'F';
+		$obj['showDateCancelled'] = model_Report::hasSpecialField($obj, model_ReportSpecialField::$DATE_CANCELLED)? 'T' : 'F';
+		$obj['showCategory'] = model_Report::hasSpecialField($obj, model_ReportSpecialField::$CATEGORY)? 'T' : 'F';
+		$obj['showRegType'] = model_Report::hasSpecialField($obj, model_ReportSpecialField::$REGISTRATION_TYPE)? 'T' : 'F';
+		$obj['showLeadNumber'] = model_Report::hasSpecialField($obj, model_ReportSpecialField::$LEAD_NUMBER)? 'T' : 'F';
+		$obj['showTotalCost'] = model_Report::hasSpecialField($obj, model_ReportSpecialField::$TOTAL_COST)? 'T' : 'F';
+		$obj['showTotalPaid'] = model_Report::hasSpecialField($obj, model_ReportSpecialField::$TOTAL_PAID)? 'T' : 'F';
+		$obj['showRemainingBalance'] = model_Report::hasSpecialField($obj, model_ReportSpecialField::$REMAINING_BALANCE)? 'T' : 'F';
 		
 		return $obj;
 	}
@@ -85,14 +52,6 @@ class db_ReportManager extends db_Manager
 				id,
 				eventId,
 				name,
-				showDateRegistered,
-				showDateCancelled,
-				showCategory,
-				showRegType,
-				showLeadNumber,
-				showTotalCost,
-				showTotalPaid,
-				showRemainingBalance,
 				isPaymentsToDate,
 				isAllRegToDate,
 				isOptionCount,
@@ -128,14 +87,6 @@ class db_ReportManager extends db_Manager
 				id,
 				eventId,
 				name,
-				showDateRegistered,
-				showDateCancelled,
-				showCategory,
-				showRegType,
-				showLeadNumber,
-				showTotalCost,
-				showTotalPaid,
-				showRemainingBalance,
 				isPaymentsToDate,
 				isAllRegToDate,
 				isOptionCount,
@@ -180,6 +131,12 @@ class db_ReportManager extends db_Manager
 	 * @param array $params [eventId, id]
 	 */
 	public function deleteReport($params) {
+		// delete special fields.
+		db_ReportSpecialFieldManager::getInstance()->deleteByReport(array(
+			'eventId' => $params['eventId'],
+			'reportId' => $params['id']
+		));
+		
 		// delete report fields.
 		$sql = '
 			DELETE FROM
@@ -241,26 +198,13 @@ class db_ReportManager extends db_Manager
 	 * @param array $params [eventId, reportId, fieldName]
 	 */
 	public function addSpecialField($params) {
-		$column = self::$SPECIAL_FIELDS[$params['fieldName']]['dbColumn'];
+		$specialField = strtoupper($params['fieldName']);
 		
-		$sql = "
-			UPDATE
-				Report
-			SET
-				{$column} = :value
-			WHERE
-				id = :reportId
-			AND
-				eventId = :eventId
-		";
-				
-		$params = array(
-			'reportId' => $params['reportId'],
+		db_ReportSpecialFieldManager::getInstance()->createField(array(
 			'eventId' => $params['eventId'],
-			'value' => 'T'
-		);
-		
-		$this->execute($sql, $params, 'Add special field to report.');
+			'reportId' => $params['reportId'],
+			'name' => $specialField
+		));
 	}
 	
 	/**
@@ -268,26 +212,13 @@ class db_ReportManager extends db_Manager
 	 * @param array $params [eventId, reportId, fieldName]
 	 */
 	public function removeSpecialField($params) {
-		$column = self::$SPECIAL_FIELDS[$params['fieldName']]['dbColumn'];
+		$specialField = strtoupper($params['fieldName']);
 		
-		$sql = "
-			UPDATE
-				Report
-			SET
-				{$column} = :value
-			WHERE
-				id = :reportId
-			AND
-				eventId = :eventId
-		";
-				
-		$params = array(
-			'reportId' => $params['reportId'],
+		db_ReportSpecialFieldManager::getInstance()->deleteFieldByName(array(
 			'eventId' => $params['eventId'],
-			'value' => 'F'
-		);
-		
-		$this->execute($sql, $params, 'Remove special field from report.');
+			'reportId' => $params['reportId'],
+			'name' => $specialField
+		));
 	}
 	
 	//////////////////////////////////////////////////////////////
@@ -322,11 +253,13 @@ class db_ReportManager extends db_Manager
 		// to the front of the results array.
 		//
 		foreach(array('lead_number', 'registration_type', 'category', 'date_cancelled', 'date_registered') as $specialFieldId) {
-			$column = self::$SPECIAL_FIELDS[$specialFieldId]['dbColumn'];
-			if($report[$column] === 'T') {
+			$specialFieldName = strtoupper($specialFieldId);
+			$hasSpecialField = model_Report::hasSpecialField($report, $specialFieldName);
+			
+			if($hasSpecialField) {
 				$field = array(
 					'id' => $specialFieldId, 
-					'displayName' => self::$SPECIAL_FIELDS[$specialFieldId]['displayName']
+					'displayName' => model_ReportSpecialField::getDisplayName($specialFieldName)
 				);
 				
 				array_unshift($results, $field);
@@ -337,11 +270,13 @@ class db_ReportManager extends db_Manager
 		// append the payment fields, if any. 
 		//
 		foreach(array('total_cost', 'total_paid', 'remaining_balance') as $specialFieldId) {
-			$column = self::$SPECIAL_FIELDS[$specialFieldId]['dbColumn'];
-			if($report[$column] === 'T') {
+			$specialFieldName = strtoupper($specialFieldId);
+			$hasSpecialField = model_Report::hasSpecialField($report, $specialFieldName);
+			
+			if($hasSpecialField) {
 				$field = array(
 					'id' => $specialFieldId, 
-					'displayName' => self::$SPECIAL_FIELDS[$specialFieldId]['displayName']
+					'displayName' => model_ReportSpecialField::getDisplayName($specialFieldName)
 				);
 				
 				array_push($results, $field);
@@ -1004,14 +939,6 @@ class db_ReportManager extends db_Manager
 				id,
 				eventId,
 				name,
-				showDateRegistered,
-				showDateCancelled,
-				showCategory,
-				showRegType,
-				showLeadNumber,
-				showTotalCost,
-				showTotalPaid,
-				showRemainingBalance,
 				isPaymentsToDate,
 				isAllRegToDate,
 				isOptionCount,

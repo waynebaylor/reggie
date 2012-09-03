@@ -9,6 +9,18 @@ class model_Report
 			($report['isRegTypeBreakdown'] === 'T')
 		);
 	}
+	
+	public static function hasSpecialField($report, $fieldName) {
+		$specialFields = $report['specialFields'];
+		
+		foreach($specialFields as $f) {
+			if($f['name'] === $fieldName) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }
 
 ?>
