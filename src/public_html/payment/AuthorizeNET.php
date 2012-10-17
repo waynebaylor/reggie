@@ -114,7 +114,12 @@ class payment_AuthorizeNET
 		else if($type === 'AUTH_CAPTURE' && $this->isAdminPayment && in_array($this->event['id'], array(10, 17, 18))) {
 			$lineItems = $this->getAdminLineItems();
 			
-			if(!empty($lineItems)) {
+			$balanceDue = 0.00;
+			foreach($lineItems as $item) {
+				$balanceDue += $item['quantity']*$item['unitPrice'];
+			}
+			
+			if(!empty($lineItems) && ($balanceDue == $amount)) {
 				$authNetLineItems = $this->getAuthNetLineItems($lineItems);
 				
 				$fields['x_line_item'] = $authNetLineItems;
