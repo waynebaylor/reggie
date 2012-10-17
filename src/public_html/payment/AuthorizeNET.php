@@ -12,16 +12,19 @@ class payment_AuthorizeNET
 	private $event;
 	private $info;
 	private $amount;
+	private $regGroupId;
 	
 	private $url;
 	
-	function __construct($event, $info, $amount, $isAdminPayment = FALSE) {
+	// regGroupId is only used if isAdminPayment is TRUE.
+	function __construct($event, $info, $amount, $isAdminPayment = FALSE, $regGroupId = 0) {
 		$this->url = in_array(Config::$MODE_DEVELOPMENT, Config::$SETTINGS['MODE'])? 
 							  Config::$SETTINGS['AUTH_NET_TEST_URL'] : Config::$SETTINGS['AUTH_NET_URL'];
 						
 		$this->event = $event;
 		$this->amount = $amount;
 		$this->info = $info;
+		$this->regGroupId = $regGroupId;
 		
 		// if this is an admin payment, then we don't set the special values for payment description
 		// and payment line items.
@@ -97,11 +100,30 @@ class payment_AuthorizeNET
 			'x_country' => ArrayUtil::getValue($this->info, 'country', 'US')
 		);
 		
+		// non-admin AVA payment.
 		if($type === 'AUTH_CAPTURE' && !$this->isAdminPayment && in_array($this->event['id'], array(10, 17, 18))) {
-			$fields['x_line_item'] = $this->getLineItems();	
+			$lineItems = $this->getLineItems();
+			$authNetLineItems = $this->getAuthNetLineItems($lineItems);
+			
+			$fields['x_line_item'] = $authNetLineItems;	
 			
 			// overwrite description.
-			$fields['x_description'] = substr($this->getDescription(), 0, 255);
+			$fields['x_description'] = substr($this->getAVADescription(), 0, 255);
+		}
+		// admin AVA payment (only works if this is the first payment for the group and it covers the total balance due).
+		else if($type === 'AUTH_CAPTURE' && $this->isAdminPayment && in_array($this->event['id'], array(10, 17, 18))) {
+			$lineItems = $this->getAdminLineItems();
+			
+			if(!empty($lineItems)) {
+				$authNetLineItems = $this->getAuthNetLineItems($lineItems);
+				
+				$fields['x_line_item'] = $authNetLineItems;
+				
+				// overwrite description.
+				$desc = substr($this->getAVAAdminDescription(), 0, 255);
+				$fields['x_description'] = $desc;
+				
+			}
 		}
 
 		return $fields;
@@ -110,7 +132,7 @@ class payment_AuthorizeNET
 	/**
 	 * NOTE: this has a dependency on the attendee registration session object.
 	 */
-	private function getDescription() {
+	private function getAVADescription() {
 		$lineItems = array();
 		
 		$registrations = model_reg_Registration::getConvertedRegistrationsFromSession();
@@ -119,6 +141,12 @@ class payment_AuthorizeNET
 			$lineItems = array_merge($lineItems, $regLineItems);
 		}
 		
+		$desc = $this->getLineItemDescription($lineItems);
+		
+		return $desc;
+	}
+	
+	private function getLineItemDescription($lineItems) {
 		$desc = array();
 		
 		foreach($lineItems as $item) {
@@ -144,6 +172,13 @@ class payment_AuthorizeNET
 			$lineItems = array_merge($lineItems, $regLineItems);
 		}
 		
+		return $lineItems;
+	}
+	
+	/**
+	 * @param array $lineItems [ [id, code, description, quantity, price] ]
+	 */
+	private function getAuthNetLineItems($lineItems) {
 		// auth.net will only accept 30 line items.
 		$lineItemCount = count($lineItems);
 		if($lineItemCount > 30) {
@@ -310,6 +345,33 @@ class payment_AuthorizeNET
 		curl_close($transaction);
 		
 		return $response;
+	}
+	
+	private function getAdminLineItems() {
+		$lineItems = array();
+		
+		$data = db_reg_PaymentManager::getInstance()->findAdminPaymentData($this->regGroupId);
+		foreach($data as $d) {
+			$line = $this->getSanitizedLineItem(
+				$d['id'], 
+				$d['code'], 
+				$d['description'], 
+				$d['quantity'], 
+				$d['price']
+			);
+			
+			$lineItems[] = $line;
+		}	
+		
+		return $lineItems;
+	}
+	
+	private function getAVAAdminDescription() {
+		$lineItems = $this->getAdminLineItems();
+		
+		$desc = $this->getLineItemDescription($lineItems);
+		
+		return $desc;
 	}
 }
 

@@ -38,7 +38,7 @@ class logic_admin_registration_Payment extends logic_Performer
 		$event = $this->strictFindById(db_EventManager::getInstance(), $params['eventId']);
 		
 		if($params['paymentType'] == model_PaymentType::$AUTHORIZE_NET) {
-			$authorizeNet = new payment_AuthorizeNET($event, $params, $params['amount'], TRUE);
+			$authorizeNet = new payment_AuthorizeNET($event, $params, $params['amount'], TRUE, $group['id']);
 			$result = $authorizeNet->makePayment();
 			
 			$result['paymentType'] = model_PaymentType::$AUTHORIZE_NET;

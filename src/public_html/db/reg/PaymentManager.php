@@ -341,6 +341,78 @@ class db_reg_PaymentManager extends db_Manager
 		
 		$this->execute($sql, $params, 'Remove payment.');
 	}
+	
+	public function findAdminPaymentData($regGroupId) {
+		$sql = '
+			(
+			    select 
+			        RegOption.id as id,
+			        RegOption.code as code,
+			        RegOption.description as description,
+			        1 as quantity,
+			        RegOptionPrice.price as price
+			    from
+			        RegOption
+			    inner join
+			        Registration_RegOption 
+			    on
+			        RegOption.id = Registration_RegOption.regOptionId
+			    inner join
+			        Registration 
+			    on
+			        Registration.id = Registration_RegOption.registrationId
+			    inner join
+			        RegOptionPrice
+			    on
+			        Registration_RegOption.priceId = RegOptionPrice.id
+			    where
+			        Registration_RegOption.dateCancelled is null
+			    and
+			        Registration.dateCancelled is null
+			    and
+			        RegOptionPrice.price > 0
+			    and
+			        Registration.regGroupId = :regGroupId
+			    and 
+			        not exists (select id from Payment where regGroupId = :regGroupId)
+			)
+			union
+			(
+			    select 
+			        VariableQuantityOption.id as id,
+			        VariableQuantityOption.code as code,
+			        VariableQuantityOption.description as description,
+			        Registration_VariableQuantityOption.quantity as quantity,
+			        RegOptionPrice.price as price
+			    from
+			        VariableQuantityOption
+			    inner join
+			        Registration_VariableQuantityOption 
+			    on
+			        VariableQuantityOption.id = Registration_VariableQuantityOption.variableQuantityId
+			    inner join
+			        Registration 
+			    on
+			        Registration.id = Registration_VariableQuantityOption.registrationId
+			    inner join
+			        RegOptionPrice
+			    on
+			        Registration_VariableQuantityOption.priceId = RegOptionPrice.id
+			    where
+			        Registration_VariableQuantityOption.quantity > 0
+			    and
+			        Registration.dateCancelled is null
+			    and
+			        RegOptionPrice.price > 0
+			    and
+			        Registration.regGroupId = :regGroupId
+			    and 
+			        not exists (select id from Payment where regGroupId = :regGroupId)
+			)
+		';
+		
+		return $this->rawQuery($sql, array('regGroupId' => $regGroupId), 'finding data for admin payment.');
+	}
 }
 
 ?>
