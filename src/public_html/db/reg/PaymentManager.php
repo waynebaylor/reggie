@@ -370,8 +370,6 @@ class db_reg_PaymentManager extends db_Manager
 			    and
 			        Registration.dateCancelled is null
 			    and
-			        RegOptionPrice.price > 0
-			    and
 			        Registration.regGroupId = :regGroupId
 			    and 
 			        not exists (select id from Payment where regGroupId = :regGroupId)
@@ -402,8 +400,6 @@ class db_reg_PaymentManager extends db_Manager
 			        Registration_VariableQuantityOption.quantity > 0
 			    and
 			        Registration.dateCancelled is null
-			    and
-			        RegOptionPrice.price > 0
 			    and
 			        Registration.regGroupId = :regGroupId
 			    and 
