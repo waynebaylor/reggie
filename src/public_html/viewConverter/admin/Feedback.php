@@ -33,7 +33,9 @@ class viewConverter_admin_Feedback extends viewConverter_admin_AdminConverter
 						style: "width: 500px; min-height: 100px;"
 					}, 
 					textareaNode
-				).startup();
+				);
+				
+				feedbackTextarea.startup();
 				
 				hhreg.xhrTableForm.bind(feedbackFormNode, function() {
 					// hide the dialog after submitting form, but not too fast.

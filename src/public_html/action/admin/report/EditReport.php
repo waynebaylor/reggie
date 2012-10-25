@@ -31,7 +31,8 @@ class action_admin_report_EditReport extends action_ValidatorAction
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0,
 			'id' => 0,
-			'name' => ''
+			'name' => '',
+			'type' => model_Report::$STANDARD
 		));
 		
 		$user = SessionUtil::getUser();

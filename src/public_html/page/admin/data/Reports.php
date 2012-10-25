@@ -7,6 +7,7 @@
 				'id' => $report['id'],
 				'eventId' => $report['eventId'],
 				'name' => $report['name'],
+				'type' => $report['type'],
 				'htmlResultsUrl' => $this->contextUrl("/admin/report/GenerateReport?eventId={$report['eventId']}&reportId={$report['id']}"),
 				'csvResultsUrl' => $this->contextUrl("/admin/report/GenerateReport?a=csv&eventId={$report['eventId']}&reportId={$report['id']}")
 			)) ?>

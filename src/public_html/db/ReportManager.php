@@ -52,10 +52,7 @@ class db_ReportManager extends db_Manager
 				id,
 				eventId,
 				name,
-				isPaymentsToDate,
-				isAllRegToDate,
-				isOptionCount,
-				isRegTypeBreakdown
+				type
 			FROM
 				Report
 			WHERE
@@ -87,10 +84,7 @@ class db_ReportManager extends db_Manager
 				id,
 				eventId,
 				name,
-				isPaymentsToDate,
-				isAllRegToDate,
-				isOptionCount,
-				isRegTypeBreakdown
+				type
 			FROM
 				Report
 			WHERE
@@ -111,15 +105,17 @@ class db_ReportManager extends db_Manager
 			INSERT INTO
 				Report (
 					eventId,
-					name	
+					name,
+					type	
 				)
 			VALUES (
 				:eventId,
-				:name
+				:name,
+				:type
 			)
 		';
 		
-		$params = ArrayUtil::keyIntersect($params, array('eventId', 'name'));
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'name', 'type'));
 		
 		$this->execute($sql, $params, 'Create report.');
 		
@@ -174,21 +170,22 @@ class db_ReportManager extends db_Manager
 	
 	/**
 	 * 
-	 * @param array $params [eventId, id, name]
+	 * @param array $params [eventId, id, name, type]
 	 */
 	public function saveReport($params) {
 		$sql = '
 			UPDATE
 				Report
 			SET
-				name = :name
+				name = :name,
+				type = :type
 			WHERE
 				id = :id
 			AND
 				eventId = :eventId
 		';
 		
-		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id', 'name'));
+		$params = ArrayUtil::keyIntersect($params, array('eventId', 'id', 'name', 'type'));
 		
 		$this->execute($sql, $params, 'Save report.');
 	}
@@ -379,19 +376,19 @@ class db_ReportManager extends db_Manager
 				Report (
 					eventId,
 					name,
-					isRegTypeBreakdown
+					type
 				)
 			VALUES (
 				:eventId,
 				:name,
-				:isRegTypeBreakdown
+				:type
 			)
 		';	
 		
 		$params = array(
 			'eventId' => $params['eventId'],
 			'name' => 'Registration Type Breakdown',
-			'isRegTypeBreakdown' => 'T'
+			'type' => model_Report::$REG_TYPE_BREAKDOWN
 		);
 		
 		$this->execute($sql, $params, 'Create reg type breakdown report.');
@@ -407,19 +404,19 @@ class db_ReportManager extends db_Manager
 				Report (
 					eventId,
 					name,
-					isOptionCount
+					type
 				)
 			VALUES (
 				:eventId,
 				:name,
-				:isOptionCount
+				:type
 			)
 		';	
 		
 		$params = array(
 			'eventId' => $params['eventId'],
 			'name' => 'Option Counts',
-			'isOptionCount' => 'T'
+			'type' => model_Report::$OPTION_COUNTS
 		); 
 		
 		$this->execute($sql, $params, 'Create option count report.');
@@ -435,19 +432,19 @@ class db_ReportManager extends db_Manager
 				Report (
 					eventId,
 					name,
-					isAllRegToDate
+					type
 				)
 			VALUES (
 				:eventId,
 				:name,
-				:isAllRegToDate
+				:type
 			)
 		';	
 		
 		$params = array(
 			'eventId' => $params['eventId'],
 			'name' => 'All Registrations To Date',
-			'isAllRegToDate' => 'T'
+			'type' => model_Report::$ALL_REG_TO_DATE
 		);
 		
 		$this->execute($sql, $params, 'Create all reg to date report.');
@@ -463,19 +460,19 @@ class db_ReportManager extends db_Manager
 				Report (
 					eventId,
 					name,
-					isPaymentsToDate	
+					type	
 				)
 			VALUES (
 				:eventId,
 				:name,
-				:isPaymentsToDate
+				:type
 			)
 		';
 		
 		$params = array(
 			'eventId' => $params['eventId'],
 			'name' => 'Payments To Date',
-			'isPaymentsToDate' => 'T'
+			'type' => model_Report::$PAYMENTS_TO_DATE
 			
 		);
 		
@@ -908,7 +905,8 @@ class db_ReportManager extends db_Manager
 			array(
 				'id', 
 				'eventId', 
-				'name'
+				'name',
+				'type'
 			), 
 			array(
 				'eventId' => $params['eventId']
@@ -939,10 +937,7 @@ class db_ReportManager extends db_Manager
 				id,
 				eventId,
 				name,
-				isPaymentsToDate,
-				isAllRegToDate,
-				isOptionCount,
-				isRegTypeBreakdown
+				type
 			FROM
 				Report
 			WHERE
@@ -957,30 +952,109 @@ class db_ReportManager extends db_Manager
 	}
 	
 	/**
-	 * @param array $params [eventId, regOptionId]
+	 * @param array $params [eventId]
 	 */
 	public function regOptionRoster($params) {
-		$sql = '
-			SELECT
-				RRO.registrationId,
-				RRO.priceId
-			FROM
-				Registration_RegOption RRO
-			INNER JOIN
-				Registration R
-			ON
-				RRO.registrationId = R.id
-			WHERE
-				R.eventId = :eventId
-			AND
-				RRO.regOptionId = :regOptionId
-			AND
-				RRO.dateCancelled IS NULL
-		';
+		$metadata_first_name = db_EventMetadataManager::$FIRST_NAME;
+		$metadata_last_name = db_EventMetadataManager::$LAST_NAME;
 		
-		$params = ArrayUtil::keyIntersect($params, array('eventId', 'regOptionId'));
+		$sql = "
+			SELECT 
+				regGroupId, 
+				optionCode, 
+				quantity, 
+				lastName, 
+				firstName
+			FROM (
+				(
+					SELECT
+						R.regGroupId as regGroupId,
+						RO.code AS optionCode,
+						'' as quantity,
+						(
+							SELECT RI.value 
+							FROM Registration_Information RI
+							INNER JOIN Event_Metadata EM
+							ON RI.contactFieldId = EM.contactFieldId
+							WHERE EM.eventId = :eventId
+							AND RI.registrationId = RRO.registrationId
+							AND EM.metadata = '{$metadata_last_name}'
+						) AS lastName,
+						(
+							SELECT RI.value 
+							FROM Registration_Information RI
+							INNER JOIN Event_Metadata EM
+							ON RI.contactFieldId = EM.contactFieldId
+							WHERE EM.eventId = :eventId
+							AND RI.registrationId = RRO.registrationId
+							AND EM.metadata = '{$metadata_first_name}'
+						) AS firstName
+					FROM
+						RegOption RO
+					INNER JOIN
+						Registration_RegOption RRO
+					ON
+						RO.id = RRO.regOptionId
+					INNER JOIN
+						Registration R
+					ON
+						RRO.registrationId = R.id
+					WHERE
+						RO.eventId = :eventId
+					AND
+						RRO.dateCancelled is NULL
+					AND
+						R.dateCancelled is NULL
+				) 
+				UNION ALL 
+				(
+					SELECT
+						R.regGroupId as regGroupId,
+						VQO.code AS optionCode,
+						RVQO.quantity as quantity,
+						(
+							SELECT RI.value 
+							FROM Registration_Information RI
+							INNER JOIN Event_Metadata EM
+							ON RI.contactFieldId = EM.contactFieldId
+							WHERE EM.eventId = :eventId
+							AND RI.registrationId = RVQO.registrationId
+							AND EM.metadata = '{$metadata_last_name}'
+						) AS lastName,
+						(
+							SELECT RI.value 
+							FROM Registration_Information RI
+							INNER JOIN Event_Metadata EM
+							ON RI.contactFieldId = EM.contactFieldId
+							WHERE EM.eventId = :eventId
+							AND RI.registrationId = RVQO.registrationId
+							AND EM.metadata = '{$metadata_first_name}'
+						) AS firstName
+					FROM
+						VariableQuantityOption VQO
+					INNER JOIN
+						Registration_VariableQuantityOption RVQO
+					ON
+						VQO.id = RVQO.variableQuantityId
+					INNER JOIN
+						Registration R
+					ON
+						RVQO.registrationId = R.id
+					WHERE
+						VQO.eventId = :eventId
+					AND
+						RVQO.quantity != 0
+					AND
+						R.dateCancelled is NULL
+				)
+			) AS Roster
+			ORDER BY 
+				optionCode ASC, lastName ASC, firstName ASC
+		";
 		
-		return $this->query($sql, $params, 'Reg Option Roster');
+		$params = ArrayUtil::keyIntersect($params, array('eventId'));
+		
+		return $this->rawQuery($sql, $params, 'Reg Option Roster');
 	}
 }
 

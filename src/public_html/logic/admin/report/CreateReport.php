@@ -15,6 +15,7 @@ class logic_admin_report_CreateReport extends logic_Performer
 			'report' => array(
 				'id' => 0,
 				'name' => '',
+				'type' => model_Report::$STANDARD,
 				'showDateRegistered' => 'F',
 				'showDateCancelled' => 'F',
 				'showCategory' => 'F',

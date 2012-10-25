@@ -498,14 +498,10 @@ create table if not exists `Payment` (
 -- --------------------------------------------------
 
 create table if not exists `Report` (
-	`id`			integer		not null auto_increment,
-	`eventId`		integer		not null,
+	`id`			integer		    not null auto_increment,
+	`eventId`		integer		    not null,
 	`name`			varchar(255)	not null,
-	`isPaymentsToDate`	char(1)		not null default 'F',
-	`isAllRegToDate`	char(1)		not null default 'F',
-	`isOptionCount`		char(1)		not null default 'F',
-	`isRegTypeBreakdown`	char(1)		not null default 'F',
-	`type`                  varchar(255)    not null,
+	`type`          varchar(255)    not null default 'STANDARD',
 	primary key(`id`)
 ) ENGINE=InnoDB default CHARSET=utf8;
 

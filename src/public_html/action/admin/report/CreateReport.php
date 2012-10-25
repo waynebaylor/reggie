@@ -42,7 +42,8 @@ class action_admin_report_CreateReport extends action_ValidatorAction
 	public function createReport() {
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0,
-			'name' => ''
+			'name' => '',
+			'type' => model_Report::$STANDARD
 		));
 		
 		$user = SessionUtil::getUser();

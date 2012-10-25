@@ -25,6 +25,9 @@
 
 	<div class="divider"></div>
 	
+	<?php if($this->report['type'] !== model_Report::$OPTION_ROSTER && 
+			 $this->report['type'] !== model_Report::$OPTION_COUNTS &&
+			 $this->report['type'] !== model_Report::$REG_TYPE_BREAKDOWN): ?>
 	<div class="fragment-fields">
 		<div>
 			<?php echo $this->getFileContents('page_admin_report_FieldList') ?>
@@ -41,6 +44,7 @@
 			) ?>
 		</div>
 	</div>
+	<?php endif; ?>
 </div>
 
 

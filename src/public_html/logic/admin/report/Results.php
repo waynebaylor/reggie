@@ -23,21 +23,27 @@ class logic_admin_report_Results extends logic_Performer
 		$this->showDetailsLink = $this->canSeeDetailsLink($params['user'], $eventId);
 		$this->showSummaryLink = $this->canSeeSummaryLink($params['user'], $eventId);
 		
-		if($report['isPaymentsToDate'] === 'T') {
+		if($report['type'] === model_Report::$PAYMENTS_TO_DATE) {
 			$info = logic_admin_report_PaymentsToDateHelper::addSpecialInfo($report, $info);
 		}
-		else if($report['isAllRegToDate'] === 'T') { 
+		else if($report['type'] === model_Report::$ALL_REG_TO_DATE) { 
 			$info = logic_admin_report_AllRegToDateHelper::addSpecialInfo($report, $info);
 		}
-		else if($report['isOptionCount'] === 'T') {
+		else if($report['type'] === model_Report::$OPTION_COUNTS) {
 			$info = logic_admin_report_OptionCountHelper::addSpecialInfo($report, $info);
 			$this->showDetailsLink = false;
 			$this->showSummaryLink = false;
 		}
-		else if($report['isRegTypeBreakdown'] === 'T') {
+		else if($report['type'] === model_Report::$REG_TYPE_BREAKDOWN) {
 			$info = logic_admin_report_RegTypeBreakdownHelper::addSpecialInfo($report, $info);
 			$this->showDetailsLink = false;
 			$this->showSummaryLink = false;
+		}
+		else if($report['type'] === model_Report::$BADGE_REPORT) {
+			$info = logic_admin_report_BadgeReportHelper::addSpecialInfo($report, $info);
+		}
+		else if($report['type'] === model_Report::$OPTION_ROSTER) {
+			$info = logic_admin_report_OptionRosterHelper::addSpecialInfo($report, $info);
 		}
 		
 		return array( 
