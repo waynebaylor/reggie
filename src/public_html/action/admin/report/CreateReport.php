@@ -42,9 +42,15 @@ class action_admin_report_CreateReport extends action_ValidatorAction
 	public function createReport() {
 		$params = RequestUtil::getValues(array(
 			'eventId' => 0,
-			'name' => '',
+			'name' => '', 
 			'type' => model_Report::$STANDARD
 		));
+		
+		// hack. because the form is not ajax we can't do validation, 
+		// so just give report a generic default name if they don't put one.
+		if(empty($params['name'])) {
+			$params['name'] = 'New Report';
+		}
 		
 		$user = SessionUtil::getUser();
 		$this->checkRole($user, $params['eventId']);
