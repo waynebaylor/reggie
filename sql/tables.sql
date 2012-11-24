@@ -1,6 +1,8 @@
 
 set foreign_key_checks = 0;
 
+drop table if exists Report_SpecialField;
+drop table if exists Feedback;
 drop table if exists Event_Metadata;
 drop table if exists User_Role;
 drop table if exists Role;
