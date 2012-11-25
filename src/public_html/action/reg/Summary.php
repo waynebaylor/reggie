@@ -135,6 +135,14 @@ class action_reg_Summary extends action_ValidatorAction
 			db_reg_RegistrationManager::getInstance()->createLeadNumber($reg['eventId'], $reg['id']);
 		}
 
+		// sending emails is sometimes slow. if script times out or
+		// something else happens while sending emails our db transaction
+		// will be rolled back. we want to commit db transaction regardless
+		// of email success. we have to start a new transaction because Controller.php
+		// will try to commit automatically.
+		db_reg_GroupManager::getInstance()->commitTransaction();
+		db_reg_GroupManager::getInstance()->beginTransaction();
+		
 		$this->sendConfirmationEmail($regGroup);
 		
 		return $regGroup;
