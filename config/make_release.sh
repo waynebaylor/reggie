@@ -20,9 +20,9 @@ fi
 # check out the tag.
 if [ "$svntag" != "trunk" ]
 then
-    svn checkout svn://dino/baylorsc/reggie/tags/$svntag $svntag-tmp
+    svn export svn://dino/baylorsc/reggie/tags/$svntag $svntag-tmp
 else
-    svn checkout svn://dino/baylorsc/reggie/trunk $svntag-tmp
+    svn export svn://dino/baylorsc/reggie/trunk $svntag-tmp
 fi
 
 # build optimized js.
