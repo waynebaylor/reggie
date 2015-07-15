@@ -55,7 +55,6 @@ class Config
 		//
 		// Authorize.NET properties.
 		//
-		// (login: 7S86HWQgDsE, trans key: 6E49knh37h9vYQ52) 
 		'AUTH_NET_TEST_URL' => 'https://test.authorize.net/gateway/transact.dll',
 		'AUTH_NET_URL' => 'https://secure.authorize.net/gateway/transact.dll'
 	);
